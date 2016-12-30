@@ -4,7 +4,8 @@
   "description": "Gist client for everyone",
   "main": "main.js",
   "scripts": {
-    "start": "electron ./main.js",
+    "pack": "webpack --display-modules",
+    "start": "webpack && electron ./main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,11 +21,21 @@
   "author": "CosmoX",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "css-loader": "^0.26.1",
     "electron-prebuilt": "^0.37.2",
     "json-loader": "^0.5.4",
+    "node-sass": "^4.1.1",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1",
     "webpack": "^1.14.0"
   },
   "dependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
     "request": "^2.79.0",
     "request-promise": "^4.1.1"
   }

@@ -1,8 +1,11 @@
 'use strict'
 
-const rp = require('request-promise');
-let gist_list = [];
+import React from 'react';
+import ReactDom from 'react-dom';
+import ReqPromise from 'request-promise';
+import Snippet from './components/snippet';
 
+let gist_list = [];
 let options = {
     uri: 'https://api.github.com/users/hackjutsu/gists',
     headers: {
@@ -11,17 +14,20 @@ let options = {
     json: true // Automatically parses the JSON string in the response
 };
 
-rp(options)
+ReqPromise(options)
     .then(function (gists) {
 		gist_list = gists;
 		console.log(gist_list.length);
 		gist_list.forEach(function(gist) {
 		     console.log(gist.html_url);
 		});
+        ReactDom.render(
+            <Snippet html_url={gist_list[0].html_url}/>,
+            document.getElementById('app')
+        )
     })
     .catch(function (err) {
 		console.log('The request has failed');
-        // API call failed...
     });
 
 

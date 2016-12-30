@@ -13,6 +13,15 @@ module.exports = {
     },
 	module: {
 		loaders: [{
+          test: /\.js$/,
+          include: [path.resolve(__dirname, 'app')],
+          exclude: /node_modules/,
+          loaders: ['babel?presets[]=es2015,presets[]=react']
+        }, {
+          test: /\.scss$/,
+          exclude: /node_modules/,
+          loaders: ['style', 'css', 'sass']
+        }, {
 			test: /\.json/,
 			// exclude: /node_modules/,
 			loaders: ['json']
