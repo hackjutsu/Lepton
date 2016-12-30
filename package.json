@@ -1,0 +1,31 @@
+{
+  "name": "GiGist",
+  "version": "1.0.0",
+  "description": "Gist client for everyone",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ./main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "keywords": [
+    "gist",
+    "js",
+    "electron",
+    "desktop"
+  ],
+  "author": "CosmoX",
+  "license": "MIT",
+  "devDependencies": {
+    "electron-prebuilt": "^0.37.2",
+    "json-loader": "^0.5.4",
+    "webpack": "^1.14.0"
+  },
+  "dependencies": {
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
+  }
+}
