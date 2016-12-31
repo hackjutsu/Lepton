@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import ReqPromise from 'request-promise'
 import Account from '../../../configs/account'
