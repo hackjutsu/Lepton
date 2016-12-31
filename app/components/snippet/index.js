@@ -3,8 +3,11 @@
 import React, { Component } from 'react'
 import ReqPromise from 'request-promise'
 import Account from '../../../configs/account'
+import HighlightJS from 'highlight'
 import './index.scss'
+import '../../lib/vendor/styles/github.css'
 
+const hl = HighlightJS.Highlight
 const single_gist_uri = 'https://api.github.com/gists/'
 
 function makeOption(uri) {
@@ -51,6 +54,11 @@ class Snippet extends Component {
       })
   }
 
+  createMarkup(content) {
+      let html = '<pre><code>' + hl(content) + '</code></pre>'
+      return {__html: html}
+  }
+
   render() {
 
     if (!this.state.details) {
@@ -68,13 +76,12 @@ class Snippet extends Component {
     for (let key in fileList) {
       if (fileList.hasOwnProperty(key)) {
         let gistFile = fileList[key]
+
         files.push(
           <div key={ key }>
             <div>{ gistFile.filename }</div>
             <div>{ gistFile.language }</div>
-            <div className='code-area'>
-                <code>{ gistFile.content }</code>
-            </div>
+            <div className='code-area' dangerouslySetInnerHTML={ this.createMarkup(gistFile.content) } />
           </div>
         )
       }

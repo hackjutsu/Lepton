@@ -2,11 +2,14 @@
 
 const path = require('path')
 const webpack = require('webpack')
+const nodeExternals = require('webpack-node-externals')
+
 
 module.exports = {
     entry: [
         './app/app.js'
     ],
+    target: 'electron',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'app.bundle.js'
@@ -35,5 +38,8 @@ module.exports = {
           loader: 'text'
         }]
 	},
-	target: 'electron'
+    externals: [nodeExternals({
+        // this WILL include `jquery` and `webpack/hot/dev-server` in the bundle, as well as `lodash/*`
+        // whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/]
+    })]
 }

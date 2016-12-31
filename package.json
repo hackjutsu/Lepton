@@ -35,14 +35,14 @@
     "style-loader": "^0.13.1",
     "text-loader": "0.0.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.14.0"
+    "webpack": "^1.14.0",
+    "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
     "highlight": "^0.2.4",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "request": "^2.79.0",
-    "request-promise": "^4.1.1",
-    "syntax": "^1.3.4"
+    "request-promise": "^4.1.1"
   }
 }
