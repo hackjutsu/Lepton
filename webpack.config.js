@@ -1,7 +1,7 @@
 'use strict'
 
-const path = require('path');
-const webpack = require('webpack');
+const path = require('path')
+const webpack = require('webpack')
 
 module.exports = {
     entry: [
@@ -18,14 +18,22 @@ module.exports = {
           exclude: /node_modules/,
           loaders: ['babel?presets[]=es2015,presets[]=react']
         }, {
-          test: /\.scss$/,
-          exclude: /node_modules/,
+          test: /\.(scss|css)$/,
           loaders: ['style', 'css', 'sass']
         }, {
 			test: /\.json/,
 			// exclude: /node_modules/,
-			loaders: ['json']
-		}]
+			loader: 'json'
+		}, {
+          test: /\.(png|jpg)$/,
+          loader: 'url-loader'
+        }, {
+          test: /\.html$/,
+          loader: 'html'
+        }, {
+          test: /\.txt$/,
+          loader: 'text'
+        }]
 	},
 	target: 'electron'
-};
+}

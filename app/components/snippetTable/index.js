@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
-import Snippet from '../snippet/index';
-import './index.scss';
+import React, { Component } from 'react'
+import Snippet from '../snippet/index'
+import './index.scss'
 
 class SnippetTable extends Component {
 
   renderSnippets() {
-    let gistStore = this.props.gistStore;
-    let updateGistStore = this.props.updateGistStore;
-    let snippetList = [];
+    let gistStore = this.props.gistStore
+    let updateGistStore = this.props.updateGistStore
+    let snippetList = []
 
     for (let key in gistStore) {
       if (gistStore.hasOwnProperty(key)) {
         snippetList.push(
           <Snippet snippet={ gistStore[key] } updateGistStore={ updateGistStore } key={ key } />
-        );
+        )
       }
     }
 
-    return snippetList;
-  };
+    return snippetList
+  }
 
   render() {
     return (
@@ -27,6 +27,6 @@ class SnippetTable extends Component {
       </div>
     )
   }
-};
+}
 
-export default SnippetTable;
+export default SnippetTable

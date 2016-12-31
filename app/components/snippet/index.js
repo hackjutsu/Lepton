@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import ReqPromise from 'request-promise';
-import Account from '../../../configs/account';
-import './index.scss';
+import React, { Component } from 'react'
+import ReqPromise from 'request-promise'
+import Account from '../../../configs/account'
+import './index.scss'
 
-const single_gist_uri = 'https://api.github.com/gists/';
+const single_gist_uri = 'https://api.github.com/gists/'
+
 function makeOption(uri) {
-
     return {
         uri: uri,
         headers: {
@@ -16,37 +16,37 @@ function makeOption(uri) {
             pass: Account.password
         },
         json: true // Automatically parses the JSON string in the response
-    };
+    }
 }
 
 class Snippet extends Component {
 
   constructor(props){
-    super(props);
+    super(props)
 
-    let snippet = this.props.snippet;
-    this.state = Object.assign({}, snippet);
+    let snippet = this.props.snippet
+    this.state = Object.assign({}, snippet)
 
     if (!this.state.details) {
-        this.fetchSnippet();
+        this.fetchSnippet()
     }
   }
 
   fetchSnippet() {
-    // console.log(single_gist_uri + this.state.id);
-    ReqPromise(makeOption(single_gist_uri + this.state.id))
+    // console.log(single_gist_uri + this.state.id)
+    ReqPromise(makeOption(single_gist_uri + this.state.brief.id))
       .then((details) => {
-        //  console.log(details.description);
+        //  console.log(details.description)
          this.setState({
              details: details
-         });
+         })
          this.props.updateGistStore(
              Object.assign({}, this.state)
-         );
+         )
       })
       .catch(function (err) {
-        console.log('The request has failed: ' + err);
-      });
+        console.log('The request has failed: ' + err)
+      })
   }
 
   render() {
@@ -61,18 +61,20 @@ class Snippet extends Component {
         )
     }
 
-    let files = [];
-    let fileList = this.state.details.files;
+    let files = []
+    let fileList = this.state.details.files
     for (let key in fileList) {
       if (fileList.hasOwnProperty(key)) {
-        let gistFile = fileList[key];
+        let gistFile = fileList[key]
         files.push(
           <div key={ key }>
             <div>{ gistFile.filename }</div>
             <div>{ gistFile.language }</div>
-            <p className='code-area'>{ gistFile.content }</p>
+            <div className='code-area'>
+                <code>{ gistFile.content }</code>
+            </div>
           </div>
-        );
+        )
       }
     }
 
@@ -85,6 +87,6 @@ class Snippet extends Component {
       </div>
     )
   }
-};
+}
 
-export default Snippet;
+export default Snippet
