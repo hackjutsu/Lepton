@@ -4,6 +4,7 @@
   "description": "Gist client for everyone",
   "main": "main.js",
   "scripts": {
+    "lint": "eslint app",
     "pack": "webpack --display-modules",
     "start": "webpack && electron ./main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,6 +28,11 @@
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.26.1",
     "electron-prebuilt": "^0.37.2",
+    "eslint": "^3.12.2",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-react": "^6.8.0",
+    "eslint-plugin-standard": "^2.0.1",
     "file-loader": "^0.9.0",
     "html-loader": "^0.4.4",
     "json-loader": "^0.5.4",

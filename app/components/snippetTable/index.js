@@ -6,7 +6,7 @@ import './index.scss'
 
 class SnippetTable extends Component {
 
-  renderSnippets() {
+  renderSnippets () {
     let gistStore = this.props.gistStore
     let updateGistStore = this.props.updateGistStore
     let snippetList = []
@@ -22,7 +22,7 @@ class SnippetTable extends Component {
     return snippetList
   }
 
-  render() {
+  render () {
     return (
       <div className='snippet-table'>
           { this.renderSnippets() }

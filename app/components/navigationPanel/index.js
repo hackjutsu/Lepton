@@ -5,7 +5,7 @@ import './index.scss'
 
 class NavigationPanel extends Component {
 
-  renderTags() {
+  renderTags () {
     let langTags = this.props.langTags
     let tagList = []
     for (let key in langTags) {
@@ -19,7 +19,7 @@ class NavigationPanel extends Component {
     return tagList
   } // renderTags()
 
-  render() {
+  render () {
     return (
       <div className='menu-panel'>
           { this.renderTags() }
