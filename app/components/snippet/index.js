@@ -5,7 +5,7 @@ import ReqPromise from 'request-promise'
 import Account from '../../../configs/account'
 import HighlightJS from 'highlight'
 import './index.scss'
-import '../../lib/vendor/styles/github.css'
+import '../../lib/vendor/styles/vs.css'
 
 const hl = HighlightJS.Highlight
 const SINGLE_GIST_URI = 'https://api.github.com/gists/'

@@ -12,8 +12,10 @@ module.exports = {
     target: 'electron',
     output: {
         path: path.resolve(__dirname, 'dist'),
+        publicPath: '/dist/',
         filename: 'app.bundle.js'
     },
+    watch: true,
 	module: {
 		loaders: [{
           test: /\.js$/,
