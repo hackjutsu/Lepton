@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
 import ReqPromise from 'request-promise'
-import AppContainer from './containers/AppContainer'
+import AppContainer from './containers/appContainer'
 import Account from '../configs/account'
 
 const USER_GISTS_URI = 'https://api.github.com/users/hackjutsu/gists'

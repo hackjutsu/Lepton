@@ -30,14 +30,15 @@ class NavigationPanel extends Component {
 
   renderTags () {
     let langTags = this.props.langTags
+    let activeLangTag = this.props.activeLangTag
     let tagList = []
-    for (let key in langTags) {
-      if (langTags.hasOwnProperty(key)) {
+    for (let lang in langTags) {
+      if (langTags.hasOwnProperty(lang)) {
         tagList.push(
-          <div
-            key={ key }
-            onClick={ () => this.handleClicked(key) }>
-            { key }
+          <div className={ lang == activeLangTag? 'active-lang-tag' : 'lang-tag' }
+            key={ lang }
+            onClick={ () => this.handleClicked(lang) }>
+            { lang }
           </div>
         )
       }

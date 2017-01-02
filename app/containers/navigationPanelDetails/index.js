@@ -16,16 +16,18 @@ class NavigationPanelDetails extends Component {
   }
 
   renderSnippetThumbnails () {
+    let gists = this.props.gists
     let langTags = this.props.langTags
     let activeLangTag = this.props.activeLangTag
+    let activeGist = this.props.activeGist
 
     let snippetThumbnails = []
-    for (let item of langTags[activeLangTag].keys()) {
+    for (let gistId of langTags[activeLangTag].keys()) {
       snippetThumbnails.push(
-        <div
-          key={ item }
-          onClick={ () => this.handleClicked(item) }>
-          { item }
+        <div className={ gistId == activeGist? 'active-snippet-thumnail' : 'snippet-thumnail' }
+          key={ gistId }
+          onClick={ () => this.handleClicked(gistId) }>
+          { gists[gistId].brief.description }
         </div>
       )
     }
@@ -46,7 +48,8 @@ function mapStateToProps (state) {
   return {
     gists: state.gists,
     langTags: state.langTags,
-    activeLangTag: state.activeLangTag
+    activeLangTag: state.activeLangTag,
+    activeGist: state.activeGist
   }
 }
 
