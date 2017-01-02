@@ -34,7 +34,7 @@ class NavigationPanel extends Component {
     for (let key in langTags) {
       if (langTags.hasOwnProperty(key)) {
         tagList.push(
-          <div
+          <div className='lang-tag'
             key={ key }
             onClick={ () => this.handleClicked(key) }>
             { key }

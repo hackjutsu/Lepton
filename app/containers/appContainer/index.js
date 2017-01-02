@@ -1,10 +1,9 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import NavigationPanel from '../navigationPanel'
 import NavigationPanelDetails from '../navigationPanelDetails'
-// import SnippetTable from '../snippetTable'
+import SnippetTable from '../snippetTable'
 import './index.scss'
 
 class AppContainer extends Component {
@@ -18,10 +17,7 @@ class AppContainer extends Component {
       </div>
     )
   }
+  
 }
 
-function mapStateToProps (state) {
-  return {}
-}
-
-export default connect(mapStateToProps)(AppContainer)
+export default AppContainer
