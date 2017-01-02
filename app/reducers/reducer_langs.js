@@ -1,9 +1,11 @@
 'use strict'
 
+import { UPDATE_LANG_TAGS } from '../actions'
+
 export default function (state = {}, action) {
   // console.log('** reducer_langs is triggered with action type: ' + action.type)
   switch (action.type) {
-    case 'LANG_TAGS_UPDATED':
+    case UPDATE_LANG_TAGS:
       return action.payload
     default:
   }

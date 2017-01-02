@@ -17,15 +17,15 @@ function makeOption (uri) {
   }
 }
 
-export const GISTS_UPDATED = 'GISTS_UPDATED'
+export const UPDATE_GISTS = 'UPDATE_GISTS'
 export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
-export const LANG_TAGS_UPDATED = 'LANG_TAGS_UPDATED'
-export const LANG_TAG_SELECTED = 'LANG_TAG_SELECTED'
-export const GIST_SELECTED = 'GIST_SELECTED'
+export const UPDATE_LANG_TAGS = 'UPDATE_LANG_TAGS'
+export const SELECT_LANG_TAG = 'SELECT_LANG_TAG'
+export const SELECT_GIST = 'SELECT_GIST'
 
 export function updateGists (gists) {
   return {
-    type: GISTS_UPDATED,
+    type: UPDATE_GISTS,
     payload: gists
   }
 }
@@ -40,21 +40,21 @@ export function updateSingleGist (gist) {
 
 export function updateLangTags (tags) {
   return {
-    type: LANG_TAGS_UPDATED,
+    type: UPDATE_LANG_TAGS,
     payload: tags
   }
 }
 
 export function selectLangTag (tag) {
   return {
-    type: LANG_TAG_SELECTED,
+    type: SELECT_LANG_TAG,
     payload: tag
   }
 }
 
 export function selectGist (id) {
   return {
-    type: GIST_SELECTED,
+    type: SELECT_GIST,
     payload: id
   }
 }

@@ -8,26 +8,25 @@ import './index.scss'
 
 class NavigationPanelDetails extends Component {
 
+  handleClicked (gistId) {
+    if (!this.props.gists[gistId].details) {
+      this.props.fetchSingleGist(this.props.gists[gistId], gistId)
+    }
+    this.props.selectGist(gistId)
+  }
+
   renderSnippetThumbnails () {
-    let gists = this.props.gists
     let langTags = this.props.langTags
     let activeLangTag = this.props.activeLangTag
-
-    // set the default gist
-    let gistListForActiveLangTag = [...langTags[activeLangTag]]
-    let defaultGistId = gistListForActiveLangTag[0]
-
-    console.log(defaultGistId)
-
-    if (!gists[defaultGistId].details) {
-      this.props.fetchSingleGist(gists[defaultGistId], defaultGistId)
-    }
-    this.props.selectGist(gistListForActiveLangTag[0])
 
     let snippetThumbnails = []
     for (let item of langTags[activeLangTag].keys()) {
       snippetThumbnails.push(
-            <div key={ item }> { item } </div>
+        <div
+          key={ item }
+          onClick={ () => this.handleClicked(item) }>
+          { item }
+        </div>
       )
     }
 
@@ -44,7 +43,6 @@ class NavigationPanelDetails extends Component {
 }
 
 function mapStateToProps (state) {
-  console.log('** Inside NavigationPanelDetails')
   return {
     gists: state.gists,
     langTags: state.langTags,

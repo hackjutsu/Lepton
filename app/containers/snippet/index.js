@@ -46,7 +46,7 @@ class Snippet extends Component {
     return (
       <div className='snippet-box'>
         <div className='snippet-code'>
-          <a href={ this.state.details.html_url }>{ this.state.details.description }</a>
+          <a href={ activeSnippet.details.html_url }>{ activeSnippet.details.description }</a>
           { files }
         </div>
       </div>
