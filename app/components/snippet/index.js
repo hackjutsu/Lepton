@@ -45,9 +45,9 @@ class Snippet extends Component {
         this.setState({
           details: details
         })
-        this.props.updateGistStore(
-          Object.assign({}, this.state)
-        )
+        // this.props.updateGistStore(
+        //   Object.assign({}, this.state)
+        // )
       })
       .catch(function (err) {
         console.log('The request has failed: ' + err)

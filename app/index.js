@@ -2,19 +2,38 @@
 
 import React from 'react'
 import ReactDom from 'react-dom'
+import { Provider } from 'react-redux'
 import ReqPromise from 'request-promise'
-import NavigationPanel from './components/navigationPanel'
-import NavigationPanelDetails from './components/navigationPanelDetails'
-import SnippetTable from './components/snippetTable'
+import AppContainer from './containers/AppContainer'
 import Account from '../configs/account'
 
 const USER_GISTS_URI = 'https://api.github.com/users/hackjutsu/gists'
 
-let gistStore = {}
-let langsTags = {}
-let activeTag = ''
+// how to import action creators?
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import { updateGists, updateLangTags, selectLangTag } from './actions/index'
+import RootReducer from './reducers'
 
-function makeOption (uri) {
+const store = createStore(
+    RootReducer,
+    applyMiddleware(thunk)
+)
+
+function _updateGistStore (gists) {
+  store.dispatch(updateGists(gists))
+}
+
+function _updateLangTags (langsTags) {
+  console.log('** Inside _updateLangTags')
+  store.dispatch(updateLangTags(langsTags))
+}
+
+function _updateActiveLangTag (activeTag) {
+  store.dispatch(selectLangTag(activeTag))
+}
+
+function _makeOption (uri) {
   return {
     uri: uri,
     headers: {
@@ -28,14 +47,13 @@ function makeOption (uri) {
   }
 }
 
-function updateGistStore (gist) {
-  // console.log("updateGistStore is called")
-  Object.assign(gistStore, gist)
-}
-
-ReqPromise(makeOption(USER_GISTS_URI))
+ReqPromise(_makeOption(USER_GISTS_URI))
   .then((gistList) => {
     console.log('The length of the gist list is ' + gistList.length)
+    let gists = {}
+    let langsTags = {}
+    let activeTag = ''
+
     gistList.forEach((gist) => {
       let langs = new Set()
 
@@ -54,27 +72,25 @@ ReqPromise(makeOption(USER_GISTS_URI))
         }
       }
 
-      gistStore[gist.id] = {
+      gists[gist.id] = {
         langs: langs,
         brief: gist,
         details: null
       }
-
-      ReactDom.render(
-        <NavigationPanel langTags={ langsTags } />,
-        document.getElementById('panel')
-      )
-
-      ReactDom.render(
-        <NavigationPanelDetails langTags={ langsTags } activeTag={ activeTag } />,
-        document.getElementById('panel-details')
-      )
-
-      ReactDom.render(
-        <SnippetTable gistStore={ gistStore } updateGistStore={ updateGistStore } />,
-        document.getElementById('app')
-      )
     }) // gistList.forEach
+
+    // initialize the redux store
+    _updateGistStore(gists)
+    _updateLangTags(langsTags)
+    _updateActiveLangTag(activeTag)
+
+    console.log('** before ReactDom.render')
+    ReactDom.render(
+      <Provider store={ store }>
+        <AppContainer />
+      </Provider>,
+      document.getElementById('container')
+    )
   })
   .catch(function (err) {
     console.log('The request has failed: ' + err)

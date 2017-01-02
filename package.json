@@ -39,6 +39,7 @@
     "html-loader": "^0.4.4",
     "json-loader": "^0.5.4",
     "node-sass": "^4.1.1",
+    "redux-devtools": "^3.3.1",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
     "text-loader": "0.0.1",
@@ -51,6 +52,9 @@
     "highlight": "^0.2.4",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "react-redux": "^5.0.1",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0",
     "request": "^2.79.0",
     "request-promise": "^4.1.1"
   }
