@@ -17,7 +17,6 @@ class AppContainer extends Component {
       </div>
     )
   }
-  
 }
 
 export default AppContainer

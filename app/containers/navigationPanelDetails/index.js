@@ -24,7 +24,7 @@ class NavigationPanelDetails extends Component {
     let snippetThumbnails = []
     for (let gistId of langTags[activeLangTag].keys()) {
       snippetThumbnails.push(
-        <div className={ gistId == activeGist? 'active-snippet-thumnail' : 'snippet-thumnail' }
+        <div className={ gistId === activeGist ? 'active-snippet-thumnail' : 'snippet-thumnail' }
           key={ gistId }
           onClick={ () => this.handleClicked(gistId) }>
           { gists[gistId].brief.description }

@@ -1,7 +1,7 @@
 'use strict'
 
-import Account from '../../configs/account'
 import ReqPromise from 'request-promise'
+
 const SINGLE_GIST_URI = 'https://api.github.com/gists/'
 function makeOption (uri) {
   return {
@@ -9,19 +9,23 @@ function makeOption (uri) {
     headers: {
       'User-Agent': 'Request-Promise'
     },
-    auth: { // HTTP Authentication
-      user: Account.username,
-      pass: Account.password
-    },
     json: true // Automatically parses the JSON string in the response
   }
 }
 
+export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN'
 export const UPDATE_GISTS = 'UPDATE_GISTS'
 export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
 export const UPDATE_LANG_TAGS = 'UPDATE_LANG_TAGS'
 export const SELECT_LANG_TAG = 'SELECT_LANG_TAG'
 export const SELECT_GIST = 'SELECT_GIST'
+
+export function updateAccessToken (token) {
+  return {
+    type: UPDATE_ACCESS_TOKEN,
+    payload: token
+  }
+}
 
 export function updateGists (gists) {
   return {
@@ -62,14 +66,15 @@ export function selectGist (id) {
 export function fetchSingleGist (oldGist, id) {
   console.log(SINGLE_GIST_URI + id)
   return (dispatch, getState) => {
-    return ReqPromise(makeOption(SINGLE_GIST_URI + id))
+    let state = getState()
+    return ReqPromise(makeOption(SINGLE_GIST_URI + id + '?access_token=' + state.accessToken))
       .then((details) => {
         let newGist = Object.assign(oldGist, { details: details })
         let newGistWithId = {}
         newGistWithId[id] = newGist
         dispatch(updateSingleGist(newGistWithId))
       })
-      .catch(function (err) {
+      .catch((err) => {
         console.log('The request has failed: ' + err)
       })
   }
