@@ -24,8 +24,10 @@ class NavigationPanel extends Component {
     let defaultGistId = gistListForActiveLangTag[0]
 
     if (!gists[defaultGistId].details) {
+      console.log('** dispatch fetchSingleGist')
       this.props.fetchSingleGist(gists[defaultGistId], defaultGistId)
     }
+    console.log('** dispatch selectGist')
     this.props.selectGist(gistListForActiveLangTag[0])
   }
 

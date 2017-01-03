@@ -43,7 +43,6 @@ export function updateGists (gists) {
 }
 
 export function updateSingleGist (gist) {
-  console.log('** Inside updateSingleGist')
   return {
     type: UPDATE_SINGLE_GIST,
     payload: gist

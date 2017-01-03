@@ -10,7 +10,13 @@ class SnippetTable extends Component {
   render () {
     let gists = this.props.gists
     let activeGist = this.props.activeGist
-    if (!activeGist) return // This happens when the user has no gists
+    if (!activeGist) {
+      return (
+        <div className='snippet-table'>
+          Loading...
+        </div>
+      )
+    } // This happens when the user has no gists
 
     return (
       <div className='snippet-table'>

@@ -9,7 +9,6 @@ import AppContainer from './containers/appContainer'
 
 import Account from '../configs/account'
 
-const USER_GISTS_URI = 'https://api.github.com/users/hackjutsu/gists'
 const USER_PROFILE_URI = 'https://api.github.com/user'
 
 // how to import action creators?
@@ -67,7 +66,7 @@ function launchAuthWindow () {
       accessTokenPromise.then((response) => {
         let accessToken = response.access_token
         console.log('Got access Token: ' + accessToken)
-		initUserSession (accessToken)
+        initUserSession(accessToken)
       }).catch((err) => {
         console.log('Failed: ' + JSON.stringify(err.error))
       })
@@ -109,89 +108,95 @@ function launchAuthWindow () {
 
 function makeOption (uri, accessToken) {
   return {
-	uri: uri,
-	headers: {
-	  'User-Agent': 'Request-Promise',
-	},
-	qs: {
-	  access_token: accessToken
-	},
-	json: true // Automatically parses the JSON string in the response
+    uri: uri,
+    headers: {
+      'User-Agent': 'Request-Promise',
+    },
+    qs: {
+      access_token: accessToken
+    },
+    json: true // Automatically parses the JSON string in the response
   }
 }
 
 function _updateAccessToken (token) {
+  console.log('** dispatch updateAccessToken')
   store.dispatch(updateAccessToken(token))
 }
 
 function _updateGistStore (gists) {
+  console.log('** dispatch updateGists')
   store.dispatch(updateGists(gists))
 }
 
-function _updateLangTags (langsTags) {
-  store.dispatch(updateLangTags(langsTags))
+function _updateLangTags (langTags) {
+  console.log('** dispatch updateLangTags')
+  store.dispatch(updateLangTags(langTags))
 }
 
 function _updateActiveLangTag (activeTag) {
+  console.log('** dispatch selectLangTag')
   store.dispatch(selectLangTag(activeTag))
 }
 
-function _updateUserSession (accessToken) {
-  ReqPromise(makeOption(USER_PROFILE_URI, accessToken))
-    .then((data) => {
-    //   console.log(JSON.stringify(data))
-	  store.dispatch(updateUserSession({
-		active : 'true',
-        profile: data
-	  }))
-	})
-	.catch((err) => {
+function makeUserGistsUri (userLoginId) {
+  return 'https://api.github.com/users/' + userLoginId + '/gists'
+}
+
+function initUserGists (userLoginId, accessToken) {
+  return ReqPromise(makeOption(makeUserGistsUri(userLoginId), accessToken))
+    .then((gistList) => {
+      console.log('The length of the gist list is ' + gistList.length)
+      let gists = {}
+      let langTags = {}
+      let activeTag = ''
+
+      gistList.forEach((gist) => {
+        let langs = new Set()
+
+        for (let key in gist.files) {
+          if (gist.files.hasOwnProperty(key)) {
+            let file = gist.files[key]
+            let language = file.language
+            langs.add(language)
+            if (langTags.hasOwnProperty(language)) {
+              langTags[language].add(gist.id)
+            } else {
+              if (!activeTag) activeTag = language
+              langTags[language] = new Set()
+              langTags[language].add(gist.id)
+            }
+          }
+        }
+
+        gists[gist.id] = {
+          langs: langs,
+          brief: gist,
+          details: null
+        }
+      }) // gistList.forEach
+
+      // initialize the redux store
+      _updateGistStore(gists)
+      _updateLangTags(langTags)
+      _updateActiveLangTag(activeTag)
+    })
+    .catch(function (err) {
       console.log('The request has failed: ' + err)
-	})
+    })
 }
 
 function initUserSession (accessToken) {
+  console.log('** Inside initUserSession')
   _updateAccessToken(accessToken)
-
-  ReqPromise(makeOption(USER_GISTS_URI, accessToken))
-  .then((gistList) => {
-    console.log('The length of the gist list is ' + gistList.length)
-    let gists = {}
-    let langsTags = {}
-    let activeTag = ''
-
-    gistList.forEach((gist) => {
-      let langs = new Set()
-
-      for (let key in gist.files) {
-        if (gist.files.hasOwnProperty(key)) {
-          let file = gist.files[key]
-          let language = file.language
-          langs.add(language)
-          if (langsTags.hasOwnProperty(language)) {
-            langsTags[language].add(gist.id)
-          } else {
-            if (!activeTag) activeTag = language
-            langsTags[language] = new Set()
-            langsTags[language].add(gist.id)
-          }
-        }
-      }
-
-      gists[gist.id] = {
-        langs: langs,
-        brief: gist,
-        details: null
-      }
-    }) // gistList.forEach
-
-    // initialize the redux store
-    _updateGistStore(gists)
-    _updateLangTags(langsTags)
-    _updateActiveLangTag(activeTag)
-	_updateUserSession(accessToken)
-  })
-  .catch(function (err) {
+  ReqPromise(makeOption(USER_PROFILE_URI, accessToken))
+    .then((profile) => {
+      initUserGists(profile.login, accessToken).then(() => {
+        console.log('** dispatch updateUserSession')
+        store.dispatch(updateUserSession({ active: 'true', profile: profile }))
+      })
+    })
+  .catch((err) => {
     console.log('The request has failed: ' + err)
   })
 }

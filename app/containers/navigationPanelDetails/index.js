@@ -22,6 +22,13 @@ class NavigationPanelDetails extends Component {
     let activeGist = this.props.activeGist
 
     let snippetThumbnails = []
+
+    if (!gists || !langTags || !activeLangTag || !activeGist) {
+      return (
+        <div> Loading... </div>
+      )
+    }
+
     for (let gistId of langTags[activeLangTag].keys()) {
       snippetThumbnails.push(
         <div className={ gistId === activeGist ? 'active-snippet-thumnail' : 'snippet-thumnail' }

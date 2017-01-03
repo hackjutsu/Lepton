@@ -6,16 +6,16 @@ import './index.scss'
 
 class UserPanel extends Component {
 
-  handleLoginClicked() {
+  handleLoginClicked () {
     console.log('** Login clicked')
     this.props.launchAuthWindow()
   }
 
-  handleLogoutClicked() {
-	console.log('** Logout clicked')
+  handleLogoutClicked () {
+    console.log('** Logout clicked')
   }
 
-  renderProfile() {
+  renderProfile () {
     let profile = this.props.userSession.profile
     if (!profile) {
       return
@@ -30,9 +30,9 @@ class UserPanel extends Component {
     return (
       <div className='user-panel'>
         <button type="button" className='user-session-button'
-		  onClick={ () => this.handleLoginClicked() }>LOGIN</button>
+          onClick={ () => this.handleLoginClicked() }>LOGIN</button>
         <button type="button" className='user-session-button'
-		  onClick={ () => this.handleLogoutClicked() }>LOGOUT</button>
+          onClick={ () => this.handleLogoutClicked() }>LOGOUT</button>
         <div>
           { this.renderProfile() }
         </div>
