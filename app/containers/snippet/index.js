@@ -12,7 +12,7 @@ class Snippet extends Component {
 
   createMarkup (content) {
     let html = '<pre><code>' + hl(content) + '</code></pre>'
-    return {__html: html}
+    return { __html: html }
   }
 
   render () {
