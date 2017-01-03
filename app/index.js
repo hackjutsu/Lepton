@@ -42,7 +42,7 @@ let options = {
 }
 
 function launchAuthWindow () {
-  let authWindow = new remote.BrowserWindow({ width: 800, height: 600, show: false })
+  let authWindow = new remote.BrowserWindow({ width: 400, height: 600, show: false })
   let githubUrl = 'https://github.com/login/oauth/authorize?'
   let authUrl = githubUrl + 'client_id=' + options.client_id + '&scope=' + options.scopes
   authWindow.loadURL(authUrl)
@@ -55,7 +55,8 @@ function launchAuthWindow () {
 
     if (code || error) {
       // Close the browser if code found or error
-      console.log('** About to destroy the auth browser')
+      console.log('** Clear the session and destroy the auth browser')
+      authWindow.webContents.session.clearStorageData([], () => {})
       authWindow.destroy()
     }
 

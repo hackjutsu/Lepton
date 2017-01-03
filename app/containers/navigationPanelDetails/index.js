@@ -25,7 +25,7 @@ class NavigationPanelDetails extends Component {
 
     if (!gists || !langTags || !activeLangTag || !activeGist) {
       return (
-        <div> Loading... </div>
+        <div> You haven't created any gist yet. </div>
       )
     }
 

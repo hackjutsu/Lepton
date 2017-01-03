@@ -13,7 +13,7 @@ class SnippetTable extends Component {
     if (!activeGist) {
       return (
         <div className='snippet-table'>
-          Loading...
+          
         </div>
       )
     } // This happens when the user has no gists
