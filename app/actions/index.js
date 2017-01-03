@@ -13,6 +13,7 @@ function makeOption (uri) {
   }
 }
 
+export const UPDATE_USER_SESSION = 'UPDATE_USER_SESSION'
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN'
 export const UPDATE_GISTS = 'UPDATE_GISTS'
 export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
@@ -24,6 +25,13 @@ export function updateAccessToken (token) {
   return {
     type: UPDATE_ACCESS_TOKEN,
     payload: token
+  }
+}
+
+export function updateUserSession (status) {
+  return {
+    type: UPDATE_USER_SESSION,
+    payload: status
   }
 }
 

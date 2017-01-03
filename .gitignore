@@ -4,3 +4,4 @@ dist
 configs
 npm-debug.log
 test
+*backup*

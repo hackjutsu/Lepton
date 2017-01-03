@@ -17,6 +17,7 @@ class NavigationPanel extends Component {
     let gists = this.props.gists
     let langTags = this.props.langTags
     let activeLangTag = key
+    if (!activeLangTag) return // This happens when the user has no gists
 
     // set the default gist
     let gistListForActiveLangTag = [...langTags[activeLangTag]]
