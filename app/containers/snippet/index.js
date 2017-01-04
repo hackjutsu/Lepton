@@ -17,12 +17,10 @@ class Snippet extends Component {
 
   render () {
     let activeSnippet = this.props.gists[this.props.activeGist]
-    if (!activeSnippet.details) {
+    if (!activeSnippet || !activeSnippet.details) {
       return (
         <div className='snippet-box'>
-          <div className='snippet-code'>
-            <p>'Loading...'</p>
-          </div>
+          <div className='snippet-code'></div>
         </div>
       )
     }

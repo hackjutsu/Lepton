@@ -2,9 +2,25 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { logoutUserSession } from '../../actions/index'
+import { bindActionCreators } from 'redux'
 import './index.scss'
 
 class UserPanel extends Component {
+
+  renderLoginButton () {
+    return (
+      <button type="button" className='user-session-button'
+        onClick={ () => this.handleLoginClicked() }>LOGIN</button>
+    )
+  }
+
+  renderLogoutButton () {
+    return (
+      <button type="button" className='user-session-button'
+        onClick={ () => this.handleLogoutClicked() }>LOGOUT</button>
+    )
+  }
 
   handleLoginClicked () {
     console.log('** Login clicked')
@@ -13,12 +29,16 @@ class UserPanel extends Component {
 
   handleLogoutClicked () {
     console.log('** Logout clicked')
+    console.log('** dispatch logoutUserSession')
+    this.props.logoutUserSession()
   }
 
   renderProfile () {
     let profile = this.props.userSession.profile
-    if (!profile) {
-      return
+    if (!profile || this.props.userSession.active === 'false') {
+      return (
+          <div></div>
+      )
     }
 
     return (
@@ -29,14 +49,13 @@ class UserPanel extends Component {
   render () {
     return (
       <div className='user-panel'>
-        <button type="button" className='user-session-button'
-          onClick={ () => this.handleLoginClicked() }>LOGIN</button>
-        <button type="button" className='user-session-button'
-          onClick={ () => this.handleLogoutClicked() }>LOGOUT</button>
+        { this.props.userSession.active === 'true'
+            ? this.renderLogoutButton()
+            : this.renderLoginButton() }
         <div>
           { this.renderProfile() }
         </div>
-  </div>
+      </div>
     )
   }
 }
@@ -47,4 +66,10 @@ function mapStateToProps (state) {
   }
 }
 
-export default connect(mapStateToProps)(UserPanel)
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators({
+    logoutUserSession: logoutUserSession
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserPanel)

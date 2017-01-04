@@ -14,8 +14,9 @@ Status: **In progress**
 
 **GitHub OAuth Integration**
 - - [x] Login
-- - [ ] Logout
-- - [ ] Access token local persistence
+- - [x] Logout
+- - [ ] Persist access token
+- - [ ] Revoke access token
 
 **Comment section**
 - - [ ] Display comments
