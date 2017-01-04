@@ -19,9 +19,9 @@ class UserPanel extends Component {
     return (
       <div>
         <button type="button" className='user-session-button'
-          onClick={ () => this.handleLogoutClicked() }>LOGOUT</button>
+          onClick={ this.handleLogoutClicked.bind(this) }>LOGOUT</button>
         <button type="button" className='user-session-button'
-          onClick={ () => this.handleSyncClicked() }>Sync</button>
+          onClick={ this.handleSyncClicked.bind(this) }>Sync</button>
         <a>Last Sync: { this.props.syncTime }</a>
       </div>
     )

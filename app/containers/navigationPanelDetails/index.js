@@ -35,7 +35,7 @@ class NavigationPanelDetails extends Component {
       snippetThumbnails.push(
         <div className={ gistId === activeGist ? 'active-snippet-thumnail' : 'snippet-thumnail' }
           key={ gistId }
-          onClick={ () => this.handleClicked(gistId) }>
+          onClick={ this.handleClicked.bind(this, gistId) }>
           { gists[gistId].brief.description }
         </div>
       )

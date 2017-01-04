@@ -22,7 +22,7 @@ class NavigationPanel extends Component {
         tagList.push(
           <div className={ lang === activeLangTag ? 'active-lang-tag' : 'lang-tag' }
             key={ lang }
-            onClick={ () => this.handleClicked(lang) }>
+            onClick={ this.handleClicked.bind(this, lang) }>
             { lang }
           </div>
         )

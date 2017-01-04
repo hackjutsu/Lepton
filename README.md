@@ -9,9 +9,9 @@ Status: **In progress**
 **Gists section**
 - - [x] Display all gists
 - - [x] Group gists by languages
-- - [ ] Open the gist webpage
+- - [x] Display gist revisions
+- - [ ] Create new gist
 - - [ ] Edit gists
-- - [ ] Display gist history
 
 **GitHub OAuth Integration**
 - - [x] Login

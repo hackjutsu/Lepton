@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import HighlightJS from 'highlight'
+import Shell from 'shell'
 import './index.scss'
 import '../../lib/vendor/styles/vs.css'
 
@@ -30,7 +31,6 @@ class Snippet extends Component {
     for (let key in fileList) {
       if (fileList.hasOwnProperty(key)) {
         let gistFile = fileList[key]
-
         files.push(
           <div key={ key }>
             <div>{ gistFile.filename }</div>
@@ -44,7 +44,10 @@ class Snippet extends Component {
     return (
       <div className='snippet-box'>
         <div className='snippet-code'>
-          <a href={ activeSnippet.details.html_url }>{ activeSnippet.details.description }</a>
+          <p>{ activeSnippet.details.description }</p>
+          <button type="button" onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') } >
+            View Revisions
+          </button>
           { files }
         </div>
       </div>
