@@ -22,7 +22,7 @@ class AppContainer extends Component {
     return (
       <div className='app-container'>
         <UserPanel reSyncUserGists = { this.props.reSyncUserGists } />
-        <NavigationPanel setActiveGistAfterClicked = { this.props.setActiveGistAfterClicked } />
+        <NavigationPanel updateActiveGistAfterClicked = { this.props.updateActiveGistAfterClicked } />
         <NavigationPanelDetails />
         <SnippetTable />
       </div>

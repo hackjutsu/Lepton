@@ -4,16 +4,11 @@ import { remote } from 'electron'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
-import ReqPromise from 'request-promise'
-import AppContainer from './containers/appContainer'
-
-import Account from '../configs/account'
-
-const USER_PROFILE_URI = 'https://api.github.com/user'
-
-// how to import action creators?
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
+import ReqPromise from 'request-promise'
+import AppContainer from './containers/appContainer'
+import Account from '../configs/account'
 import RootReducer from './reducers'
 import {
   updateGists,
@@ -26,36 +21,35 @@ import {
   selectGist
 } from './actions/index'
 
-const store = createStore(
-    RootReducer,
-    applyMiddleware(thunk)
-)
-
-ReactDom.render(
-  <Provider store={ store }>
-    <AppContainer
-      launchAuthWindow = { launchAuthWindow }
-      reSyncUserGists = { reSyncUserGists }
-      setActiveGistAfterClicked = { setActiveGistAfterClicked } />
-  </Provider>,
-  document.getElementById('container')
-)
+const USER_PROFILE_URI = 'https://api.github.com/user'
+const CONFIG_OPTIONS = {
+  client_id: Account.client_id,
+  client_secret: Account.client_secret,
+  scopes: ['user', 'gist']
+}
 
 let preSyncSnapshot = {
   activeLangTag: null,
   activeGist: null
 }
 
-let options = {
-  client_id: Account.client_id,
-  client_secret: Account.client_secret,
-  scopes: ['user', 'gist']
+function makeOption (uri, accessToken) {
+  return {
+    uri: uri,
+    headers: {
+      'User-Agent': 'Request-Promise',
+    },
+    qs: {
+      access_token: accessToken
+    },
+    json: true // Automatically parses the JSON string in the response
+  }
 }
 
 function launchAuthWindow () {
   let authWindow = new remote.BrowserWindow({ width: 400, height: 600, show: false })
   let githubUrl = 'https://github.com/login/oauth/authorize?'
-  let authUrl = githubUrl + 'client_id=' + options.client_id + '&scope=' + options.scopes
+  let authUrl = githubUrl + 'client_id=' + CONFIG_OPTIONS.client_id + '&scope=' + CONFIG_OPTIONS.scopes
   authWindow.loadURL(authUrl)
   authWindow.show()
 
@@ -73,8 +67,7 @@ function launchAuthWindow () {
 
     // If there is a code, proceed to get token from github
     if (code) {
-      console.log(code)
-      let accessTokenPromise = requestGithubToken(options, code)
+      let accessTokenPromise = requestGithubToken(code)
       accessTokenPromise.then((response) => {
         let accessToken = response.access_token
         console.log('Got access Token: ' + accessToken)
@@ -88,13 +81,13 @@ function launchAuthWindow () {
     }
   }
 
-  function requestGithubToken (options, code) {
+  function requestGithubToken (code) {
     return ReqPromise({
       method: 'POST',
       uri: 'https://github.com/login/oauth/access_token',
       form: {
-        'client_id': options.client_id,
-        'client_secret': options.client_secret,
+        'client_id': CONFIG_OPTIONS.client_id,
+        'client_secret': CONFIG_OPTIONS.client_secret,
         'code': code,
       },
       json: true
@@ -118,84 +111,75 @@ function launchAuthWindow () {
   }, false)
 }
 
-function makeOption (uri, accessToken) {
-  return {
-    uri: uri,
-    headers: {
-      'User-Agent': 'Request-Promise',
-    },
-    qs: {
-      access_token: accessToken
-    },
-    json: true // Automatically parses the JSON string in the response
-  }
-}
-
-function _updateSyncTime (time) {
+function setSyncTime (time) {
   console.log('** dispatch updateSyncTime')
   store.dispatch(updateSyncTime(time))
 }
 
-function _updateAccessToken (token) {
+function initAccessToken (token) {
   console.log('** dispatch updateAccessToken')
   store.dispatch(updateAccessToken(token))
 }
 
-function _updateGistStore (gists) {
-  console.log('** dispatch updateGists')
-  store.dispatch(updateGists(gists))
-}
-
-function _updateLangTags (langTags) {
+/** Start: Language tags management **/
+function updateLangTagsAfterSync (langTags) {
   console.log('** dispatch updateLangTags')
   store.dispatch(updateLangTags(langTags))
 }
+/** End: Language tags management **/
 
-function _updateActiveLangTag (langTags, newActiveTag) {
-  if (getEffectiveActiveLangTag(langTags, newActiveTag) !== preSyncSnapshot.activeLangTag) {
-      console.log('** dispatch selectLangTag')
-      store.dispatch(selectLangTag(newActiveTag))
+/** Start: Acitive language tag management **/
+function getEffectiveActiveLangTagAfterSync (langTags, newActiveTag) {
+  if (!langTags || !langTags[preSyncSnapshot.activeLangTag]) {
+    return newActiveTag
+  }
+  return preSyncSnapshot.activeLangTag
+}
+
+function updateActiveLangTagAfterSync (langTags, newActiveTag) {
+  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTag)
+  if (effectiveLangTag !== preSyncSnapshot.activeLangTag) {
+    console.log('** dispatch selectLangTag')
+    store.dispatch(selectLangTag(newActiveTag))
   }
 }
+/** End: Acitive language tag management **/
 
-function _updateActiveGist (gists, activeGistId) {
-    if (!gists[activeGistId].details) {
-      console.log('** dispatch fetchSingleGist')
-      store.dispatch(fetchSingleGist(gists[activeGistId], activeGistId))
-    }
-    console.log('** dispatch selectGist')
-    store.dispatch(selectGist(activeGistId))
+/** Start: Acitive gist management **/
+function updateActiveGistBase (gists, activeGist) {
+  if (!gists[activeGist].details) {
+    console.log('** dispatch fetchSingleGist')
+    store.dispatch(fetchSingleGist(gists[activeGist], activeGist))
+  }
+  console.log('** dispatch selectGist')
+  store.dispatch(selectGist(activeGist))
 }
 
-function getEffectiveActiveLangTag (langTags, newActiveTag) {
-    if (!langTags || !langTags[preSyncSnapshot.activeLangTag]) {
-      return newActiveTag
-    }
-    return preSyncSnapshot.activeLangTag
+function updateActiveGistAfterSync (gists, langTags, newActiveTag) {
+  let activeGist = preSyncSnapshot.activeGist
+  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTag)
+  if (!activeGist || // pre active gist is not set
+      !gists[activeGist] || // pre active gist is deleted
+      effectiveLangTag !== preSyncSnapshot.activeLangTag) { // pre activeLangTag changed
+    let gistListForActiveLangTag = [...langTags[effectiveLangTag]]
+    activeGist = gistListForActiveLangTag[0] // reset the active gist
+  }
+
+  updateActiveGistBase(gists, activeGist)
 }
 
-function setActiveGistAfterSync (gists, langTags, newActiveTag) {
-    // set the active gist
-    let activeGistId = preSyncSnapshot.activeGist
-    let effectiveLangTag = getEffectiveActiveLangTag(langTags, newActiveTag)
-    if (!activeGistId || // active gist is not set
-        !gists[activeGistId] || // active gist is deleted
-        effectiveLangTag !== preSyncSnapshot.activeLangTag) { // activeLangTag changed
-      console.log('** Inside')
-      let gistListForActiveLangTag = [...langTags[effectiveLangTag]]
-      activeGistId = gistListForActiveLangTag[0] // reset the active gist
-    }
-
-    _updateActiveGist(gists, activeGistId)
-}
-
-function setActiveGistAfterClicked (gists, langTags, newActiveTag) {
-  if (!gists || !langTags || !newActiveTag) return // This happens when the user has no gists
-
+function updateActiveGistAfterClicked (gists, langTags, newActiveTag) {
   let gistListForActiveLangTag = [...langTags[newActiveTag]]
-  let activeGistId = gistListForActiveLangTag[0] // reset the active gist
+  let activeGist = gistListForActiveLangTag[0] // reset the active gist
 
-  _updateActiveGist(gists, activeGistId)
+  updateActiveGistBase(gists, activeGist)
+}
+/** End: Acitive gist management **/
+
+/** Start: User gists management **/
+function updateGistStoreAfterSync (gists) {
+  console.log('** dispatch updateGists')
+  store.dispatch(updateGists(gists))
 }
 
 function makeUserGistsUri (userLoginId) {
@@ -217,7 +201,7 @@ function updateUserGists (userLoginId, accessToken) {
       console.log('The length of the gist list is ' + gistList.length)
       let gists = {}
       let langTags = {}
-      let activeTag = ''
+      let activeTagCandidate = ''
 
       gistList.forEach((gist) => {
         let langs = new Set()
@@ -230,7 +214,7 @@ function updateUserGists (userLoginId, accessToken) {
             if (langTags.hasOwnProperty(language)) {
               langTags[language].add(gist.id)
             } else {
-              if (!activeTag) activeTag = language
+              if (!activeTagCandidate) activeTagCandidate = language
               langTags[language] = new Set()
               langTags[language].add(gist.id)
             }
@@ -244,21 +228,22 @@ function updateUserGists (userLoginId, accessToken) {
         }
       }) // gistList.forEach
 
-      // initialize the redux store
-      _updateSyncTime(Date.now())
-      _updateGistStore(gists)
-      _updateLangTags(langTags)
-      _updateActiveLangTag(langTags, activeTag)
-      setActiveGistAfterSync(gists, langTags, activeTag)
+      // refresh the redux state
+      setSyncTime(Date.now())
+      updateGistStoreAfterSync(gists)
+      updateLangTagsAfterSync(langTags)
+      updateActiveLangTagAfterSync(langTags, activeTagCandidate)
+      updateActiveGistAfterSync(gists, langTags, activeTagCandidate)
     })
     .catch(function (err) {
       console.log('The request has failed: ' + err)
     })
 }
+/** End: User gists management **/
 
+/** Start: User session management **/
 function initUserSession (accessToken) {
-  console.log('** Inside initUserSession')
-  _updateAccessToken(accessToken)
+  initAccessToken(accessToken)
   ReqPromise(makeOption(USER_PROFILE_URI, accessToken))
     .then((profile) => {
       updateUserGists(profile.login, accessToken).then(() => {
@@ -270,3 +255,20 @@ function initUserSession (accessToken) {
     console.log('The request has failed: ' + err)
   })
 }
+/** End: User session management **/
+
+// Start
+const store = createStore(
+    RootReducer,
+    applyMiddleware(thunk)
+)
+
+ReactDom.render(
+  <Provider store={ store }>
+    <AppContainer
+      launchAuthWindow = { launchAuthWindow }
+      reSyncUserGists = { reSyncUserGists }
+      updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />
+  </Provider>,
+  document.getElementById('container')
+)

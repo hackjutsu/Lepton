@@ -10,7 +10,7 @@ class NavigationPanel extends Component {
 
   handleClicked (key) {
     this.props.selectLangTag(key)
-    this.props.setActiveGistAfterClicked(this.props.gists, this.props.langTags, key)
+    this.props.updateActiveGistAfterClicked(this.props.gists, this.props.langTags, key)
   }
 
   renderTags () {
