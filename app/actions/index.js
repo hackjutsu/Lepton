@@ -16,6 +16,7 @@ function makeOption (uri) {
 export const UPDATE_USER_SESSION = 'UPDATE_USER_SESSION'
 export const LOGOUT_USER_SESSION = 'LOGOUT_USER_SESSION'
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN'
+export const REMOVE_ACCESS_TOKEN = 'REMOVE_ACCESS_TOKEN'
 export const UPDATE_GISTS = 'UPDATE_GISTS'
 export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
 export const UPDATE_LANG_TAGS = 'UPDATE_LANG_TAGS'
@@ -26,6 +27,13 @@ export function updateAccessToken (token) {
   return {
     type: UPDATE_ACCESS_TOKEN,
     payload: token
+  }
+}
+
+export function removeAccessToken () {
+  return {
+    type: REMOVE_ACCESS_TOKEN,
+    payload: null
   }
 }
 

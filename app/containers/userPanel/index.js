@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { logoutUserSession } from '../../actions/index'
+import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 import './index.scss'
 
@@ -31,6 +31,7 @@ class UserPanel extends Component {
     console.log('** Logout clicked')
     console.log('** dispatch logoutUserSession')
     this.props.logoutUserSession()
+    removeAccessToken()
   }
 
   renderProfile () {

@@ -15,9 +15,16 @@ Status: **In progress**
 **GitHub OAuth Integration**
 - - [x] Login
 - - [x] Logout
-- - [ ] Persist access token
-- - [ ] Revoke access token
+
+**APP life cycle**
+- - [ ] Refresh
+- - [ ] Persist access token when close
+- - [ ] Read persistence when open
 
 **Comment section**
 - - [ ] Display comments
 - - [ ] Make comments
+
+**Advanced feature**
+- - [ ] Customized tags
+- - [ ] Gist sharing
