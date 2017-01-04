@@ -18,7 +18,7 @@ Status: **In progress**
 - - [x] Logout
 
 **APP life cycle**
-- - [ ] Re-sync with the GitHub
+- - [x] Re-sync with the GitHub
 - - [ ] Persist access token when close
 - - [ ] Read persistence when open
 

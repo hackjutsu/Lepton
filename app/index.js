@@ -130,17 +130,23 @@ function updateLangTagsAfterSync (langTags) {
 
 /** Start: Acitive language tag management **/
 function getEffectiveActiveLangTagAfterSync (langTags, newActiveTag) {
+  // The active language tag could be invalid if the specific language tag no
+  // long exists after synchronization. However, if it is still valid, we should
+  // keep it.
   if (!langTags || !langTags[preSyncSnapshot.activeLangTag]) {
     return newActiveTag
   }
   return preSyncSnapshot.activeLangTag
 }
 
-function updateActiveLangTagAfterSync (langTags, newActiveTag) {
-  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTag)
+function updateActiveLangTagAfterSync (langTags, newActiveTagCandidate) {
+  // The active language tag could be invalid if the specific language tag no
+  // long exists after synchronization. We should get the effective active tag
+  // by calling getEffectiveActiveLangTagAfterSync()
+  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
   if (effectiveLangTag !== preSyncSnapshot.activeLangTag) {
     console.log('** dispatch selectLangTag')
-    store.dispatch(selectLangTag(newActiveTag))
+    store.dispatch(selectLangTag(newActiveTagCandidate))
   }
 }
 /** End: Acitive language tag management **/
@@ -155,23 +161,20 @@ function updateActiveGistBase (gists, activeGist) {
   store.dispatch(selectGist(activeGist))
 }
 
-function updateActiveGistAfterSync (gists, langTags, newActiveTag) {
+function updateActiveGistAfterSync (gists, langTags, newActiveTagCandidate) {
   let activeGist = preSyncSnapshot.activeGist
-  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTag)
-  if (!activeGist || // pre active gist is not set
-      !gists[activeGist] || // pre active gist is deleted
-      effectiveLangTag !== preSyncSnapshot.activeLangTag) { // pre activeLangTag changed
+  if (!activeGist || !gists[activeGist]) {
+    // If the previous active gist is not set or is deleted, we should reset it.
+    let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
     let gistListForActiveLangTag = [...langTags[effectiveLangTag]]
     activeGist = gistListForActiveLangTag[0] // reset the active gist
   }
-
   updateActiveGistBase(gists, activeGist)
 }
 
 function updateActiveGistAfterClicked (gists, langTags, newActiveTag) {
   let gistListForActiveLangTag = [...langTags[newActiveTag]]
   let activeGist = gistListForActiveLangTag[0] // reset the active gist
-
   updateActiveGistBase(gists, activeGist)
 }
 /** End: Acitive gist management **/
