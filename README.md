@@ -9,6 +9,7 @@ Status: **In progress**
 **Gists section**
 - - [x] Display all gists
 - - [x] Group gists by languages
+- - [ ] Open the gist webpage
 - - [ ] Edit gists
 - - [ ] Display gist history
 
@@ -17,7 +18,7 @@ Status: **In progress**
 - - [x] Logout
 
 **APP life cycle**
-- - [ ] Refresh
+- - [ ] Re-sync with the GitHub
 - - [ ] Persist access token when close
 - - [ ] Read persistence when open
 

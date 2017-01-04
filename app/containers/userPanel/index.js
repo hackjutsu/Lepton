@@ -8,17 +8,22 @@ import './index.scss'
 
 class UserPanel extends Component {
 
-  renderLoginButton () {
+  renderOutSection () {
     return (
       <button type="button" className='user-session-button'
         onClick={ () => this.handleLoginClicked() }>LOGIN</button>
     )
   }
 
-  renderLogoutButton () {
+  renderInSection () {
     return (
-      <button type="button" className='user-session-button'
-        onClick={ () => this.handleLogoutClicked() }>LOGOUT</button>
+      <div>
+        <button type="button" className='user-session-button'
+          onClick={ () => this.handleLogoutClicked() }>LOGOUT</button>
+        <button type="button" className='user-session-button'
+          onClick={ () => this.handleSyncClicked() }>Sync</button>
+        <a>Last Sync: { this.props.syncTime }</a>
+      </div>
     )
   }
 
@@ -32,6 +37,11 @@ class UserPanel extends Component {
     console.log('** dispatch logoutUserSession')
     this.props.logoutUserSession()
     removeAccessToken()
+  }
+
+  handleSyncClicked () {
+    console.log('** Sync clicked')
+    this.props.reSyncUserGists()
   }
 
   renderProfile () {
@@ -51,8 +61,8 @@ class UserPanel extends Component {
     return (
       <div className='user-panel'>
         { this.props.userSession.active === 'true'
-            ? this.renderLogoutButton()
-            : this.renderLoginButton() }
+            ? this.renderInSection()
+            : this.renderOutSection() }
         <div>
           { this.renderProfile() }
         </div>
@@ -63,7 +73,8 @@ class UserPanel extends Component {
 
 function mapStateToProps (state) {
   return {
-    userSession: state.userSession
+    userSession: state.userSession,
+    syncTime: state.syncTime
   }
 }
 

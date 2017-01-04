@@ -17,10 +17,13 @@ import thunk from 'redux-thunk'
 import RootReducer from './reducers'
 import {
   updateGists,
+  updateSyncTime,
   updateLangTags,
   selectLangTag,
   updateAccessToken,
-  updateUserSession
+  updateUserSession,
+  fetchSingleGist,
+  selectGist
 } from './actions/index'
 
 const store = createStore(
@@ -30,10 +33,18 @@ const store = createStore(
 
 ReactDom.render(
   <Provider store={ store }>
-    <AppContainer launchAuthWindow = { launchAuthWindow }/>
+    <AppContainer
+      launchAuthWindow = { launchAuthWindow }
+      reSyncUserGists = { reSyncUserGists }
+      setActiveGistAfterClicked = { setActiveGistAfterClicked } />
   </Provider>,
   document.getElementById('container')
 )
+
+let preSyncSnapshot = {
+  activeLangTag: null,
+  activeGist: null
+}
 
 let options = {
   client_id: Account.client_id,
@@ -120,6 +131,11 @@ function makeOption (uri, accessToken) {
   }
 }
 
+function _updateSyncTime (time) {
+  console.log('** dispatch updateSyncTime')
+  store.dispatch(updateSyncTime(time))
+}
+
 function _updateAccessToken (token) {
   console.log('** dispatch updateAccessToken')
   store.dispatch(updateAccessToken(token))
@@ -135,16 +151,67 @@ function _updateLangTags (langTags) {
   store.dispatch(updateLangTags(langTags))
 }
 
-function _updateActiveLangTag (activeTag) {
-  console.log('** dispatch selectLangTag')
-  store.dispatch(selectLangTag(activeTag))
+function _updateActiveLangTag (langTags, newActiveTag) {
+  if (getEffectiveActiveLangTag(langTags, newActiveTag) !== preSyncSnapshot.activeLangTag) {
+      console.log('** dispatch selectLangTag')
+      store.dispatch(selectLangTag(newActiveTag))
+  }
+}
+
+function _updateActiveGist (gists, activeGistId) {
+    if (!gists[activeGistId].details) {
+      console.log('** dispatch fetchSingleGist')
+      store.dispatch(fetchSingleGist(gists[activeGistId], activeGistId))
+    }
+    console.log('** dispatch selectGist')
+    store.dispatch(selectGist(activeGistId))
+}
+
+function getEffectiveActiveLangTag (langTags, newActiveTag) {
+    if (!langTags || !langTags[preSyncSnapshot.activeLangTag]) {
+      return newActiveTag
+    }
+    return preSyncSnapshot.activeLangTag
+}
+
+function setActiveGistAfterSync (gists, langTags, newActiveTag) {
+    // set the active gist
+    let activeGistId = preSyncSnapshot.activeGist
+    let effectiveLangTag = getEffectiveActiveLangTag(langTags, newActiveTag)
+    if (!activeGistId || // active gist is not set
+        !gists[activeGistId] || // active gist is deleted
+        effectiveLangTag !== preSyncSnapshot.activeLangTag) { // activeLangTag changed
+      console.log('** Inside')
+      let gistListForActiveLangTag = [...langTags[effectiveLangTag]]
+      activeGistId = gistListForActiveLangTag[0] // reset the active gist
+    }
+
+    _updateActiveGist(gists, activeGistId)
+}
+
+function setActiveGistAfterClicked (gists, langTags, newActiveTag) {
+  if (!gists || !langTags || !newActiveTag) return // This happens when the user has no gists
+
+  let gistListForActiveLangTag = [...langTags[newActiveTag]]
+  let activeGistId = gistListForActiveLangTag[0] // reset the active gist
+
+  _updateActiveGist(gists, activeGistId)
 }
 
 function makeUserGistsUri (userLoginId) {
   return 'https://api.github.com/users/' + userLoginId + '/gists'
 }
 
-function initUserGists (userLoginId, accessToken) {
+function reSyncUserGists () {
+  let state = store.getState()
+  preSyncSnapshot = {
+    activeLangTag: state.activeLangTag,
+    activeGist: state.activeGist
+  }
+  updateUserGists(state.userSession.profile.login, state.accessToken)
+}
+
+function updateUserGists (userLoginId, accessToken) {
   return ReqPromise(makeOption(makeUserGistsUri(userLoginId), accessToken))
     .then((gistList) => {
       console.log('The length of the gist list is ' + gistList.length)
@@ -178,9 +245,11 @@ function initUserGists (userLoginId, accessToken) {
       }) // gistList.forEach
 
       // initialize the redux store
+      _updateSyncTime(Date.now())
       _updateGistStore(gists)
       _updateLangTags(langTags)
-      _updateActiveLangTag(activeTag)
+      _updateActiveLangTag(langTags, activeTag)
+      setActiveGistAfterSync(gists, langTags, activeTag)
     })
     .catch(function (err) {
       console.log('The request has failed: ' + err)
@@ -192,7 +261,7 @@ function initUserSession (accessToken) {
   _updateAccessToken(accessToken)
   ReqPromise(makeOption(USER_PROFILE_URI, accessToken))
     .then((profile) => {
-      initUserGists(profile.login, accessToken).then(() => {
+      updateUserGists(profile.login, accessToken).then(() => {
         console.log('** dispatch updateUserSession')
         store.dispatch(updateUserSession({ active: 'true', profile: profile }))
       })

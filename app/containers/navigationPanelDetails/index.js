@@ -23,7 +23,9 @@ class NavigationPanelDetails extends Component {
 
     let snippetThumbnails = []
 
-    if (!gists || !langTags || !activeLangTag || !activeGist) {
+    if (!gists || !langTags || !activeLangTag) {
+      console.log('activeLangTag is ' + activeLangTag)
+      console.log('activeGist is ' + activeGist)
       return (
         <div> You haven't created any gist yet. </div>
       )

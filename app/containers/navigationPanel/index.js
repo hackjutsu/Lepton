@@ -10,25 +10,7 @@ class NavigationPanel extends Component {
 
   handleClicked (key) {
     this.props.selectLangTag(key)
-    this.setDefaultGist(key)
-  }
-
-  setDefaultGist (key) {
-    let gists = this.props.gists
-    let langTags = this.props.langTags
-    let activeLangTag = key
-    if (!gists || !langTags || !activeLangTag) return // This happens when the user has no gists
-
-    // set the default gist
-    let gistListForActiveLangTag = [...langTags[activeLangTag]]
-    let defaultGistId = gistListForActiveLangTag[0]
-
-    if (!gists[defaultGistId].details) {
-      console.log('** dispatch fetchSingleGist')
-      this.props.fetchSingleGist(gists[defaultGistId], defaultGistId)
-    }
-    console.log('** dispatch selectGist')
-    this.props.selectGist(gistListForActiveLangTag[0])
+    this.props.setActiveGistAfterClicked(this.props.gists, this.props.langTags, key)
   }
 
   renderTags () {
@@ -49,10 +31,6 @@ class NavigationPanel extends Component {
 
     return tagList
   } // renderTags()
-
-  componentWillMount () {
-    this.setDefaultGist(this.props.activeLangTag)
-  }
 
   render () {
     return (

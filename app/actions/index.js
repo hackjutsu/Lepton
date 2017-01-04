@@ -18,6 +18,7 @@ export const LOGOUT_USER_SESSION = 'LOGOUT_USER_SESSION'
 export const UPDATE_ACCESS_TOKEN = 'UPDATE_ACCESS_TOKEN'
 export const REMOVE_ACCESS_TOKEN = 'REMOVE_ACCESS_TOKEN'
 export const UPDATE_GISTS = 'UPDATE_GISTS'
+export const UPDATE_SYNC_TIME = 'UPDATE_SYNC_TIME'
 export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
 export const UPDATE_LANG_TAGS = 'UPDATE_LANG_TAGS'
 export const SELECT_LANG_TAG = 'SELECT_LANG_TAG'
@@ -55,6 +56,13 @@ export function updateGists (gists) {
   return {
     type: UPDATE_GISTS,
     payload: gists
+  }
+}
+
+export function updateSyncTime (time) {
+  return {
+    type: UPDATE_SYNC_TIME,
+    payload: time
   }
 }
 
