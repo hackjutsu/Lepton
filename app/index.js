@@ -204,7 +204,8 @@ function updateUserGists (userLoginId, accessToken) {
       console.log('The length of the gist list is ' + gistList.length)
       let gists = {}
       let langTags = {}
-      let activeTagCandidate = ''
+      let activeTagCandidate = 'All'
+      langTags.All = new Set()
 
       gistList.forEach((gist) => {
         let langs = new Set()
@@ -214,10 +215,10 @@ function updateUserGists (userLoginId, accessToken) {
             let file = gist.files[key]
             let language = file.language
             langs.add(language)
+            langTags.All.add(gist.id)
             if (langTags.hasOwnProperty(language)) {
               langTags[language].add(gist.id)
             } else {
-              if (!activeTagCandidate) activeTagCandidate = language
               langTags[language] = new Set()
               langTags[language].add(gist.id)
             }
@@ -237,6 +238,10 @@ function updateUserGists (userLoginId, accessToken) {
       updateLangTagsAfterSync(langTags)
       updateActiveLangTagAfterSync(langTags, activeTagCandidate)
       updateActiveGistAfterSync(gists, langTags, activeTagCandidate)
+
+      // clean up the snapshot for the previous state
+      preSyncSnapshot.activeLangTag = null
+      preSyncSnapshot.activeGist = null
     })
     .catch(function (err) {
       console.log('The request has failed: ' + err)

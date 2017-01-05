@@ -11,7 +11,6 @@ class Snippet extends Component {
 
   createMarkup (content) {
     let html = '<pre><code>' + HighlightJS.highlightAuto(content).value + '</code></pre>'
-    console.log(html)
     return { __html: html }
   }
 
@@ -47,6 +46,7 @@ class Snippet extends Component {
           <button type="button" onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') } >
             View Revisions
           </button>
+          <div>{ activeSnippet.details.public ? 'public' : 'secret' }</div>
           { files }
         </div>
       </div>
