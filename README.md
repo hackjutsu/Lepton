@@ -22,10 +22,11 @@ Status: **In progress**
 - - [ ] Persist access token when close
 - - [ ] Read persistence when open
 
-**Comment section**
+**Comment section** (optional?)
 - - [ ] Display comments
 - - [ ] Make comments
 
 **Advanced feature**
+- - [ ] Offline
 - - [ ] Customized tags
 - - [ ] Gist sharing

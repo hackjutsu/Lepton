@@ -11,8 +11,8 @@ module.exports = {
     ],
     target: 'electron',
     output: {
-        path: path.resolve(__dirname, 'dist'),
-        publicPath: '/dist/',
+        path: path.resolve(__dirname, 'bundle'),
+        publicPath: '/bundle/',
         filename: 'app.bundle.js'
     },
     watch: true,

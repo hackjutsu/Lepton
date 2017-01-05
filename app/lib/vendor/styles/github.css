@@ -4,126 +4,96 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 
 */
 
-pre code {
-  display: block; padding: 0.5em;
-  color: #000;
-  background: #f8f8ff
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
 }
 
-pre .comment,
-pre .template_comment,
-pre .diff .header,
-pre .javadoc {
+.hljs-comment,
+.hljs-quote {
   color: #998;
-  font-style: italic
+  font-style: italic;
 }
 
-pre .keyword,
-pre .css .rule .keyword,
-pre .winutils,
-pre .javascript .title,
-pre .lisp .title,
-pre .subst {
-  color: #000;
-  font-weight: bold
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #333;
+  font-weight: bold;
 }
 
-pre .number,
-pre .hexcolor {
-  color: #40a070
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #008080;
 }
 
-pre .string,
-pre .tag .value,
-pre .phpdoc,
-pre .tex .formula {
-  color: #d14
+.hljs-string,
+.hljs-doctag {
+  color: #d14;
 }
 
-pre .title,
-pre .id {
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
   color: #900;
-  font-weight: bold
+  font-weight: bold;
 }
 
-pre .javascript .title,
-pre .lisp .title,
-pre .subst {
-  font-weight: normal
+.hljs-subst {
+  font-weight: normal;
 }
 
-pre .class .title,
-pre .haskell .label,
-pre .tex .command {
+.hljs-type,
+.hljs-class .hljs-title {
   color: #458;
-  font-weight: bold
+  font-weight: bold;
 }
 
-pre .tag,
-pre .tag .title,
-pre .rules .property,
-pre .django .tag .keyword {
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
   color: #000080;
-  font-weight: normal
+  font-weight: normal;
 }
 
-pre .attribute,
-pre .variable,
-pre .instancevar,
-pre .lisp .body {
-  color: #008080
+.hljs-regexp,
+.hljs-link {
+  color: #009926;
 }
 
-pre .regexp {
-  color: #009926
+.hljs-symbol,
+.hljs-bullet {
+  color: #990073;
 }
 
-pre .class {
-  color: #458;
-  font-weight: bold
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #0086b3;
 }
 
-pre .symbol,
-pre .ruby .symbol .string,
-pre .ruby .symbol .keyword,
-pre .ruby .symbol .keymethods,
-pre .lisp .keyword,
-pre .tex .special,
-pre .input_number {
-  color: #990073
-}
-
-pre .builtin,
-pre .built_in,
-pre .lisp .title {
-  color: #0086b3
-}
-
-pre .preprocessor,
-pre .pi,
-pre .doctype,
-pre .shebang,
-pre .cdata {
+.hljs-meta {
   color: #999;
-  font-weight: bold
+  font-weight: bold;
 }
 
-pre .deletion {
-  background: #fdd
+.hljs-deletion {
+  background: #fdd;
 }
 
-pre .addition {
-  background: #dfd
+.hljs-addition {
+  background: #dfd;
 }
 
-pre .diff .change {
-  background: #0086b3
+.hljs-emphasis {
+  font-style: italic;
 }
 
-pre .chunk {
-  color: #aaa
-}
-
-pre .tex .formula {
-  opacity: 0.5;
+.hljs-strong {
+  font-weight: bold;
 }

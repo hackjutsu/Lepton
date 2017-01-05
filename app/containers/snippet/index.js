@@ -2,17 +2,16 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import HighlightJS from 'highlight'
+import HighlightJS from 'highlight.js'
 import Shell from 'shell'
 import './index.scss'
-import '../../lib/vendor/styles/vs.css'
-
-const hl = HighlightJS.Highlight
+import '../../lib/vendor/styles/default.css'
 
 class Snippet extends Component {
 
   createMarkup (content) {
-    let html = '<pre><code>' + hl(content) + '</code></pre>'
+    let html = '<pre><code>' + HighlightJS.highlightAuto(content).value + '</code></pre>'
+    console.log(html)
     return { __html: html }
   }
 

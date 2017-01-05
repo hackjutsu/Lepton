@@ -1,4 +1,5 @@
 node_modules
+bundle
 dist
 .DS_Store
 configs
