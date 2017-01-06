@@ -59,11 +59,11 @@ class Snippet extends Component {
     return (
       <div className='header-table'>
       <div className='line'>
-        <div className='header-title'>{ activeSnippet.details.public ? 'public gist' : 'secret gist' }</div>
+        <div className='header-title'>{ activeSnippet.brief.public ? 'public gist' : 'secret gist' }</div>
         <a
           href='#'
           className='customized-button'
-          onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') }>
+          onClick={ Shell.openExternal.bind(this, activeSnippet.brief.html_url + '/revisions') }>
           #revisions
         </a>
       </div>
@@ -73,10 +73,16 @@ class Snippet extends Component {
 
   render () {
     let activeSnippet = this.props.gists[this.props.activeGist]
-    if (!activeSnippet || !activeSnippet.details) {
+    if (!activeSnippet) return
+    else if (!activeSnippet.details) {
       return (
         <div className='snippet-box'>
-          <div className='snippet-code'></div>
+          <Panel className='snippet-code'
+            bsStyle={ activeSnippet.brief.public ? 'success' : 'danger' }
+            header={ this.renderPanelHeader(activeSnippet) }>
+              <p>{ activeSnippet.brief.description }</p>
+            <div><hr/></div>
+          </Panel>
         </div>
       )
     }

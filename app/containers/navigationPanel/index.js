@@ -34,18 +34,18 @@ class NavigationPanel extends Component {
     return tagList
   } // renderTags()
 
- renderTagSection () {
-   if (this.props.userSession.active !== 'true') {
-     return
-   }
+  renderTagSection () {
+    if (this.props.userSession.active !== 'true') {
+      return
+    }
 
-   return (
-     <div className='lang-tag-section'>
-       <hr/>
-       { this.renderTags() }
-     </div>
-   )
- }
+    return (
+      <div className='lang-tag-section'>
+        <hr/>
+        { this.renderTags() }
+      </div>
+    )
+  }
 
   render () {
     return (

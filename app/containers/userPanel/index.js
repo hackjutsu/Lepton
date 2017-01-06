@@ -48,11 +48,11 @@ class UserPanel extends Component {
   renderProfile () {
     let profile = this.props.userSession.profile
     if (!profile || this.props.userSession.active === 'false') {
-      return ()
+      return
     }
 
     return (
-      <div><Image src={ profile.avatar_url } className='profile-image' circle/></div>
+      <div><Image className='profile-image-section' src={ profile.avatar_url } circle/></div>
     )
   }
 
