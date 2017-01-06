@@ -37,14 +37,14 @@ class Snippet extends Component {
 
   renderRawModal () {
     return (
-      <Modal show={ this.state.showRaw } onHide={ this.closeRawModal.bind(this) }>
+      <Modal className='edit-modal' show={ this.state.showRaw } onHide={ this.closeRawModal.bind(this) }>
         <Modal.Header closeButton>
           <Modal.Title>{ this.state.rawFile }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className='code-area'>
+          <p className='code-area'>
             { this.state.rawContent }
-          </div>
+          </p>
         </Modal.Body>
       </Modal>
     )

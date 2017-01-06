@@ -6,10 +6,25 @@
 
 .lang-tag {
 	margin: 5px;
-	border: 1px solid red;
+	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+	font-size: 12px;
+}
+
+.lang-tag:hover {
+	cursor: pointer;
+}
+
+.lang-tag-section {
+	margin-left: 0px;
 }
 
 .active-lang-tag {
 	margin: 5px;
-	border: 5px solid red;
+	color: red;
+	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+	font-size: 12px;
+}
+
+.active-lang-tag:hover {
+	cursor: pointer;
 }

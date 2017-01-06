@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import UserPanel from '../UserPanel'
 import { selectLangTag, selectGist, fetchSingleGist } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 import './index.scss'
@@ -20,10 +21,11 @@ class NavigationPanel extends Component {
     for (let lang in langTags) {
       if (langTags.hasOwnProperty(lang)) {
         tagList.push(
-          <div className={ lang === activeLangTag ? 'active-lang-tag' : 'lang-tag' }
-            key={ lang }
-            onClick={ this.handleClicked.bind(this, lang) }>
-            { lang }
+          <div key={ lang }>
+            <a className={ lang === activeLangTag ? 'active-lang-tag' : 'lang-tag' }
+              onClick={ this.handleClicked.bind(this, lang) }>
+              { '#' + lang }
+            </a>
           </div>
         )
       }
@@ -32,10 +34,27 @@ class NavigationPanel extends Component {
     return tagList
   } // renderTags()
 
+ renderTagSection () {
+   if (this.props.userSession.active !== 'true') {
+     return
+   }
+
+   return (
+     <div className='lang-tag-section'>
+       <hr/>
+       { this.renderTags() }
+     </div>
+   )
+ }
+
   render () {
     return (
       <div className='menu-panel'>
-          { this.renderTags() }
+        <UserPanel
+          reSyncUserGists = { this.props.reSyncUserGists }
+          launchAuthWindow = { this.props.launchAuthWindow }
+        />
+        { this.renderTagSection() }
       </div>
     )
   }
@@ -45,6 +64,7 @@ function mapStateToProps (state) {
   return {
     gists: state.gists,
     langTags: state.langTags,
+    userSession: state.userSession,
     activeLangTag: state.activeLangTag
   }
 }

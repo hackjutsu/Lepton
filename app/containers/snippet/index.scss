@@ -1,5 +1,6 @@
 .snippet-box {
   margin: 2px;
+  min-height: 560px;
   // position: relative;
 }
 
@@ -27,8 +28,7 @@
 
 .snippet-code {
   margin: 5px;
-  // border: 1px solid black;
-  // color: red;
+  min-height: inherit;;
 }
 
 .code-area {
@@ -41,6 +41,14 @@
   color: #4078C0;
   font-size: 12px;
   margin-bottom: 5px;
+}
+
+.modal-content {
+  min-height: 500px;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: auto;
 }
 
 p {

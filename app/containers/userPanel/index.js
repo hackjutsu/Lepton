@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
-import { Button } from 'react-bootstrap'
+import { Button, Image } from 'react-bootstrap'
 import './index.scss'
 
 class UserPanel extends Component {
@@ -48,25 +48,23 @@ class UserPanel extends Component {
   renderProfile () {
     let profile = this.props.userSession.profile
     if (!profile || this.props.userSession.active === 'false') {
-      return (
-          <div></div>
-      )
+      return ()
     }
 
     return (
-      <div><img src={ profile.avatar_url } className='profile-image' /></div>
+      <div><Image src={ profile.avatar_url } className='profile-image' circle/></div>
     )
   }
 
   render () {
     return (
       <div className='user-panel'>
-        { this.props.userSession.active === 'true'
-            ? this.renderInSection()
-            : this.renderOutSection() }
         <div>
           { this.renderProfile() }
         </div>
+        { this.props.userSession.active === 'true'
+            ? this.renderInSection()
+            : this.renderOutSection() }
       </div>
     )
   }

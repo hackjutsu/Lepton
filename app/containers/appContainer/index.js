@@ -2,9 +2,8 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import UserPanel from '../userPanel'
-import NavigationPanel from '../navigationPanel'
 import NavigationPanelDetails from '../navigationPanelDetails'
+import NavigationPanel from '../navigationPanel'
 import SnippetTable from '../snippetTable'
 import './index.scss'
 
@@ -14,15 +13,19 @@ class AppContainer extends Component {
     if (this.props.userSession.active === 'false') {
       return (
         <div className='app-container'>
-          <UserPanel launchAuthWindow = { this.props.launchAuthWindow } />
+          <NavigationPanel
+            launchAuthWindow = { this.props.launchAuthWindow }
+            eSyncUserGists = { this.props.reSyncUserGists }
+            />
         </div>
       )
     }
 
     return (
       <div className='app-container'>
-        <UserPanel reSyncUserGists = { this.props.reSyncUserGists } />
-        <NavigationPanel updateActiveGistAfterClicked = { this.props.updateActiveGistAfterClicked } />
+        <NavigationPanel
+          updateActiveGistAfterClicked = { this.props.updateActiveGistAfterClicked }
+          reSyncUserGists = { this.props.reSyncUserGists } />
         <NavigationPanelDetails />
         <SnippetTable />
       </div>
