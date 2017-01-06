@@ -17,10 +17,11 @@
   float: left;
 }
 
-.open-revisions-button {
+.customized-button {
   float: right;
   font-size: 13px;
   margin-top: 4px;
+  margin-right: 4px;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
 }
 
@@ -31,9 +32,9 @@
 }
 
 .code-area {
-  margin-bottom: 1px;
+  // margin-bottom: 1px;
   // border: 1px solid black;
-  // white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
 .file-name {

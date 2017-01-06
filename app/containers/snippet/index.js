@@ -2,13 +2,53 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Panel, Button } from 'react-bootstrap'
+import { Panel, Modal } from 'react-bootstrap'
 import HighlightJS from 'highlight.js'
 import Shell from 'shell'
 import './index.scss'
 import '../../lib/vendor/highlightJS/styles/github.css'
 
 class Snippet extends Component {
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      showRaw: false,
+      rawFile: null,
+      rawContent: null
+    }
+  }
+
+  closeRawModal () {
+    this.setState({
+      showRaw: false,
+      rawFile: null,
+      rawContent: null
+    })
+  }
+
+  showRawModal (gist) {
+    this.setState({
+      showRaw: true,
+      rawFile: gist.filename,
+      rawContent: gist.content
+    })
+  }
+
+  renderRawModal () {
+    return (
+      <Modal show={ this.state.showRaw } onHide={ this.closeRawModal.bind(this) }>
+        <Modal.Header closeButton>
+          <Modal.Title>{ this.state.rawFile }</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className='code-area'>
+            { this.state.rawContent }
+          </div>
+        </Modal.Body>
+      </Modal>
+    )
+  }
 
   createMarkup (content) {
     let html = '<pre><code>' + HighlightJS.highlightAuto(content).value + '</code></pre>'
@@ -22,9 +62,9 @@ class Snippet extends Component {
         <div className='header-title'>{ activeSnippet.details.public ? 'public gist' : 'secret gist' }</div>
         <a
           href='#'
-          className='open-revisions-button'
+          className='customized-button'
           onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') }>
-          revisions
+          #revisions
         </a>
       </div>
       </div>
@@ -49,16 +89,15 @@ class Snippet extends Component {
         files.push(
           <div key={ key }>
             <hr/>
-            <div className='file-name'><b>{ gistFile.filename }</b></div>
+            <div className='file-name'>
+              <b>{ gistFile.filename }</b>
+              <a href='#' className='customized-button' onClick={ this.showRawModal.bind(this, gistFile) }>#raw</a>
+            </div>
             <div className='code-area' dangerouslySetInnerHTML={ this.createMarkup(gistFile.content) } ></div>
           </div>
         )
       }
     }
-
-    // <button className='open-revisons-button' type="button" onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') } >
-    //   View Revisions
-    // </button>
 
     return (
       <div className='snippet-box'>
@@ -66,9 +105,10 @@ class Snippet extends Component {
           bsStyle={ activeSnippet.details.public ? 'success' : 'danger' }
           header={ this.renderPanelHeader(activeSnippet) }>
           <p>{ activeSnippet.details.description }</p>
+          { this.renderRawModal() }
           { files }
         </Panel>
-    </div>
+      </div>
     )
   }
 }
