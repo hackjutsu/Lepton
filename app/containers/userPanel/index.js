@@ -4,24 +4,25 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
+import { Button } from 'react-bootstrap'
 import './index.scss'
 
 class UserPanel extends Component {
 
   renderOutSection () {
     return (
-      <button type="button" className='user-session-button'
-        onClick={ () => this.handleLoginClicked() }>LOGIN</button>
+      <Button type="button" className='user-session-button'
+        onClick={ () => this.handleLoginClicked() }>LOGIN</Button>
     )
   }
 
   renderInSection () {
     return (
       <div>
-        <button type="button" className='user-session-button'
-          onClick={ this.handleLogoutClicked.bind(this) }>LOGOUT</button>
-        <button type="button" className='user-session-button'
-          onClick={ this.handleSyncClicked.bind(this) }>Sync</button>
+        <Button type="button" className='user-session-button'
+          onClick={ this.handleLogoutClicked.bind(this) }>LOGOUT</Button>
+        <Button type="button" className='user-session-button'
+          onClick={ this.handleSyncClicked.bind(this) }>Sync</Button>
         <a>Last Sync: { this.props.syncTime }</a>
       </div>
     )

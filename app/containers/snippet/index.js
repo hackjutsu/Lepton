@@ -2,16 +2,33 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Panel, Button } from 'react-bootstrap'
 import HighlightJS from 'highlight.js'
 import Shell from 'shell'
 import './index.scss'
-import '../../lib/vendor/styles/default.css'
+import '../../lib/vendor/highlightJS/styles/github.css'
 
 class Snippet extends Component {
 
   createMarkup (content) {
     let html = '<pre><code>' + HighlightJS.highlightAuto(content).value + '</code></pre>'
     return { __html: html }
+  }
+
+  renderPanelHeader (activeSnippet) {
+    return (
+      <div className='header-table'>
+      <div className='line'>
+        <div className='header-title'>{ activeSnippet.details.public ? 'public gist' : 'secret gist' }</div>
+        <a
+          href='#'
+          className='open-revisions-button'
+          onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') }>
+          revisions
+        </a>
+      </div>
+      </div>
+    )
   }
 
   render () {
@@ -31,25 +48,27 @@ class Snippet extends Component {
         let gistFile = fileList[key]
         files.push(
           <div key={ key }>
-            <div>{ gistFile.filename }</div>
-            <div>{ gistFile.language }</div>
-            <div className='code-area' dangerouslySetInnerHTML={ this.createMarkup(gistFile.content) } />
+            <hr/>
+            <div className='file-name'><b>{ gistFile.filename }</b></div>
+            <div className='code-area' dangerouslySetInnerHTML={ this.createMarkup(gistFile.content) } ></div>
           </div>
         )
       }
     }
 
+    // <button className='open-revisons-button' type="button" onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') } >
+    //   View Revisions
+    // </button>
+
     return (
       <div className='snippet-box'>
-        <div className='snippet-code'>
+        <Panel className='snippet-code'
+          bsStyle={ activeSnippet.details.public ? 'success' : 'danger' }
+          header={ this.renderPanelHeader(activeSnippet) }>
           <p>{ activeSnippet.details.description }</p>
-          <button type="button" onClick={ Shell.openExternal.bind(this, activeSnippet.details.html_url + '/revisions') } >
-            View Revisions
-          </button>
-          <div>{ activeSnippet.details.public ? 'public' : 'secret' }</div>
           { files }
-        </div>
-      </div>
+        </Panel>
+    </div>
     )
   }
 }

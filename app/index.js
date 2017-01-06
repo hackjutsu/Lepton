@@ -20,6 +20,7 @@ import {
   fetchSingleGist,
   selectGist
 } from './actions/index'
+import './lib/vendor/bootstrap/css/bootstrap.css'
 
 const USER_PROFILE_URI = 'https://api.github.com/user'
 const CONFIG_OPTIONS = {
@@ -61,7 +62,7 @@ function launchAuthWindow () {
     if (code || error) {
       // Close the browser if code found or error
       console.log('** Clear the session and destroy the auth browser')
-      authWindow.webContents.session.clearStorageData([], () => {})
+    //   authWindow.webContents.session.clearStorageData([], () => {})
       authWindow.destroy()
     }
 

@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Panel } from 'react-bootstrap'
 import Snippet from '../snippet'
 import './index.scss'
 

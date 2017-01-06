@@ -1,11 +1,53 @@
+.snippet-box {
+  margin: 2px;
+  // position: relative;
+}
+
+.header-table {
+  width: 100%;
+  display: table;
+}
+
+.line {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.header-title {
+  float: left;
+}
+
+.open-revisions-button {
+  float: right;
+  font-size: 13px;
+  margin-top: 4px;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+}
+
 .snippet-code {
   margin: 5px;
-  border: 1px solid black;
+  // border: 1px solid black;
   // color: red;
 }
 
 .code-area {
-  margin: 5px;
-  border: 1px solid black;
-  white-space: pre-wrap;
+  margin-bottom: 1px;
+  // border: 1px solid black;
+  // white-space: pre-wrap;
+}
+
+.file-name {
+  color: #4078C0;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+p {
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 12px;
+  margin: 10px 0px 0px 0px !important
+}
+
+pre {
+  font-size: 11px !important;
 }
