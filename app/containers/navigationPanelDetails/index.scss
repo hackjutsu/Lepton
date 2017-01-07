@@ -1,19 +1,48 @@
 .panel-details {
+	margin: 5px;
 	float: left;
-	width: 150px;
-	height: 800px;
+	width: 200px;
+	overflow: auto;
+    height: 95vh;
+}
+
+.snippet-thumnail-list-item {
+	padding: 0 !important;
+	border-right-width: 0 !important;
+	border-left-width: 0 !important;
+}
+
+.snippet-thumnail-list-item:hover {
+    background-color: #F9F9F9;
+	cursor: pointer;
 }
 
 .snippet-thumnail {
 	margin: 5px;
-	border: 1px solid blue;
+	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+	font-size: 12px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.active-snippet-thumnail-public {
+	padding: 5px;
+	background: #DFF0D4;
 	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
 	font-size: 12px;
 }
 
-.active-snippet-thumnail {
+.active-snippet-thumnail-private {
+	padding: 5px;
+	background: #F2DEDE;
+	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+	font-size: 12px;
+}
+
+.snippet-thumnail-description {
 	margin: 5px;
-	border: 5px solid blue;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
 	font-size: 12px;
 }

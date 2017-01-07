@@ -15,7 +15,8 @@ class Snippet extends Component {
     this.state = {
       showRaw: false,
       rawFile: null,
-      rawContent: null
+      rawContent: null,
+      files: null
     }
   }
 
@@ -72,25 +73,14 @@ class Snippet extends Component {
   }
 
   render () {
+    console.log('Snippet render is called')
     let activeSnippet = this.props.gists[this.props.activeGist]
     if (!activeSnippet) return
-    else if (!activeSnippet.details) {
-      return (
-        <div className='snippet-box'>
-          <Panel className='snippet-code'
-            bsStyle={ activeSnippet.brief.public ? 'success' : 'danger' }
-            header={ this.renderPanelHeader(activeSnippet) }>
-              <p>{ activeSnippet.brief.description }</p>
-            <div><hr/></div>
-          </Panel>
-        </div>
-      )
-    }
 
     let files = []
-    let fileList = activeSnippet.details.files
-    for (let key in fileList) {
-      if (fileList.hasOwnProperty(key)) {
+    if (activeSnippet.details) {
+      let fileList = activeSnippet.details.files
+      for (let key in fileList) {
         let gistFile = fileList[key]
         files.push(
           <div key={ key }>
@@ -108,9 +98,9 @@ class Snippet extends Component {
     return (
       <div className='snippet-box'>
         <Panel className='snippet-code'
-          bsStyle={ activeSnippet.details.public ? 'success' : 'danger' }
+          bsStyle={ activeSnippet.brief.public ? 'success' : 'danger' }
           header={ this.renderPanelHeader(activeSnippet) }>
-          <p>{ activeSnippet.details.description }</p>
+          <p>{ activeSnippet.brief.description }</p>
           { this.renderRawModal() }
           { files }
         </Panel>

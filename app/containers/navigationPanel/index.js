@@ -18,6 +18,7 @@ class NavigationPanel extends Component {
     let langTags = this.props.langTags
     let activeLangTag = this.props.activeLangTag
     let tagList = []
+
     for (let lang in langTags) {
       if (langTags.hasOwnProperty(lang)) {
         tagList.push(

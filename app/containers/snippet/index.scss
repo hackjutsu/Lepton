@@ -1,7 +1,5 @@
 .snippet-box {
-  margin: 2px;
-  min-height: 560px;
-  // position: relative;
+
 }
 
 .header-table {
@@ -16,6 +14,9 @@
 
 .header-title {
   float: left;
+  margin-top: 4px;
+  font-size: 14px;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
 }
 
 .customized-button {
@@ -28,12 +29,10 @@
 
 .snippet-code {
   margin: 5px;
-  min-height: inherit;;
+  min-height: 550px;
 }
 
 .code-area {
-  // margin-bottom: 1px;
-  // border: 1px solid black;
   white-space: pre-wrap;
 }
 

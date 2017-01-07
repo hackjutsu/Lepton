@@ -52,7 +52,7 @@ class UserPanel extends Component {
     }
 
     return (
-      <div><Image className='profile-image-section' src={ profile.avatar_url } circle/></div>
+      <div><Image className='profile-image-section' src={ profile.avatar_url } rounded/></div>
     )
   }
 

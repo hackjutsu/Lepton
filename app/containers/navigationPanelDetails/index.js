@@ -3,16 +3,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { selectGist, fetchSingleGist } from '../../actions'
 import './index.scss'
 
 class NavigationPanelDetails extends Component {
 
   handleClicked (gistId) {
+    console.log('NavigationPanelDetails.handleClicked is clicked with gistID ' + gistId)
     if (!this.props.gists[gistId].details) {
       this.props.fetchSingleGist(this.props.gists[gistId], gistId)
     }
     this.props.selectGist(gistId)
+  }
+
+  decideSnippetListItemClass (gistId) {
+    if (gistId === this.props.activeGist) {
+      if (this.props.gists[gistId].brief.public) {
+        return 'active-snippet-thumnail-public'
+      } else {
+        return 'active-snippet-thumnail-private'
+      }
+    }
+    return 'snippet-thumnail'
   }
 
   renderSnippetThumbnails () {
@@ -33,21 +46,24 @@ class NavigationPanelDetails extends Component {
 
     for (let gistId of langTags[activeLangTag].keys()) {
       snippetThumbnails.push(
-        <div className={ gistId === activeGist ? 'active-snippet-thumnail' : 'snippet-thumnail' }
-          key={ gistId }
-          onClick={ this.handleClicked.bind(this, gistId) }>
-          { gists[gistId].brief.description }
-        </div>
+        <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>
+          <div className={ this.decideSnippetListItemClass(gistId) }
+              onClick={ this.handleClicked.bind(this, gistId) }>
+              <div className='snippet-thumnail-description'>{ gists[gistId].brief.description }</div>
+          </div>
+        </ListGroupItem>
       )
     }
 
     return snippetThumbnails
-  } // renderTags()
+  } // renderSnippetThumbnails()
 
   render () {
     return (
       <div className='panel-details'>
+        <ListGroup>
           { this.renderSnippetThumbnails() }
+        </ListGroup>
       </div>
     )
   }
