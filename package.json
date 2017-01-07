@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "highlight.js": "^9.9.0",
+    "human-readable-time": "^0.2.4",
     "react": "^15.4.1",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.1",

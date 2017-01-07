@@ -9,11 +9,11 @@ let mainWindow = null
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
       width: 900,
-      height: 650,
+      height: 700,
       minWidth: 900,
-      minHeight: 650,
+      minHeight: 700,
       titleBarStyle: 'hidden'
   })
   mainWindow.loadURL(`file://${__dirname}/index.html`)
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 })

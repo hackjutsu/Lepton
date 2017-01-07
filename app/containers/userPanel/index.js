@@ -11,19 +11,29 @@ class UserPanel extends Component {
 
   renderOutSection () {
     return (
-      <Button type="button" className='user-session-button'
-        onClick={ () => this.handleLoginClicked() }>LOGIN</Button>
+      <a href='#'
+        className='customized-button'
+        onClick={ this.handleLoginClicked.bind(this) }>
+        #login
+      </a>
     )
   }
 
   renderInSection () {
     return (
       <div>
-        <Button type="button" className='user-session-button'
-          onClick={ this.handleLogoutClicked.bind(this) }>LOGOUT</Button>
-        <Button type="button" className='user-session-button'
-          onClick={ this.handleSyncClicked.bind(this) }>Sync</Button>
-        <a>Last Sync: { this.props.syncTime }</a>
+        <a href='#'
+          className='customized-tag'
+          onClick={ this.handleLogoutClicked.bind(this) }>
+          #logout
+        </a>
+        <br/><br/>
+        <a href='#'
+          className='customized-tag'
+          onClick={ this.handleSyncClicked.bind(this) }>
+          #sync
+        </a>
+        <div className='customized-tag-small'>{ this.props.syncTime }</div>
       </div>
     )
   }

@@ -3,7 +3,7 @@
 	float: left;
 	width: 200px;
 	overflow: auto;
-    height: 95vh;
+    height: 90vh;
 }
 
 .snippet-thumnail-list-item {
@@ -20,7 +20,7 @@
 .snippet-thumnail {
 	margin: 5px;
 	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 12px;
+	font-size: 13px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -29,14 +29,14 @@
 	padding: 5px;
 	background: #DFF0D4;
 	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 12px;
+	font-size: 13px;
 }
 
 .active-snippet-thumnail-private {
 	padding: 5px;
 	background: #F2DEDE;
 	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 12px;
+	font-size: 13px;
 }
 
 .snippet-thumnail-description {
@@ -44,5 +44,5 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 12px;
+	font-size: 13px;
 }

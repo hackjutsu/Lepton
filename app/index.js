@@ -9,6 +9,7 @@ import thunk from 'redux-thunk'
 import ReqPromise from 'request-promise'
 import AppContainer from './containers/appContainer'
 import Account from '../configs/account'
+import HumanReadableTime from 'human-readable-time'
 import RootReducer from './reducers'
 import {
   updateGists,
@@ -62,7 +63,7 @@ function launchAuthWindow () {
     if (code || error) {
       // Close the browser if code found or error
       console.log('** Clear the session and destroy the auth browser')
-    //   authWindow.webContents.session.clearStorageData([], () => {})
+      authWindow.webContents.session.clearStorageData([], () => {})
       authWindow.destroy()
     }
 
@@ -234,7 +235,7 @@ function updateUserGists (userLoginId, accessToken) {
       }) // gistList.forEach
 
       // refresh the redux state
-      setSyncTime(Date.now())
+      setSyncTime(HumanReadableTime(new Date()))
       updateGistStoreAfterSync(gists)
       updateLangTagsAfterSync(langTags)
       updateActiveLangTagAfterSync(langTags, activeTagCandidate)
