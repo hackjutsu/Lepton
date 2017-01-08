@@ -6,7 +6,7 @@ import { Panel, Modal } from 'react-bootstrap'
 import HighlightJS from 'highlight.js'
 import Shell from 'shell'
 import './index.scss'
-import '../../lib/vendor/highlightJS/styles/github.css'
+import '../../utilities/vendor/highlightJS/styles/github.css'
 
 class Snippet extends Component {
 

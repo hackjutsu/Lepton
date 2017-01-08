@@ -10,6 +10,7 @@ import ReqPromise from 'request-promise'
 import AppContainer from './containers/appContainer'
 import Account from '../configs/account'
 import HumanReadableTime from 'human-readable-time'
+import LocalStore from './utilities/store/store.js'
 import RootReducer from './reducers'
 import {
   updateGists,
@@ -21,7 +22,7 @@ import {
   fetchSingleGist,
   selectGist
 } from './actions/index'
-import './lib/vendor/bootstrap/css/bootstrap.css'
+import './utilities/vendor/bootstrap/css/bootstrap.css'
 
 const USER_PROFILE_URI = 'https://api.github.com/user'
 const CONFIG_OPTIONS = {
@@ -278,17 +279,8 @@ function initUserSession (accessToken) {
 }
 /** End: User session management **/
 
-function updateLocalStorage (localData) {
-  localStorage.set('token', localData.token)
-  localStorage.set('profile', localData.profile)
+/** Start: Local storage management **/
 
-  if (localData.image) {
-    localStorage.downloadImage(localData.image, localData.profile)
-  }
-}
-
-const path = require('path')
-const LocalStore = require('./store/store.js')
 const localStorage = new LocalStore({
   // We'll call our data file 'user-preferences'
   configName: 'user-profiles',
@@ -298,13 +290,19 @@ const localStorage = new LocalStore({
   }
 })
 
+function updateLocalStorage (localData) {
+  localStorage.set('token', localData.token)
+  localStorage.set('profile', localData.profile)
+
+  if (localData.image) {
+    localStorage.downloadImage(localData.image, localData.profile)
+  }
+}
+
 function getLoggedInUserInfo () {
-  console.log('Hello')
   let loggedInUserProfile = localStorage.get('profile')
   let loggedInUserToken = localStorage.get('token')
   if (loggedInUserProfile && loggedInUserToken) {
-    console.log('!! the logged in user is ' + loggedInUserProfile)
-    console.log('!! the logged in user token is ' + loggedInUserToken)
     return {
       token: loggedInUserToken,
       profile: loggedInUserProfile,
@@ -312,10 +310,11 @@ function getLoggedInUserInfo () {
     }
   }
 
-  console.log('World')
-
   return null
 }
+
+/** End: Local storage management **/
+
 
 // Start
 const reduxStore = createStore(

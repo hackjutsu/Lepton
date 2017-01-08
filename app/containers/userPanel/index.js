@@ -25,13 +25,6 @@ class UserPanel extends Component {
     this.setState({
       showLoginModal: false
     })
-
-    // TODO: document this part
-    this.setState(
-      loggedInUserToken: null,
-      loggedInUserName: null,
-      loggedInUserImage: null
-    )
   }
 
   handleLoginClickedYes () {
