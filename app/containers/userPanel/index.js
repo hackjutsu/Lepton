@@ -4,18 +4,67 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
-import { Button, Image } from 'react-bootstrap'
+import { Button, Image, Modal } from 'react-bootstrap'
 import './index.scss'
 
 class UserPanel extends Component {
 
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      showLoginModal: false,
+      loggedInUserToken: null,
+      loggedInUserName: null,
+      loggedInUserImage: null
+    }
+  }
+
+  closeLoginModal () {
+    this.setState({
+      showLoginModal: false,
+      loggedInUserToken: null,
+      loggedInUserName: null
+    })
+  }
+
+  handleLoginClickedYes () {
+    console.log('User clicked no')
+    this.props.launchAuthWindow(this.state.loggedInUserToken)
+    this.closeLoginModal()
+  }
+
+  handleLoginClickedNo () {
+    console.log('User clicked yes')
+    this.props.launchAuthWindow(null)
+    this.closeLoginModal()
+  }
+
+  renderLoginModal () {
+    return (
+      <Modal className='login-modal' show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this) }>
+        <Modal.Header closeButton>
+          <Modal.Title>Login Modal</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{ this.state.loggedInUserName ? 'Are you ' + this.state.loggedInUserName : '' }</p>
+          <Button onClick={ this.handleLoginClickedYes.bind(this) }>YES</Button>
+          <Button onClick={ this.handleLoginClickedNo.bind(this) }>NO</Button>
+        </Modal.Body>
+      </Modal>
+    )
+  }
+
   renderOutSection () {
     return (
-      <a href='#'
-        className='customized-button'
-        onClick={ this.handleLoginClicked.bind(this) }>
-        #login
-      </a>
+      <div>
+        { this.renderLoginModal() }
+        <a href='#'
+          className='customized-button'
+          onClick={ this.handleLoginClicked.bind(this) }>
+          #login
+        </a>
+      </div>
     )
   }
 
@@ -40,13 +89,27 @@ class UserPanel extends Component {
 
   handleLoginClicked () {
     console.log('** Login clicked')
-    this.props.launchAuthWindow()
+    let loggedInUserInfo = this.props.getLoggedInUserInfo()
+    console.log('loggedInUserInfo is ' + loggedInUserInfo)
+
+
+    this.setState({
+      showLoginModal: true,
+      loggedInUserToken: loggedInUserInfo ? loggedInUserInfo.token : null,
+      loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null
+    })
+
+    console.log('!!' + this.state.showLoginModal)
   }
 
   handleLogoutClicked () {
     console.log('** Logout clicked')
     console.log('** dispatch logoutUserSession')
     this.props.logoutUserSession()
+    this.props.updateLocalStorage({
+      token: null,
+      profile: null
+    })
     removeAccessToken()
   }
 

@@ -75,7 +75,7 @@ class Snippet extends Component {
   render () {
     console.log('Snippet render is called')
     let activeSnippet = this.props.gists[this.props.activeGist]
-    if (!activeSnippet) return
+    if (!activeSnippet) return null
 
     let files = []
     if (activeSnippet.details) {

@@ -14,8 +14,10 @@ class AppContainer extends Component {
       return (
         <div className='app-container'>
           <NavigationPanel
+            updateLocalStorage = { this.props.updateLocalStorage }
+            getLoggedInUserInfo = { this.props.getLoggedInUserInfo }
             launchAuthWindow = { this.props.launchAuthWindow }
-            eSyncUserGists = { this.props.reSyncUserGists }
+            reSyncUserGists = { this.props.reSyncUserGists }
             />
         </div>
       )
@@ -24,6 +26,7 @@ class AppContainer extends Component {
     return (
       <div className='app-container'>
         <NavigationPanel
+          updateLocalStorage = { this.props.updateLocalStorage }
           updateActiveGistAfterClicked = { this.props.updateActiveGistAfterClicked }
           reSyncUserGists = { this.props.reSyncUserGists } />
         <NavigationPanelDetails />

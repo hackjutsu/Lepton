@@ -48,7 +48,12 @@ function makeOption (uri, accessToken) {
   }
 }
 
-function launchAuthWindow () {
+function launchAuthWindow (accessToken) {
+  if (accessToken) {
+    initUserSession(accessToken)
+    return
+  }
+
   let authWindow = new remote.BrowserWindow({ width: 400, height: 600, show: false })
   let githubUrl = 'https://github.com/login/oauth/authorize?'
   let authUrl = githubUrl + 'client_id=' + CONFIG_OPTIONS.client_id + '&scope=' + CONFIG_OPTIONS.scopes
@@ -115,18 +120,18 @@ function launchAuthWindow () {
 
 function setSyncTime (time) {
   console.log('** dispatch updateSyncTime')
-  store.dispatch(updateSyncTime(time))
+  reduxStore.dispatch(updateSyncTime(time))
 }
 
 function initAccessToken (token) {
   console.log('** dispatch updateAccessToken')
-  store.dispatch(updateAccessToken(token))
+  reduxStore.dispatch(updateAccessToken(token))
 }
 
 /** Start: Language tags management **/
 function updateLangTagsAfterSync (langTags) {
   console.log('** dispatch updateLangTags')
-  store.dispatch(updateLangTags(langTags))
+  reduxStore.dispatch(updateLangTags(langTags))
 }
 /** End: Language tags management **/
 
@@ -148,7 +153,7 @@ function updateActiveLangTagAfterSync (langTags, newActiveTagCandidate) {
   let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
   if (effectiveLangTag !== preSyncSnapshot.activeLangTag) {
     console.log('** dispatch selectLangTag')
-    store.dispatch(selectLangTag(newActiveTagCandidate))
+    reduxStore.dispatch(selectLangTag(newActiveTagCandidate))
   }
 }
 /** End: Acitive language tag management **/
@@ -157,10 +162,10 @@ function updateActiveLangTagAfterSync (langTags, newActiveTagCandidate) {
 function updateActiveGistBase (gists, activeGist) {
   if (!gists[activeGist].details) {
     console.log('** dispatch fetchSingleGist')
-    store.dispatch(fetchSingleGist(gists[activeGist], activeGist))
+    reduxStore.dispatch(fetchSingleGist(gists[activeGist], activeGist))
   }
   console.log('** dispatch selectGist')
-  store.dispatch(selectGist(activeGist))
+  reduxStore.dispatch(selectGist(activeGist))
 }
 
 function updateActiveGistAfterSync (gists, langTags, newActiveTagCandidate) {
@@ -184,7 +189,7 @@ function updateActiveGistAfterClicked (gists, langTags, newActiveTag) {
 /** Start: User gists management **/
 function updateGistStoreAfterSync (gists) {
   console.log('** dispatch updateGists')
-  store.dispatch(updateGists(gists))
+  reduxStore.dispatch(updateGists(gists))
 }
 
 function makeUserGistsUri (userLoginId) {
@@ -192,7 +197,7 @@ function makeUserGistsUri (userLoginId) {
 }
 
 function reSyncUserGists () {
-  let state = store.getState()
+  let state = reduxStore.getState()
   preSyncSnapshot = {
     activeLangTag: state.activeLangTag,
     activeGist: state.activeGist
@@ -232,6 +237,7 @@ function updateUserGists (userLoginId, accessToken) {
           brief: gist,
           details: null
         }
+        console.log('~~ updated gist with id ' + gist.id)
       }) // gistList.forEach
 
       // refresh the redux state
@@ -258,7 +264,11 @@ function initUserSession (accessToken) {
     .then((profile) => {
       updateUserGists(profile.login, accessToken).then(() => {
         console.log('** dispatch updateUserSession')
-        store.dispatch(updateUserSession({ active: 'true', profile: profile }))
+        reduxStore.dispatch(updateUserSession({ active: 'true', profile: profile }))
+        updateLocalStorage({
+          token: accessToken,
+          profile: profile.login
+        })
       })
     })
   .catch((err) => {
@@ -267,15 +277,51 @@ function initUserSession (accessToken) {
 }
 /** End: User session management **/
 
+function updateLocalStorage (localData) {
+  localStorage.set('token', localData.token)
+  localStorage.set('profile', localData.profile)
+}
+
+const path = require('path')
+const Store = require('./store/store.js')
+const localStorage = new Store({
+  // We'll call our data file 'user-preferences'
+  configName: 'user-profiles',
+  defaults: {
+    token: null,
+    profile: null
+  }
+})
+
+function getLoggedInUserInfo () {
+  console.log('Hello')
+  let loggedInUserProfile = localStorage.get('profile')
+  let loggedInUserToken = localStorage.get('token')
+  if (loggedInUserProfile && loggedInUserToken) {
+    console.log('!! the logged in user is ' + loggedInUserProfile)
+    console.log('!! the logged in user token is ' + loggedInUserToken)
+    return {
+      token: loggedInUserToken,
+      profile: loggedInUserProfile
+    }
+  }
+
+  console.log('World')
+
+  return null
+}
+
 // Start
-const store = createStore(
+const reduxStore = createStore(
     RootReducer,
     applyMiddleware(thunk)
 )
 
 ReactDom.render(
-  <Provider store={ store }>
+  <Provider store={ reduxStore }>
     <AppContainer
+      updateLocalStorage = { updateLocalStorage }
+      getLoggedInUserInfo = { getLoggedInUserInfo }
       launchAuthWindow = { launchAuthWindow }
       reSyncUserGists = { reSyncUserGists }
       updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />

@@ -45,14 +45,21 @@ class NavigationPanelDetails extends Component {
     }
 
     for (let gistId of langTags[activeLangTag].keys()) {
-      snippetThumbnails.push(
-        <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>
-          <div className={ this.decideSnippetListItemClass(gistId) }
-              onClick={ this.handleClicked.bind(this, gistId) }>
-              <div className='snippet-thumnail-description'>{ gists[gistId].brief.description }</div>
-          </div>
-        </ListGroupItem>
-      )
+
+      // During the synchronization, gists will be updated before the langTags,
+      // which introduces an interval where a gist exists in langTags but not in
+      // the gists. This guard makes sure we push the gist only when it is already
+      // available in gists.
+      if (gists[gistId]) {
+        snippetThumbnails.push(
+          <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>
+            <div className={ this.decideSnippetListItemClass(gistId) }
+                onClick={ this.handleClicked.bind(this, gistId) }>
+                <div className='snippet-thumnail-description'>{ gists[gistId].brief.description }</div>
+            </div>
+          </ListGroupItem>
+        )
+      }
     }
 
     return snippetThumbnails
