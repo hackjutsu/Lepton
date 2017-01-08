@@ -6,6 +6,7 @@ import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 import { Button, Image, Modal } from 'react-bootstrap'
 import './index.scss'
+import defaultImage from './github.jpg'
 
 class UserPanel extends Component {
 
@@ -22,10 +23,15 @@ class UserPanel extends Component {
 
   closeLoginModal () {
     this.setState({
-      showLoginModal: false,
-      loggedInUserToken: null,
-      loggedInUserName: null
+      showLoginModal: false
     })
+
+    // TODO: document this part
+    this.setState(
+      loggedInUserToken: null,
+      loggedInUserName: null,
+      loggedInUserImage: null
+    )
   }
 
   handleLoginClickedYes () {
@@ -40,17 +46,48 @@ class UserPanel extends Component {
     this.closeLoginModal()
   }
 
+  renderModalBoday () {
+    if (!this.state.loggedInUserImage) {
+      return(
+        <center>
+          <div>
+            <div>
+                <Image className='profile-image-modal' src={ defaultImage } rounded></Image>
+            </div>
+            <div className='button-group-modal'>
+              <Button className='button-modal' onClick={ this.handleLoginClickedNo.bind(this) }>GitHub Login</Button>
+            </div>
+          </div>
+        </center>
+      )
+    }
+
+    return(
+      <center>
+        <div>
+          <Image className='profile-image-modal' src={ this.state.loggedInUserImage } rounded></Image>
+        </div>
+        <div className='button-group-modal'>
+          <Button className='button-modal' onClick={ this.handleLoginClickedYes.bind(this) }>Continue as { this.state.loggedInUserName }</Button>
+          <br/>
+          <Button className='button-modal' onClick={ this.handleLoginClickedNo.bind(this) }>Switch Account</Button>
+        </div>
+      </center>
+    )
+  }
+
   renderLoginModal () {
     return (
-      <Modal className='login-modal' show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this) }>
+      <Modal bsSize="small" dialogClassName="custom-modal" show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this) }>
         <Modal.Header closeButton>
-          <Modal.Title>Login Modal</Modal.Title>
+          <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>{ this.state.loggedInUserName ? 'Are you ' + this.state.loggedInUserName : '' }</p>
-          <Button onClick={ this.handleLoginClickedYes.bind(this) }>YES</Button>
-          <Button onClick={ this.handleLoginClickedNo.bind(this) }>NO</Button>
+          { this.renderModalBoday() }
         </Modal.Body>
+        <Modal.Footer>
+          Powered by GitHub
+        </Modal.Footer>
       </Modal>
     )
   }
@@ -92,11 +129,11 @@ class UserPanel extends Component {
     let loggedInUserInfo = this.props.getLoggedInUserInfo()
     console.log('loggedInUserInfo is ' + loggedInUserInfo)
 
-
     this.setState({
       showLoginModal: true,
       loggedInUserToken: loggedInUserInfo ? loggedInUserInfo.token : null,
-      loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null
+      loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null,
+      loggedInUserImage: loggedInUserInfo ? loggedInUserInfo.image : null,
     })
 
     console.log('!!' + this.state.showLoginModal)

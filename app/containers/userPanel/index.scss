@@ -4,6 +4,20 @@
   // height: 800px;
 }
 
+.profile-image-modal {
+  width: 200px;
+  margin: 5px;
+}
+
+.button-group-modal {
+  margin: 20px 0;
+}
+
+.button-modal {
+  margin: 5px;
+  width: 100%;
+}
+
 .profile-image-section {
   width: 80px;
   margin: 5px;
@@ -20,3 +34,8 @@
   font-size: 10px;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
 }
+
+// .login-modal {
+//   width: 30vw;   /* Occupy the 90% of the screen width */
+//   height: 50vh;
+// }

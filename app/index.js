@@ -267,7 +267,8 @@ function initUserSession (accessToken) {
         reduxStore.dispatch(updateUserSession({ active: 'true', profile: profile }))
         updateLocalStorage({
           token: accessToken,
-          profile: profile.login
+          profile: profile.login,
+          image: profile.avatar_url
         })
       })
     })
@@ -280,11 +281,15 @@ function initUserSession (accessToken) {
 function updateLocalStorage (localData) {
   localStorage.set('token', localData.token)
   localStorage.set('profile', localData.profile)
+
+  if (localData.image) {
+    localStorage.downloadImage(localData.image, localData.profile)
+  }
 }
 
 const path = require('path')
-const Store = require('./store/store.js')
-const localStorage = new Store({
+const LocalStore = require('./store/store.js')
+const localStorage = new LocalStore({
   // We'll call our data file 'user-preferences'
   configName: 'user-profiles',
   defaults: {
@@ -302,7 +307,8 @@ function getLoggedInUserInfo () {
     console.log('!! the logged in user token is ' + loggedInUserToken)
     return {
       token: loggedInUserToken,
-      profile: loggedInUserProfile
+      profile: loggedInUserProfile,
+      image: localStorage.get('image')
     }
   }
 

@@ -3,14 +3,21 @@
 const electron = require('electron')
 const path = require('path')
 const fs = require('fs')
+const imageDownloader = require('image-downloader');
 
 class Store {
   constructor(opts) {
     // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
     // app.getPath('userData') will return a string of the user's app data directory path.
     const userDataPath = (electron.app || electron.remote.app).getPath('userData')
+    this.userProfilePath = userDataPath + '/profile/'
+
+    if (!fs.existsSync(this.userProfilePath)){
+      fs.mkdirSync(this.userProfilePath);
+    }
+
     // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
-    this.path = path.join(userDataPath, opts.configName + '.json')
+    this.path = path.join(this.userProfilePath, opts.configName + '.json')
 
 	console.log('** The persistence path is ' + this.path)
 
@@ -30,6 +37,24 @@ class Store {
     // Also if we used an async API and our app was quit before the asynchronous write had a chance to complete,
     // we might lose that data. Note that in a real app, we would try/catch this.
     fs.writeFileSync(this.path, JSON.stringify(this.data))
+  }
+
+  downloadImage (url, filename) {
+    let imagePath = this.userProfilePath + filename + '.png'
+    let options = {
+      url: url,
+      dest: imagePath,
+      done: function(err, filename, image) {
+          if (err) {
+              throw err;
+          }
+
+          console.log('File saved to', filename);
+      },
+    }
+
+    imageDownloader(options);
+    this.set('image', imagePath)
   }
 }
 
