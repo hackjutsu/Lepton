@@ -32,7 +32,6 @@ class NavigationPanelDetails extends Component {
     let gists = this.props.gists
     let langTags = this.props.langTags
     let activeLangTag = this.props.activeLangTag
-    let activeGist = this.props.activeGist
 
     let snippetThumbnails = []
 
@@ -45,7 +44,6 @@ class NavigationPanelDetails extends Component {
     }
 
     for (let gistId of langTags[activeLangTag].keys()) {
-
       // During the synchronization, gists will be updated before the langTags,
       // which introduces an interval where a gist exists in langTags but not in
       // the gists. This guard makes sure we push the gist only when it is already

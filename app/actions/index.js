@@ -1,17 +1,6 @@
 'use strict'
 
-import ReqPromise from 'request-promise'
-
-const SINGLE_GIST_URI = 'https://api.github.com/gists/'
-function makeOption (uri) {
-  return {
-    uri: uri,
-    headers: {
-      'User-Agent': 'Request-Promise'
-    },
-    json: true // Automatically parses the JSON string in the response
-  }
-}
+import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/gitHubApi'
 
 export const UPDATE_USER_SESSION = 'UPDATE_USER_SESSION'
 export const LOGOUT_USER_SESSION = 'LOGOUT_USER_SESSION'
@@ -95,10 +84,9 @@ export function selectGist (id) {
 }
 
 export function fetchSingleGist (oldGist, id) {
-  console.log(SINGLE_GIST_URI + id)
   return (dispatch, getState) => {
     let state = getState()
-    return ReqPromise(makeOption(SINGLE_GIST_URI + id + '?access_token=' + state.accessToken))
+    return getGitHubApi(GET_SINGLE_GIST)(state.accessToken, id)
       .then((details) => {
         let newGist = Object.assign(oldGist, { details: details })
         let newGistWithId = {}

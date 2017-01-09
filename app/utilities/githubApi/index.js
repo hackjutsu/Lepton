@@ -2,20 +2,49 @@
 
 import { Promise } from 'bluebird'
 import Request from 'request'
+import ReqPromise from 'request-promise'
 
-function makeOptionForGetAllGists (accessToken, userLoginId, pageNumber) {
-  return {
-    uri: 'https://api.github.com/users/' + userLoginId + '/gists',
+function exchangeAccessToken (clientId, clientSecret, authCode) {
+  return ReqPromise({
+    method: 'POST',
+    uri: 'https://github.com/login/oauth/access_token',
+    form: {
+      'client_id': clientId,
+      'client_secret': clientSecret,
+      'code': authCode,
+    },
+    json: true
+  })
+}
+
+function getUserProfile (accessToken) {
+  const USER_PROFILE_URI = 'https://api.github.com/user'
+  return ReqPromise({
+    uri: USER_PROFILE_URI,
     headers: {
-      'User-Agent': 'request',
+      'User-Agent': 'Request-Promise',
     },
     method: 'GET',
     qs: {
-      access_token: accessToken,
-      page: pageNumber
+      access_token: accessToken
     },
-    json: true
-  }
+    json: true // Automatically parses the JSON string in the response
+  })
+}
+
+function getSingleGist (accessToken, gistId) {
+  const SINGLE_GIST_URI = 'https://api.github.com/gists/'
+  return ReqPromise({
+    uri: SINGLE_GIST_URI + gistId,
+    headers: {
+      'User-Agent': 'Request-Promise'
+    },
+    method: 'GET',
+    qs: {
+      access_token: accessToken
+    },
+    json: true // Automatically parses the JSON string in the response
+  })
 }
 
 function getAllgists (accessToken, userLoginId) {
@@ -28,6 +57,7 @@ function getAllgists (accessToken, userLoginId) {
 
     funcs.mapSeries(iterator)
       .catch(err => {
+        console.log(err)
         // intentionally left blank
       })
       .finally(() => {
@@ -62,12 +92,28 @@ function getAllgists (accessToken, userLoginId) {
   }
 }
 
+function makeOptionForGetAllGists (accessToken, userLoginId, pageNumber) {
+  return {
+    uri: 'https://api.github.com/users/' + userLoginId + '/gists',
+    headers: {
+      'User-Agent': 'request',
+    },
+    method: 'GET',
+    qs: {
+      access_token: accessToken,
+      page: pageNumber
+    },
+    json: true
+  }
+}
+
 function makeRangeArr (start, end) {
   let result = []
   for (let i = start; i <= end; i++) result.push(i)
   return result
 }
 
+export const EXCHANGE_ACCESS_TOKEN = 'EXCHANGE_ACCESS_TOKEN'
 export const GET_ALL_GISTS = 'GET_ALL_GISTS'
 export const GET_SINGLE_GIST = 'GET_SINGLE_GIST'
 export const GET_USER_PROFILE = 'GET_USER_PROFILE'
@@ -75,19 +121,16 @@ export const CREATE_SINGLE_GIST = 'CREATE_SINGLE_GIST'
 export const EDIT_SINGLE_GIST = 'EDIT_SINGLE_GIST'
 
 export function getGitHubApi (selection) {
-  console.log('Inside getGitHubApi')
   switch (selection) {
+    case EXCHANGE_ACCESS_TOKEN:
+      return exchangeAccessToken
     case GET_ALL_GISTS:
       return getAllgists
+    case GET_SINGLE_GIST:
+      return getSingleGist
+    case GET_USER_PROFILE:
+      return getUserProfile
     default:
-
+      console.log('Not implemented yet.')
   }
 }
-
-// test
-// let accessToken = '04de802f7b8f123fdf4e427d2afe78b6e49d7929'
-// let rq = getAllgists(accessToken, 'hackjutsu')
-//
-// rq.then(gistList => {
-//     console.log(gistList.length)
-// })

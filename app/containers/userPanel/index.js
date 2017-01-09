@@ -41,9 +41,9 @@ class UserPanel extends Component {
 
   renderModalBody () {
     console.log('!!!' + this.state.loggedInUserName)
-    if (this.state.loggedInUserName == null ||
-         this.state.loggedInUserName == 'null' ) {
-      return(
+    if (this.state.loggedInUserName === null ||
+      this.state.loggedInUserName === 'null') {
+      return (
         <center>
           <div>
             <div>
@@ -57,7 +57,7 @@ class UserPanel extends Component {
       )
     }
 
-    return(
+    return (
       <center>
         <div>
           <Image className='profile-image-modal' src={ this.state.loggedInUserImage } rounded></Image>
@@ -83,7 +83,7 @@ class UserPanel extends Component {
       </Modal>
     )
   }
-  // 
+  //
   // <Modal.Footer>
   //   Login Powered by GitHub
   // </Modal.Footer>

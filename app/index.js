@@ -7,12 +7,19 @@ import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import ReqPromise from 'request-promise'
+
+import './utilities/vendor/bootstrap/css/bootstrap.css'
 import AppContainer from './containers/appContainer'
 import Account from '../configs/account'
 import HumanReadableTime from 'human-readable-time'
 import ImageDownloader from 'image-downloader'
-import { getGitHubApi, GET_ALL_GISTS } from './utilities/gitHubApi'
+
+import {
+  getGitHubApi,
+  GET_ALL_GISTS,
+  GET_USER_PROFILE,
+  EXCHANGE_ACCESS_TOKEN } from './utilities/gitHubApi'
+
 import RootReducer from './reducers'
 import {
   updateGists,
@@ -24,9 +31,7 @@ import {
   fetchSingleGist,
   selectGist
 } from './actions/index'
-import './utilities/vendor/bootstrap/css/bootstrap.css'
 
-const USER_PROFILE_URI = 'https://api.github.com/user'
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
   client_secret: Account.client_secret,
@@ -36,19 +41,6 @@ const CONFIG_OPTIONS = {
 let preSyncSnapshot = {
   activeLangTag: null,
   activeGist: null
-}
-
-function makeOption (uri, accessToken) {
-  return {
-    uri: uri,
-    headers: {
-      'User-Agent': 'Request-Promise',
-    },
-    qs: {
-      access_token: accessToken
-    },
-    json: true // Automatically parses the JSON string in the response
-  }
 }
 
 function launchAuthWindow (accessToken) {
@@ -77,7 +69,8 @@ function launchAuthWindow (accessToken) {
 
     // If there is a code, proceed to get token from github
     if (code) {
-      let accessTokenPromise = requestGithubToken(code)
+      let accessTokenPromise = getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
+        CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
       accessTokenPromise.then((response) => {
         let accessToken = response.access_token
         console.log('Got access Token: ' + accessToken)
@@ -89,19 +82,6 @@ function launchAuthWindow (accessToken) {
       alert('Oops! Something went wrong and we couldn\'t' +
         'log you in using Github. Please try again.')
     }
-  }
-
-  function requestGithubToken (code) {
-    return ReqPromise({
-      method: 'POST',
-      uri: 'https://github.com/login/oauth/access_token',
-      form: {
-        'client_id': CONFIG_OPTIONS.client_id,
-        'client_secret': CONFIG_OPTIONS.client_secret,
-        'code': code,
-      },
-      json: true
-    })
   }
 
   // Handle the response from GitHub - See Update from 4/12/2015
@@ -200,10 +180,6 @@ function updateGistStoreAfterSync (gists) {
   reduxStore.dispatch(updateGists(gists))
 }
 
-function makeUserGistsUri (userLoginId) {
-  return 'https://api.github.com/users/' + userLoginId + '/gists'
-}
-
 function reSyncUserGists () {
   let state = reduxStore.getState()
   preSyncSnapshot = {
@@ -267,7 +243,7 @@ function updateUserGists (userLoginId, accessToken) {
 /** Start: User session management **/
 function initUserSession (accessToken) {
   initAccessToken(accessToken)
-  ReqPromise(makeOption(USER_PROFILE_URI, accessToken))
+  getGitHubApi(GET_USER_PROFILE)(accessToken)
     .then((profile) => {
       updateUserGists(profile.login, accessToken).then(() => {
         console.log('** dispatch updateUserSession')
@@ -296,20 +272,20 @@ function updateLocalStorage (localData) {
 function downloadImage (imageUrl, filename) {
   if (!imageUrl) return
   const userProfilePath = (remote.app).getPath('userData') + '/profile/'
-  if (!fs.existsSync(userProfilePath)){
-    fs.mkdirSync(userProfilePath);
+  if (!fs.existsSync(userProfilePath)) {
+    fs.mkdirSync(userProfilePath)
   }
 
   console.log('!!Downloading image ...')
   let imagePath = userProfilePath + filename + '.png'
-  ImageDownloader ({
+  ImageDownloader({
     url: imageUrl,
     dest: imagePath,
-    done: function(err, filename, image) {
-        if (err) console.log(err)
+    done: function (err, filename, image) {
+      if (err) console.log(err)
 
-        localStorage.setItem('image', imagePath)
-        console.log('File saved to', filename);
+      localStorage.setItem('image', imagePath)
+      console.log('File saved to', filename)
     },
   })
 }
