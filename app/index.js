@@ -264,6 +264,7 @@ function initUserSession (accessToken) {
 /** Start: Local storage management **/
 
 function updateLocalStorage (localData) {
+  console.log('Updating local storage with ' + localData.profile)
   localStorage.setItem('token', localData.token)
   localStorage.setItem('profile', localData.profile)
   downloadImage(localData.image, localData.profile)
@@ -293,6 +294,7 @@ function downloadImage (imageUrl, filename) {
 function getLoggedInUserInfo () {
   let loggedInUserProfile = localStorage.getItem('profile')
   let loggedInUserToken = localStorage.getItem('token')
+  console.log('Found user profile ' + loggedInUserProfile)
   if (loggedInUserProfile && loggedInUserToken) {
     return {
       token: loggedInUserToken,
