@@ -12,6 +12,7 @@ import AppContainer from './containers/appContainer'
 import Account from '../configs/account'
 import HumanReadableTime from 'human-readable-time'
 import ImageDownloader from 'image-downloader'
+import { getGitHubApi, GET_ALL_GISTS } from './utilities/gitHubApi'
 import RootReducer from './reducers'
 import {
   updateGists,
@@ -162,6 +163,11 @@ function updateActiveLangTagAfterSync (langTags, newActiveTagCandidate) {
 
 /** Start: Acitive gist management **/
 function updateActiveGistBase (gists, activeGist) {
+  if (!gists || !activeGist) {
+    // user has no gists
+    return
+  }
+
   if (!gists[activeGist].details) {
     console.log('** dispatch fetchSingleGist')
     reduxStore.dispatch(fetchSingleGist(gists[activeGist], activeGist))
@@ -208,7 +214,7 @@ function reSyncUserGists () {
 }
 
 function updateUserGists (userLoginId, accessToken) {
-  return ReqPromise(makeOption(makeUserGistsUri(userLoginId), accessToken))
+  return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
     .then((gistList) => {
       console.log('The length of the gist list is ' + gistList.length)
       let gists = {}
@@ -282,7 +288,6 @@ function initUserSession (accessToken) {
 /** Start: Local storage management **/
 
 function updateLocalStorage (localData) {
-  console.log("!!updateLocalStorage is called")
   localStorage.setItem('token', localData.token)
   localStorage.setItem('profile', localData.profile)
   downloadImage(localData.image, localData.profile)

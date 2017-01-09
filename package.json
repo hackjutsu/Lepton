@@ -51,6 +51,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
+    "bluebird": "^3.4.7",
     "highlight.js": "^9.9.0",
     "human-readable-time": "^0.2.4",
     "image-downloader": "^2.0.1",

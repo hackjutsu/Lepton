@@ -15,7 +15,7 @@ app.on('ready', () => {
       titleBarStyle: 'hidden'
   })
   mainWindow.loadURL(`file://${__dirname}/index.html`)
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 })
 
 app.on('window-all-closed', function() {

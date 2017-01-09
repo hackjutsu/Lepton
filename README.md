@@ -19,8 +19,8 @@ Status: **In progress**
 
 **APP life cycle**
 - - [x] Re-sync with the GitHub
-- - [ ] Persist access token when close
-- - [ ] Read persistence when open
+- - [x] Persist access token when close
+- - [x] Read persistence when open
 
 **Comment section** (optional?)
 - - [ ] Display comments

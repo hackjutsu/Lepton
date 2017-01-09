@@ -10,7 +10,7 @@ import './index.scss'
 class NavigationPanelDetails extends Component {
 
   handleClicked (gistId) {
-    console.log('NavigationPanelDetails.handleClicked is clicked with gistID ' + gistId)
+    // console.log('NavigationPanelDetails.handleClicked is clicked with gistID ' + gistId)
     if (!this.props.gists[gistId].details) {
       this.props.fetchSingleGist(this.props.gists[gistId], gistId)
     }
@@ -36,11 +36,11 @@ class NavigationPanelDetails extends Component {
 
     let snippetThumbnails = []
 
-    if (!gists || !langTags || !activeLangTag) {
-      console.log('activeLangTag is ' + activeLangTag)
-      console.log('activeGist is ' + activeGist)
+    // When user has no gists, the default active language tag will be 'All' with
+    // an empty set.
+    if (langTags[activeLangTag].size === 0) {
       return (
-        <div> You haven't created any gist yet. </div>
+        <div className='snippet-thumnail'>No gist found</div>
       )
     }
 
