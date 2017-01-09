@@ -8,7 +8,6 @@ import './index.scss'
 class SnippetTable extends Component {
 
   render () {
-    console.log('SnippetTable render is called')
     let gists = this.props.gists
     let activeGist = this.props.activeGist
     if (!gists || !activeGist) {

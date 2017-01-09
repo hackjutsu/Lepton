@@ -39,8 +39,10 @@ class UserPanel extends Component {
     this.closeLoginModal()
   }
 
-  renderModalBoday () {
-    if (!this.state.loggedInUserImage) {
+  renderModalBody () {
+    console.log('!!!' + this.state.loggedInUserName)
+    if (this.state.loggedInUserName == null ||
+         this.state.loggedInUserName == 'null' ) {
       return(
         <center>
           <div>
@@ -61,7 +63,7 @@ class UserPanel extends Component {
           <Image className='profile-image-modal' src={ this.state.loggedInUserImage } rounded></Image>
         </div>
         <div className='button-group-modal'>
-          <Button className='button-modal' onClick={ this.handleLoginClickedYes.bind(this) }>Continue as { this.state.loggedInUserName }</Button>
+          <Button className='button-modal' bsStyle="success" onClick={ this.handleLoginClickedYes.bind(this) }>Continue as { this.state.loggedInUserName }</Button>
           <br/>
           <Button className='button-modal' onClick={ this.handleLoginClickedNo.bind(this) }>Switch Account</Button>
         </div>
@@ -71,19 +73,20 @@ class UserPanel extends Component {
 
   renderLoginModal () {
     return (
-      <Modal bsSize="small" dialogClassName="custom-modal" show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this) }>
+      <Modal bsSize="small" show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this) }>
         <Modal.Header closeButton>
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          { this.renderModalBoday() }
+          { this.renderModalBody() }
         </Modal.Body>
-        <Modal.Footer>
-          Powered by GitHub
-        </Modal.Footer>
       </Modal>
     )
   }
+  // 
+  // <Modal.Footer>
+  //   Login Powered by GitHub
+  // </Modal.Footer>
 
   renderOutSection () {
     return (
@@ -128,8 +131,6 @@ class UserPanel extends Component {
       loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null,
       loggedInUserImage: loggedInUserInfo ? loggedInUserInfo.image : null,
     })
-
-    console.log('!!' + this.state.showLoginModal)
   }
 
   handleLogoutClicked () {
@@ -138,7 +139,8 @@ class UserPanel extends Component {
     this.props.logoutUserSession()
     this.props.updateLocalStorage({
       token: null,
-      profile: null
+      profile: null,
+      image: null
     })
     removeAccessToken()
   }

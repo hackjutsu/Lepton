@@ -1,5 +1,6 @@
 'use strict'
 
+import fs from 'fs'
 import { remote } from 'electron'
 import React from 'react'
 import ReactDom from 'react-dom'
@@ -10,7 +11,7 @@ import ReqPromise from 'request-promise'
 import AppContainer from './containers/appContainer'
 import Account from '../configs/account'
 import HumanReadableTime from 'human-readable-time'
-import LocalStore from './utilities/store/store.js'
+import ImageDownloader from 'image-downloader'
 import RootReducer from './reducers'
 import {
   updateGists,
@@ -238,7 +239,6 @@ function updateUserGists (userLoginId, accessToken) {
           brief: gist,
           details: null
         }
-        console.log('~~ updated gist with id ' + gist.id)
       }) // gistList.forEach
 
       // refresh the redux state
@@ -281,40 +281,48 @@ function initUserSession (accessToken) {
 
 /** Start: Local storage management **/
 
-const localStorage = new LocalStore({
-  // We'll call our data file 'user-preferences'
-  configName: 'user-profiles',
-  defaults: {
-    token: null,
-    profile: null
-  }
-})
-
 function updateLocalStorage (localData) {
-  localStorage.set('token', localData.token)
-  localStorage.set('profile', localData.profile)
+  console.log("!!updateLocalStorage is called")
+  localStorage.setItem('token', localData.token)
+  localStorage.setItem('profile', localData.profile)
+  downloadImage(localData.image, localData.profile)
+}
 
-  if (localData.image) {
-    localStorage.downloadImage(localData.image, localData.profile)
+function downloadImage (imageUrl, filename) {
+  if (!imageUrl) return
+  const userProfilePath = (remote.app).getPath('userData') + '/profile/'
+  if (!fs.existsSync(userProfilePath)){
+    fs.mkdirSync(userProfilePath);
   }
+
+  console.log('!!Downloading image ...')
+  let imagePath = userProfilePath + filename + '.png'
+  ImageDownloader ({
+    url: imageUrl,
+    dest: imagePath,
+    done: function(err, filename, image) {
+        if (err) console.log(err)
+
+        localStorage.setItem('image', imagePath)
+        console.log('File saved to', filename);
+    },
+  })
 }
 
 function getLoggedInUserInfo () {
-  let loggedInUserProfile = localStorage.get('profile')
-  let loggedInUserToken = localStorage.get('token')
+  let loggedInUserProfile = localStorage.getItem('profile')
+  let loggedInUserToken = localStorage.getItem('token')
   if (loggedInUserProfile && loggedInUserToken) {
     return {
       token: loggedInUserToken,
       profile: loggedInUserProfile,
-      image: localStorage.get('image')
+      image: localStorage.getItem('image')
     }
   }
 
   return null
 }
-
 /** End: Local storage management **/
-
 
 // Start
 const reduxStore = createStore(

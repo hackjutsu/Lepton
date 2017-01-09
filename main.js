@@ -20,7 +20,14 @@ app.on('ready', () => {
 
 app.on('window-all-closed', function() {
   console.log('Clearing the cache for the main window...')
-  mainWindow.webContents.session.clearStorageData([], () => {})
+  mainWindow.webContents.session.clearStorageData([
+      'appcache',
+      'cookies',
+      'indexdb',
+      'shadercache',
+      'websql',
+      'serviceworkers',
+    ], () => {})
   if (process.platform !== "darwin") app.quit();
 })
 
