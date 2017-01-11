@@ -96,7 +96,7 @@ export function fetchSingleGist (oldGist, id) {
         dispatch(updateSingleGist(newGistWithId))
       })
       .catch((err) => {
-        logger.err('The request has failed: ' + err)
+        logger.error('The request has failed: ' + err)
       })
   }
 }

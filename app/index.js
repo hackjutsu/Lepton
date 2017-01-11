@@ -78,7 +78,7 @@ function launchAuthWindow (accessToken) {
         logger.debug('Got access Token: ' + accessToken)
         initUserSession(accessToken)
       }).catch((err) => {
-        logger.err('Failed: ' + JSON.stringify(err.error))
+        logger.error('Failed: ' + JSON.stringify(err.error))
       })
     } else if (error) {
       alert('Oops! Something went wrong and we couldn\'t' +
@@ -237,7 +237,7 @@ function updateUserGists (userLoginId, accessToken) {
       preSyncSnapshot.activeGist = null
     })
     .catch(function (err) {
-      logger.err('The request has failed: ' + err)
+      logger.error('The request has failed: ' + err)
     })
 }
 /** End: User gists management **/
@@ -258,7 +258,7 @@ function initUserSession (accessToken) {
       })
     })
   .catch((err) => {
-    logger.err('The request has failed: ' + err)
+    logger.error('The request has failed: ' + err)
   })
 }
 /** End: User session management **/
@@ -284,7 +284,7 @@ function downloadImage (imageUrl, filename) {
     url: imageUrl,
     dest: imagePath,
     done: function (err, filename, image) {
-      if (err) logger.err(err)
+      if (err) logger.error(err)
 
       localStorage.setItem('image', imagePath)
       logger.debug('File saved to', filename)

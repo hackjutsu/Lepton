@@ -60,7 +60,7 @@ function getAllgists (accessToken, userLoginId) {
 
     funcs.mapSeries(iterator)
       .catch(err => {
-        logger.err(err)
+        logger.error(err)
       })
       .finally(() => {
         resolve(gistList)

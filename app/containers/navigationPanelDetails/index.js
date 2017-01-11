@@ -7,12 +7,18 @@ import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { selectGist, fetchSingleGist } from '../../actions'
 import './index.scss'
 
+import { remote } from 'electron'
+const logger = remote.getGlobal('logger')
+
 class NavigationPanelDetails extends Component {
 
   handleClicked (gistId) {
+    logger.info('A new gist is selected: ' + gistId)
     if (!this.props.gists[gistId].details) {
+      logger.info('** dispatch fetchSingleGist ' + gistId)
       this.props.fetchSingleGist(this.props.gists[gistId], gistId)
     }
+    logger.info('** dispatch selectGist ' + gistId)
     this.props.selectGist(gistId)
   }
 
