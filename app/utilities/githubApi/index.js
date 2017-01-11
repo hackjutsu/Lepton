@@ -4,6 +4,9 @@ import { Promise } from 'bluebird'
 import Request from 'request'
 import ReqPromise from 'request-promise'
 
+import { remote } from 'electron'
+const logger = remote.getGlobal('logger')
+
 function exchangeAccessToken (clientId, clientSecret, authCode) {
   return ReqPromise({
     method: 'POST',
@@ -57,8 +60,7 @@ function getAllgists (accessToken, userLoginId) {
 
     funcs.mapSeries(iterator)
       .catch(err => {
-        console.log(err)
-        // intentionally left blank
+        logger.err(err)
       })
       .finally(() => {
         resolve(gistList)
@@ -73,7 +75,7 @@ function getAllgists (accessToken, userLoginId) {
     return function () {
       return new Promise(function (resolve, reject) {
         Request(option, function (error, response, body) {
-          console.log(body.length)
+          logger.debug('The gist number on this page is ' + body.length)
           if (error) {
             reject(error)
           } else if (body.length === 0) {
@@ -131,6 +133,6 @@ export function getGitHubApi (selection) {
     case GET_USER_PROFILE:
       return getUserProfile
     default:
-      console.log('Not implemented yet.')
+      logger.debog('Not implemented yet.')
   }
 }

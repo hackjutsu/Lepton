@@ -3,7 +3,6 @@
 import { UPDATE_GISTS, UPDATE_SINGLE_GIST } from '../actions'
 
 export default function (state = {}, action) {
-  // console.log('reducer_gists is triggered with action type: ' + action.type)
   switch (action.type) {
     case UPDATE_GISTS:
       return action.payload

@@ -1,6 +1,8 @@
 'use strict'
 
 import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/gitHubApi'
+import { remote } from 'electron'
+const logger = remote.getGlobal('logger')
 
 export const UPDATE_USER_SESSION = 'UPDATE_USER_SESSION'
 export const LOGOUT_USER_SESSION = 'LOGOUT_USER_SESSION'
@@ -94,7 +96,7 @@ export function fetchSingleGist (oldGist, id) {
         dispatch(updateSingleGist(newGistWithId))
       })
       .catch((err) => {
-        console.log('The request has failed: ' + err)
+        logger.err('The request has failed: ' + err)
       })
   }
 }

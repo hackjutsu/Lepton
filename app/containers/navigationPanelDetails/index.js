@@ -10,7 +10,6 @@ import './index.scss'
 class NavigationPanelDetails extends Component {
 
   handleClicked (gistId) {
-    // console.log('NavigationPanelDetails.handleClicked is clicked with gistID ' + gistId)
     if (!this.props.gists[gistId].details) {
       this.props.fetchSingleGist(this.props.gists[gistId], gistId)
     }

@@ -4,6 +4,14 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 
+// http://electron.rocks/sharing-between-main-and-renderer-process/
+// Set up the logger
+const logger = require('winston')
+const path = require('path')
+const fs = require('fs')
+
+initGlobalLogger()
+
 let mainWindow = null
 
 app.on('ready', () => {
@@ -19,7 +27,7 @@ app.on('ready', () => {
 })
 
 app.on('window-all-closed', function() {
-  console.log('Clearing the cache for the main window...')
+  logger.info('The app window is closed')
   // mainWindow.webContents.session.clearStorageData([
   //     'appcache',
   //     'cookies',
@@ -28,9 +36,23 @@ app.on('window-all-closed', function() {
   //     'websql',
   //     'serviceworkers',
   //   ], () => {})
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin") app.quit()
 })
 
 app.on('before-quit', function() {
 
-});
+})
+
+function initGlobalLogger () {
+  logger.level = 'debug'
+  let logFolder = path.join(app.getPath("userData"), "logs")
+  let logFile = new Date().toISOString().replace(/:/g, '.') + '.log'
+  if (!fs.existsSync(logFolder)) {
+    fs.mkdirSync(logFolder);
+  }
+  logger.add(logger.transports.File, {
+      json: false,
+      filename: path.join(logFolder, logFile),
+      timestamp: true })
+  global.logger = logger
+}

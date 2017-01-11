@@ -8,6 +8,9 @@ import { Button, Image, Modal } from 'react-bootstrap'
 import './index.scss'
 import defaultImage from './github.jpg'
 
+import { remote } from 'electron'
+const logger = remote.getGlobal('logger')
+
 class UserPanel extends Component {
 
   constructor (props) {
@@ -23,7 +26,6 @@ class UserPanel extends Component {
 
   componentWillMount () {
     let loggedInUserInfo = this.props.getLoggedInUserInfo()
-    console.log('loggedInUserInfo is ' + loggedInUserInfo)
 
     this.setState({
       showLoginModal: true,
@@ -40,19 +42,16 @@ class UserPanel extends Component {
   }
 
   handleLoginClickedYes () {
-    console.log('User clicked no')
     this.props.launchAuthWindow(this.state.loggedInUserToken)
     this.closeLoginModal()
   }
 
   handleLoginClickedNo () {
-    console.log('User clicked yes')
     this.props.launchAuthWindow(null)
     this.closeLoginModal()
   }
 
   renderModalBody () {
-    console.log('!!!' + this.state.loggedInUserName)
     if (this.state.loggedInUserName === null ||
       this.state.loggedInUserName === 'null') {
       return (
@@ -133,9 +132,7 @@ class UserPanel extends Component {
   }
 
   handleLoginClicked () {
-    console.log('** Login clicked')
     let loggedInUserInfo = this.props.getLoggedInUserInfo()
-    console.log('loggedInUserInfo is ' + loggedInUserInfo)
 
     this.setState({
       showLoginModal: true,
@@ -146,8 +143,7 @@ class UserPanel extends Component {
   }
 
   handleLogoutClicked () {
-    console.log('** Logout clicked')
-    console.log('** dispatch logoutUserSession')
+    logger.info('** dispatch logoutUserSession')
     this.props.logoutUserSession()
     this.props.updateLocalStorage({
       token: null,
@@ -165,7 +161,6 @@ class UserPanel extends Component {
   }
 
   handleSyncClicked () {
-    console.log('** Sync clicked')
     this.props.reSyncUserGists()
   }
 

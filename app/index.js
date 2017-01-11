@@ -32,6 +32,8 @@ import {
   selectGist
 } from './actions/index'
 
+const logger = remote.getGlobal('logger')
+
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
   client_secret: Account.client_secret,
@@ -62,7 +64,7 @@ function launchAuthWindow (accessToken) {
 
     if (code || error) {
       // Close the browser if code found or error
-      console.log('** Clear the session and destroy the auth browser')
+      logger.debug('** Clear the session and destroy the auth browser')
       authWindow.webContents.session.clearStorageData([], () => {})
       authWindow.destroy()
     }
@@ -73,10 +75,10 @@ function launchAuthWindow (accessToken) {
         CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
       accessTokenPromise.then((response) => {
         let accessToken = response.access_token
-        console.log('Got access Token: ' + accessToken)
+        logger.debug('Got access Token: ' + accessToken)
         initUserSession(accessToken)
       }).catch((err) => {
-        console.log('Failed: ' + JSON.stringify(err.error))
+        logger.err('Failed: ' + JSON.stringify(err.error))
       })
     } else if (error) {
       alert('Oops! Something went wrong and we couldn\'t' +
@@ -86,12 +88,12 @@ function launchAuthWindow (accessToken) {
 
   // Handle the response from GitHub - See Update from 4/12/2015
   authWindow.webContents.on('will-navigate', function (event, url) {
-    console.log('** Inside on will-navigate')
+    logger.debug('** Inside on will-navigate')
     handleCallback(url)
   })
 
   authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
-    console.log('** Inside did-get-redirect-request')
+    logger.debug('** Inside did-get-redirect-request')
     handleCallback(newUrl)
   })
 
@@ -102,18 +104,18 @@ function launchAuthWindow (accessToken) {
 }
 
 function setSyncTime (time) {
-  console.log('** dispatch updateSyncTime')
+  logger.info('** dispatch updateSyncTime')
   reduxStore.dispatch(updateSyncTime(time))
 }
 
 function initAccessToken (token) {
-  console.log('** dispatch updateAccessToken')
+  logger.info('** dispatch updateAccessToken')
   reduxStore.dispatch(updateAccessToken(token))
 }
 
 /** Start: Language tags management **/
 function updateLangTagsAfterSync (langTags) {
-  console.log('** dispatch updateLangTags')
+  logger.info('** dispatch updateLangTags')
   reduxStore.dispatch(updateLangTags(langTags))
 }
 /** End: Language tags management **/
@@ -135,7 +137,7 @@ function updateActiveLangTagAfterSync (langTags, newActiveTagCandidate) {
   // by calling getEffectiveActiveLangTagAfterSync()
   let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
   if (effectiveLangTag !== preSyncSnapshot.activeLangTag) {
-    console.log('** dispatch selectLangTag')
+    logger.info('** dispatch selectLangTag')
     reduxStore.dispatch(selectLangTag(newActiveTagCandidate))
   }
 }
@@ -149,10 +151,10 @@ function updateActiveGistBase (gists, activeGist) {
   }
 
   if (!gists[activeGist].details) {
-    console.log('** dispatch fetchSingleGist')
+    logger.info('** dispatch fetchSingleGist')
     reduxStore.dispatch(fetchSingleGist(gists[activeGist], activeGist))
   }
-  console.log('** dispatch selectGist')
+  logger.info('** dispatch selectGist')
   reduxStore.dispatch(selectGist(activeGist))
 }
 
@@ -176,7 +178,7 @@ function updateActiveGistAfterClicked (gists, langTags, newActiveTag) {
 
 /** Start: User gists management **/
 function updateGistStoreAfterSync (gists) {
-  console.log('** dispatch updateGists')
+  logger.info('** dispatch updateGists')
   reduxStore.dispatch(updateGists(gists))
 }
 
@@ -192,7 +194,7 @@ function reSyncUserGists () {
 function updateUserGists (userLoginId, accessToken) {
   return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
     .then((gistList) => {
-      console.log('The length of the gist list is ' + gistList.length)
+      logger.debug('The length of the gist list is ' + gistList.length)
       let gists = {}
       let langTags = {}
       let activeTagCandidate = 'All'
@@ -235,7 +237,7 @@ function updateUserGists (userLoginId, accessToken) {
       preSyncSnapshot.activeGist = null
     })
     .catch(function (err) {
-      console.log('The request has failed: ' + err)
+      logger.err('The request has failed: ' + err)
     })
 }
 /** End: User gists management **/
@@ -246,7 +248,7 @@ function initUserSession (accessToken) {
   getGitHubApi(GET_USER_PROFILE)(accessToken)
     .then((profile) => {
       updateUserGists(profile.login, accessToken).then(() => {
-        console.log('** dispatch updateUserSession')
+        logger.info('** dispatch updateUserSession')
         reduxStore.dispatch(updateUserSession({ active: 'true', profile: profile }))
         updateLocalStorage({
           token: accessToken,
@@ -256,7 +258,7 @@ function initUserSession (accessToken) {
       })
     })
   .catch((err) => {
-    console.log('The request has failed: ' + err)
+    logger.err('The request has failed: ' + err)
   })
 }
 /** End: User session management **/
@@ -264,7 +266,7 @@ function initUserSession (accessToken) {
 /** Start: Local storage management **/
 
 function updateLocalStorage (localData) {
-  console.log('Updating local storage with ' + localData.profile)
+  logger.debug('Updating local storage with ' + localData.profile)
   localStorage.setItem('token', localData.token)
   localStorage.setItem('profile', localData.profile)
   downloadImage(localData.image, localData.profile)
@@ -277,16 +279,15 @@ function downloadImage (imageUrl, filename) {
     fs.mkdirSync(userProfilePath)
   }
 
-  console.log('!!Downloading image ...')
   let imagePath = userProfilePath + filename + '.png'
   ImageDownloader({
     url: imageUrl,
     dest: imagePath,
     done: function (err, filename, image) {
-      if (err) console.log(err)
+      if (err) logger.err(err)
 
       localStorage.setItem('image', imagePath)
-      console.log('File saved to', filename)
+      logger.debug('File saved to', filename)
     },
   })
 }
@@ -294,7 +295,8 @@ function downloadImage (imageUrl, filename) {
 function getLoggedInUserInfo () {
   let loggedInUserProfile = localStorage.getItem('profile')
   let loggedInUserToken = localStorage.getItem('token')
-  console.log('Found user profile ' + loggedInUserProfile)
+  logger.info('Found user profile ' + loggedInUserProfile)
+
   if (loggedInUserProfile && loggedInUserToken) {
     return {
       token: loggedInUserToken,
