@@ -77,7 +77,7 @@ function getAllgists (accessToken, userLoginId) {
           if (error) {
             reject(error)
           } else if (body.length === 0) {
-            reject('page empty')
+            reject('page empty (Not an error)')
           } else {
             for (let key in body) {
               if (body.hasOwnProperty(key)) {

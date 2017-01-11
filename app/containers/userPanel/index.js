@@ -21,6 +21,18 @@ class UserPanel extends Component {
     }
   }
 
+  componentWillMount () {
+    let loggedInUserInfo = this.props.getLoggedInUserInfo()
+    console.log('loggedInUserInfo is ' + loggedInUserInfo)
+
+    this.setState({
+      showLoginModal: true,
+      loggedInUserToken: loggedInUserInfo ? loggedInUserInfo.token : null,
+      loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null,
+      loggedInUserImage: loggedInUserInfo ? loggedInUserInfo.image : null,
+    })
+  }
+
   closeLoginModal () {
     this.setState({
       showLoginModal: false
@@ -73,8 +85,8 @@ class UserPanel extends Component {
 
   renderLoginModal () {
     return (
-      <Modal bsSize="small" show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this) }>
-        <Modal.Header closeButton>
+      <Modal bsSize="small" show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this)}>
+        <Modal.Header>
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -92,11 +104,11 @@ class UserPanel extends Component {
     return (
       <div>
         { this.renderLoginModal() }
-        <a href='#'
-          className='customized-button'
-          onClick={ this.handleLoginClicked.bind(this) }>
-          #login
-        </a>
+          <a href='#'
+            className='customized-button'
+            onClick={ this.handleLoginClicked.bind(this) }>
+            #login
+          </a>
       </div>
     )
   }
@@ -143,6 +155,13 @@ class UserPanel extends Component {
       image: null
     })
     removeAccessToken()
+
+    this.setState({
+      showLoginModal: true,
+      loggedInUserToken: null,
+      loggedInUserName: null,
+      loggedInUserImage: null
+    })
   }
 
   handleSyncClicked () {

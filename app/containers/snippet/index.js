@@ -43,9 +43,7 @@ class Snippet extends Component {
           <Modal.Title>{ this.state.rawFile }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p className='code-area'>
-            { this.state.rawContent }
-          </p>
+          <textarea className='code-area' defaultValue={ this.state.rawContent } />
         </Modal.Body>
       </Modal>
     )

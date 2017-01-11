@@ -33,7 +33,12 @@
 }
 
 .code-area {
+  width: 100%;
+  min-height: 400px;
   white-space: pre-wrap;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
+  border: 0px;
 }
 
 .file-name {
@@ -50,11 +55,11 @@
   overflow: auto;
 }
 
-p {
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-  margin: 10px 0px 0px 0px !important
-}
+// p {
+//   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+//   font-size: 13px;
+//   margin: 10px 0px 0px 0px !important
+// }
 
 pre {
   font-size: 11px !important;
