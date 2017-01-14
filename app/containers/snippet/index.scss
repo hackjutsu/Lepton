@@ -22,8 +22,7 @@
 .customized-button {
   float: right;
   font-size: 13px;
-  margin-top: 4px;
-  margin-right: 4px;
+  margin: 5px 5px 0px 10px;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
 }
 
@@ -34,7 +33,7 @@
 
 .code-area {
   width: 100%;
-  min-height: 400px;
+  min-height: 300px;
   white-space: pre-wrap;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
   font-size: 13px;
@@ -48,18 +47,12 @@
 }
 
 .edit-modal .modal-content {
-  min-height: 500px;
+  min-height: 300px;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
   font-size: 13px;
   white-space: nowrap;
   overflow: auto;
 }
-
-// p {
-//   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-//   font-size: 13px;
-//   margin: 10px 0px 0px 0px !important
-// }
 
 pre {
   font-size: 11px !important;

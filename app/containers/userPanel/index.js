@@ -6,6 +6,7 @@ import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 import { Button, Image, Modal } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
+import { NEW_GIST } from '../gistEditorForm'
 import defaultImage from './github.jpg'
 import './index.scss'
 
@@ -108,19 +109,27 @@ class UserPanel extends Component {
   }
 
   renderGistEditorModalBody () {
+    let initialData = {
+      description: '',
+      gists: [
+          {filename: '', content:''}
+      ]}
     return (
-      <GistEditorForm onSubmit={ this.handleGistEditorFormSubmit.bind(this) }></GistEditorForm>
+      <GistEditorForm
+        initialData={ initialData }
+        formStyle={ NEW_GIST }
+        onSubmit={ this.handleGistEditorFormSubmit.bind(this) }></GistEditorForm>
     )
   }
 
   renderGistEditorModal () {
     return (
       <Modal bsSize="large" show={ this.state.showGistEditorModal } onHide={ this.closeGistEditorModal.bind(this)}>
-        <Modal.Header>
+        <Modal.Header closeButton>
           <Modal.Title>New Gist</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          { this.renderGistEditorModalBody() }
+          { this.renderGistEditorModalBody.bind(this)() }
         </Modal.Body>
       </Modal>
     )

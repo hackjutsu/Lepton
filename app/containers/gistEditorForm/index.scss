@@ -33,8 +33,6 @@
   width: 80%;
   margin: 5px 20px 5px 0px;
   padding: 5px;
-  // min-height: 400px;
-  // white-space: pre-wrap;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
   font-size: 13px;
   border: solid  1px;
@@ -45,7 +43,7 @@
 .gist-editor-content-area {
   width: 100%;
   padding: 5px;
-  min-height: 400px;
+  min-height: 300px;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
   font-size: 13px;
   border: 0px;
@@ -58,7 +56,7 @@
 }
 
 .control-button-group {
-  // float: right;
+  height: 45px;
 }
 
 .gist-editor-customized-tag {

@@ -52,6 +52,7 @@ function initGlobalLogger () {
   }
   logger.add(logger.transports.File, {
       json: false,
+      exitOnError: false,
       filename: path.join(logFolder, logFile),
       timestamp: true })
   global.logger = logger
