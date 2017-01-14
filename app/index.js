@@ -151,10 +151,10 @@ function updateActiveGistBase (gists, activeGist) {
   }
 
   if (!gists[activeGist].details) {
-    logger.info('** dispatch fetchSingleGist')
+    logger.info('** dispatch fetchSingleGist ' + activeGist)
     reduxStore.dispatch(fetchSingleGist(gists[activeGist], activeGist))
   }
-  logger.info('** dispatch selectGist')
+  logger.info('** dispatch selectGist ' + activeGist)
   reduxStore.dispatch(selectGist(activeGist))
 }
 

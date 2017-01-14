@@ -5,8 +5,9 @@ import { connect } from 'react-redux'
 import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 import { Button, Image, Modal } from 'react-bootstrap'
-import './index.scss'
+import GistEditorForm from '../gistEditorForm'
 import defaultImage from './github.jpg'
+import './index.scss'
 
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
@@ -17,6 +18,7 @@ class UserPanel extends Component {
     super(props)
 
     this.state = {
+      showGistEditorModal: false,
       showLoginModal: false,
       loggedInUserToken: null,
       loggedInUserName: null,
@@ -51,7 +53,7 @@ class UserPanel extends Component {
     this.closeLoginModal()
   }
 
-  renderModalBody () {
+  renderLoginModalBody () {
     if (this.state.loggedInUserName === null ||
       this.state.loggedInUserName === 'null') {
       return (
@@ -89,25 +91,50 @@ class UserPanel extends Component {
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          { this.renderModalBody() }
+          { this.renderLoginModalBody() }
         </Modal.Body>
       </Modal>
     )
   }
-  //
-  // <Modal.Footer>
-  //   Login Powered by GitHub
-  // </Modal.Footer>
+
+  closeGistEditorModal () {
+    this.setState({
+      showGistEditorModal: false
+    })
+  }
+
+  handleGistEditorFormSubmit (data) {
+    logger.debug('Form submitted: ' + JSON.stringify(data))
+  }
+
+  renderGistEditorModalBody () {
+    return (
+      <GistEditorForm onSubmit={ this.handleGistEditorFormSubmit.bind(this) }></GistEditorForm>
+    )
+  }
+
+  renderGistEditorModal () {
+    return (
+      <Modal bsSize="large" show={ this.state.showGistEditorModal } onHide={ this.closeGistEditorModal.bind(this)}>
+        <Modal.Header>
+          <Modal.Title>New Gist</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          { this.renderGistEditorModalBody() }
+        </Modal.Body>
+      </Modal>
+    )
+  }
 
   renderOutSection () {
     return (
       <div>
         { this.renderLoginModal() }
-          <a href='#'
-            className='customized-button'
-            onClick={ this.handleLoginClicked.bind(this) }>
-            #login
-          </a>
+        <a href='#'
+          className='customized-tag'
+          onClick={ this.handleLoginClicked.bind(this) }>
+          #login
+        </a>
       </div>
     )
   }
@@ -115,12 +142,19 @@ class UserPanel extends Component {
   renderInSection () {
     return (
       <div>
+        { this.renderGistEditorModal() }
         <a href='#'
           className='customized-tag'
           onClick={ this.handleLogoutClicked.bind(this) }>
           #logout
         </a>
         <br/><br/>
+        <a href='#'
+          className='customized-tag'
+          onClick={ this.handleNewGistClicked.bind(this) }>
+          #new
+        </a>
+        <br/>
         <a href='#'
           className='customized-tag'
           onClick={ this.handleSyncClicked.bind(this) }>
@@ -157,6 +191,14 @@ class UserPanel extends Component {
       loggedInUserToken: null,
       loggedInUserName: null,
       loggedInUserImage: null
+    })
+  }
+
+  handleNewGistClicked () {
+    logger.debug('handleNewGistClicked is called')
+    logger.debug('Showing the gist editor modal.')
+    this.setState({
+      showGistEditorModal: true
     })
   }
 

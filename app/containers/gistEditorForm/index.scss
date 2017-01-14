@@ -1,0 +1,68 @@
+.gist-editor-control-button {
+  margin: 5px 2px;
+  float: right;
+}
+
+.gist-editor-new-gist-button {
+  margin: 5px 0px;
+}
+
+.gist-editor-section {
+  margin: 5px 5px;
+}
+
+.gist-editor-section .panel-body {
+  padding: 0px !important;
+}
+
+.gist-editor-section .panel-heading {
+  padding: 2px 5px !important;
+}
+
+.gist-editor-input-area {
+  width: 100%;
+  padding: 5px;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
+  border: solid  1px;
+  border-color: #D3D3D3;
+  border-radius: 3px;
+}
+
+.gist-editor-filename-area {
+  width: 80%;
+  margin: 5px 20px 5px 0px;
+  padding: 5px;
+  // min-height: 400px;
+  // white-space: pre-wrap;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
+  border: solid  1px;
+  border-color: #D3D3D3;
+  border-radius: 3px;
+}
+
+.gist-editor-content-area {
+  width: 100%;
+  padding: 5px;
+  min-height: 400px;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
+  border: 0px;
+  resize: none;
+}
+
+.gist-editor-gist-file {
+  border: 0px;
+  padding: 10px 0px !important;
+}
+
+.control-button-group {
+  // float: right;
+}
+
+.gist-editor-customized-tag {
+  font-size: 13px;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  color: #4078C0 !important;
+}

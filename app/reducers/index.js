@@ -1,6 +1,7 @@
 'use strict'
 
 import { combineReducers } from 'redux'
+import { reducer as formReducer } from 'redux-form'
 import AccessTokenReducer from './reducer_token'
 import GistsReducer from './reducer_gists'
 import SyncTimeReducer from './reducer_sync_time'
@@ -10,6 +11,7 @@ import ActiveLangTagReducer from './reducer_active_lang_tag'
 import UserSessionReducer from './reducer_user_session'
 
 const rootReducer = combineReducers({
+  form: formReducer,
   userSession: UserSessionReducer,
   accessToken: AccessTokenReducer,
   gists: GistsReducer,

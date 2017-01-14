@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Panel, Modal } from 'react-bootstrap'
 import HighlightJS from 'highlight.js'
-import Shell from 'shell'
+import { shell } from 'electron'
 import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github.css'
 
@@ -62,7 +62,7 @@ class Snippet extends Component {
         <a
           href='#'
           className='customized-button'
-          onClick={ Shell.openExternal.bind(this, activeSnippet.brief.html_url + '/revisions') }>
+          onClick={ shell.openExternal.bind(this, activeSnippet.brief.html_url + '/revisions') }>
           #revisions
         </a>
       </div>
