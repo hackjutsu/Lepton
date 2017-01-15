@@ -2,13 +2,24 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { logoutUserSession, removeAccessToken } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 import { Button, Image, Modal } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { NEW_GIST } from '../gistEditorForm'
 import defaultImage from './github.jpg'
 import './index.scss'
+
+import {
+  logoutUserSession,
+  updateSingleGist,
+  updateLangTags,
+  selectLangTag,
+  selectGist } from '../../actions/index'
+
+import {
+  getGitHubApi,
+  CREATE_SINGLE_GIST
+} from '../../utilities/gitHubApi'
 
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
@@ -104,8 +115,74 @@ class UserPanel extends Component {
     })
   }
 
-  handleGistEditorFormSubmit (data) {
+  handleCreateSingleGist (data) {
     logger.debug('Form submitted: ' + JSON.stringify(data))
+    let isPublic = data.private === undefined ? true : !data.private
+    let description = data.description
+    let processedFiles = {}
+
+    data.gistFiles.forEach ((file) => {
+      processedFiles[file.filename]= {
+        content: file.content
+      }
+    })
+
+    logger.debug(this.props.accessToken)
+    logger.debug('isPublic is ' + isPublic)
+    getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
+    .catch((err) => {
+      logger.error(JSON.stringify(err))
+    })
+    .then((response) => {
+      logger.debug(JSON.stringify(response))
+      // TODO: udpate the gists without syncing
+      this.updateGistsStoreWithNewGist(response)
+    })
+    .finally(() => {
+      logger.debug('Closing the editor modal')
+      this.closeGistEditorModal()
+    })
+  }
+
+  updateGistsStoreWithNewGist (gistDetails) {
+    let gistId = gistDetails.id
+    logger.debug('The new gist id is ' + gistId)
+    let files = gistDetails.files
+
+    let langs = new Set()
+    let langTags = this.props.langTags
+    langTags.All.add(gistId)
+    for (let key in files) {
+      if (files.hasOwnProperty(key)) {
+        let file = files[key]
+        let language = file.language
+        langs.add(language)
+        if (langTags.hasOwnProperty(language)) {
+          langTags[language].add(gistId)
+        } else {
+          langTags[language] = new Set()
+          langTags[language].add(gistId)
+        }
+      }
+    }
+
+    let newGist = {}
+    newGist[gistId] = {
+      langs: langs,
+      brief: gistDetails,
+      details: gistDetails
+    }
+    logger.info('** dispatch updateSingleGist')
+    this.props.updateSingleGist(newGist)
+
+    logger.info('** dispatch updateLangTags')
+    this.props.updateLangTags(langTags)
+
+    logger.info('** dispatch selectLangTag')
+    this.props.selectLangTag('All')
+
+    logger.info('** dispatch selectGist')
+    this.props.selectGist(gistId)
   }
 
   renderGistEditorModalBody () {
@@ -118,7 +195,7 @@ class UserPanel extends Component {
       <GistEditorForm
         initialData={ initialData }
         formStyle={ NEW_GIST }
-        onSubmit={ this.handleGistEditorFormSubmit.bind(this) }></GistEditorForm>
+        onSubmit={ this.handleCreateSingleGist.bind(this) }></GistEditorForm>
     )
   }
 
@@ -243,13 +320,19 @@ class UserPanel extends Component {
 function mapStateToProps (state) {
   return {
     userSession: state.userSession,
-    syncTime: state.syncTime
+    syncTime: state.syncTime,
+    accessToken: state.accessToken,
+    langTags: state.langTags,
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    logoutUserSession: logoutUserSession
+    logoutUserSession: logoutUserSession,
+    updateSingleGist: updateSingleGist,
+    updateLangTags: updateLangTags,
+    selectLangTag: selectLangTag,
+    selectGist: selectGist
   }, dispatch)
 }
 

@@ -42,7 +42,7 @@ class NavigationPanelDetails extends Component {
 
     // When user has no gists, the default active language tag will be 'All' with
     // an empty set.
-    if (langTags[activeLangTag].size === 0) {
+    if (!langTags[activeLangTag] || langTags[activeLangTag].size === 0) {
       return (
         <div className='snippet-thumnail'>No gist found</div>
       )

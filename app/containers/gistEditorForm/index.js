@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
-import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
+import { Button, ListGroup, ListGroupItem, Panel, Checkbox } from 'react-bootstrap'
 
 import './index.scss'
 
@@ -16,50 +16,14 @@ class GistEditorForm extends Component {
     logger.debug('props.initialData is ' + JSON.stringify(initialData))
 
     // Initialize the form
+    initialData.private && change('private', initialData.private)
     initialData.description && change('description', initialData.description)
     initialData.gists && change('gistFiles', initialData.gists)
   }
 
-  renderButtonGroup () {
-    const { submitting, formStyle } = this.props
-
-    if (formStyle === NEW_GIST) {
-      return (
-        <div className='control-button-group'>
-          <Button
-            className='gist-editor-control-button'
-            type='submit'
-            bsStyle="danger"
-            disabled={ submitting }>
-            Create secret gist
-          </Button>
-          <Button
-            className='gist-editor-control-button'
-            type='submit'
-            bsStyle='success'
-            disabled={ submitting }>
-            Create public gist
-          </Button>
-        </div>
-      )
-    } else if (formStyle === UPDATE_GIST) {
-      return (
-        <div className='control-button-group'>
-          <Button
-            className='gist-editor-control-button'
-            type='submit'
-            bsStyle="success"
-            disabled={ submitting }>
-            Update gist
-          </Button>
-        </div>
-      )
-    }
-  }
-
   render() {
     logger.debug('Inside gistEditorForm render method')
-    const { handleSubmit } = this.props
+    const { handleSubmit, submitting, formStyle } = this.props
 
     return (
       <form onSubmit={ handleSubmit }>
@@ -69,9 +33,18 @@ class GistEditorForm extends Component {
           component={ renderDescriptionField }/>
         <FieldArray
           name='gistFiles'
+          formStyle={ formStyle }
           component={ renderGistFiles }/>
         <hr/>
-        { this.renderButtonGroup() }
+        <div className='control-button-group'>
+          <Button
+            className='gist-editor-control-button'
+            type='submit'
+            bsStyle='success'
+            disabled={ submitting }>
+            Submit
+          </Button>
+        </div>
       </form>
     )
   }
@@ -108,7 +81,7 @@ function renderGistFileHeader (member, fields, index) {
   )
 }
 
-const renderGistFiles = ({ fields }) => (
+const renderGistFiles = ({ fields, formStyle }) => (
   <ListGroup className='gist-editor-section'>
     { fields.map((member, index) =>
       <ListGroupItem className='gist-editor-gist-file' key={index}>
@@ -125,6 +98,10 @@ const renderGistFiles = ({ fields }) => (
         onClick={ () => fields.push({}) }>
         #add file
       </a>
+      <div className='gist-editor-privacy-checkbox'>
+        <Field name='private' id='private' component='input' type='checkbox' disabled={ formStyle === UPDATE_GIST }/>
+         &nbsp;private
+      </div>
     </div>
   </ListGroup>
 )

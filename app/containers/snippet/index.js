@@ -52,11 +52,12 @@ class Snippet extends Component {
     logger.debug('Form submitted: ' + JSON.stringify(data))
   }
 
-  renderGistEditorModalBody (description, fileArray) {
+  renderGistEditorModalBody (description, fileArray, isPrivate) {
     logger.debug('Inside renderGistEditorModalBody')
     let initialData = Object.assign({
       description: description,
-      gists: fileArray
+      gists: fileArray,
+      private: isPrivate
     })
 
     logger.debug(UPDATE_GIST)
@@ -69,7 +70,7 @@ class Snippet extends Component {
     )
   }
 
-  renderGistEditorModal (description, fileArray) {
+  renderGistEditorModal (description, fileArray, isPrivate) {
     logger.debug('Inside renderGistEditorModal')
     return (
       <Modal
@@ -80,7 +81,7 @@ class Snippet extends Component {
           <Modal.Title>Edit Gist</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          { this.renderGistEditorModalBody(description, fileArray) }
+          { this.renderGistEditorModalBody(description, fileArray, isPrivate) }
         </Modal.Body>
       </Modal>
     )
@@ -185,7 +186,7 @@ class Snippet extends Component {
           bsStyle={ activeSnippet.brief.public ? 'success' : 'danger' }
           header={ this.renderPanelHeader(activeSnippet) }>
           <p>{ activeSnippet.brief.description }</p>
-          { this.renderGistEditorModal(activeSnippet.brief.description, fileArray) }
+          { this.renderGistEditorModal(activeSnippet.brief.description, fileArray, !activeSnippet.brief.public) }
           { this.renderRawModal() }
           { fileHtmlArray }
         </Panel>

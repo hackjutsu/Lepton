@@ -115,14 +115,21 @@ function makeRangeArr (start, end) {
   return result
 }
 
-function createSingleGist () {
+function createSingleGist (accessToken, description, files, isPublic) {
+  logger.debug('Inside createSingleGist ' + isPublic)
   return ReqPromise({
+    headers: {
+      'User-Agent': 'request',
+    },
     method: 'POST',
-    uri: 'https://github.com/login/oauth/access_token',
-    form: {
-      'client_id': clientId,
-      'client_secret': clientSecret,
-      'code': authCode,
+    uri: 'https://api.github.com/gists',
+    qs: {
+      access_token: accessToken
+    },
+    body: {
+      description: description,
+      public: isPublic,
+      files: files
     },
     json: true
   })
