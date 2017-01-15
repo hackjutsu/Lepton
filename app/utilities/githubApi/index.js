@@ -115,6 +115,19 @@ function makeRangeArr (start, end) {
   return result
 }
 
+function createSingleGist () {
+  return ReqPromise({
+    method: 'POST',
+    uri: 'https://github.com/login/oauth/access_token',
+    form: {
+      'client_id': clientId,
+      'client_secret': clientSecret,
+      'code': authCode,
+    },
+    json: true
+  })
+}
+
 export const EXCHANGE_ACCESS_TOKEN = 'EXCHANGE_ACCESS_TOKEN'
 export const GET_ALL_GISTS = 'GET_ALL_GISTS'
 export const GET_SINGLE_GIST = 'GET_SINGLE_GIST'
@@ -132,6 +145,8 @@ export function getGitHubApi (selection) {
       return getSingleGist
     case GET_USER_PROFILE:
       return getUserProfile
+    case CREATE_SINGLE_GIST:
+      return createSingleGist
     default:
       logger.debog('Not implemented yet.')
   }
