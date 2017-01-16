@@ -75,7 +75,7 @@ function renderGistFileHeader (member, fields, index) {
           component='input'
           placeholder='File name...'/>
         <a href='#'
-          className='gist-editor-customized-tag'
+          className={ index === 0 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
           onClick={ () => fields.remove(index) }>#remove</a>
       </div>
   )

@@ -10,8 +10,8 @@ Status: **In progress**
 - - [x] Display all gists
 - - [x] Group gists by languages
 - - [x] Display gist revisions
-- - [ ] Create new gist
-- - [ ] Edit gists
+- - [x] Create new gist
+- - [x] Edit gists
 
 **GitHub OAuth Integration**
 - - [x] Login
@@ -22,11 +22,8 @@ Status: **In progress**
 - - [x] Persist access token when close
 - - [x] Read persistence when open
 
-**Comment section** (optional?)
-- - [ ] Display comments
-- - [ ] Make comments
-
 **Advanced feature**
 - - [ ] Offline
 - - [ ] Customized tags
 - - [ ] Gist sharing
+- - [ ] Local Search
