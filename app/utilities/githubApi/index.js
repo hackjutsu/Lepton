@@ -116,7 +116,6 @@ function makeRangeArr (start, end) {
 }
 
 function createSingleGist (accessToken, description, files, isPublic) {
-  logger.debug('Inside createSingleGist ' + isPublic)
   return ReqPromise({
     headers: {
       'User-Agent': 'request',
@@ -132,6 +131,24 @@ function createSingleGist (accessToken, description, files, isPublic) {
       files: files
     },
     json: true
+  })
+}
+
+function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) {
+  return ReqPromise({
+    headers: {
+      'User-Agent': 'request',
+    },
+    method: 'PATCH',
+      uri: 'https://api.github.com/gists/' + gistId,
+      qs: {
+        access_token: accessToken
+      },
+      body: {
+        description: updatedDescription,
+        files: updatedFiles
+      },
+      json: true
   })
 }
 
@@ -154,7 +171,9 @@ export function getGitHubApi (selection) {
       return getUserProfile
     case CREATE_SINGLE_GIST:
       return createSingleGist
+    case EDIT_SINGLE_GIST:
+      return editSingleGist
     default:
-      logger.debog('Not implemented yet.')
+      logger.debug('Not implemented yet.')
   }
 }

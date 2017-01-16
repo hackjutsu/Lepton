@@ -41,14 +41,14 @@ class NavigationPanelDetails extends Component {
     let snippetThumbnails = []
 
     // When user has no gists, the default active language tag will be 'All' with
-    // an empty set.
-    if (!langTags[activeLangTag] || langTags[activeLangTag].size === 0) {
+    // an empty array.
+    if (!langTags || !langTags[activeLangTag] || langTags[activeLangTag].length === 0) {
       return (
         <div className='snippet-thumnail'>No gist found</div>
       )
     }
 
-    for (let gistId of langTags[activeLangTag].keys()) {
+    langTags[activeLangTag].forEach((gistId) => {
       // During the synchronization, gists will be updated before the langTags,
       // which introduces an interval where a gist exists in langTags but not in
       // the gists. This guard makes sure we push the gist only when it is already
@@ -63,7 +63,7 @@ class NavigationPanelDetails extends Component {
           </ListGroupItem>
         )
       }
-    }
+  })
 
     return snippetThumbnails
   } // renderSnippetThumbnails()

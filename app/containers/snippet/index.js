@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { Panel, Modal } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
@@ -9,6 +10,16 @@ import HighlightJS from 'highlight.js'
 import { shell } from 'electron'
 import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github.css'
+
+import {
+  updateSingleGist,
+  selectLangTag,
+  updateLangTags } from '../../actions/index'
+
+import {
+  getGitHubApi,
+  EDIT_SINGLE_GIST
+} from '../../utilities/gitHubApi'
 
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
@@ -50,6 +61,113 @@ class Snippet extends Component {
 
   handleGistEditorFormSubmit (data) {
     logger.debug('Form submitted: ' + JSON.stringify(data))
+    let description = data.description
+    let processedFiles = {}
+
+    data.gistFiles.forEach ((file) => {
+      processedFiles[file.filename]= {
+        content: file.content
+      }
+    })
+
+    let activeSnippet = this.props.gists[this.props.activeGist]
+    for (let preFile in activeSnippet.details.files) {
+      logger.debug('!! The preFile is ' + preFile)
+      if (!processedFiles[preFile]) {
+        processedFiles[preFile] = null
+      }
+    }
+
+    logger.debug('The processedFiles are ' + JSON.stringify(processedFiles))
+
+    getGitHubApi(EDIT_SINGLE_GIST)(
+      this.props.accessToken,
+      this.props.activeGist,
+      description,
+      processedFiles)
+    .catch((err) => {
+      logger.error(JSON.stringify(err))
+    })
+    .then((response) => {
+      this.updateGistsStoreWithUpdatedGist(response)
+    })
+    .finally(() => {
+      logger.debug('Closing the editor modal')
+      this.closeGistEditorModal()
+    })
+  }
+
+  updateGistsStoreWithUpdatedGist (gistDetails) {
+    let gistId = gistDetails.id
+    logger.debug('The new gist id is ' + gistId)
+    let files = gistDetails.files
+
+    let activeSnippet = this.props.gists[this.props.activeGist]
+    let preLangs = activeSnippet.langs
+
+    // Adding files in an eidt could introduce some changes to the langTags.
+    // 1) if a gist has a new language, we should add the gist id to this
+    // language tag, ie langTags[language] 2) if the new language doesn't
+    // exist, we should add the new language to langTags.
+    let newLangs = new Set()
+    let langTags = this.props.langTags
+    for (let key in files) {
+      if (files.hasOwnProperty(key)) {
+        let file = files[key]
+        let language = file.language
+        newLangs.add(language)
+        if (langTags.hasOwnProperty(language)) {
+          if (langTags[language].indexOf(gistId) === -1) {
+            langTags[language].unshift(gistId)
+          }
+        } else {
+          langTags[language] = []
+          langTags[language].unshift(gistId)
+        }
+      }
+    }
+
+    logger.debug('Filtering out the outdated gistId in the langTags')
+    // Removing files in an eidt could introduce some changes to the langTags.
+    // 1) if a gist no long has a language, we should remove the gist id from
+    // this language tag 2) if the updated language tag is empty, we should remove
+    // this tag at all.
+    for (let language of preLangs) {
+      if (!newLangs.has(language)) {
+        langTags[language] = langTags[language].filter((value) => {
+          return value != gistId
+        })
+        if (langTags[language].length === 0) {
+          delete langTags[language]
+        }
+      }
+    }
+
+    let updatedGist = {}
+    updatedGist[gistId] = {
+      langs: newLangs,
+      brief: gistDetails,
+      details: gistDetails
+    }
+
+    logger.info('** dispatch updateSingleGist')
+    this.props.updateSingleGist(updatedGist)
+
+    logger.info('** dispatch updateLangTags')
+    this.props.updateLangTags(langTags)
+
+    // If the previous active language tag is no longer valid, for example,
+    // user deletes all cpp files inside a gist when C++ tag is the ative tag,
+    // or the gist array for the preivous active language tag is empty, we
+    // choose to fall back to 'All'.
+    if (!langTags[this.props.activeLangTag] ||
+        !langTags[this.props.activeLangTag][gistId]) {
+      logger.info('** dispatch selectLangTag')
+      logger.debug('The selected language tag is All')
+      this.props.selectLangTag('All')
+    }
+    // logger.info('** dispatch selectGist')
+    // this.props.selectGist(gistId)
   }
 
   renderGistEditorModalBody (description, fileArray, isPrivate) {
@@ -198,8 +316,20 @@ class Snippet extends Component {
 function mapStateToProps (state) {
   return {
     gists: state.gists,
-    activeGist: state.activeGist
+    activeLangTag: state.activeLangTag,
+    activeGist: state.activeGist,
+    userSession: state.userSession,
+    accessToken: state.accessToken,
+    langTags: state.langTags,
   }
 }
 
-export default connect(mapStateToProps)(Snippet)
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators({
+    updateSingleGist: updateSingleGist,
+    updateLangTags: updateLangTags,
+    selectLangTag: selectLangTag
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Snippet)

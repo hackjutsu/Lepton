@@ -163,14 +163,14 @@ function updateActiveGistAfterSync (gists, langTags, newActiveTagCandidate) {
   if (!activeGist || !gists[activeGist]) {
     // If the previous active gist is not set or is deleted, we should reset it.
     let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
-    let gistListForActiveLangTag = [...langTags[effectiveLangTag]]
+    let gistListForActiveLangTag = langTags[effectiveLangTag]
     activeGist = gistListForActiveLangTag[0] // reset the active gist
   }
   updateActiveGistBase(gists, activeGist)
 }
 
 function updateActiveGistAfterClicked (gists, langTags, newActiveTag) {
-  let gistListForActiveLangTag = [...langTags[newActiveTag]]
+  let gistListForActiveLangTag = langTags[newActiveTag]
   let activeGist = gistListForActiveLangTag[0] // reset the active gist
   updateActiveGistBase(gists, activeGist)
 }
@@ -196,9 +196,10 @@ function updateUserGists (userLoginId, accessToken) {
     .then((gistList) => {
       logger.debug('The length of the gist list is ' + gistList.length)
       let gists = {}
-      let langTags = {}
+      let rawLangTags = {}
       let activeTagCandidate = 'All'
-      langTags.All = new Set()
+      rawLangTags['All'] = new Set()
+      let langTags = {}
 
       gistList.forEach((gist) => {
         let langs = new Set()
@@ -208,14 +209,20 @@ function updateUserGists (userLoginId, accessToken) {
             let file = gist.files[key]
             let language = file.language
             langs.add(language)
-            langTags.All.add(gist.id)
-            if (langTags.hasOwnProperty(language)) {
-              langTags[language].add(gist.id)
+            rawLangTags['All'].add(gist.id)
+            if (rawLangTags.hasOwnProperty(language)) {
+              rawLangTags[language].add(gist.id)
             } else {
-              langTags[language] = new Set()
-              langTags[language].add(gist.id)
+              rawLangTags[language] = new Set()
+              rawLangTags[language].add(gist.id)
             }
           }
+        }
+
+        for (let language in rawLangTags) {
+          // Save the gist ids in an Array rather than a Set, which facilitate
+          // many operations later, like displaying the gist id from an Array
+          langTags[language] = [...rawLangTags[language]]
         }
 
         gists[gist.id] = {

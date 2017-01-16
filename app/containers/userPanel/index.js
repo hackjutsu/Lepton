@@ -10,6 +10,7 @@ import defaultImage from './github.jpg'
 import './index.scss'
 
 import {
+  removeAccessToken,
   logoutUserSession,
   updateSingleGist,
   updateLangTags,
@@ -127,15 +128,11 @@ class UserPanel extends Component {
       }
     })
 
-    logger.debug(this.props.accessToken)
-    logger.debug('isPublic is ' + isPublic)
     getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
     .catch((err) => {
       logger.error(JSON.stringify(err))
     })
     .then((response) => {
-      logger.debug(JSON.stringify(response))
-      // TODO: udpate the gists without syncing
       this.updateGistsStoreWithNewGist(response)
     })
     .finally(() => {
@@ -144,6 +141,7 @@ class UserPanel extends Component {
     })
   }
 
+  // TODO: It might be better to use Array instead of Set each lang
   updateGistsStoreWithNewGist (gistDetails) {
     let gistId = gistDetails.id
     logger.debug('The new gist id is ' + gistId)
@@ -151,17 +149,17 @@ class UserPanel extends Component {
 
     let langs = new Set()
     let langTags = this.props.langTags
-    langTags.All.add(gistId)
+    langTags.All.unshift(gistId)
     for (let key in files) {
       if (files.hasOwnProperty(key)) {
         let file = files[key]
         let language = file.language
         langs.add(language)
         if (langTags.hasOwnProperty(language)) {
-          langTags[language].add(gistId)
+          langTags[language].unshift(gistId)
         } else {
-          langTags[language] = new Set()
-          langTags[language].add(gistId)
+          langTags[language] = []
+          langTags[language].unshift(gistId)
         }
       }
     }
