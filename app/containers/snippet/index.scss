@@ -33,7 +33,15 @@
 
 .code-area {
   width: 100%;
-  // min-height: 300px;
+  white-space: pre-wrap;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
+  border: 0px;
+}
+
+.code-area-raw {
+  width: 100%;
+  min-height: 550px;
   white-space: pre-wrap;
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
   font-size: 13px;
