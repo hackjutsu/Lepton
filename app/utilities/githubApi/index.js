@@ -140,15 +140,15 @@ function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) 
       'User-Agent': 'request',
     },
     method: 'PATCH',
-      uri: 'https://api.github.com/gists/' + gistId,
-      qs: {
-        access_token: accessToken
-      },
-      body: {
-        description: updatedDescription,
-        files: updatedFiles
-      },
-      json: true
+    uri: 'https://api.github.com/gists/' + gistId,
+    qs: {
+      access_token: accessToken
+    },
+    body: {
+      description: updatedDescription,
+      files: updatedFiles
+    },
+    json: true
   })
 }
 

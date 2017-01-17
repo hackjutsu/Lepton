@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
-import { Button, ListGroup, ListGroupItem, Panel, Checkbox } from 'react-bootstrap'
+import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 
 import './index.scss'
 
@@ -11,7 +11,7 @@ export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
 
 class GistEditorForm extends Component {
-  componentWillMount() {
+  componentWillMount () {
     const { change, initialData } = this.props
     logger.debug('props.initialData is ' + JSON.stringify(initialData))
 
@@ -21,7 +21,7 @@ class GistEditorForm extends Component {
     initialData.gists && change('gistFiles', initialData.gists)
   }
 
-  render() {
+  render () {
     logger.debug('Inside gistEditorForm render method')
     const { handleSubmit, submitting, formStyle } = this.props
 

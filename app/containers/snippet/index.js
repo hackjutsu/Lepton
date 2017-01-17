@@ -7,7 +7,7 @@ import { Panel, Modal } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github.css'
 
@@ -21,7 +21,6 @@ import {
   EDIT_SINGLE_GIST
 } from '../../utilities/gitHubApi'
 
-import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class Snippet extends Component {
@@ -64,8 +63,8 @@ class Snippet extends Component {
     let description = data.description
     let processedFiles = {}
 
-    data.gistFiles.forEach ((file) => {
-      processedFiles[file.filename]= {
+    data.gistFiles.forEach((file) => {
+      processedFiles[file.filename] = {
         content: file.content
       }
     })
@@ -135,7 +134,7 @@ class Snippet extends Component {
     for (let language of preLangs) {
       if (!newLangs.has(language)) {
         langTags[language] = langTags[language].filter((value) => {
-          return value != gistId
+          return value !== gistId
         })
         if (langTags[language].length === 0) {
           delete langTags[language]
@@ -161,7 +160,7 @@ class Snippet extends Component {
     // or the gist array for the preivous active language tag is empty, we
     // choose to fall back to 'All'.
     if (!langTags[this.props.activeLangTag] ||
-        !langTags[this.props.activeLangTag][gistId]) {
+        !langTags[this.props.activeLangTag].includes(gistId)) {
       logger.info('** dispatch selectLangTag')
       logger.debug('The selected language tag is All')
       this.props.selectLangTag('All')
@@ -237,8 +236,9 @@ class Snippet extends Component {
     )
   }
 
-  createMarkup (content) {
-    let html = '<pre><code>' + HighlightJS.highlightAuto(content).value + '</code></pre>'
+  createMarkup (content, language) {
+    language = language === 'Shell' ? 'Bash' : language
+    let html = '<pre><code>' + HighlightJS.highlightAuto(content, [language]).value + '</code></pre>'
     return { __html: html }
   }
 
@@ -292,7 +292,7 @@ class Snippet extends Component {
             </div>
             <div
               className='code-area'
-              dangerouslySetInnerHTML={ this.createMarkup(gistFile.content) }/>
+              dangerouslySetInnerHTML={ this.createMarkup(gistFile.content, gistFile.language) }/>
           </div>
         )
       }

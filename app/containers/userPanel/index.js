@@ -122,8 +122,8 @@ class UserPanel extends Component {
     let description = data.description
     let processedFiles = {}
 
-    data.gistFiles.forEach ((file) => {
-      processedFiles[file.filename]= {
+    data.gistFiles.forEach((file) => {
+      processedFiles[file.filename] = {
         content: file.content
       }
     })
@@ -187,7 +187,7 @@ class UserPanel extends Component {
     let initialData = {
       description: '',
       gists: [
-          {filename: '', content:''}
+          {filename: '', content: ''}
       ]}
     return (
       <GistEditorForm

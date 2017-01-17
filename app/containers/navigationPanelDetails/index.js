@@ -63,7 +63,7 @@ class NavigationPanelDetails extends Component {
           </ListGroupItem>
         )
       }
-  })
+    })
 
     return snippetThumbnails
   } // renderSnippetThumbnails()
