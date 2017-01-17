@@ -23,7 +23,7 @@ app.on('ready', () => {
       titleBarStyle: 'hidden'
   })
   mainWindow.loadURL(`file://${__dirname}/index.html`)
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 })
 
 app.on('window-all-closed', function() {
@@ -36,7 +36,7 @@ app.on('window-all-closed', function() {
   //     'websql',
   //     'serviceworkers',
   //   ], () => {})
-  if (process.platform !== "darwin") app.quit()
+  if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('before-quit', function() {
@@ -45,11 +45,15 @@ app.on('before-quit', function() {
 
 function initGlobalLogger () {
   logger.level = 'debug'
-  let logFolder = path.join(app.getPath("userData"), "logs")
-  let logFile = new Date().toISOString().replace(/:/g, '.') + '.log'
+  let appFolder = app.getPath('userData')
+  if (!fs.existsSync(appFolder)) {
+    fs.mkdirSync(appFolder);
+  }
+  let logFolder = path.join(app.getPath('userData'), 'logs')
   if (!fs.existsSync(logFolder)) {
     fs.mkdirSync(logFolder);
   }
+  let logFile = new Date().toISOString().replace(/:/g, '.') + '.log'
   logger.add(logger.transports.File, {
       json: false,
       exitOnError: false,
