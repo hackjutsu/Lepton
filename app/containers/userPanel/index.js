@@ -150,19 +150,17 @@ class UserPanel extends Component {
     let langs = new Set()
     let langTags = this.props.langTags
     langTags.All.unshift(gistId)
-    for (let key in files) {
-      if (files.hasOwnProperty(key)) {
-        let file = files[key]
-        let language = file.language
-        langs.add(language)
-        if (langTags.hasOwnProperty(language)) {
-          langTags[language].unshift(gistId)
-        } else {
-          langTags[language] = []
-          langTags[language].unshift(gistId)
-        }
+    Object.keys(files).forEach(filename => {
+      let file = files[filename]
+      let language = file.language
+      langs.add(language)
+      if (langTags.hasOwnProperty(language)) {
+        langTags[language].unshift(gistId)
+      } else {
+        langTags[language] = []
+        langTags[language].unshift(gistId)
       }
-    }
+    })
 
     let newGist = {}
     newGist[gistId] = {

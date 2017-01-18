@@ -204,20 +204,18 @@ function updateUserGists (userLoginId, accessToken) {
       gistList.forEach((gist) => {
         let langs = new Set()
 
-        for (let key in gist.files) {
-          if (gist.files.hasOwnProperty(key)) {
-            let file = gist.files[key]
-            let language = file.language
-            langs.add(language)
-            rawLangTags['All'].add(gist.id)
-            if (rawLangTags.hasOwnProperty(language)) {
-              rawLangTags[language].add(gist.id)
-            } else {
-              rawLangTags[language] = new Set()
-              rawLangTags[language].add(gist.id)
-            }
+        Object.keys(gist.files).forEach(filename => {
+          let file = gist.files[filename]
+          let language = file.language
+          langs.add(language)
+          rawLangTags['All'].add(gist.id)
+          if (rawLangTags.hasOwnProperty(language)) {
+            rawLangTags[language].add(gist.id)
+          } else {
+            rawLangTags[language] = new Set()
+            rawLangTags[language].add(gist.id)
           }
-        }
+        })
 
         for (let language in rawLangTags) {
           // Save the gist ids in an Array rather than a Set, which facilitate

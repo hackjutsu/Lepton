@@ -110,21 +110,19 @@ class Snippet extends Component {
     // exist, we should add the new language to langTags.
     let newLangs = new Set()
     let langTags = this.props.langTags
-    for (let key in files) {
-      if (files.hasOwnProperty(key)) {
-        let file = files[key]
-        let language = file.language
-        newLangs.add(language)
-        if (langTags.hasOwnProperty(language)) {
-          if (langTags[language].indexOf(gistId) === -1) {
-            langTags[language].unshift(gistId)
-          }
-        } else {
-          langTags[language] = []
+    Object.keys(files).forEach(filename => {
+      let file = files[filename]
+      let language = file.language
+      newLangs.add(language)
+      if (langTags.hasOwnProperty(language)) {
+        if (langTags[language].indexOf(gistId) === -1) {
           langTags[language].unshift(gistId)
         }
+      } else {
+        langTags[language] = []
+        langTags[language].unshift(gistId)
       }
-    }
+    })
 
     logger.debug('Filtering out the outdated gistId in the langTags')
     // Removing files in an eidt could introduce some changes to the langTags.
