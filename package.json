@@ -1,6 +1,6 @@
 {
-  "name": "GiGist",
-  "version": "1.0.0",
+  "name": "Lepton",
+  "version": "0.1.0",
   "description": "Gist client for everyone",
   "main": "main.js",
   "scripts": {
@@ -67,7 +67,7 @@
     "winston": "^2.3.0"
   },
   "build": {
-    "appId": "com.hackjutsu.gigist",
+    "appId": "com.hackjutsu.lepton",
     "mac": {
       "category": "public.app-category.education"
     },
