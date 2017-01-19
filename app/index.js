@@ -32,7 +32,7 @@ import {
   selectGist
 } from './actions/index'
 
-import Notifier from 'node-notifier'
+import Notifier from './utilities/notifier'
 
 const logger = remote.getGlobal('logger')
 
@@ -244,18 +244,10 @@ function updateUserGists (userLoginId, accessToken) {
       preSyncSnapshot.activeLangTag = null
       preSyncSnapshot.activeGist = null
       logger.debug('About to send succeed notification')
-      Notifier.notify({
-        'title': 'Sync succeed',
-        'message': humanReadableSyncTime,
-        timeout: 3
-      })
+      Notifier('Sync succeed', humanReadableSyncTime)
     })
     .catch(function (err) {
-      Notifier.notify({
-        'title': 'Sync failed',
-        'message': err,
-        timeout: 3
-      })
+      Notifier('Sync failed', err)
       logger.error('The request has failed: ' + err)
     })
 }

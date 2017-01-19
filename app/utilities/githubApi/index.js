@@ -3,7 +3,7 @@
 import { Promise } from 'bluebird'
 import Request from 'request'
 import ReqPromise from 'request-promise'
-import Notifier from 'node-notifier'
+import Notifier from '../notifier'
 
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
@@ -64,11 +64,7 @@ function getAllgists (accessToken, userLoginId) {
       .catch(err => {
         if (err !== EMPTY_PAGE_ERROR_MESSAGE) {
           logger.error(err)
-		  Notifier.notify({
-	        'title': 'Sync failed',
-	        'message': err,
-            timeout: 3
-	      })
+          Notifier('Sync failed', err)
         }
       })
       .finally(() => {
