@@ -3,6 +3,7 @@
 import { Promise } from 'bluebird'
 import Request from 'request'
 import ReqPromise from 'request-promise'
+import Notifier from 'node-notifier'
 
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
@@ -50,6 +51,7 @@ function getSingleGist (accessToken, gistId) {
   })
 }
 
+const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
 function getAllgists (accessToken, userLoginId) {
   let gistList = []
   return new Promise(function (resolve, reject) {
@@ -60,7 +62,14 @@ function getAllgists (accessToken, userLoginId) {
 
     funcs.mapSeries(iterator)
       .catch(err => {
-        logger.error(err)
+        if (err !== EMPTY_PAGE_ERROR_MESSAGE) {
+          logger.error(err)
+		  Notifier.notify({
+	        'title': 'Sync failed',
+	        'message': err,
+            timeout: 3
+	      })
+        }
       })
       .finally(() => {
         resolve(gistList)
@@ -79,7 +88,7 @@ function getAllgists (accessToken, userLoginId) {
           if (error) {
             reject(error)
           } else if (body.length === 0) {
-            reject('page empty (Not an error)')
+            reject(EMPTY_PAGE_ERROR_MESSAGE)
           } else {
             for (let key in body) {
               if (body.hasOwnProperty(key)) {

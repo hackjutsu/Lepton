@@ -7,6 +7,8 @@ import { Button, Image, Modal } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { NEW_GIST } from '../gistEditorForm'
 import defaultImage from './github.jpg'
+import HumanReadableTime from 'human-readable-time'
+import Notifier from 'node-notifier'
 import './index.scss'
 
 import {
@@ -130,6 +132,11 @@ class UserPanel extends Component {
 
     getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
     .catch((err) => {
+      Notifier.notify({
+        'title': 'Gist creation failed',
+        'message': err,
+        timeout: 3
+      })
       logger.error(JSON.stringify(err))
     })
     .then((response) => {
@@ -179,6 +186,12 @@ class UserPanel extends Component {
 
     logger.info('** dispatch selectGist')
     this.props.selectGist(gistId)
+
+    Notifier.notify({
+      'title': 'Gist created',
+      'message': HumanReadableTime(new Date()),
+      timeout: 3
+    })
   }
 
   renderGistEditorModalBody () {

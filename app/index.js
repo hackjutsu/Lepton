@@ -32,6 +32,8 @@ import {
   selectGist
 } from './actions/index'
 
+import Notifier from 'node-notifier'
+
 const logger = remote.getGlobal('logger')
 
 const CONFIG_OPTIONS = {
@@ -231,7 +233,8 @@ function updateUserGists (userLoginId, accessToken) {
       }) // gistList.forEach
 
       // refresh the redux state
-      setSyncTime(HumanReadableTime(new Date()))
+      let humanReadableSyncTime = HumanReadableTime(new Date())
+      setSyncTime(humanReadableSyncTime)
       updateGistStoreAfterSync(gists)
       updateLangTagsAfterSync(langTags)
       updateActiveLangTagAfterSync(langTags, activeTagCandidate)
@@ -240,8 +243,19 @@ function updateUserGists (userLoginId, accessToken) {
       // clean up the snapshot for the previous state
       preSyncSnapshot.activeLangTag = null
       preSyncSnapshot.activeGist = null
+      logger.debug('About to send succeed notification')
+      Notifier.notify({
+        'title': 'Sync succeed',
+        'message': humanReadableSyncTime,
+        timeout: 3
+      })
     })
     .catch(function (err) {
+      Notifier.notify({
+        'title': 'Sync failed',
+        'message': err,
+        timeout: 3
+      })
       logger.error('The request has failed: ' + err)
     })
 }

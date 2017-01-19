@@ -8,6 +8,8 @@ import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
 import { shell, remote } from 'electron'
+import Notifier from 'node-notifier'
+import HumanReadableTime from 'human-readable-time'
 import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github.css'
 
@@ -85,6 +87,11 @@ class Snippet extends Component {
       description,
       processedFiles)
     .catch((err) => {
+      Notifier.notify({
+        'title': 'Gist update failed',
+        'message': err,
+        timeout: 3
+      })
       logger.error(JSON.stringify(err))
     })
     .then((response) => {
@@ -165,6 +172,13 @@ class Snippet extends Component {
     }
     // logger.info('** dispatch selectGist')
     // this.props.selectGist(gistId)
+
+    Notifier.notify({
+      'title': 'Gist updated',
+      'message': HumanReadableTime(new Date()),
+      timeout: 3
+    })
+
   }
 
   renderGistEditorModalBody (description, fileArray, isPrivate) {
