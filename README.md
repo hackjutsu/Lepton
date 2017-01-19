@@ -1,4 +1,4 @@
-# GiGist
+# Lepton
 
 Status: **In progress**
 

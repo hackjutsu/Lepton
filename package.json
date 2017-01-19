@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "bluebird": "^3.4.7",
+    "electron-context-menu": "^0.8.0",
     "highlight.js": "^9.9.0",
     "human-readable-time": "^0.2.4",
     "image-downloader": "^2.0.1",

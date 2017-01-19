@@ -1,6 +1,7 @@
 'use strict'
 
 const electron = require('electron')
+const ContextMenu = require('electron-context-menu')
 const Menu = electron.Menu
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -23,6 +24,11 @@ function createWindow () {
     minHeight: 700,
     titleBarStyle: 'hidden'
   })
+
+  ContextMenu({
+    prepend: (params, mainWindow) => []
+  })
+
   mainWindow.loadURL(`file://${__dirname}/index.html`)
   setUpApplicationMenu()
   // mainWindow.webContents.openDevTools()
