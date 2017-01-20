@@ -6,6 +6,11 @@
     height: 90vh;
 }
 
+.font-style-base {
+	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+	font-size: 13px;
+}
+
 .snippet-thumnail-list-item {
 	padding: 0 !important;
 	border-right-width: 0 !important;
@@ -18,31 +23,31 @@
 }
 
 .snippet-thumnail {
+	@extend .font-style-base;
 	margin: 5px;
-	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 13px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.active-snippet-thumnail-base {
+	@extend .font-style-base;
+	padding: 5px;
+	background: rgb(237, 237, 237);
 }
 
 .active-snippet-thumnail-public {
-	padding: 5px;
-	background: #DFF0D4;
-	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 13px;
+	@extend .active-snippet-thumnail-base;
+	// background: #DFF0D4;
 }
 
 .active-snippet-thumnail-private {
-	padding: 5px;
-	background: #F2DEDE;
-	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 13px;
+	@extend .active-snippet-thumnail-base;
+	// background: #F2DEDE;
 }
 
 .snippet-thumnail-description {
+	@extend .font-style-base;
 	margin: 5px;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 13px;
 }
