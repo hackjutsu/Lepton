@@ -1,0 +1,39 @@
+.login-modal {
+  .modal-button-base {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  .modal {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    background: #808080;
+  }
+
+  .modal-content {
+    margin-top: 100px;
+  }
+
+  .profile-image-modal {
+    width: 200px;
+    margin: 5px;
+  }
+
+  .button-group-modal {
+    margin: 20px 0;
+  }
+
+  .modal-button {
+    @extend .modal-button-base;
+  }
+
+  .modal-button-disabled {
+    @extend .modal-button-base;
+    cursor: not-allowed;
+  }
+
+  .modal-button-disabled:hover {
+    cursor: not-allowed;
+  }
+}

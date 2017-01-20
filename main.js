@@ -1,7 +1,6 @@
 'use strict'
 
 const electron = require('electron')
-const ContextMenu = require('electron-context-menu')
 const Menu = electron.Menu
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -17,14 +16,23 @@ initGlobalLogger()
 let mainWindow = null
 
 function createWindow () {
+  console.time('init')
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 700,
     minWidth: 1000,
     minHeight: 700,
-    titleBarStyle: 'hidden'
+    titleBarStyle: 'hidden',
+    backgroundColor: '#808080',
+    show: false
   })
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
+    console.timeEnd('init')
+  })
+
+  const ContextMenu = require('electron-context-menu')
   ContextMenu({
     prepend: (params, mainWindow) => []
   })
@@ -34,7 +42,9 @@ function createWindow () {
   // mainWindow.webContents.openDevTools()
 }
 
-app.on('ready', createWindow)
+app.on('ready', function() {
+    createWindow()
+})
 
 app.on('window-all-closed', function() {
   logger.info('The app window is closed')

@@ -29,7 +29,8 @@ import {
   updateAccessToken,
   updateUserSession,
   fetchSingleGist,
-  selectGist
+  selectGist,
+  updateAuthWindowStatus
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
@@ -59,6 +60,8 @@ function launchAuthWindow (accessToken) {
   authWindow.loadURL(authUrl)
   authWindow.show()
 
+  updateAuthWindowStatusOn()
+
   function handleCallback (url) {
     let rawCode = /code=([^&]*)/.exec(url) || null
     let code = (rawCode && rawCode.length > 1) ? rawCode[1] : null
@@ -69,6 +72,7 @@ function launchAuthWindow (accessToken) {
       logger.debug('** Clear the session and destroy the auth browser')
       authWindow.webContents.session.clearStorageData([], () => {})
       authWindow.destroy()
+      updateAuthWindowStatusOff()
     }
 
     // If there is a code, proceed to get token from github
@@ -101,6 +105,7 @@ function launchAuthWindow (accessToken) {
 
   // Reset the authWindow on close
   authWindow.on('close', function () {
+    updateAuthWindowStatusOff()
     authWindow = null
   }, false)
 }
@@ -113,6 +118,16 @@ function setSyncTime (time) {
 function initAccessToken (token) {
   logger.info('** dispatch updateAccessToken')
   reduxStore.dispatch(updateAccessToken(token))
+}
+
+function updateAuthWindowStatusOn () {
+  logger.info('** dispatch updateAuthWindowStatus ON')
+  reduxStore.dispatch(updateAuthWindowStatus('ON'))
+}
+
+function updateAuthWindowStatusOff () {
+  logger.info('** dispatch updateAuthWindowStatus OFF')
+  reduxStore.dispatch(updateAuthWindowStatus('OFF'))
 }
 
 /** Start: Language tags management **/
@@ -275,7 +290,6 @@ function initUserSession (accessToken) {
 /** End: User session management **/
 
 /** Start: Local storage management **/
-
 function updateLocalStorage (localData) {
   logger.debug('Updating local storage with ' + localData.profile)
   localStorage.setItem('token', localData.token)

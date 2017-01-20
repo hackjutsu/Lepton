@@ -9,6 +9,7 @@ import ActiveGistReducer from './reducer_active_gist'
 import LangsReducer from './reducer_langs'
 import ActiveLangTagReducer from './reducer_active_lang_tag'
 import UserSessionReducer from './reducer_user_session'
+import AuthWindowStatusReducer from './reducer_auth_window_status'
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   syncTime: SyncTimeReducer,
   activeGist: ActiveGistReducer,
   langTags: LangsReducer,
-  activeLangTag: ActiveLangTagReducer
+  activeLangTag: ActiveLangTagReducer,
+  authWindowStatus: AuthWindowStatusReducer
 })
 
 export default rootReducer

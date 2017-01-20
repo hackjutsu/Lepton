@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import NavigationPanelDetails from '../navigationPanelDetails'
 import NavigationPanel from '../navigationPanel'
+import LoginPage from '../LoginPage'
 import SnippetTable from '../snippetTable'
 import './index.scss'
 
@@ -13,12 +14,9 @@ class AppContainer extends Component {
     if (this.props.userSession.active === 'false') {
       return (
         <div className='app-container'>
-          <NavigationPanel
-            updateLocalStorage = { this.props.updateLocalStorage }
+          <LoginPage
             getLoggedInUserInfo = { this.props.getLoggedInUserInfo }
-            launchAuthWindow = { this.props.launchAuthWindow }
-            reSyncUserGists = { this.props.reSyncUserGists }
-            />
+            launchAuthWindow = { this.props.launchAuthWindow }/>
         </div>
       )
     }

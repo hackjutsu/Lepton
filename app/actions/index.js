@@ -14,6 +14,14 @@ export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
 export const UPDATE_LANG_TAGS = 'UPDATE_LANG_TAGS'
 export const SELECT_LANG_TAG = 'SELECT_LANG_TAG'
 export const SELECT_GIST = 'SELECT_GIST'
+export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
+
+export function updateAuthWindowStatus (status) {
+  return {
+    type: UPDATE_AUTHWINDOW_STATUS,
+    payload: status
+  }
+}
 
 export function updateAccessToken (token) {
   return {

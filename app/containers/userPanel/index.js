@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux'
 import { Button, Image, Modal } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { NEW_GIST } from '../gistEditorForm'
-import defaultImage from './github.jpg'
 import HumanReadableTime from 'human-readable-time'
 import Notifier from '../../utilities/notifier'
 import './index.scss'
@@ -33,83 +32,8 @@ class UserPanel extends Component {
     super(props)
 
     this.state = {
-      showGistEditorModal: false,
-      showLoginModal: false,
-      loggedInUserToken: null,
-      loggedInUserName: null,
-      loggedInUserImage: null
+      showGistEditorModal: false
     }
-  }
-
-  componentWillMount () {
-    let loggedInUserInfo = this.props.getLoggedInUserInfo()
-
-    this.setState({
-      showLoginModal: true,
-      loggedInUserToken: loggedInUserInfo ? loggedInUserInfo.token : null,
-      loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null,
-      loggedInUserImage: loggedInUserInfo ? loggedInUserInfo.image : null,
-    })
-  }
-
-  closeLoginModal () {
-    this.setState({
-      showLoginModal: false
-    })
-  }
-
-  handleLoginClickedYes () {
-    this.props.launchAuthWindow(this.state.loggedInUserToken)
-    this.closeLoginModal()
-  }
-
-  handleLoginClickedNo () {
-    this.props.launchAuthWindow(null)
-    this.closeLoginModal()
-  }
-
-  renderLoginModalBody () {
-    if (this.state.loggedInUserName === null ||
-      this.state.loggedInUserName === 'null') {
-      return (
-        <center>
-          <div>
-            <div>
-                <Image className='profile-image-modal' src={ defaultImage } rounded></Image>
-            </div>
-            <div className='button-group-modal'>
-              <Button className='button-modal' onClick={ this.handleLoginClickedNo.bind(this) }>GitHub Login</Button>
-            </div>
-          </div>
-        </center>
-      )
-    }
-
-    return (
-      <center>
-        <div>
-          <Image className='profile-image-modal' src={ this.state.loggedInUserImage } rounded></Image>
-        </div>
-        <div className='button-group-modal'>
-          <Button className='button-modal' bsStyle="success" onClick={ this.handleLoginClickedYes.bind(this) }>Continue as { this.state.loggedInUserName }</Button>
-          <br/>
-          <Button className='button-modal' onClick={ this.handleLoginClickedNo.bind(this) }>Switch Account</Button>
-        </div>
-      </center>
-    )
-  }
-
-  renderLoginModal () {
-    return (
-      <Modal bsSize="small" show={ this.state.showLoginModal } onHide={ this.closeLoginModal.bind(this)}>
-        <Modal.Header>
-          <Modal.Title>Login</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          { this.renderLoginModalBody() }
-        </Modal.Body>
-      </Modal>
-    )
   }
 
   closeGistEditorModal () {
@@ -213,19 +137,6 @@ class UserPanel extends Component {
     )
   }
 
-  renderOutSection () {
-    return (
-      <div>
-        { this.renderLoginModal() }
-        <a href='#'
-          className='customized-tag'
-          onClick={ this.handleLoginClicked.bind(this) }>
-          #login
-        </a>
-      </div>
-    )
-  }
-
   renderInSection () {
     return (
       <div>
@@ -252,17 +163,6 @@ class UserPanel extends Component {
     )
   }
 
-  handleLoginClicked () {
-    let loggedInUserInfo = this.props.getLoggedInUserInfo()
-
-    this.setState({
-      showLoginModal: true,
-      loggedInUserToken: loggedInUserInfo ? loggedInUserInfo.token : null,
-      loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null,
-      loggedInUserImage: loggedInUserInfo ? loggedInUserInfo.image : null,
-    })
-  }
-
   handleLogoutClicked () {
     logger.info('** dispatch logoutUserSession')
     this.props.logoutUserSession()
@@ -272,13 +172,6 @@ class UserPanel extends Component {
       image: null
     })
     removeAccessToken()
-
-    this.setState({
-      showLoginModal: true,
-      loggedInUserToken: null,
-      loggedInUserName: null,
-      loggedInUserImage: null
-    })
   }
 
   handleNewGistClicked () {
@@ -310,9 +203,7 @@ class UserPanel extends Component {
         <div>
           { this.renderProfile() }
         </div>
-        { this.props.userSession.active === 'true'
-            ? this.renderInSection()
-            : this.renderOutSection() }
+        { this.renderInSection() }
       </div>
     )
   }
