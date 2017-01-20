@@ -11,24 +11,32 @@ import './index.scss'
 class AppContainer extends Component {
 
   render () {
-    if (this.props.userSession.active === 'false') {
+    let {
+        userSession,
+        getLoggedInUserInfo,
+        launchAuthWindow,
+        updateLocalStorage,
+        updateActiveGistAfterClicked,
+        reSyncUserGists } = this.props
+
+    if (userSession.activeStatus === 'ACTIVE') {
       return (
         <div className='app-container'>
-          <LoginPage
-            getLoggedInUserInfo = { this.props.getLoggedInUserInfo }
-            launchAuthWindow = { this.props.launchAuthWindow }/>
+          <NavigationPanel
+            updateLocalStorage = { updateLocalStorage }
+            updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
+            reSyncUserGists = { reSyncUserGists } />
+          <NavigationPanelDetails />
+          <SnippetTable />
         </div>
       )
     }
 
     return (
       <div className='app-container'>
-        <NavigationPanel
-          updateLocalStorage = { this.props.updateLocalStorage }
-          updateActiveGistAfterClicked = { this.props.updateActiveGistAfterClicked }
-          reSyncUserGists = { this.props.reSyncUserGists } />
-        <NavigationPanelDetails />
-        <SnippetTable />
+        <LoginPage
+          getLoggedInUserInfo = { getLoggedInUserInfo }
+          launchAuthWindow = { launchAuthWindow }/>
       </div>
     )
   }

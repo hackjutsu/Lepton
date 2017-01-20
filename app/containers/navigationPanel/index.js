@@ -34,7 +34,7 @@ class NavigationPanel extends Component {
   } // renderTags()
 
   renderTagSection () {
-    if (this.props.userSession.active !== 'true') {
+    if (this.props.userSession.activeStatus !== 'ACTIVE') {
       return
     }
 

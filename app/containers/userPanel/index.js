@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Button, Image, Modal } from 'react-bootstrap'
+import { Image, Modal } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { NEW_GIST } from '../gistEditorForm'
 import HumanReadableTime from 'human-readable-time'
@@ -188,7 +188,7 @@ class UserPanel extends Component {
 
   renderProfile () {
     let profile = this.props.userSession.profile
-    if (!profile || this.props.userSession.active === 'false') {
+    if (!profile || this.props.userSession.activeStatus === 'INACTIVE') {
       return
     }
 

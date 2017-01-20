@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Image, Modal } from 'react-bootstrap'
+import { Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import defaultImage from './github.jpg'
 
 import './index.scss'
@@ -24,6 +24,9 @@ class LoginPage extends Component {
 
   handleLoginClicked () {
     if (this.props.authWindowStatus === 'OFF') {
+      this.setState({
+        loggedInUserImage: defaultImage
+      })
       this.props.launchAuthWindow()
     }
   }
@@ -34,46 +37,62 @@ class LoginPage extends Component {
     }
   }
 
-  renderLoginModalBody () {
-    let { loggedInUserName, loggedInUserImage } = this.state
-    let { authWindowStatus } = this.props
-    logger.debug(authWindowStatus)
+  renderControlSection () {
+    let { loggedInUserName } = this.state
+    let { authWindowStatus, userSessionStatus } = this.props
+
+    if (userSessionStatus === 'IN_PROGRESS') {
+      return (
+        <div className='button-group-modal'>
+           <ProgressBar active now={ 100 }/>
+        </div>
+      )
+    }
+
     if (loggedInUserName === null || loggedInUserName === 'null') {
       return (
-        <center>
-          <div>
-            <Image className='profile-image-modal' src={ defaultImage } rounded/>
-          </div>
-          <div className='button-group-modal'>
-            <Button
-              className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
-              onClick={ this.handleLoginClicked.bind(this) }>
-              GitHub Login
-            </Button>
-          </div>
-        </center>
+        <div className='button-group-modal'>
+          <Button
+            className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
+            onClick={ this.handleLoginClicked.bind(this) }>
+            GitHub Login
+          </Button>
+        </div>
       )
+    }
+
+    return (
+      <div className='button-group-modal'>
+        <Button
+          className='modal-button'
+          bsStyle="success"
+          onClick={ this.handleContinueButtonClicked.bind(this) }>
+          Continue as { loggedInUserName }
+        </Button>
+        <br/>
+        <Button
+          className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
+          onClick={ this.handleLoginClicked.bind(this) }>
+          Switch Account
+        </Button>
+      </div>
+    )
+  }
+
+  renderLoginModalBody () {
+    let { loggedInUserName, loggedInUserImage, userSessionStatus } = this.state
+
+    let profileImage = loggedInUserImage || defaultImage
+    if (loggedInUserName === null || loggedInUserName === 'null') {
+      profileImage = defaultImage
     }
 
     return (
       <center>
         <div>
-          <Image className='profile-image-modal' src={ loggedInUserImage } rounded/>
+          <Image className='profile-image-modal' src={ profileImage } rounded/>
         </div>
-        <div className='button-group-modal'>
-          <Button
-            className='modal-button'
-            bsStyle="success"
-            onClick={ this.handleContinueButtonClicked.bind(this) }>
-            Continue as { loggedInUserName }
-          </Button>
-          <br/>
-          <Button
-            className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
-            onClick={ this.handleLoginClicked.bind(this) }>
-            Switch Account
-          </Button>
-        </div>
+        { this.renderControlSection() }
       </center>
     )
   }
@@ -96,7 +115,8 @@ class LoginPage extends Component {
 
 function mapStateToProps (state) {
   return {
-    authWindowStatus: state.authWindowStatus
+    authWindowStatus: state.authWindowStatus,
+    userSessionStatus: state.userSession.activeStatus
   }
 }
 
