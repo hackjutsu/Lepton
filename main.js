@@ -40,6 +40,8 @@ function createWindow () {
   mainWindow.loadURL(`file://${__dirname}/index.html`)
   setUpApplicationMenu()
   // mainWindow.webContents.openDevTools()
+
+  global.mainWindow = mainWindow 
 }
 
 app.on('ready', function() {
