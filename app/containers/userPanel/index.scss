@@ -1,22 +1,23 @@
 .user-panel {
-  // float: left;
-  // width: 10%;
-  // height: 800px;
-}
 
-.profile-image-section {
-  width: 80px;
-  margin: 5px;
-}
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
 
-.customized-tag {
-  margin: 5px;
-  font-size: 13px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-}
+  .profile-image-section {
+    width: 80px;
+    margin: 5px;
+  }
 
-.customized-tag-small {
-  margin: 3px;
-  font-size: 10px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  .customized-tag {
+    @extend .font-style-base;
+    margin: 5px;
+  }
+
+  .customized-tag-small {
+    @extend .font-style-base;
+    font-size: 10px;
+    margin: 3px;
+  }
 }

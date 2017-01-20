@@ -1,67 +1,71 @@
 .snippet-box {
 
-}
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
 
-.header-table {
-  width: 100%;
-  display: table;
-}
+  .header-table {
+    width: 100%;
+    display: table;
+  }
 
-.line {
-  display: table-cell;
-  vertical-align: middle;
-}
+  .line {
+    display: table-cell;
+    vertical-align: middle;
+  }
 
-.header-title {
-  float: left;
-  margin-top: 4px;
-  font-size: 14px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-}
+  .header-title {
+    @extend .font-style-base;
+    float: left;
+    margin-top: 4px;
+    font-size: 14px;
+  }
 
-.customized-button {
-  float: right;
-  font-size: 13px;
-  margin: 5px 5px 0px 10px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-}
+  .customized-button {
+    @extend .font-style-base;
+    float: right;
+    margin: 5px 5px 0px 10px;
+  }
 
-.snippet-code {
-  margin: 5px;
-  min-height: 620px;
-}
+  .snippet-code {
+    margin: 5px;
+    min-height: 620px;
+  }
 
-.code-area {
-  width: 100%;
-  white-space: pre-wrap;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-  border: 0px;
-}
+  .snippet-decription {
+    @extend .font-style-base;
+  }
 
-.code-area-raw {
-  width: 100%;
-  min-height: 550px;
-  white-space: pre-wrap;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-  border: 0px;
-}
+  .code-area {
+    @extend .font-style-base;
+    width: 100%;
+    white-space: pre-wrap;
+    border: 0px;
+  }
 
-.file-name {
-  color: #4078C0;
-  font-size: 13px;
-  margin-bottom: 5px;
-}
+  .code-area-raw {
+    @extend .font-style-base;
+    width: 100%;
+    min-height: 550px;
+    white-space: pre-wrap;
+    border: 0px;
+  }
 
-.edit-modal .modal-content {
-  min-height: 300px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: auto;
-}
+  .file-name {
+    @extend .font-style-base;
+    color: #4078C0;
+    margin-bottom: 5px;
+  }
 
-pre {
-  font-size: 11px !important;
+  .edit-modal .modal-content {
+    @extend .font-style-base;
+    min-height: 300px;
+    white-space: nowrap;
+    overflow: auto;
+  }
+
+  pre {
+    font-size: 11px !important;
+  }
 }

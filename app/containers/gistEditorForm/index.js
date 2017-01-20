@@ -26,7 +26,7 @@ class GistEditorForm extends Component {
     const { handleSubmit, submitting, formStyle } = this.props
 
     return (
-      <form onSubmit={ handleSubmit }>
+      <form className='gist-editor-form' onSubmit={ handleSubmit }>
         <Field
           name='description'
           type='text'

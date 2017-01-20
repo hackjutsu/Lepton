@@ -1,81 +1,85 @@
-.gist-editor-control-button {
-  margin: 5px 2px;
-  float: right;
-}
+.gist-editor-form {
 
-.gist-editor-new-gist-button {
-  margin: 5px 0px;
-}
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
 
-.gist-editor-section {
-  margin: 5px 5px;
-}
+  .font-style-blue {
+    @extend .font-style-base;
+    color: #4078C0 !important;
+  }
 
-.gist-editor-section .panel-body {
-  padding: 0px !important;
-}
+  .gist-editor-control-button {
+    margin: 5px 2px;
+    float: right;
+  }
 
-.gist-editor-section .panel-heading {
-  padding: 2px 5px !important;
-}
+  .gist-editor-new-gist-button {
+    margin: 5px 0px;
+  }
 
-.gist-editor-input-area {
-  width: 100%;
-  padding: 5px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-  border: solid  1px;
-  border-color: #D3D3D3;
-  border-radius: 3px;
-}
+  .gist-editor-section {
+    margin: 5px 5px;
+  }
 
-.gist-editor-filename-area {
-  width: 80%;
-  margin: 5px 20px 5px 0px;
-  padding: 5px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-  border: solid  1px;
-  border-color: #D3D3D3;
-  border-radius: 3px;
-}
+  .gist-editor-section .panel-body {
+    padding: 0px !important;
+  }
 
-.gist-editor-content-area {
-  width: 100%;
-  padding: 5px;
-  min-height: 300px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-  border: 0px;
-  resize: none;
-}
+  .gist-editor-section .panel-heading {
+    padding: 2px 5px !important;
+  }
 
-.gist-editor-gist-file {
-  border: 0px;
-  padding: 10px 0px !important;
-}
+  .gist-editor-input-area {
+    @extend .font-style-base;
+    width: 100%;
+    padding: 5px;
+    border: solid  1px;
+    border-color: #D3D3D3;
+    border-radius: 3px;
+  }
 
-.control-button-group {
-  height: 45px;
-}
+  .gist-editor-filename-area {
+    @extend .font-style-base;
+    width: 80%;
+    margin: 5px 20px 5px 0px;
+    padding: 5px;
+    border: solid  1px;
+    border-color: #D3D3D3;
+    border-radius: 3px;
+  }
 
-.gist-editor-customized-tag {
-  font-size: 13px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  color: #4078C0 !important;
-}
+  .gist-editor-content-area {
+    @extend .font-style-base;
+    width: 100%;
+    padding: 5px;
+    min-height: 300px;
+    border: 0px;
+    resize: none;
+  }
 
-.gist-editor-customized-tag-hidden {
-  visibility: hidden;     
-  font-size: 13px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  color: #4078C0 !important;
-}
+  .gist-editor-gist-file {
+    border: 0px;
+    padding: 10px 0px !important;
+  }
 
-.gist-editor-privacy-checkbox {
-  display: inline;
-  float: right;
-  font-size: 13px;
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  color: #4078C0 !important;
+  .control-button-group {
+    height: 45px;
+  }
+
+  .gist-editor-customized-tag {
+    @extend .font-style-blue;
+  }
+
+  .gist-editor-customized-tag-hidden {
+    @extend .font-style-blue;
+    visibility: hidden;
+  }
+
+  .gist-editor-privacy-checkbox {
+    @extend .font-style-blue;
+    display: inline;
+    float: right;
+  }
 }

@@ -1,53 +1,53 @@
 .panel-details {
-	margin: 5px;
-	float: left;
-	width: 200px;
-	overflow: auto;
-    height: 90vh;
+  margin: 5px;
+  float: left;
+  width: 200px;
+  overflow: auto;
+  height: 90vh;
 }
 
 .font-style-base {
-	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 13px;
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
 }
 
 .snippet-thumnail-list-item {
-	padding: 0 !important;
-	border-right-width: 0 !important;
-	border-left-width: 0 !important;
+  padding: 0 !important;
+  border-right-width: 0 !important;
+  border-left-width: 0 !important;
 }
 
 .snippet-thumnail-list-item:hover {
-    background-color: #F9F9F9;
-	cursor: pointer;
+  background-color: #F9F9F9;
+  cursor: pointer;
 }
 
 .snippet-thumnail {
-	@extend .font-style-base;
-	margin: 5px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  @extend .font-style-base;
+  margin: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .active-snippet-thumnail-base {
-	@extend .font-style-base;
-	padding: 5px;
-	background: rgb(237, 237, 237);
+  @extend .font-style-base;
+  padding: 5px;
+  background: rgb(237, 237, 237);
 }
 
 .active-snippet-thumnail-public {
-	@extend .active-snippet-thumnail-base;
-	// background: #DFF0D4;
+  @extend .active-snippet-thumnail-base;
+  // background: #DFF0D4;
 }
 
 .active-snippet-thumnail-private {
-	@extend .active-snippet-thumnail-base;
-	// background: #F2DEDE;
+  @extend .active-snippet-thumnail-base;
+  // background: #F2DEDE;
 }
 
 .snippet-thumnail-description {
-	@extend .font-style-base;
-	margin: 5px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+  @extend .font-style-base;
+  margin: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

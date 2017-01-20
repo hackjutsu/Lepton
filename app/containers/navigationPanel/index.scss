@@ -1,46 +1,52 @@
 .menu-panel {
-	margin: 2px 5px;
-	float: left;
-	width: 110px;
-	height: 95vh;
+  margin: 2px 5px;
+  float: left;
+  width: 110px;
+  height: 95vh;
 }
 
-.lang-tag {
-	margin: 5px;
-	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 13px;
-}
+.menu-panel {
 
-.lang-tag:hover {
-	cursor: pointer;
-}
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
 
-.lang-tag-section {
-	margin-left: 0px;
-}
+  .lang-tag {
+    @extend .font-style-base;
+    margin: 5px;
+  }
 
-.active-lang-tag {
-	margin: 5px;
-	color: #B0580E;
-	font-weight: bold;
-	font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-	font-size: 13px;
-}
+  .lang-tag:hover {
+    cursor: pointer;
+  }
 
-.active-lang-tag:hover {
-	cursor: pointer;
-}
+  .lang-tag-section {
+    margin-left: 0px;
+  }
 
-::-webkit-scrollbar {
+  .active-lang-tag {
+    @extend .font-style-base;
+    margin: 5px;
+    color: #B0580E;
+    font-weight: bold;
+  }
+
+  .active-lang-tag:hover {
+    cursor: pointer;
+  }
+
+  ::-webkit-scrollbar {
     width: 5px;
-}
+  }
 
-::-webkit-scrollbar-track {
+  ::-webkit-scrollbar-track {
     // -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     border-radius: 0px;
-}
+  }
 
-::-webkit-scrollbar-thumb {
+  ::-webkit-scrollbar-thumb {
     border-radius: 5px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+  }
 }

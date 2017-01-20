@@ -306,7 +306,7 @@ class Snippet extends Component {
         <Panel className='snippet-code'
           bsStyle={ activeSnippet.brief.public ? 'default' : 'danger' }
           header={ this.renderPanelHeader(activeSnippet) }>
-          <p>{ activeSnippet.brief.description }</p>
+          <p className='snippet-decription'>{ activeSnippet.brief.description }</p>
           { this.renderGistEditorModal(activeSnippet.brief.description, fileArray, !activeSnippet.brief.public) }
           { this.renderRawModal() }
           { fileHtmlArray }
