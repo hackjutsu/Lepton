@@ -243,18 +243,18 @@ function updateUserGists (userLoginId, accessToken) {
           }
         })
 
-        for (let language in rawLangTags) {
-          // Save the gist ids in an Array rather than a Set, which facilitate
-          // many operations later, like displaying the gist id from an Array
-          langTags[language] = [...rawLangTags[language]]
-        }
-
         gists[gist.id] = {
           langs: langs,
           brief: gist,
           details: null
         }
       }) // gistList.forEach
+
+      for (let language in rawLangTags) {
+        // Save the gist ids in an Array rather than a Set, which facilitate
+        // many operations later, like displaying the gist id from an Array
+        langTags[language] = [...rawLangTags[language]]
+      }
 
       // refresh the redux state
       let humanReadableSyncTime = HumanReadableTime(new Date())
