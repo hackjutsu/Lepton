@@ -64,7 +64,7 @@ function getAllgists (accessToken, userLoginId) {
       .catch(err => {
         if (err !== EMPTY_PAGE_ERROR_MESSAGE) {
           logger.error(err)
-          Notifier('Sync failed', err)
+          Notifier('Sync failed', JSON.stringify(err))
         }
       })
       .finally(() => {

@@ -30,7 +30,8 @@ import {
   updateUserSession,
   fetchSingleGist,
   selectGist,
-  updateAuthWindowStatus
+  updateAuthWindowStatus,
+  updateGistSyncStatus
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
@@ -91,6 +92,7 @@ function launchAuthWindow (accessToken) {
         initUserSession(accessToken)
       }).catch((err) => {
         logger.error('Failed: ' + JSON.stringify(err.error))
+        Notifier('Sync failed', JSON.stringify(err.error))
       })
     } else if (error) {
       alert('Oops! Something went wrong and we couldn\'t' +
@@ -215,6 +217,7 @@ function reSyncUserGists () {
 }
 
 function updateUserGists (userLoginId, accessToken) {
+  reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
     .then((gistList) => {
       logger.debug('The length of the gist list is ' + gistList.length)
@@ -264,12 +267,14 @@ function updateUserGists (userLoginId, accessToken) {
       // clean up the snapshot for the previous state
       preSyncSnapshot.activeLangTag = null
       preSyncSnapshot.activeGist = null
-      logger.debug('About to send succeed notification')
       Notifier('Sync succeed', humanReadableSyncTime)
     })
-    .catch(function (err) {
-      Notifier('Sync failed', err)
+    .catch(err => {
+      Notifier('Sync failed', JSON.stringify(err))
       logger.error('The request has failed: ' + err)
+    })
+    .finally(() => {
+      reduxStore.dispatch(updateGistSyncStatus('DONE'))
     })
 }
 /** End: User gists management **/
@@ -294,6 +299,7 @@ function initUserSession (accessToken) {
   .catch((err) => {
     logger.error('The request has failed: ' + err)
     reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+    Notifier('Sync failed', JSON.stringify(err))
   })
 }
 /** End: User session management **/

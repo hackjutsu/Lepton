@@ -6,8 +6,19 @@
   }
 
   .profile-image-section {
-    width: 80px;
+    width: 90px;
     margin: 5px;
+  }
+
+  .resync-progress-bar {
+    width: 90%;
+    height: 5px;
+    margin-bottom: 0;
+  }
+
+  .resync-progress-bar-hidden {
+    @extend .resync-progress-bar;
+    visibility: hidden;
   }
 
   .customized-tag {

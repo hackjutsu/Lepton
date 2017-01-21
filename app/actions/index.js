@@ -1,6 +1,7 @@
 'use strict'
 
 import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/gitHubApi'
+import Notifier from '../utilities/notifier'
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
@@ -15,6 +16,14 @@ export const UPDATE_LANG_TAGS = 'UPDATE_LANG_TAGS'
 export const SELECT_LANG_TAG = 'SELECT_LANG_TAG'
 export const SELECT_GIST = 'SELECT_GIST'
 export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
+export const UPDATE_GIST_SYNC_STATUS = 'UPDATE_GIST_SYNC_STATUS'
+
+export function updateGistSyncStatus (status) {
+  return {
+    type: UPDATE_GIST_SYNC_STATUS,
+    payload: status
+  }
+}
 
 export function updateAuthWindowStatus (status) {
   return {
@@ -105,6 +114,7 @@ export function fetchSingleGist (oldGist, id) {
       })
       .catch((err) => {
         logger.error('The request has failed: ' + err)
+        Notifier('Sync failed', JSON.stringify(err))
       })
   }
 }

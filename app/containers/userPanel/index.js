@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Image, Modal } from 'react-bootstrap'
+import { Image, Modal, ProgressBar } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { NEW_GIST } from '../gistEditorForm'
 import HumanReadableTime from 'human-readable-time'
@@ -68,7 +68,6 @@ class UserPanel extends Component {
     })
   }
 
-  // TODO: It might be better to use Array instead of Set each lang
   updateGistsStoreWithNewGist (gistDetails) {
     let gistId = gistDetails.id
     logger.debug('The new gist id is ' + gistId)
@@ -202,6 +201,11 @@ class UserPanel extends Component {
       <div className='user-panel'>
         <div>
           { this.renderProfile() }
+          <ProgressBar
+            className={ this.props.gistSyncStatus === 'IN_PROGRESS' ?
+                'resync-progress-bar' : 'resync-progress-bar-hidden' }
+            active
+            now={ 100 }/>
         </div>
         { this.renderInSection() }
       </div>
@@ -215,6 +219,7 @@ function mapStateToProps (state) {
     syncTime: state.syncTime,
     accessToken: state.accessToken,
     langTags: state.langTags,
+    gistSyncStatus: state.gistSyncStatus
   }
 }
 
