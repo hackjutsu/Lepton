@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Well } from 'react-bootstrap'
 import Snippet from '../snippet'
 import './index.scss'
 
@@ -10,9 +11,11 @@ class SnippetTable extends Component {
   render () {
     let gists = this.props.gists
     let activeGist = this.props.activeGist
-    if (!gists || !activeGist) {
+    if (!gists || !activeGist || !gists[activeGist]) {
       return (
-        <div className='snippet-table'></div>
+        <div className='snippet-table'>
+          <Well className='welcome-section'>Click <b>#new</b> on the left panel to create a gist.</Well>
+        </div>
       )
     } // This happens when the user has no gists
 

@@ -15,6 +15,10 @@
     vertical-align: middle;
   }
 
+  .welcome-section {
+    @extend .font-style-base;  
+  }
+
   .header-title {
     @extend .font-style-base;
     float: left;

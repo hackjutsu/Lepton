@@ -44,7 +44,7 @@ class NavigationPanelDetails extends Component {
     // an empty array.
     if (!langTags || !langTags[activeLangTag] || langTags[activeLangTag].length === 0) {
       return (
-        <div className='snippet-thumnail'>No gist found</div>
+        <div className='snippet-thumnail'></div>
       )
     }
 

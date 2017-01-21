@@ -4,3 +4,17 @@
   overflow: auto;
   height: 95vh;
 }
+
+.snippet-table {
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
+
+  .welcome-section {
+    @extend .font-style-base;
+    font-size: 15px;
+    text-align: center;
+    height: 90vh;
+  }
+}
