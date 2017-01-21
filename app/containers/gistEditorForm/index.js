@@ -30,7 +30,8 @@ class GistEditorForm extends Component {
         <Field
           name='description'
           type='text'
-          component={ renderDescriptionField }/>
+          component={ renderDescriptionField }
+          validate={ required }/>
         <FieldArray
           name='gistFiles'
           formStyle={ formStyle }
@@ -50,30 +51,45 @@ class GistEditorForm extends Component {
   }
 }
 
-const renderDescriptionField = ({ input, type }) => (
+const required = value => value ? undefined : 'required'
+
+const renderTitleInputField = ({ input, label, type, meta: { touched, error, warning } }) => (
+  <div className='title-input-field'>
+    <input className='gist-editor-filename-area' {...input} placeholder={label} type={type}/>
+    { touched && ((error && <span className='error-msg'>{ error }</span>) ||
+      (warning && <span className='error-msg'>{ warning }</span>)) }
+  </div>
+)
+
+const renderDescriptionField = ({ input, type, meta: { touched, error, warning } }) => (
   <div className='gist-editor-section'>
     <input
       className='gist-editor-input-area'
       { ...input }
       type={ type }
       placeholder='Gist description...'/>
+      { touched && ((error && <span className='error-msg'>{ error }</span>) ||
+        (warning && <span className='error-msg'>{ warning }</span>)) }
   </div>
 )
 
-const renderContentField = ({ input, type, placeholder }) => (
+const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning } }) => (
   <div>
     <textarea className='gist-editor-content-area' { ...input } type={ type } placeholder={ placeholder }/>
+    { touched && ((error && <span className='error-msg'>{error}</span>) ||
+      (warning && <span className='error-msg'>{warning}</span>)) }
   </div>
 )
 
 function renderGistFileHeader (member, fields, index) {
   return (
       <div>
-        <Field className='gist-editor-filename-area'
+        <Field
           name={ `${member}.filename` }
           type='text'
-          component='input'
-          placeholder='File name...'/>
+          component={ renderTitleInputField }
+          placeholder='File name...'
+          validate={ required }/>
         <a href='#'
           className={ index === 0 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
           onClick={ () => fields.remove(index) }>#remove</a>
@@ -88,7 +104,8 @@ const renderGistFiles = ({ fields, formStyle }) => (
         <Panel header={ renderGistFileHeader(member, fields, index) }>
           <Field name={ `${member}.content` }
             type='text'
-            component={ renderContentField }/>
+            component={ renderContentField }
+            validate={ required }/>
         </Panel>
       </ListGroupItem>
     ) }

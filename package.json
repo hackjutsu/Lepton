@@ -1,7 +1,7 @@
 {
   "name": "Lepton",
-  "version": "0.1.0",
-  "description": "Gist client for everyone",
+  "version": "0.1.5",
+  "description": "AWESOME Gist client for everyone",
   "main": "main.js",
   "scripts": {
     "lint": "eslint app",

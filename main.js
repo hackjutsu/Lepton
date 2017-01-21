@@ -18,8 +18,8 @@ let mainWindow = null
 function createWindow () {
   console.time('init')
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 700,
+    width: 1200,
+    height: 900,
     minWidth: 1000,
     minHeight: 700,
     titleBarStyle: 'hidden',
@@ -41,7 +41,7 @@ function createWindow () {
   setUpApplicationMenu()
   // mainWindow.webContents.openDevTools()
 
-  global.mainWindow = mainWindow 
+  global.mainWindow = mainWindow
 }
 
 app.on('ready', function() {

@@ -70,10 +70,11 @@
 
   .gist-editor-customized-tag {
     @extend .font-style-blue;
+    margin-left: 5px;
   }
 
   .gist-editor-customized-tag-hidden {
-    @extend .font-style-blue;
+    @extend .gist-editor-customized-tag;
     visibility: hidden;
   }
 
@@ -81,5 +82,16 @@
     @extend .font-style-blue;
     display: inline;
     float: right;
+  }
+
+  .title-input-field {
+    display: inline;
+  }
+
+  .error-msg {
+    @extend .font-style-base;
+    font-size: 11px;
+    font-weight: bold;
+    color: #B0580E;
   }
 }
