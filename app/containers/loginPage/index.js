@@ -7,9 +7,6 @@ import defaultImage from './github.jpg'
 
 import './index.scss'
 
-import { remote } from 'electron'
-const logger = remote.getGlobal('logger')
-
 class LoginPage extends Component {
 
   componentWillMount () {
@@ -80,7 +77,7 @@ class LoginPage extends Component {
   }
 
   renderLoginModalBody () {
-    let { loggedInUserName, loggedInUserImage, userSessionStatus } = this.state
+    let { loggedInUserName, loggedInUserImage } = this.state
 
     let profileImage = loggedInUserImage || defaultImage
     if (loggedInUserName === null || loggedInUserName === 'null') {

@@ -18,7 +18,9 @@ class SnippetTable extends Component {
 
     return (
       <div className='snippet-table'>
-          <Snippet snippet={ gists[activeGist] } />
+          <Snippet
+            reSyncUserGists={ this.props.reSyncUserGists }
+            snippet={ gists[activeGist] } />
       </div>
     )
   }

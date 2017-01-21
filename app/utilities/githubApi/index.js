@@ -157,12 +157,27 @@ function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) 
   })
 }
 
+function deleteSingleGist (accessToken, gistId) {
+  return ReqPromise({
+    headers: {
+      'User-Agent': 'request',
+    },
+    method: 'DELETE',
+    uri: 'https://api.github.com/gists/' + gistId,
+    qs: {
+      access_token: accessToken
+    },
+    json: true
+  })
+}
+
 export const EXCHANGE_ACCESS_TOKEN = 'EXCHANGE_ACCESS_TOKEN'
 export const GET_ALL_GISTS = 'GET_ALL_GISTS'
 export const GET_SINGLE_GIST = 'GET_SINGLE_GIST'
 export const GET_USER_PROFILE = 'GET_USER_PROFILE'
 export const CREATE_SINGLE_GIST = 'CREATE_SINGLE_GIST'
 export const EDIT_SINGLE_GIST = 'EDIT_SINGLE_GIST'
+export const DELETE_SINGLE_GIST = 'DELETE_SINGLE_GIST'
 
 export function getGitHubApi (selection) {
   switch (selection) {
@@ -178,6 +193,8 @@ export function getGitHubApi (selection) {
       return createSingleGist
     case EDIT_SINGLE_GIST:
       return editSingleGist
+    case DELETE_SINGLE_GIST:
+      return deleteSingleGist
     default:
       logger.debug('Not implemented yet.')
   }

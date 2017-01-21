@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Panel, Modal } from 'react-bootstrap'
+import { Panel, Modal, Button } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
@@ -20,7 +20,8 @@ import {
 
 import {
   getGitHubApi,
-  EDIT_SINGLE_GIST
+  EDIT_SINGLE_GIST,
+  DELETE_SINGLE_GIST
 } from '../../utilities/gitHubApi'
 
 const logger = remote.getGlobal('logger')
@@ -30,6 +31,7 @@ class Snippet extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      showDeleteModal: false,
       showGistEditorModal: false,
       showRawModal: false,
       rawFile: null,
@@ -38,17 +40,64 @@ class Snippet extends Component {
     }
   }
 
-  showEditModal (details) {
-    details && this.setState({
-      showGistEditorModal: true,
-      rawFile: null,
-      rawContent: null
+  showDeleteModal () {
+    this.setState({
+      showDeleteModal: true
     })
   }
 
-  closeEditModal () {
+  closeDeleteModal () {
     this.setState({
-      showGistEditorModal: false,
+      showDeleteModal: false
+    })
+  }
+
+  handleDeleteClicked () {
+    let { accessToken, activeGist } = this.props
+    getGitHubApi(DELETE_SINGLE_GIST)(
+      accessToken,
+      activeGist)
+    .catch(err => {
+      logger.error('Failed to delete the gist ' + activeGist)
+      logger.error(JSON.stringify(err))
+      Notifier('Failed to delete the gist', JSON.stringify(err))
+    })
+    .then(data => {
+      logger.info('The gist ' + activeGist + ' has been deleted.')
+      Notifier('Gist deleted', 'The gist has been deleted')
+
+      // For performance purpose, we should perform an internal update, like what
+      // we're doing for creating/edit gists. However, since delete is an infrequent
+      // operation, we decide to just call the resync method and keep the logic
+      // simple.
+      this.props.reSyncUserGists()
+    })
+    .finally(() => {
+      this.closeDeleteModal()
+    })
+  }
+
+  renderDeleteModal () {
+    return (
+      <div className="static-modal">
+        <Modal show={ this.state.showDeleteModal } bsSize="small">
+          <Modal.Header>
+            <Modal.Title>Delete the gist?</Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button onClick={ this.closeDeleteModal.bind(this) }>cancel</Button>
+            <Button
+              bsStyle="danger"
+              onClick={ this.handleDeleteClicked.bind(this) }>delete</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
+    )
+  }
+
+  showGistEditorModal (details) {
+    details && this.setState({
+      showGistEditorModal: true,
       rawFile: null,
       rawContent: null
     })
@@ -254,13 +303,18 @@ class Snippet extends Component {
         </div>
         <a className='customized-button'
           href='#'
-          onClick={ this.showEditModal.bind(this, activeSnippet.details) }>
+          onClick={ this.showGistEditorModal.bind(this, activeSnippet.details) }>
           #edit
         </a>
         <a className='customized-button'
           href='#'
           onClick={ shell.openExternal.bind(this, activeSnippet.brief.html_url + '/revisions') }>
           #revisions
+        </a>
+        <a className='customized-button'
+          href='#'
+          onClick={ this.showDeleteModal.bind(this) }>
+          #delete
         </a>
       </div>
       </div>
@@ -309,6 +363,7 @@ class Snippet extends Component {
           <p className='snippet-decription'>{ activeSnippet.brief.description }</p>
           { this.renderGistEditorModal(activeSnippet.brief.description, fileArray, !activeSnippet.brief.public) }
           { this.renderRawModal() }
+          { this.renderDeleteModal() }
           { fileHtmlArray }
         </Panel>
       </div>

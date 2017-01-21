@@ -27,7 +27,8 @@ class AppContainer extends Component {
             updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
             reSyncUserGists = { reSyncUserGists } />
           <NavigationPanelDetails />
-          <SnippetTable />
+          <SnippetTable
+            reSyncUserGists = { reSyncUserGists } />
         </div>
       )
     }
