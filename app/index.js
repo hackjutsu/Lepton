@@ -221,6 +221,7 @@ function updateUserGists (userLoginId, accessToken) {
   return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
     .then((gistList) => {
       logger.debug('The length of the gist list is ' + gistList.length)
+      let preGists = reduxStore.getState().gists
       let gists = {}
       let rawLangTags = {}
       let activeTagCandidate = 'All'
@@ -247,6 +248,13 @@ function updateUserGists (userLoginId, accessToken) {
           langs: langs,
           brief: gist,
           details: null
+        }
+
+        // Keep the date for the unchanged gist, so that user doesn't need
+        // to resync.
+        let preGist = preGists[gist.id]
+        if (preGist && preGist.details && preGist.details.updated_at === gist.updated_at) {
+          gists[gist.id] = Object.assign(gists[gist.id], { details: preGist.details })
         }
       }) // gistList.forEach
 
