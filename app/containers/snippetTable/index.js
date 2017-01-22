@@ -9,8 +9,7 @@ import './index.scss'
 class SnippetTable extends Component {
 
   render () {
-    let gists = this.props.gists
-    let activeGist = this.props.activeGist
+    let { gists, activeGist, searchIndex, reSyncUserGists } = this.props
     if (!gists || !activeGist || !gists[activeGist]) {
       return (
         <div className='snippet-table'>
@@ -22,7 +21,8 @@ class SnippetTable extends Component {
     return (
       <div className='snippet-table'>
           <Snippet
-            reSyncUserGists={ this.props.reSyncUserGists }
+            searchIndex = { searchIndex }
+            reSyncUserGists={ reSyncUserGists }
             snippet={ gists[activeGist] } />
       </div>
     )

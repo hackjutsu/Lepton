@@ -20,14 +20,14 @@ function removeFromIndex (item) {
 
 function updateToIndex (item) {
   if (!item) return
-  index.update(item)
+  index.updateDoc(item)
 }
 
 function searchFromIndex (query) {
   if (!query) return
   return index.search(query, {
     fields: {
-      description: { boost: 1 }  
+      description: { boost: 1 }
     }
   })
 }

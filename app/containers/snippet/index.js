@@ -149,6 +149,9 @@ class Snippet extends Component {
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
+    let { gists, activeGist, langTags, activeLangTag, updateSingleGist,
+      updateLangTags, selectLangTag, searchIndex} = this.props
+
     let gistId = gistDetails.id
     logger.debug('The new gist id is ' + gistId)
     let files = gistDetails.files
@@ -161,7 +164,6 @@ class Snippet extends Component {
     // language tag, ie langTags[language] 2) if the new language doesn't
     // exist, we should add the new language to langTags.
     let newLangs = new Set()
-    let langTags = this.props.langTags
     Object.keys(files).forEach(filename => {
       let file = files[filename]
       let language = file.language
@@ -200,23 +202,28 @@ class Snippet extends Component {
     }
 
     logger.info('** dispatch updateSingleGist')
-    this.props.updateSingleGist(updatedGist)
+    updateSingleGist(updatedGist)
 
     logger.info('** dispatch updateLangTags')
-    this.props.updateLangTags(langTags)
+    updateLangTags(langTags)
 
     // If the previous active language tag is no longer valid, for example,
     // user deletes all cpp files inside a gist when C++ tag is the ative tag,
     // or the gist array for the preivous active language tag is empty, we
     // choose to fall back to 'All'.
-    if (!langTags[this.props.activeLangTag] ||
-        !langTags[this.props.activeLangTag].includes(gistId)) {
+    if (!langTags[activeLangTag] || !langTags[activeLangTag].includes(gistId)) {
       logger.info('** dispatch selectLangTag')
       logger.debug('The selected language tag is All')
-      this.props.selectLangTag('All')
+      selectLangTag('All')
     }
     // logger.info('** dispatch selectGist')
     // this.props.selectGist(gistId)
+
+    logger.debug('>>>>> ' + 'update the searchIndex with ' + gistDetails.description)
+    searchIndex.updateToIndex({
+      id: gistId,
+      description: gistDetails.description
+    })
 
     Notifier('Gist updated', HumanReadableTime(new Date()))
   }

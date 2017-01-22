@@ -40,6 +40,7 @@ class AppContainer extends Component {
             reSyncUserGists = { reSyncUserGists } />
           <NavigationPanelDetails />
           <SnippetTable
+            searchIndex = { searchIndex }
             reSyncUserGists = { reSyncUserGists } />
         </div>
       )
