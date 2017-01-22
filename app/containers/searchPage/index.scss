@@ -74,25 +74,12 @@
     margin-top: 100px;
   }
 
-  .profile-image-modal {
-    width: 200px;
-    margin: 5px;
-  }
-
-  .button-group-modal {
-    margin: 20px 0;
-  }
-
-  .modal-button {
-    @extend .modal-button-base;
-  }
-
-  .modal-button-disabled {
-    @extend .modal-button-base;
-    cursor: not-allowed;
-  }
-
-  .modal-button-disabled:hover {
-    cursor: not-allowed;
+  .tip {
+    @extend .font-style-base;
+    width: 100%;
+    text-align: right;
+    font-size: 10px;
+    color: grey;
+    font-style: italic;
   }
 }

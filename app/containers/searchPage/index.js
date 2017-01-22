@@ -108,6 +108,7 @@ class SearchPage extends Component {
         <ListGroup>
           { this.renderSearchResults() }
         </ListGroup>
+        <div className='tip'>Shift+Space to dismiss</div>
       </div>
     )
   }
