@@ -47,13 +47,21 @@ class NavigationPanel extends Component {
   }
 
   render () {
+   let {
+     searchIndex,
+     updateLocalStorage,
+     getLoggedInUserInfo,
+     reSyncUserGists,
+     launchAuthWindow } = this.props
+
     return (
       <div className='menu-panel'>
         <UserPanel
-          updateLocalStorage = { this.props.updateLocalStorage }
-          getLoggedInUserInfo = { this.props.getLoggedInUserInfo }
-          reSyncUserGists = { this.props.reSyncUserGists }
-          launchAuthWindow = { this.props.launchAuthWindow }
+          searchIndex = { searchIndex }
+          updateLocalStorage = { updateLocalStorage }
+          getLoggedInUserInfo = { getLoggedInUserInfo }
+          reSyncUserGists = { reSyncUserGists }
+          launchAuthWindow = { launchAuthWindow }
         />
         { this.renderTagSection() }
       </div>

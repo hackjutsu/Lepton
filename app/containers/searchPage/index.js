@@ -3,6 +3,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Image, Modal, ListGroupItem, ListGroup } from 'react-bootstrap'
+import { selectLangTag, selectGist, fetchSingleGist, updateSearchWindowStatus } from '../../actions/index'
+import { bindActionCreators } from 'redux'
 
 import './index.scss'
 
@@ -18,6 +20,21 @@ class SearchPage extends Component {
       inputValue: '',
       searchResults: []
     }
+  }
+
+  handleSnippetClicked (gistId) {
+    let { gists, selectLangTag, selectGist, updateSearchWindowStatus } = this.props
+
+    logger.debug('User clicked on ' + gistId)
+    if (!gists[gistId].details) {
+      logger.info('** dispatch fetchSingleGist ' + gistId)
+      fetchSingleGist(gists[gistId], gistId)
+    }
+    logger.info('** dispatch selectGist ' + gistId)
+    selectGist(gistId)
+
+    selectLangTag('All')
+    updateSearchWindowStatus('OFF')
   }
 
   updateInputValue (evt) {
@@ -48,7 +65,7 @@ class SearchPage extends Component {
       let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
       let langs = [...gist.langs]
       resultsJSXGroup.push(
-        <ListGroupItem key={ item.ref }>
+        <ListGroupItem key={ item.ref } onClick={ this.handleSnippetClicked.bind(this, item.ref) }>
           <div>{ langs }</div>
           { highlightedDescription }
         </ListGroupItem>
@@ -95,4 +112,12 @@ function mapStateToProps (state) {
   }
 }
 
-export default connect(mapStateToProps)(SearchPage)
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators({
+    selectLangTag: selectLangTag,
+    selectGist: selectGist,
+    updateSearchWindowStatus: updateSearchWindowStatus
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchPage)

@@ -264,8 +264,8 @@ function updateUserGists (userLoginId, accessToken) {
         // Update the SearchIndex
         logger.debug('>>>>> updating the search index with ' + gist.description)
         SearchIndex.addToIndex({
-          'id': gist.id,
-          'description': gist.description
+          id: gist.id,
+          description: gist.description
         })
       }) // gistList.forEach
 

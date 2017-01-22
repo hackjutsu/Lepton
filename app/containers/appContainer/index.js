@@ -26,13 +26,15 @@ class AppContainer extends Component {
         updateLocalStorage,
         updateActiveGistAfterClicked,
         reSyncUserGists,
-        searchWindowStatus } = this.props
+        searchWindowStatus,
+        searchIndex } = this.props
 
     if (userSession.activeStatus === 'ACTIVE') {
       return (
         <div className='app-container'>
           { this.renderSearchPage() }
           <NavigationPanel
+            searchIndex = { searchIndex }
             updateLocalStorage = { updateLocalStorage }
             updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
             reSyncUserGists = { reSyncUserGists } />

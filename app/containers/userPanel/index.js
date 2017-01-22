@@ -69,16 +69,22 @@ class UserPanel extends Component {
   }
 
   updateGistsStoreWithNewGist (gistDetails) {
+    let {
+      langTags,
+      updateSingleGist,
+      updateLangTags,
+      selectLangTag,
+      selectGist,
+      searchIndex } = this.props
+
     let gistId = gistDetails.id
     logger.debug('The new gist id is ' + gistId)
     let files = gistDetails.files
 
     let langs = new Set()
-    let langTags = this.props.langTags
     langTags.All.unshift(gistId)
     Object.keys(files).forEach(filename => {
-      let file = files[filename]
-      let language = file.language
+      let language = files[filename].language
       langs.add(language)
       if (langTags.hasOwnProperty(language)) {
         langTags[language].unshift(gistId)
@@ -95,16 +101,23 @@ class UserPanel extends Component {
       details: gistDetails
     }
     logger.info('** dispatch updateSingleGist')
-    this.props.updateSingleGist(newGist)
+    updateSingleGist(newGist)
 
     logger.info('** dispatch updateLangTags')
-    this.props.updateLangTags(langTags)
+    updateLangTags(langTags)
 
     logger.info('** dispatch selectLangTag')
-    this.props.selectLangTag('All')
+    selectLangTag('All')
 
     logger.info('** dispatch selectGist')
-    this.props.selectGist(gistId)
+    selectGist(gistId)
+
+    // update the search index
+    logger.debug('>>>>> updating the search index with ' + gistDetails.description)
+    searchIndex.addToIndex({
+      id: gistId,
+      description: gistDetails.description
+    })
 
     Notifier('Gist created', HumanReadableTime(new Date()))
   }
