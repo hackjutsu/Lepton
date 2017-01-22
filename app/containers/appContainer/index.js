@@ -6,9 +6,17 @@ import NavigationPanelDetails from '../navigationPanelDetails'
 import NavigationPanel from '../navigationPanel'
 import LoginPage from '../LoginPage'
 import SnippetTable from '../snippetTable'
+import SearchPage from '../searchPage'
 import './index.scss'
 
 class AppContainer extends Component {
+
+  renderSearchPage() {
+    if (this.props.searchWindowStatus === 'OFF') return null
+    return (
+      <SearchPage searchIndex = { this.props.searchIndex } />
+    )
+  }
 
   render () {
     let {
@@ -17,11 +25,13 @@ class AppContainer extends Component {
         launchAuthWindow,
         updateLocalStorage,
         updateActiveGistAfterClicked,
-        reSyncUserGists } = this.props
+        reSyncUserGists,
+        searchWindowStatus } = this.props
 
     if (userSession.activeStatus === 'ACTIVE') {
       return (
         <div className='app-container'>
+          { this.renderSearchPage() }
           <NavigationPanel
             updateLocalStorage = { updateLocalStorage }
             updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
@@ -45,7 +55,8 @@ class AppContainer extends Component {
 
 function mapStateToProps (state) {
   return {
-    userSession: state.userSession
+    userSession: state.userSession,
+    searchWindowStatus: state.searchWindowStatus
   }
 }
 

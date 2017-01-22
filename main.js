@@ -1,6 +1,7 @@
 'use strict'
 
 const electron = require('electron')
+const electronLocalshortcut = require('electron-localshortcut');
 const Menu = electron.Menu
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -14,6 +15,8 @@ const fs = require('fs')
 initGlobalLogger()
 
 let mainWindow = null
+let keyShortcutForSearch1 = 'Shift+Space'
+let keyShortcutForSearch2 = 'CommandOrControl+F'
 
 function createWindow () {
   console.time('init')
@@ -30,6 +33,14 @@ function createWindow () {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
     console.timeEnd('init')
+    electronLocalshortcut.register(mainWindow, keyShortcutForSearch1, () => {
+      console.log('You pressed ' + keyShortcutForSearch1)
+      mainWindow.webContents.send('search-gist')
+    })
+    electronLocalshortcut.register(mainWindow, keyShortcutForSearch2, () => {
+      console.log('You pressed ' + keyShortcutForSearch2)
+      mainWindow.webContents.send('search-gist')
+    })
   })
 
   const ContextMenu = require('electron-context-menu')
@@ -55,7 +66,9 @@ app.on('window-all-closed', function() {
 })
 
 app.on('before-quit', function() {
-
+  electronLocalshortcut.unregister(mainWindow, keyShortcutForSearch1)
+  electronLocalshortcut.unregister(mainWindow, keyShortcutForSearch2)
+  electronLocalshortcut.unregisterAll(mainWindow)
 })
 
 app.on('activate', () => {

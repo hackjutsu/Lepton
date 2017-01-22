@@ -17,6 +17,7 @@ export const SELECT_LANG_TAG = 'SELECT_LANG_TAG'
 export const SELECT_GIST = 'SELECT_GIST'
 export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
 export const UPDATE_GIST_SYNC_STATUS = 'UPDATE_GIST_SYNC_STATUS'
+export const UPDATE_SEARCHWINDOW_STATUS = 'UPDATE_SEARCHWINDOW_STATUS'
 
 export function updateGistSyncStatus (status) {
   return {
@@ -28,6 +29,13 @@ export function updateGistSyncStatus (status) {
 export function updateAuthWindowStatus (status) {
   return {
     type: UPDATE_AUTHWINDOW_STATUS,
+    payload: status
+  }
+}
+
+export function updateSearchWindowStatus (status) {
+  return {
+    type: UPDATE_SEARCHWINDOW_STATUS,
     payload: status
   }
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 import fs from 'fs'
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
@@ -13,6 +13,7 @@ import AppContainer from './containers/appContainer'
 import Account from '../configs/account'
 import HumanReadableTime from 'human-readable-time'
 import ImageDownloader from 'image-downloader'
+import SearchIndex from './utilities/search'
 
 import {
   getGitHubApi,
@@ -31,7 +32,8 @@ import {
   fetchSingleGist,
   selectGist,
   updateAuthWindowStatus,
-  updateGistSyncStatus
+  updateGistSyncStatus,
+  updateSearchWindowStatus
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
@@ -217,6 +219,8 @@ function reSyncUserGists () {
 }
 
 function updateUserGists (userLoginId, accessToken) {
+  logger.debug('>>>>> reseting the search index')
+  SearchIndex.resetIndex()
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
     .then((gistList) => {
@@ -256,6 +260,13 @@ function updateUserGists (userLoginId, accessToken) {
         if (preGist && preGist.details && preGist.details.updated_at === gist.updated_at) {
           gists[gist.id] = Object.assign(gists[gist.id], { details: preGist.details })
         }
+
+        // Update the SearchIndex
+        logger.debug('>>>>> updating the search index with ' + gist.description)
+        SearchIndex.addToIndex({
+          'id': gist.id,
+          'description': gist.description
+        })
       }) // gistList.forEach
 
       for (let language in rawLangTags) {
@@ -276,6 +287,10 @@ function updateUserGists (userLoginId, accessToken) {
       preSyncSnapshot.activeLangTag = null
       preSyncSnapshot.activeGist = null
       Notifier('Sync succeed', humanReadableSyncTime)
+
+      // testing
+      let results = SearchIndex.searchFromIndex('node js')
+      logger.debug(JSON.stringify(results))
     })
     .catch(err => {
       Notifier('Sync failed', JSON.stringify(err))
@@ -357,6 +372,15 @@ function getLoggedInUserInfo () {
 }
 /** End: Local storage management **/
 
+
+ipcRenderer.on('search-gist', data => {
+    let preStatus = reduxStore.getState().searchWindowStatus
+    let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
+    reduxStore.dispatch(updateSearchWindowStatus(newStatus))
+    logger.debug('>>>>> ' + newStatus)
+});
+
+
 // Start
 const reduxStore = createStore(
     RootReducer,
@@ -366,6 +390,7 @@ const reduxStore = createStore(
 ReactDom.render(
   <Provider store={ reduxStore }>
     <AppContainer
+      searchIndex = { SearchIndex }
       updateLocalStorage = { updateLocalStorage }
       getLoggedInUserInfo = { getLoggedInUserInfo }
       launchAuthWindow = { launchAuthWindow }
