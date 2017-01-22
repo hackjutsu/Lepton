@@ -23,7 +23,7 @@ class SearchPage extends Component {
   }
 
   handleSnippetClicked (gistId) {
-    let { gists, selectLangTag, selectGist, updateSearchWindowStatus } = this.props
+    let { gists, selectLangTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
 
     logger.debug('User clicked on ' + gistId)
     if (!gists[gistId].details) {
@@ -45,7 +45,6 @@ class SearchPage extends Component {
 
   queryInputValue (evt) {
     let inputValue = evt.target.value
-    // if (inputValue.length < 2) return
 
     let searchIndex = this.props.searchIndex
     let results = searchIndex.searchFromIndex(inputValue)
@@ -58,16 +57,37 @@ class SearchPage extends Component {
     let { inputValue, searchResults } = this.state
     let { gists } = this.props
 
+    // In some unknown circumstance, searchResults is undefined. So we put a
+    // guard here. We should remove it once we better understand the mechanism
+    // behind it.
+    if (!inputValue || !searchResults) return null
+
+    if (inputValue.length > 0 && searchResults.length === 0) {
+      return (
+        <div className='not-found-msg'>
+          No result found...
+        </div>
+      )
+    }
+
     let resultsJSXGroup = []
-    searchResults && searchResults.forEach(item => {
+    searchResults.forEach(item => {
       let gist = gists[item.ref]
       let gistDescription = gist.brief.description
-      let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
-      let langs = [...gist.langs]
+    //   let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
+      let highlightedDescription = gistDescription
+      let langs = [...gist.langs].map(lang => {
+        return (
+          <div className='langTag' key={ lang }>{ '#' + lang }</div>
+        )
+      })
       resultsJSXGroup.push(
-        <ListGroupItem key={ item.ref } onClick={ this.handleSnippetClicked.bind(this, item.ref) }>
-          <div>{ langs }</div>
-          { highlightedDescription }
+        <ListGroupItem
+          className='search-result-item'
+          key={ item.ref }
+          onClick={ this.handleSnippetClicked.bind(this, item.ref) }>
+          <div className='snippet-description'>{ highlightedDescription }</div>
+          <div className='langTagGroup'>{ langs }</div>
         </ListGroupItem>
       )
     })
@@ -79,8 +99,9 @@ class SearchPage extends Component {
       <div>
         <input
           type="text"
-          name="txt"
           className='search-box'
+          placeholder='Search...'
+          autoFocus
           value={ this.state.inputValue }
           onChange={ this.updateInputValue.bind(this) }
           onKeyUp={ this.queryInputValue.bind(this) }/>
@@ -116,6 +137,7 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     selectLangTag: selectLangTag,
     selectGist: selectGist,
+    fetchSingleGist: fetchSingleGist,
     updateSearchWindowStatus: updateSearchWindowStatus
   }, dispatch)
 }

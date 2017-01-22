@@ -7,11 +7,55 @@
 
   .search-box {
     @extend .font-style-base;
-    font-size: 16px;
+    font-size: 20px;
     width: 100%;
-    margin: 5px 0;
     padding: 10px;
-    text-align: center;
+    border: 0;
+  }
+
+  .search-box:focus {
+    outline:none;
+  }
+
+  .search-result-item {
+
+  }
+
+  .list-group-item {
+    border-left: 0;
+    border-right: 0;
+  }
+
+  .list-group-item:first-child {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+  }
+
+  .list-group-item:last-child {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+
+  .snippet-description {
+    @extend .font-style-base;
+  }
+
+  .not-found-msg {
+    @extend .font-style-base;
+    font-size: 15px;
+    padding: 10px;
+    color: grey;
+  }
+
+  .langTagGroup {
+    margin-top: 10px;
+  }
+
+  .langTag {
+    display: inline;
+    margin-right: 10px;
+    font-size: 11px;
+    color: #4078C0;
   }
 
   .modal-button-base {

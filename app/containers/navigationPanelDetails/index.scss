@@ -6,48 +6,61 @@
   height: 92vh;
 }
 
-.font-style-base {
+.panel-details {
+
+  .font-style-base {
   font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-  font-size: 13px;
-}
+    font-size: 13px;
+  }
 
-.snippet-thumnail-list-item {
-  padding: 0 !important;
-  border-right-width: 0 !important;
-  border-left-width: 0 !important;
-}
+  .list-group-item:first-child {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+  }
 
-.snippet-thumnail-list-item:hover {
-  background-color: #F9F9F9;
-  cursor: pointer;
-}
+  .list-group-item:last-child {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
 
-.snippet-thumnail {
-  @extend .font-style-base;
-  margin: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .snippet-thumnail-list-item {
+    padding: 0 !important;
+    border-right-width: 0 !important;
+    border-left-width: 0 !important;
+  }
 
-.active-snippet-thumnail-base {
-  @extend .font-style-base;
-  padding: 5px;
-  background: rgb(237, 237, 237);
-}
+  .snippet-thumnail-list-item:hover {
+    background-color: #F9F9F9;
+    cursor: pointer;
+  }
 
-.active-snippet-thumnail-public {
-  @extend .active-snippet-thumnail-base;
-  // background: #DFF0D4;
-}
+  .snippet-thumnail {
+    @extend .font-style-base;
+    margin: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.active-snippet-thumnail-private {
-  @extend .active-snippet-thumnail-base;
-  // background: #F2DEDE;
-}
+  .active-snippet-thumnail-base {
+    @extend .font-style-base;
+    padding: 5px;
+    background: rgb(237, 237, 237);
+  }
 
-.snippet-thumnail-description {
-  @extend .font-style-base;
-  margin: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  .active-snippet-thumnail-public {
+    @extend .active-snippet-thumnail-base;
+    // background: #DFF0D4;
+  }
+
+  .active-snippet-thumnail-private {
+    @extend .active-snippet-thumnail-base;
+    // background: #F2DEDE;
+  }
+
+  .snippet-thumnail-description {
+    @extend .font-style-base;
+    margin: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
