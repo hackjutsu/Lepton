@@ -1,6 +1,7 @@
 # Lepton
 
 ![Screenshot](./docs_resource/screenshot.png)
+
 |       Login        |      Edit         |   Search    |
 | :-----------: |:-------------:| :-----:|
 | ![Screenshot](./docs_resource/login.png) | ![Screenshot](./docs_resource/edit.png) | ![Screenshot](./docs_resource/search_bar.png) |
