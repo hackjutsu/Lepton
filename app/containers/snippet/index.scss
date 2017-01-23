@@ -1,9 +1,9 @@
-.snippet-box {
+.font-style-base {
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
+}
 
-  .font-style-base {
-    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-    font-size: 13px;
-  }
+.snippet-box {
 
   .header-table {
     width: 100%;
@@ -16,7 +16,7 @@
   }
 
   .welcome-section {
-    @extend .font-style-base;  
+    @extend .font-style-base;
   }
 
   .header-title {
@@ -48,21 +48,13 @@
     border: 0px;
   }
 
-  .code-area-raw {
-    @extend .font-style-base;
-    width: 100%;
-    min-height: 550px;
-    white-space: pre-wrap;
-    border: 0px;
-  }
-
   .file-name {
     @extend .font-style-base;
     color: #4078C0;
     margin-bottom: 5px;
   }
 
-  .edit-modal .modal-content {
+  .raw-modal .modal-content {
     @extend .font-style-base;
     min-height: 300px;
     white-space: nowrap;
@@ -72,4 +64,12 @@
   pre {
     font-size: 11px !important;
   }
+}
+
+.code-area-raw {
+  @extend .font-style-base;
+  width: 100%;
+  min-height: 550px;
+  white-space: pre-wrap;
+  border: 0px;
 }

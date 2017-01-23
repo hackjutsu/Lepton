@@ -282,7 +282,7 @@ class Snippet extends Component {
   renderRawModal () {
     return (
       <Modal
-        className='edit-modal'
+        className='raw-modal'
         show={ this.state.showRawModal }
         onHide={ this.closeRawModal.bind(this) }>
         <Modal.Header closeButton>
