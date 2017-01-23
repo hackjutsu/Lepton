@@ -56,11 +56,19 @@ class NavigationPanelDetails extends Component {
       // the gists. This guard makes sure we push the gist only when it is already
       // available in gists.
       if (gists[gistId]) {
+        // Pick up the content inside the first [] as the snippet thumbnail's title.
+        // For example, "[Apple is delicious] It's affordable and healthy." will
+        // pick up "Apple is delicious" as the title. If no brackets are found,
+        // it shows to the original description. It provides users the flexibility
+        // to decide what to be shown in the thumbnail.
+        let rawDescription = gists[gistId].brief.description
+        let regexForTitle = rawDescription.match(/\[.*\]/)
+        let title = (regexForTitle && regexForTitle[0].substring(1, regexForTitle[0].length-1)) || rawDescription
         snippetThumbnails.push(
           <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>
             <div className={ this.decideSnippetListItemClass(gistId) }
                 onClick={ this.handleClicked.bind(this, gistId) }>
-                <div className='snippet-thumnail-description'>{ gists[gistId].brief.description }</div>
+                <div className='snippet-thumnail-description'>{ title }</div>
             </div>
           </ListGroupItem>
         )

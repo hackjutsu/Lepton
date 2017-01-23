@@ -39,27 +39,27 @@ function createWindow () {
     mainWindow.show()
     console.timeEnd('init')
     electronLocalshortcut.register(mainWindow, keyShortcutForSearch1, () => {
-      console.log('You pressed ' + keyShortcutForSearch1)
+    //   console.log('You pressed ' + keyShortcutForSearch1)
       mainWindow.webContents.send('search-gist')
     })
     electronLocalshortcut.register(mainWindow, keyShortcutForSearch2, () => {
-      console.log('You pressed ' + keyShortcutForSearch2)
+    //   console.log('You pressed ' + keyShortcutForSearch2)
       mainWindow.webContents.send('search-gist')
     })
     electronLocalshortcut.register(mainWindow, keyUp, () => {
-      console.log('You pressed ' + keyUp)
+    //   console.log('You pressed ' + keyUp)
       mainWindow.webContents.send('key-up')
     })
     electronLocalshortcut.register(mainWindow, keyDown, () => {
-      console.log('You pressed ' + keyDown)
+    //   console.log('You pressed ' + keyDown)
       mainWindow.webContents.send('key-down')
     })
     electronLocalshortcut.register(mainWindow, keyEnter, () => {
-      console.log('You pressed ' + keyEnter)
+    //   console.log('You pressed ' + keyEnter)
       mainWindow.webContents.send('key-enter')
     })
     electronLocalshortcut.register(mainWindow, keyNewGist, () => {
-      console.log('You pressed ' + keyNewGist)
+    //   console.log('You pressed ' + keyNewGist)
       mainWindow.webContents.send('new-gist')
     })
   })
