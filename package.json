@@ -8,7 +8,7 @@
     "dev": "node dev-server.js",
     "pack": "webpack --display-modules",
     "watch": "webpack --watch",
-    "start": "webpack && electron ./main.js",
+    "start": "electron ./main.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dist": "build"
   },

@@ -15,24 +15,23 @@ module.exports = {
     publicPath: '/bundle/',
     filename: 'app.bundle.js'
   },
-  watch: true,
-	module: {
-		loaders: [{
+  module: {
+    loaders: [{
       test: /\.js$/,
       include: [path.resolve(__dirname, 'app')],
       exclude: /node_modules/,
       loader: 'babel',
       query: {
-        presets: ['es2015', 'react']  
+        presets: ['es2015', 'react']
       }
     }, {
       test: /\.(scss|css)$/,
       loaders: ['style', 'css', 'sass']
     }, {
-			test: /\.json/,
-			// exclude: /node_modules/,
-			loader: 'json'
-		}, {
+      test: /\.json/,
+	  // exclude: /node_modules/,
+	  loader: 'json'
+	}, {
       test: /\.(png|jpg)$/,
       loader: 'url-loader'
     }, {
@@ -44,20 +43,17 @@ module.exports = {
     }, {
       test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
       loader: 'url?limit=10000&mimetype=application/font-woff'
-    },
-    {
+    }, {
       test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
       loader: 'url?limit=10000&mimetype=application/octet-stream'
-    },
-    {
+    }, {
       test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
       loader: 'file'
-    },
-    {
+    }, {
       test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
       loader: 'url?limit=10000&mimetype=image/svg+xml'
     }]
-	},
+  },
   externals: [nodeExternals({
     // this WILL include `jquery` and `webpack/hot/dev-server` in the bundle, as well as `lodash/*`
     // whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/]
