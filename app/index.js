@@ -219,7 +219,6 @@ function reSyncUserGists () {
 }
 
 function updateUserGists (userLoginId, accessToken) {
-  logger.debug('>>>>> reseting the search index')
   SearchIndex.resetIndex()
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
@@ -262,7 +261,6 @@ function updateUserGists (userLoginId, accessToken) {
         }
 
         // Update the SearchIndex
-        logger.debug('>>>>> updating the search index with ' + gist.description)
         SearchIndex.addToIndex({
           id: gist.id,
           description: gist.description
@@ -372,13 +370,13 @@ function getLoggedInUserInfo () {
 }
 /** End: Local storage management **/
 
-
+/** Start: Response to keyboard events **/
 ipcRenderer.on('search-gist', data => {
-    let preStatus = reduxStore.getState().searchWindowStatus
-    let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
-    reduxStore.dispatch(updateSearchWindowStatus(newStatus))
-    logger.debug('>>>>> ' + newStatus)
-});
+  let preStatus = reduxStore.getState().searchWindowStatus
+  let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
+  reduxStore.dispatch(updateSearchWindowStatus(newStatus))
+})
+/** End: Response to keyboard events **/
 
 
 // Start

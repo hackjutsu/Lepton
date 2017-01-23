@@ -23,7 +23,7 @@ import {
   CREATE_SINGLE_GIST
 } from '../../utilities/gitHubApi'
 
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class UserPanel extends Component {
@@ -31,9 +31,20 @@ class UserPanel extends Component {
   constructor (props) {
     super(props)
 
+    this.keyEvents = ipcRenderer
     this.state = {
       showGistEditorModal: false
     }
+  }
+
+  componentWillMount () {
+    this.keyEvents.on('new-gist', () => {
+      this.handleNewGistClicked()
+    })
+  }
+
+  componentWillUnmount () {
+    this.keyEvents.removeAllListeners('new-gist')
   }
 
   closeGistEditorModal () {
@@ -187,8 +198,6 @@ class UserPanel extends Component {
   }
 
   handleNewGistClicked () {
-    logger.debug('handleNewGistClicked is called')
-    logger.debug('Showing the gist editor modal.')
     this.setState({
       showGistEditorModal: true
     })

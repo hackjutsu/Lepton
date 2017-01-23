@@ -15,8 +15,13 @@ const fs = require('fs')
 initGlobalLogger()
 
 let mainWindow = null
+
 let keyShortcutForSearch1 = 'Shift+Space'
 let keyShortcutForSearch2 = 'CommandOrControl+F'
+let keyNewGist = 'CommandOrControl+N'
+let keyUp = 'Shift+Up'
+let keyDown = 'Shift+Down'
+let keyEnter = 'Shift+Enter'
 
 function createWindow () {
   console.time('init')
@@ -40,6 +45,22 @@ function createWindow () {
     electronLocalshortcut.register(mainWindow, keyShortcutForSearch2, () => {
       console.log('You pressed ' + keyShortcutForSearch2)
       mainWindow.webContents.send('search-gist')
+    })
+    electronLocalshortcut.register(mainWindow, keyUp, () => {
+      console.log('You pressed ' + keyUp)
+      mainWindow.webContents.send('key-up')
+    })
+    electronLocalshortcut.register(mainWindow, keyDown, () => {
+      console.log('You pressed ' + keyDown)
+      mainWindow.webContents.send('key-down')
+    })
+    electronLocalshortcut.register(mainWindow, keyEnter, () => {
+      console.log('You pressed ' + keyEnter)
+      mainWindow.webContents.send('key-enter')
+    })
+    electronLocalshortcut.register(mainWindow, keyNewGist, () => {
+      console.log('You pressed ' + keyNewGist)
+      mainWindow.webContents.send('new-gist')
     })
   })
 
@@ -66,8 +87,6 @@ app.on('window-all-closed', function() {
 })
 
 app.on('before-quit', function() {
-  electronLocalshortcut.unregister(mainWindow, keyShortcutForSearch1)
-  electronLocalshortcut.unregister(mainWindow, keyShortcutForSearch2)
   electronLocalshortcut.unregisterAll(mainWindow)
 })
 

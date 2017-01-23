@@ -3,29 +3,74 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Image, Modal, ListGroupItem, ListGroup } from 'react-bootstrap'
-import { selectLangTag, selectGist, fetchSingleGist, updateSearchWindowStatus } from '../../actions/index'
+import {
+  selectLangTag,
+  selectGist,
+  fetchSingleGist,
+  updateSearchWindowStatus} from '../../actions/index'
 import { bindActionCreators } from 'redux'
 
 import './index.scss'
 
-import { remote } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class SearchPage extends Component {
 
   constructor (props) {
     super(props)
-
+    this.keyEvents = ipcRenderer
     this.state = {
       inputValue: '',
+      selectedIndex: 0,
       searchResults: []
+    }
+  }
+
+  componentWillMount () {
+    this.keyEvents.on('key-up', this.selectPreGist.bind(this))
+    this.keyEvents.on('key-down', this.selectNextGist.bind(this))
+    this.keyEvents.on('key-enter', this.selectCurrentGist.bind(this))
+  }
+
+  componentWillUnmount () {
+    this.keyEvents.removeAllListeners('key-up')
+    this.keyEvents.removeAllListeners('key-down')
+    this.keyEvents.removeAllListeners('key-enter')
+  }
+
+  selectPreGist () {
+    let { selectedIndex, searchResults } = this.state
+    selectedIndex = selectedIndex - 1;
+    if (!searchResults || selectedIndex < 0) {
+      selectedIndex = searchResults.length - 1
+    }
+    this.setState({
+      selectedIndex: selectedIndex,
+    })
+  }
+
+  selectNextGist () {
+    let { selectedIndex, searchResults } = this.state
+    selectedIndex = selectedIndex + 1;
+    if (!searchResults || selectedIndex >= searchResults.length) {
+      selectedIndex = 0;
+    }
+    this.setState({
+      selectedIndex: selectedIndex,
+    })
+  }
+
+  selectCurrentGist () {
+    let { selectedIndex, searchResults } = this.state
+    if (searchResults && searchResults.length > 0) {
+      this.handleSnippetClicked(searchResults[selectedIndex].ref)
     }
   }
 
   handleSnippetClicked (gistId) {
     let { gists, selectLangTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
 
-    logger.debug('User clicked on ' + gistId)
     if (!gists[gistId].details) {
       logger.info('** dispatch fetchSingleGist ' + gistId)
       fetchSingleGist(gists[gistId], gistId)
@@ -39,6 +84,7 @@ class SearchPage extends Component {
 
   updateInputValue (evt) {
     this.setState({
+      selectedIndex: 0,
       inputValue: evt.target.value
     })
   }
@@ -54,7 +100,7 @@ class SearchPage extends Component {
   }
 
   renderSearchResults () {
-    let { inputValue, searchResults } = this.state
+    let { searchResults, selectedIndex, inputValue } = this.state
     let { gists } = this.props
 
     // In some unknown circumstance, searchResults is undefined. So we put a
@@ -71,23 +117,24 @@ class SearchPage extends Component {
     }
 
     let resultsJSXGroup = []
-    searchResults.forEach(item => {
+    searchResults.forEach((item, index) => {
       let gist = gists[item.ref]
       let gistDescription = gist.brief.description
-    //   let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
+      // let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
       let highlightedDescription = gistDescription
       let langs = [...gist.langs].map(lang => {
         return (
-          <div className='langTag' key={ lang }>{ '#' + lang }</div>
+          <div className='lang-tag' key={ lang }>{ '#' + lang }</div>
         )
       })
       resultsJSXGroup.push(
         <ListGroupItem
-          className='search-result-item'
+          className={ index === selectedIndex
+              ? 'search-result-item-selected' : 'search-result-item' }
           key={ item.ref }
           onClick={ this.handleSnippetClicked.bind(this, item.ref) }>
           <div className='snippet-description'>{ highlightedDescription }</div>
-          <div className='langTagGroup'>{ langs }</div>
+          <div className='lang-tag-group'>{ langs }</div>
         </ListGroupItem>
       )
     })
@@ -95,6 +142,7 @@ class SearchPage extends Component {
   }
 
   renderSearchModalBody () {
+    let tips = 'Navigation: Shift+Up/Down | Select: Shift+Enter | Exit: Shift+Space'
     return (
       <div>
         <input
@@ -108,7 +156,7 @@ class SearchPage extends Component {
         <ListGroup>
           { this.renderSearchResults() }
         </ListGroup>
-        <div className='tip'>Shift+Space to dismiss</div>
+        <div className='tip'>{ tips }</div>
       </div>
     )
   }

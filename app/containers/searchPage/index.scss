@@ -21,6 +21,10 @@
 
   }
 
+  .search-result-item-selected {
+     background: rgb(237, 237, 237);
+  }
+
   .list-group-item {
     border-left: 0;
     border-right: 0;
@@ -47,15 +51,20 @@
     color: grey;
   }
 
-  .langTagGroup {
+  .lang-tag-group {
     margin-top: 10px;
   }
 
-  .langTag {
+  .lang-tag {
     display: inline;
     margin-right: 10px;
     font-size: 11px;
     color: #4078C0;
+  }
+
+  .lang-tag-selected {
+    @extend .lang-tag;
+    border:solid 2px red;
   }
 
   .modal-button-base {
