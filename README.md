@@ -1,5 +1,5 @@
-# Lepton 
+# Lepton
 
-![](./logo.png) *v0.2.0* released!
+![](./logo.png) *v0.3.0* released!
 
 ![Screenshot](./screenshot.png)
