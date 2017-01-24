@@ -99,6 +99,32 @@ class SearchPage extends Component {
     })
   }
 
+  renderSnippetDescription (rawDescription) {
+    let regexForTitle = rawDescription.match(/\[.*\]/)
+    let rawTitle = regexForTitle && regexForTitle[0] || ''
+    let title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length-1) || ''
+
+    let regextForKeywords = rawDescription.match(/#keywords:.*$/)
+    let keywords = regextForKeywords && regextForKeywords[0] || ''
+
+    let description = rawDescription.substring(rawTitle.length, rawDescription.length - keywords.length)
+
+    let htmlForDescriptionSection = []
+    if (title.length > 0) {
+      htmlForDescriptionSection.push(<div className='title-section' key='title'>{ title }</div>)
+    }
+    htmlForDescriptionSection.push(<div className='description-section' key='description'>{ description }</div>)
+    if (keywords.length > 0) {
+      htmlForDescriptionSection.push(<div className='keywords-section' key='keywords'>{ keywords }</div>)
+    }
+
+    return (
+      <div>
+        { htmlForDescriptionSection }
+      </div>
+    )
+  }
+
   renderSearchResults () {
     let { searchResults, selectedIndex, inputValue } = this.state
     let { gists } = this.props
@@ -133,7 +159,7 @@ class SearchPage extends Component {
               ? 'search-result-item-selected' : 'search-result-item' }
           key={ item.ref }
           onClick={ this.handleSnippetClicked.bind(this, item.ref) }>
-          <div className='snippet-description'>{ highlightedDescription }</div>
+          <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
           <div className='lang-tag-group'>{ langs }</div>
         </ListGroupItem>
       )

@@ -16,8 +16,7 @@ initGlobalLogger()
 
 let mainWindow = null
 
-let keyShortcutForSearch1 = 'Shift+Space'
-let keyShortcutForSearch2 = 'CommandOrControl+F'
+let keyShortcutForSearch = 'Shift+Space'
 let keyNewGist = 'CommandOrControl+N'
 let keyUp = 'Shift+Up'
 let keyDown = 'Shift+Down'
@@ -38,12 +37,8 @@ function createWindow () {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
     console.timeEnd('init')
-    electronLocalshortcut.register(mainWindow, keyShortcutForSearch1, () => {
+    electronLocalshortcut.register(mainWindow, keyShortcutForSearch, () => {
     //   console.log('You pressed ' + keyShortcutForSearch1)
-      mainWindow && mainWindow.webContents.send('search-gist')
-    })
-    electronLocalshortcut.register(mainWindow, keyShortcutForSearch2, () => {
-    //   console.log('You pressed ' + keyShortcutForSearch2)
       mainWindow && mainWindow.webContents.send('search-gist')
     })
     electronLocalshortcut.register(mainWindow, keyUp, () => {

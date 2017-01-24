@@ -61,6 +61,26 @@
     overflow: auto;
   }
 
+  .title-section {
+    @extend .font-style-base;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .description-section {
+    @extend .font-style-base;
+    color: #808080;
+  }
+
+  .keywords-section {
+    @extend .font-style-base;
+    color: grey;
+    font-size: 10px;
+    font-style: italic;
+    margin-top: 15px;
+  }
+
   pre {
     font-size: 11px !important;
   }
