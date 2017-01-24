@@ -5,6 +5,7 @@
 |       Login        |      Edit         |   Search    |
 | :-----------: |:-------------:| :-----:|
 | ![Screenshot](./docs_resource/login.png) | ![Screenshot](./docs_resource/edit.png) | ![Screenshot](./docs_resource/search_bar.png) |
+|*Smile*|*Command + N*|*Shift + Space*|
 
 [GitHub Gist](https://gist.github.com/) Desktop Client.
 - Group your gists by languages
