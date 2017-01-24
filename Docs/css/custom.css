@@ -1,0 +1,21 @@
+.app-image-main {
+  position: absolute;;
+  height: 750px;
+  top: 120px;
+  right: 0px;
+  /*overflow: visible;*/
+}
+
+header {
+  background-image: url(../img/bg-pattern.png), linear-gradient(to left, rgb(237, 237, 237), black);
+}
+
+.feature-point {
+	font-size: 20px;
+	margin-bottom: 20px;
+}
+
+.platforms {
+	font-size: 15px;
+	display: inline;
+}
