@@ -10,10 +10,17 @@ import thunk from 'redux-thunk'
 
 import './utilities/vendor/bootstrap/css/bootstrap.css'
 import AppContainer from './containers/appContainer'
-import Account from '../configs/account'
 import HumanReadableTime from 'human-readable-time'
 import ImageDownloader from 'image-downloader'
 import SearchIndex from './utilities/search'
+
+let Account = null
+try {
+  Account = require('../configs/account')
+} catch(e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+  Account = require('../configs/accountDummy')
+}
 
 import {
   getGitHubApi,

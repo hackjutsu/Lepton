@@ -2,7 +2,7 @@ node_modules
 bundle
 dist
 .DS_Store
-configs
+configs/account.js
 npm-debug.log
 test
 screenshots
