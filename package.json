@@ -9,7 +9,7 @@
     "pack": "webpack --display-modules",
     "watch": "webpack --watch",
     "start": "electron ./main.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "webpack --display-modules",
     "dist": "build"
   },
   "repository": {
