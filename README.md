@@ -2,12 +2,12 @@
 
 ![Screenshot](./docs_resource/screenshot.png)
 
-|       Login        |      Edit         |   Search    |
-| :-----------: |:-------------:| :-----:|
-| ![Screenshot](./docs_resource/login.png) | ![Screenshot](./docs_resource/edit.png) | ![Screenshot](./docs_resource/search_bar.png) |
-|*Smile*|*Command + N*|*Shift + Space*|
+|      Edit         |   Search    |
+| :-------------:| :-----:|
+| ![Screenshot](./docs_resource/edit.png) | ![Screenshot](./docs_resource/search_bar.png) |
+|*Command + N*|*Shift + Space*|
 
-[GitHub Gist](https://gist.github.com/) Desktop Client.
+**Lepton** is a lean [GitHub Gist](https://gist.github.com/) Desktop Client based on Electron.
 - Group your gists by languages
 - Create/Edit/Delete gists
 - Instant search
