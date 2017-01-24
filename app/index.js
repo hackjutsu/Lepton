@@ -26,7 +26,7 @@ import {
   getGitHubApi,
   GET_ALL_GISTS,
   GET_USER_PROFILE,
-  EXCHANGE_ACCESS_TOKEN } from './utilities/gitHubApi'
+  EXCHANGE_ACCESS_TOKEN } from './utilities/githubApi'
 
 import RootReducer from './reducers'
 import {

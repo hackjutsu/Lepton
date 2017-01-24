@@ -22,7 +22,7 @@ import {
   getGitHubApi,
   EDIT_SINGLE_GIST,
   DELETE_SINGLE_GIST
-} from '../../utilities/gitHubApi'
+} from '../../utilities/githubApi'
 
 const logger = remote.getGlobal('logger')
 

@@ -21,7 +21,7 @@ import {
 import {
   getGitHubApi,
   CREATE_SINGLE_GIST
-} from '../../utilities/gitHubApi'
+} from '../../utilities/githubApi'
 
 import { remote, ipcRenderer } from 'electron'
 const logger = remote.getGlobal('logger')
