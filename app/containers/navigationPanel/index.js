@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import UserPanel from '../UserPanel'
+import UserPanel from '../userPanel'
 import { selectLangTag, selectGist, fetchSingleGist } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 import './index.scss'
