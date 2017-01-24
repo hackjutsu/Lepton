@@ -128,7 +128,13 @@ class Snippet extends Component {
       }
     }
 
-    logger.debug('The processedFiles are ' + JSON.stringify(processedFiles))
+    // In the past, we close the dialog after getting response from the server
+    // both for the “create” and “edit” actions. However, the state change for
+    // the “edit” action is less intensive than “create”, for example, the active
+    // language tag and the active gist are likely be the same as before.
+    // Therefore, we decide the close the dialog without waiting for the server’s
+    // response, which provides better user experience.
+    this.closeGistEditorModal()
 
     getGitHubApi(EDIT_SINGLE_GIST)(
       this.props.accessToken,
@@ -141,10 +147,6 @@ class Snippet extends Component {
     })
     .then((response) => {
       this.updateGistsStoreWithUpdatedGist(response)
-    })
-    .finally(() => {
-      logger.debug('Closing the editor modal')
-      this.closeGistEditorModal()
     })
   }
 
