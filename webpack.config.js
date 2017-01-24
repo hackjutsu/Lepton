@@ -4,7 +4,6 @@ const path = require('path')
 const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 
-
 module.exports = {
   entry: [
     './app/index.js'
@@ -16,42 +15,45 @@ module.exports = {
     filename: 'app.bundle.js'
   },
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
       include: [path.resolve(__dirname, 'app')],
       exclude: /node_modules/,
-      loader: 'babel',
-      query: {
-        presets: ['es2015', 'react']
+      loader: 'babel-loader',
+      options: {
+        presets: [
+          ['es2015',  { "modules": false }],
+          'react'
+        ]
       }
     }, {
       test: /\.(scss|css)$/,
-      loaders: ['style', 'css', 'sass']
+      loaders: ['style-loader', 'css-loader', 'sass-loader']
     }, {
       test: /\.json/,
 	  // exclude: /node_modules/,
-	  loader: 'json'
+	  loader: 'json-loader'
 	}, {
       test: /\.(png|jpg)$/,
       loader: 'url-loader'
     }, {
       test: /\.html$/,
-      loader: 'html'
+      loader: 'html-loader'
     }, {
       test: /\.txt$/,
-      loader: 'text'
+      loader: 'text-loader'
     }, {
       test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/font-woff'
+      loader: 'url-loader?limit=10000&mimetype=application/font-woff'
     }, {
       test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=application/octet-stream'
+      loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
     }, {
       test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'file'
+      loader: 'file-loader'
     }, {
       test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url?limit=10000&mimetype=image/svg+xml'
+      loader: 'url-loader?limit=10000&mimetype=image/svg+xml'
     }]
   },
   externals: [nodeExternals({
