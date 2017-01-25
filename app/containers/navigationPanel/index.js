@@ -47,12 +47,12 @@ class NavigationPanel extends Component {
   }
 
   render () {
-   let {
-     searchIndex,
-     updateLocalStorage,
-     getLoggedInUserInfo,
-     reSyncUserGists,
-     launchAuthWindow } = this.props
+    let {
+      searchIndex,
+      updateLocalStorage,
+      getLoggedInUserInfo,
+      reSyncUserGists,
+      launchAuthWindow } = this.props
 
     return (
       <div className='menu-panel'>

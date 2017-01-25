@@ -3,7 +3,7 @@
 export default function parser (rawDescription) {
   let regexForTitle = rawDescription.match(/\[.*\]/)
   let rawTitle = regexForTitle && regexForTitle[0] || ''
-  let title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length-1) || ''
+  let title = ((rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length-1)) || ''
 
   let regextForKeywords = rawDescription.match(/#keywords:.*$/)
   let keywords = regextForKeywords && regextForKeywords[0] || ''
@@ -12,7 +12,7 @@ export default function parser (rawDescription) {
 
   return {
     title: title,
-	description: description,
-	keywords: keywords
+    description: description,
+    keywords: keywords
   }
 }

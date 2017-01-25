@@ -63,7 +63,7 @@ class NavigationPanelDetails extends Component {
         // it shows to the original description. It provides users the flexibility
         // to decide what to be shown in the thumbnail.
         let rawDescription = gists[gistId].brief.description
-        let { title, description, keywords } = descriptionParser(rawDescription)
+        let { title, description } = descriptionParser(rawDescription)
         let thumbnailTitle = title.length > 0 ? title : description
         snippetThumbnails.push(
           <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>

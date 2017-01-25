@@ -152,7 +152,7 @@ class Snippet extends Component {
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
-    let { gists, activeGist, langTags, activeLangTag, updateSingleGist,
+    let { langTags, activeLangTag, updateSingleGist,
       updateLangTags, selectLangTag, searchIndex} = this.props
 
     let gistId = gistDetails.id
@@ -348,7 +348,6 @@ class Snippet extends Component {
         { htmlForDescriptionSection }
       </div>
     )
-
   }
 
   render () {

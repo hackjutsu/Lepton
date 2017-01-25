@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Image, Modal, ListGroupItem, ListGroup } from 'react-bootstrap'
+import { Modal, ListGroupItem, ListGroup } from 'react-bootstrap'
 import {
   selectLangTag,
   selectGist,
@@ -42,7 +42,7 @@ class SearchPage extends Component {
 
   selectPreGist () {
     let { selectedIndex, searchResults } = this.state
-    selectedIndex = selectedIndex - 1;
+    selectedIndex = selectedIndex - 1
     if (!searchResults || selectedIndex < 0) {
       selectedIndex = searchResults.length - 1
     }
@@ -53,9 +53,9 @@ class SearchPage extends Component {
 
   selectNextGist () {
     let { selectedIndex, searchResults } = this.state
-    selectedIndex = selectedIndex + 1;
+    selectedIndex = selectedIndex + 1
     if (!searchResults || selectedIndex >= searchResults.length) {
-      selectedIndex = 0;
+      selectedIndex = 0
     }
     this.setState({
       selectedIndex: selectedIndex,

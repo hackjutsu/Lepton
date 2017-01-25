@@ -11,7 +11,7 @@ import './index.scss'
 
 class AppContainer extends Component {
 
-  renderSearchPage() {
+  renderSearchPage () {
     if (this.props.searchWindowStatus === 'OFF') return null
     return (
       <SearchPage searchIndex = { this.props.searchIndex } />

@@ -17,7 +17,7 @@ import SearchIndex from './utilities/search'
 let Account = null
 try {
   Account = require('../configs/account')
-} catch(e) {
+} catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
   Account = require('../configs/accountDummy')
 }
@@ -384,7 +384,6 @@ ipcRenderer.on('search-gist', data => {
   reduxStore.dispatch(updateSearchWindowStatus(newStatus))
 })
 /** End: Response to keyboard events **/
-
 
 // Start
 const reduxStore = createStore(
