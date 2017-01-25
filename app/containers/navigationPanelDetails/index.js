@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { selectGist, fetchSingleGist } from '../../actions'
+import descriptionParser from '../../utilities/descriptionParser'
 import './index.scss'
 
 import { remote } from 'electron'
@@ -62,13 +63,13 @@ class NavigationPanelDetails extends Component {
         // it shows to the original description. It provides users the flexibility
         // to decide what to be shown in the thumbnail.
         let rawDescription = gists[gistId].brief.description
-        let regexForTitle = rawDescription.match(/\[.*\]/)
-        let title = (regexForTitle && regexForTitle[0].substring(1, regexForTitle[0].length-1)) || rawDescription
+        let { title, description, keywords } = descriptionParser(rawDescription)
+        let thumbnailTitle = title.length > 0 ? title : description
         snippetThumbnails.push(
           <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>
             <div className={ this.decideSnippetListItemClass(gistId) }
                 onClick={ this.handleClicked.bind(this, gistId) }>
-                <div className='snippet-thumnail-description'>{ title }</div>
+                <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
             </div>
           </ListGroupItem>
         )

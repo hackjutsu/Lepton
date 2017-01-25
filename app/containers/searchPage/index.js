@@ -9,6 +9,7 @@ import {
   fetchSingleGist,
   updateSearchWindowStatus} from '../../actions/index'
 import { bindActionCreators } from 'redux'
+import descriptionParser from '../../utilities/descriptionParser'
 
 import './index.scss'
 
@@ -100,14 +101,7 @@ class SearchPage extends Component {
   }
 
   renderSnippetDescription (rawDescription) {
-    let regexForTitle = rawDescription.match(/\[.*\]/)
-    let rawTitle = regexForTitle && regexForTitle[0] || ''
-    let title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length-1) || ''
-
-    let regextForKeywords = rawDescription.match(/#keywords:.*$/)
-    let keywords = regextForKeywords && regextForKeywords[0] || ''
-
-    let description = rawDescription.substring(rawTitle.length, rawDescription.length - keywords.length)
+    let { title, description, keywords } = descriptionParser(rawDescription)
 
     let htmlForDescriptionSection = []
     if (title.length > 0) {
