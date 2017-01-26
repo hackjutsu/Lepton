@@ -29,6 +29,11 @@
     @extend .modal-button-base;
   }
 
+  .modal-button:focus {
+      border: 1px solid grey;
+      outline-color: grey;
+  }
+
   .modal-button-disabled {
     @extend .modal-button-base;
     cursor: not-allowed;

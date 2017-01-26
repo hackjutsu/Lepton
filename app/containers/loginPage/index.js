@@ -50,6 +50,7 @@ class LoginPage extends Component {
       return (
         <div className='button-group-modal'>
           <Button
+            autoFocus
             className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
             onClick={ this.handleLoginClicked.bind(this) }>
             GitHub Login
@@ -61,6 +62,7 @@ class LoginPage extends Component {
     return (
       <div className='button-group-modal'>
         <Button
+          autoFocus
           className='modal-button'
           bsStyle="success"
           onClick={ this.handleContinueButtonClicked.bind(this) }>
