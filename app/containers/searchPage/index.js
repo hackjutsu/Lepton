@@ -20,7 +20,6 @@ class SearchPage extends Component {
 
   constructor (props) {
     super(props)
-    this.keyEvents = ipcRenderer
     this.state = {
       inputValue: '',
       selectedIndex: 0,
@@ -38,9 +37,9 @@ class SearchPage extends Component {
   }
 
   componentWillUnmount () {
-    this.keyEvents.removeAllListeners('key-up')
-    this.keyEvents.removeAllListeners('key-down')
-    this.keyEvents.removeAllListeners('key-enter')
+    ipcRenderer.removeAllListeners('key-up')
+    ipcRenderer.removeAllListeners('key-down')
+    ipcRenderer.removeAllListeners('key-enter')
   }
 
   selectPreGist () {

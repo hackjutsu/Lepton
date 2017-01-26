@@ -51,6 +51,11 @@ function createWindow () {
     })
   })
 
+  const ContextMenu = require('electron-context-menu')
+  ContextMenu({
+    prepend: (params, mainWindow) => []
+  })
+
   mainWindow.loadURL(`file://${__dirname}/index.html`)
   setUpApplicationMenu()
   // mainWindow.webContents.openDevTools()
