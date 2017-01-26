@@ -25,6 +25,10 @@
      background: rgb(237, 237, 237);
   }
 
+  .list-group {
+    margin-bottom: 0px; 
+  }
+
   .list-group-item {
     border-left: 0;
     border-right: 0;
@@ -85,6 +89,8 @@
 
   .tip {
     @extend .font-style-base;
+    margin-top: -27px;
+    margin-bottom: 10px;
     width: 100%;
     text-align: right;
     font-size: 10px;

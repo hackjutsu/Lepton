@@ -29,9 +29,12 @@ class SearchPage extends Component {
   }
 
   componentWillMount () {
-    this.keyEvents.on('key-up', this.selectPreGist.bind(this))
-    this.keyEvents.on('key-down', this.selectNextGist.bind(this))
-    this.keyEvents.on('key-enter', this.selectCurrentGist.bind(this))
+    ipcRenderer.on('key-up', this.selectPreGist.bind(this))
+    ipcRenderer.on('key-down', this.selectNextGist.bind(this))
+    ipcRenderer.on('key-enter', this.selectCurrentGist.bind(this))
+    ipcRenderer.on('key-escape', () => {
+      this.props.updateSearchWindowStatus('OFF')
+    })
   }
 
   componentWillUnmount () {
@@ -162,7 +165,6 @@ class SearchPage extends Component {
   }
 
   renderSearchModalBody () {
-    let tips = 'Navigation: Shift+Up/Down | Select: Shift+Enter | Exit: Shift+Space'
     return (
       <div>
         <input
@@ -173,10 +175,10 @@ class SearchPage extends Component {
           value={ this.state.inputValue }
           onChange={ this.updateInputValue.bind(this) }
           onKeyUp={ this.queryInputValue.bind(this) }/>
+        <div className='tip'>Navigation: Shift+Up/Down | Select: Shift+Enter</div>
         <ListGroup>
           { this.renderSearchResults() }
         </ListGroup>
-        <div className='tip'>{ tips }</div>
       </div>
     )
   }

@@ -16,11 +16,11 @@ initGlobalLogger()
 
 let mainWindow = null
 
-let keyShortcutForSearch = 'Shift+Space'
-let keyNewGist = 'CommandOrControl+N'
-let keyUp = 'Shift+Up'
-let keyDown = 'Shift+Down'
-let keyEnter = 'Shift+Enter'
+const keyShortcutForSearch = 'Shift+Space'
+const keyNewGist = 'CommandOrControl+N'
+const keyUp = 'Shift+Up'
+const keyDown = 'Shift+Down'
+const keyEnter = 'Shift+Enter'
 
 function createWindow () {
   console.time('init')
@@ -37,10 +37,6 @@ function createWindow () {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
     console.timeEnd('init')
-    electronLocalshortcut.register(mainWindow, keyShortcutForSearch, () => {
-    //   console.log('You pressed ' + keyShortcutForSearch1)
-      mainWindow && mainWindow.webContents.send('search-gist')
-    })
     electronLocalshortcut.register(mainWindow, keyUp, () => {
     //   console.log('You pressed ' + keyUp)
       mainWindow && mainWindow.webContents.send('key-up')
@@ -53,15 +49,6 @@ function createWindow () {
     //   console.log('You pressed ' + keyEnter)
       mainWindow && mainWindow.webContents.send('key-enter')
     })
-    electronLocalshortcut.register(mainWindow, keyNewGist, () => {
-    //   console.log('You pressed ' + keyNewGist)
-      mainWindow && mainWindow.webContents.send('new-gist')
-    })
-  })
-
-  const ContextMenu = require('electron-context-menu')
-  ContextMenu({
-    prepend: (params, mainWindow) => []
   })
 
   mainWindow.loadURL(`file://${__dirname}/index.html`)
@@ -95,25 +82,30 @@ app.on('activate', () => {
 
 function setUpApplicationMenu () {
   // Create the Application's main menu
-  let template = [{
-    label: "Application",
+  let { mainMenuTemplate } = require('./app/utilities/menu/mainMenu')
+  let gistMenu = {
+    label: 'Gist',
     submenu: [
-      { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
-      { type: "separator" },
-      { label: "Quit", accelerator: "Command+Q", click: function() { app.quit() }}
-    ]}, {
-    label: "Edit",
-    submenu: [
-      { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
-      { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
-      { type: "separator" },
-      { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
-      { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-      { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-      { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
-    ]}
-  ]
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+      {
+        label: 'New Gist',
+        accelerator: keyNewGist,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('new-gist')
+      },
+      {
+        label: 'Search Gist',
+        accelerator: keyShortcutForSearch,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('search-gist')
+      },
+      {
+        label: 'Escape',
+        accelerator: 'Escape',
+        click: (item, mainWindow) => mainWindow && mainWindow.send('key-escape')
+      }
+    ]
+  }
+  let template = [...mainMenuTemplate, gistMenu]
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 }
 
 function initGlobalLogger () {
