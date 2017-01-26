@@ -243,7 +243,7 @@ function updateUserGists (userLoginId, accessToken) {
 
         Object.keys(gist.files).forEach(filename => {
           let file = gist.files[filename]
-          let language = file.language
+          let language = file.language || 'Other'
           langs.add(language)
           rawLangTags['All'].add(gist.id)
           if (rawLangTags.hasOwnProperty(language)) {
