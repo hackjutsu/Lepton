@@ -108,9 +108,9 @@ class SearchPage extends Component {
       htmlForDescriptionSection.push(<div className='title-section' key='title'>{ title }</div>)
     }
     htmlForDescriptionSection.push(<div className='description-section' key='description'>{ description }</div>)
-    if (keywords.length > 0) {
-      htmlForDescriptionSection.push(<div className='keywords-section' key='keywords'>{ keywords }</div>)
-    }
+    // if (keywords.length > 0) {
+    //   htmlForDescriptionSection.push(<div className='keywords-section' key='keywords'>{ keywords }</div>)
+    // }
 
     return (
       <div>

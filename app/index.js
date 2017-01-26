@@ -50,7 +50,7 @@ const logger = remote.getGlobal('logger')
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
   client_secret: Account.client_secret,
-  scopes: ['user', 'gist']
+  scopes: ['gist']
 }
 
 let preSyncSnapshot = {
@@ -91,7 +91,7 @@ function launchAuthWindow (accessToken) {
 
     // If there is a code, proceed to get token from github
     if (code) {
-      logger.info('** dispatch updateUserSession')
+      logger.info('** dispatch updateUserSession IN_PROGRESS')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
       let accessTokenPromise = getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
         CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
@@ -309,13 +309,13 @@ function updateUserGists (userLoginId, accessToken) {
 
 /** Start: User session management **/
 function initUserSession (accessToken) {
-  logger.info('** dispatch updateUserSession')
+  logger.info('** dispatch updateUserSession IN_PROGRESS')
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(accessToken)
   getGitHubApi(GET_USER_PROFILE)(accessToken)
     .then((profile) => {
       updateUserGists(profile.login, accessToken).then(() => {
-        logger.info('** dispatch updateUserSession')
+        logger.info('** dispatch updateUserSession ACTIVE')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: profile }))
         updateLocalStorage({
           token: accessToken,
@@ -326,6 +326,7 @@ function initUserSession (accessToken) {
     })
   .catch((err) => {
     logger.error('The request has failed: ' + err)
+    logger.info('** dispatch updateUserSession INACTIVE')
     reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
     Notifier('Sync failed', JSON.stringify(err))
   })

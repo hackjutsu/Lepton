@@ -27,7 +27,7 @@ function searchFromIndex (query) {
   if (!query) return
   return index.search(query, {
     fields: {
-      description: { boost: 1 }
+      description: { boost: 1, bool: 'AND' },
     }
   })
 }

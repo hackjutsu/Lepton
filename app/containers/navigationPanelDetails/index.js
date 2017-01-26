@@ -62,7 +62,10 @@ class NavigationPanelDetails extends Component {
         // pick up "Apple is delicious" as the title. If no brackets are found,
         // it shows to the original description. It provides users the flexibility
         // to decide what to be shown in the thumbnail.
-        let rawDescription = gists[gistId].brief.description
+        let gist = gists[gistId]
+        let firstFilename = Object.keys(gist.brief.files)[0]
+        let rawDescription = gist.brief.description.length === 0 ? firstFilename : gist.brief.description
+
         let { title, description } = descriptionParser(rawDescription)
         let thumbnailTitle = title.length > 0 ? title : description
         snippetThumbnails.push(
