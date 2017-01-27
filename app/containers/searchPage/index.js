@@ -75,10 +75,10 @@ class SearchPage extends Component {
     let { gists, selectLangTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
 
     if (!gists[gistId].details) {
-      logger.info('** dispatch fetchSingleGist ' + gistId)
+      logger.info('[Dispatch] fetchSingleGist ' + gistId)
       fetchSingleGist(gists[gistId], gistId)
     }
-    logger.info('** dispatch selectGist ' + gistId)
+    logger.info('[Dispatch] selectGist ' + gistId)
     selectGist(gistId)
 
     selectLangTag('All')

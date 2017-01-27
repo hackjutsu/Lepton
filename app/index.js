@@ -91,7 +91,7 @@ function launchAuthWindow (accessToken) {
 
     // If there is a code, proceed to get token from github
     if (code) {
-      logger.info('** dispatch updateUserSession IN_PROGRESS')
+      logger.info('[Dispatch] updateUserSession IN_PROGRESS')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
       let accessTokenPromise = getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
         CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
@@ -128,28 +128,28 @@ function launchAuthWindow (accessToken) {
 }
 
 function setSyncTime (time) {
-  logger.info('** dispatch updateSyncTime')
+  logger.info('[Dispatch] updateSyncTime')
   reduxStore.dispatch(updateSyncTime(time))
 }
 
 function initAccessToken (token) {
-  logger.info('** dispatch updateAccessToken')
+  logger.info('[Dispatch] updateAccessToken')
   reduxStore.dispatch(updateAccessToken(token))
 }
 
 function updateAuthWindowStatusOn () {
-  logger.info('** dispatch updateAuthWindowStatus ON')
+  logger.info('[Dispatch] updateAuthWindowStatus ON')
   reduxStore.dispatch(updateAuthWindowStatus('ON'))
 }
 
 function updateAuthWindowStatusOff () {
-  logger.info('** dispatch updateAuthWindowStatus OFF')
+  logger.info('[Dispatch] updateAuthWindowStatus OFF')
   reduxStore.dispatch(updateAuthWindowStatus('OFF'))
 }
 
 /** Start: Language tags management **/
 function updateLangTagsAfterSync (langTags) {
-  logger.info('** dispatch updateLangTags')
+  logger.info('[Dispatch] updateLangTags')
   reduxStore.dispatch(updateLangTags(langTags))
 }
 /** End: Language tags management **/
@@ -171,7 +171,7 @@ function updateActiveLangTagAfterSync (langTags, newActiveTagCandidate) {
   // by calling getEffectiveActiveLangTagAfterSync()
   let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
   if (effectiveLangTag !== preSyncSnapshot.activeLangTag) {
-    logger.info('** dispatch selectLangTag')
+    logger.info('[Dispatch] selectLangTag')
     reduxStore.dispatch(selectLangTag(newActiveTagCandidate))
   }
 }
@@ -185,10 +185,10 @@ function updateActiveGistBase (gists, activeGist) {
   }
 
   if (!gists[activeGist].details) {
-    logger.info('** dispatch fetchSingleGist ' + activeGist)
+    logger.info('[Dispatch] fetchSingleGist ' + activeGist)
     reduxStore.dispatch(fetchSingleGist(gists[activeGist], activeGist))
   }
-  logger.info('** dispatch selectGist ' + activeGist)
+  logger.info('[Dispatch] selectGist ' + activeGist)
   reduxStore.dispatch(selectGist(activeGist))
 }
 
@@ -212,7 +212,7 @@ function updateActiveGistAfterClicked (gists, langTags, newActiveTag) {
 
 /** Start: User gists management **/
 function updateGistStoreAfterSync (gists) {
-  logger.info('** dispatch updateGists')
+  logger.info('[Dispatch] updateGists')
   reduxStore.dispatch(updateGists(gists))
 }
 
@@ -309,13 +309,13 @@ function updateUserGists (userLoginId, accessToken) {
 
 /** Start: User session management **/
 function initUserSession (accessToken) {
-  logger.info('** dispatch updateUserSession IN_PROGRESS')
+  logger.info('[Dispatch] updateUserSession IN_PROGRESS')
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(accessToken)
   getGitHubApi(GET_USER_PROFILE)(accessToken)
     .then((profile) => {
       updateUserGists(profile.login, accessToken).then(() => {
-        logger.info('** dispatch updateUserSession ACTIVE')
+        logger.info('[Dispatch] updateUserSession ACTIVE')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: profile }))
         updateLocalStorage({
           token: accessToken,
@@ -326,7 +326,7 @@ function initUserSession (accessToken) {
     })
   .catch((err) => {
     logger.error('The request has failed: ' + err)
-    logger.info('** dispatch updateUserSession INACTIVE')
+    logger.info('[Dispatch] updateUserSession INACTIVE')
     reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
     Notifier('Sync failed', JSON.stringify(err))
   })

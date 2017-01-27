@@ -204,10 +204,10 @@ class Snippet extends Component {
       details: gistDetails
     }
 
-    logger.info('** dispatch updateSingleGist')
+    logger.info('[Dispatch] updateSingleGist')
     updateSingleGist(updatedGist)
 
-    logger.info('** dispatch updateLangTags')
+    logger.info('[Dispatch] updateLangTags')
     updateLangTags(langTags)
 
     // If the previous active language tag is no longer valid, for example,
@@ -215,11 +215,11 @@ class Snippet extends Component {
     // or the gist array for the preivous active language tag is empty, we
     // choose to fall back to 'All'.
     if (!langTags[activeLangTag] || !langTags[activeLangTag].includes(gistId)) {
-      logger.info('** dispatch selectLangTag')
+      logger.info('[Dispatch] selectLangTag')
       logger.debug('The selected language tag is All')
       selectLangTag('All')
     }
-    // logger.info('** dispatch selectGist')
+    // logger.info('[Dispatch] selectGist')
     // this.props.selectGist(gistId)
 
     logger.debug('>>>>> ' + 'update the searchIndex with ' + gistDetails.description)

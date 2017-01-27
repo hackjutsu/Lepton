@@ -18,10 +18,10 @@ class NavigationPanelDetails extends Component {
 
     logger.info('A new gist is selected: ' + gistId)
     if (!gists[gistId].details) {
-      logger.info('** dispatch fetchSingleGist ' + gistId)
+      logger.info('[Dispatch] fetchSingleGist ' + gistId)
       fetchSingleGist(gists[gistId], gistId)
     }
-    logger.info('** dispatch selectGist ' + gistId)
+    logger.info('[Dispatch] selectGist ' + gistId)
     selectGist(gistId)
   }
 

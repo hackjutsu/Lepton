@@ -111,16 +111,16 @@ class UserPanel extends Component {
       brief: gistDetails,
       details: gistDetails
     }
-    logger.info('** dispatch updateSingleGist')
+    logger.info('[Dispatch] updateSingleGist')
     updateSingleGist(newGist)
 
-    logger.info('** dispatch updateLangTags')
+    logger.info('[Dispatch] updateLangTags')
     updateLangTags(langTags)
 
-    logger.info('** dispatch selectLangTag')
+    logger.info('[Dispatch] selectLangTag')
     selectLangTag('All')
 
-    logger.info('** dispatch selectGist')
+    logger.info('[Dispatch] selectGist')
     selectGist(gistId)
 
     // update the search index
@@ -187,7 +187,7 @@ class UserPanel extends Component {
   }
 
   handleLogoutClicked () {
-    logger.info('** dispatch logoutUserSession')
+    logger.info('[Dispatch] logoutUserSession')
     this.props.logoutUserSession()
     this.props.updateLocalStorage({
       token: null,
