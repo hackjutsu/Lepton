@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Panel, Modal, Button } from 'react-bootstrap'
+import { Panel, Modal, Button, ProgressBar } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
@@ -301,11 +301,11 @@ class Snippet extends Component {
   createMarkup (content, language) {
     language = language === 'Shell' ? 'Bash' : language
     let line = 0
-    let html =  `<span class='line-number' data-pseudo-content=${ ++line }></span>` + HighlightJS.highlightAuto(content, [language, 'css']).value
+    let html = `<span class='line-number' data-pseudo-content=${++line}></span>` + HighlightJS.highlightAuto(content, [language, 'css']).value
     let codeHtml = html.replace(/\r?\n/g, () => {
-      return `\n<span class='line-number' data-pseudo-content=${ ++line }></span>`
+      return `\n<span class='line-number' data-pseudo-content=${++line}></span>`
     })
-    return { __html: `<pre><code>${ codeHtml }</code></pre>` }
+    return { __html: `<pre><code>${codeHtml}</code></pre>` }
   }
 
   renderPanelHeader (activeSnippet) {
@@ -394,6 +394,9 @@ class Snippet extends Component {
           bsStyle={ activeSnippet.brief.public ? 'default' : 'danger' }
           header={ this.renderPanelHeader(activeSnippet) }>
           <div className='snippet-decription'>{ this.renderSnippetDescription(activeSnippet.brief.description) }</div>
+          { activeSnippet.details
+              ? null
+              : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }
           { this.renderGistEditorModal(activeSnippet.brief.description, fileArray, !activeSnippet.brief.public) }
           { this.renderRawModal() }
           { this.renderDeleteModal() }

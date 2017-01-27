@@ -12,13 +12,8 @@
 
   .resync-progress-bar {
     width: 90%;
-    height: 5px;
+    height: 3px;
     margin-bottom: 0;
-  }
-
-  .resync-progress-bar-hidden {
-    @extend .resync-progress-bar;
-    visibility: hidden;
   }
 
   .customized-tag {
