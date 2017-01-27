@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Image, Modal, ProgressBar } from 'react-bootstrap'
+import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import defaultImage from './github.jpg'
 
 import './index.scss'
@@ -46,9 +46,14 @@ class LoginPage extends Component {
       )
     }
 
-    if (loggedInUserName === null || loggedInUserName === 'null') {
+    if (userSessionStatus === 'EXPIRED' || loggedInUserName === null || loggedInUserName === 'null') {
       return (
         <div className='button-group-modal'>
+          { userSessionStatus === 'EXPIRED'
+              ? <Alert bsStyle="warning">
+                  <strong>Token expired.</strong> Please login again.
+                </Alert>
+              : null }
           <Button
             autoFocus
             className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }

@@ -325,9 +325,15 @@ function initUserSession (accessToken) {
       })
     })
   .catch((err) => {
-    logger.error('The request has failed: ' + err)
-    logger.info('[Dispatch] updateUserSession INACTIVE')
-    reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+    logger.error('The request has failed: \n' + JSON.stringify(err))
+
+    if (err.statusCode === 401) {
+      logger.info('[Dispatch] updateUserSession EXPIRED')
+      reduxStore.dispatch(updateUserSession({ activeStatus: 'EXPIRED' }))
+    } else {
+      logger.info('[Dispatch] updateUserSession INACTIVE')
+      reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+    }
     Notifier('Sync failed', JSON.stringify(err))
   })
 }
