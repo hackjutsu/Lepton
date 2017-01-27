@@ -54,13 +54,6 @@
     margin-bottom: 5px;
   }
 
-  .raw-modal .modal-content {
-    @extend .font-style-base;
-    min-height: 300px;
-    white-space: nowrap;
-    overflow: auto;
-  }
-
   .title-section {
     @extend .font-style-base;
     font-size: 14px;
@@ -84,12 +77,43 @@
   pre {
     font-size: 11px !important;
   }
+
+  .line-number {
+    text-align: right;
+    padding-right: 20px;
+    display: inline-block;
+    color: rgba(0,0,0,0.2);
+    width: 40px;
+    font-size: 11px;
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  }
 }
 
-.code-area-raw {
-  @extend .font-style-base;
-  width: 100%;
-  min-height: 550px;
-  white-space: pre-wrap;
-  border: 0px;
+.raw-modal {
+  .modal-dialog {
+    width: 90vw !important;
+  }
+
+  .modal-content {
+    @extend .font-style-base;
+    min-height: 300px;
+     white-space: nowrap;
+    overflow: auto;
+  }
+
+  .code-area-raw {
+    @extend .font-style-base;
+    width: 100%;
+    min-height: 550px;
+    white-space: pre-wrap;
+    border: 0px;
+  }
+}
+
+// CSS technique to disable the line numbers from being selected
+// http://codepen.io/danoc/pen/ByGKZv
+[data-pseudo-content]::before,
+[data-pseudo-content--before]::before,
+[data-pseudo-content--after]::after {
+  content: attr(data-pseudo-content);
 }

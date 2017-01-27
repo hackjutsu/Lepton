@@ -300,8 +300,12 @@ class Snippet extends Component {
 
   createMarkup (content, language) {
     language = language === 'Shell' ? 'Bash' : language
-    let html = '<pre><code>' + HighlightJS.highlightAuto(content, [language]).value + '</code></pre>'
-    return { __html: html }
+    let line = 0
+    let html =  `<span class='line-number' data-pseudo-content=${ ++line }></span>` + HighlightJS.highlightAuto(content, [language, 'css']).value
+    let codeHtml = html.replace(/\r?\n/g, () => {
+      return `\n<span class='line-number' data-pseudo-content=${ ++line }></span>`
+    })
+    return { __html: `<pre><code>${ codeHtml }</code></pre>` }
   }
 
   renderPanelHeader (activeSnippet) {
