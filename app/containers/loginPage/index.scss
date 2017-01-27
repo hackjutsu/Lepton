@@ -30,8 +30,7 @@
   }
 
   .modal-button:focus {
-      border: 1px solid grey;
-      outline-color: grey;
+    outline: none;
   }
 
   .modal-button-disabled {
