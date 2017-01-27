@@ -17,6 +17,11 @@
     outline:none;
   }
 
+  .result-group {
+    max-height: 70vh;
+    overflow: auto;
+  }
+
   .search-result-item {
 
   }
@@ -26,7 +31,7 @@
   }
 
   .list-group {
-    margin-bottom: 0px; 
+    margin-bottom: 0px;
   }
 
   .list-group-item {

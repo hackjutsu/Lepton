@@ -175,7 +175,7 @@ class SearchPage extends Component {
           onChange={ this.updateInputValue.bind(this) }
           onKeyUp={ this.queryInputValue.bind(this) }/>
         <div className='tip'>Navigation: Shift+Up/Down | Select: Shift+Enter</div>
-        <ListGroup>
+        <ListGroup className='result-group'>
           { this.renderSearchResults() }
         </ListGroup>
       </div>
