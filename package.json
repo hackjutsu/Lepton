@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "AWESOME Gist client for everyone",
   "main": "main.js",
   "scripts": {
