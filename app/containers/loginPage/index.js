@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { ipcRenderer } from 'electron'
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import defaultImage from './github.jpg'
 
@@ -17,6 +18,14 @@ class LoginPage extends Component {
       loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null,
       loggedInUserImage: loggedInUserInfo ? loggedInUserInfo.image : null,
     })
+
+    ipcRenderer.on('auto-login', () => {
+      this.state.loggedInUserToken && this.handleContinueButtonClicked()
+    })
+  }
+
+  componentWillUnmount () {
+    ipcRenderer.removeAllListeners('auto-login')
   }
 
   handleLoginClicked () {

@@ -22,6 +22,13 @@ const keyUp = 'Shift+Up'
 const keyDown = 'Shift+Down'
 const keyEnter = 'Shift+Enter'
 
+function createWindowAndAutoLogin () {
+  createWindow()
+  mainWindow.on('show', () => {
+    mainWindow.webContents.send('auto-login')
+  })
+}
+
 function createWindow () {
   console.time('init')
   mainWindow = new BrowserWindow({
@@ -81,7 +88,7 @@ app.on('activate', () => {
   // On macOS, if an app is not fully closed, it is expected to open again
   // when the icon is clicked.
   if (process.platform === 'darwin' && mainWindow === null) {
-    createWindow()
+    createWindowAndAutoLogin()
   }
 })
 

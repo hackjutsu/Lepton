@@ -384,13 +384,13 @@ function getLoggedInUserInfo () {
 }
 /** End: Local storage management **/
 
-/** Start: Response to keyboard events **/
+/** Start: Response to main process events **/
 ipcRenderer.on('search-gist', data => {
   let preStatus = reduxStore.getState().searchWindowStatus
   let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
   reduxStore.dispatch(updateSearchWindowStatus(newStatus))
 })
-/** End: Response to keyboard events **/
+/** End: Response to  main process events **/
 
 // Start
 const reduxStore = createStore(
