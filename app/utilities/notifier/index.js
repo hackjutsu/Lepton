@@ -1,11 +1,10 @@
 'use strict'
 
-import Notifier from 'node-notifier'
-
 export default function (title, message) {
-  Notifier.notify({
-    'title': title,
-    'message': message,
-    timeout: 3
-  })
+  let option = {
+    title: title,
+    body: message,
+    silent: true
+  }
+  new Notification(option.title, option)
 }

@@ -58,7 +58,6 @@
     "highlight.js": "^9.9.0",
     "human-readable-time": "^0.2.4",
     "image-downloader": "^2.0.1",
-    "node-notifier": "^4.6.1",
     "react": "^15.4.1",
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.1",
