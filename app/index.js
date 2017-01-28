@@ -286,7 +286,7 @@ function updateUserGists (userLoginId, accessToken) {
       // clean up the snapshot for the previous state
       preSyncSnapshot.activeLangTag = null
       preSyncSnapshot.activeGist = null
-      Notifier('Sync succeed', humanReadableSyncTime)
+      Notifier('Sync succeeds', humanReadableSyncTime)
 
       // testing
       let results = SearchIndex.searchFromIndex('node js')
