@@ -2,7 +2,7 @@
 
 ![Screenshot](./docs_resource/screenshot.png)
 
-|      Edit         |   Search    |
+|      Create         |   Search    |
 | :-------------:| :-----:|
 | ![Screenshot](./docs_resource/edit.png) | ![Screenshot](./docs_resource/search_bar.png) |
 |*Command + N*|*Shift + Space*|

@@ -30,21 +30,19 @@ class UserPanel extends Component {
 
   constructor (props) {
     super(props)
-
-    this.keyEvents = ipcRenderer
     this.state = {
       showGistEditorModal: false
     }
   }
 
   componentWillMount () {
-    this.keyEvents.on('new-gist', () => {
+    ipcRenderer.on('new-gist', () => {
       this.handleNewGistClicked()
     })
   }
 
   componentWillUnmount () {
-    this.keyEvents.removeAllListeners('new-gist')
+    ipcRenderer.removeAllListeners('new-gist')
   }
 
   closeGistEditorModal () {
@@ -54,7 +52,6 @@ class UserPanel extends Component {
   }
 
   handleCreateSingleGist (data) {
-    logger.debug('Form submitted: ' + JSON.stringify(data))
     let isPublic = data.private === undefined ? true : !data.private
     let description = data.description
     let processedFiles = {}
@@ -67,14 +64,13 @@ class UserPanel extends Component {
 
     getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
     .catch((err) => {
-      Notifier('Gist creation failed', err)
+      Notifier('Gist creation failed')
       logger.error(JSON.stringify(err))
     })
     .then((response) => {
       this.updateGistsStoreWithNewGist(response)
     })
     .finally(() => {
-      logger.debug('Closing the editor modal')
       this.closeGistEditorModal()
     })
   }
@@ -89,7 +85,6 @@ class UserPanel extends Component {
       searchIndex } = this.props
 
     let gistId = gistDetails.id
-    logger.debug('The new gist id is ' + gistId)
     let files = gistDetails.files
 
     let langs = new Set()
@@ -124,7 +119,6 @@ class UserPanel extends Component {
     selectGist(gistId)
 
     // update the search index
-    logger.debug('>>>>> updating the search index with ' + gistDetails.description)
     searchIndex.addToIndex({
       id: gistId,
       description: gistDetails.description

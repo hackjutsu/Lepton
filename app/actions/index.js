@@ -122,7 +122,7 @@ export function fetchSingleGist (oldGist, id) {
       })
       .catch((err) => {
         logger.error('The request has failed: ' + err)
-        Notifier('Sync failed', JSON.stringify(err))
+        Notifier('Sync failed', 'Please check your network condition.')
       })
   }
 }

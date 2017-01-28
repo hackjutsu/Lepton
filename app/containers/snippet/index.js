@@ -61,11 +61,11 @@ class Snippet extends Component {
     .catch(err => {
       logger.error('Failed to delete the gist ' + activeGist)
       logger.error(JSON.stringify(err))
-      Notifier('Failed to delete the gist', JSON.stringify(err))
+      Notifier('Deletion failed', 'Please check your network condition.')
     })
     .then(data => {
       logger.info('The gist ' + activeGist + ' has been deleted.')
-      Notifier('Gist deleted', 'The gist has been deleted')
+      Notifier('The gist has been deleted')
 
       // For performance purpose, we should perform an internal update, like what
       // we're doing for creating/edit gists. However, since delete is an infrequent
@@ -111,7 +111,6 @@ class Snippet extends Component {
   }
 
   handleGistEditorFormSubmit (data) {
-    logger.debug('Form submitted: ' + JSON.stringify(data))
     let description = data.description
     let processedFiles = {}
 
@@ -123,7 +122,6 @@ class Snippet extends Component {
 
     let activeSnippet = this.props.gists[this.props.activeGist]
     for (let preFile in activeSnippet.details.files) {
-      logger.debug('!! The preFile is ' + preFile)
       if (!processedFiles[preFile]) {
         processedFiles[preFile] = null
       }
@@ -143,7 +141,7 @@ class Snippet extends Component {
       description,
       processedFiles)
     .catch((err) => {
-      Notifier('Gist update failed', err)
+      Notifier('Gist update failed')
       logger.error(JSON.stringify(err))
     })
     .then((response) => {
@@ -156,7 +154,6 @@ class Snippet extends Component {
       updateLangTags, selectLangTag, searchIndex} = this.props
 
     let gistId = gistDetails.id
-    logger.debug('The new gist id is ' + gistId)
     let files = gistDetails.files
 
     let activeSnippet = this.props.gists[this.props.activeGist]
@@ -181,7 +178,6 @@ class Snippet extends Component {
       }
     })
 
-    logger.debug('Filtering out the outdated gistId in the langTags')
     // Removing files in an eidt could introduce some changes to the langTags.
     // 1) if a gist no long has a language, we should remove the gist id from
     // this language tag 2) if the updated language tag is empty, we should remove
@@ -216,13 +212,11 @@ class Snippet extends Component {
     // choose to fall back to 'All'.
     if (!langTags[activeLangTag] || !langTags[activeLangTag].includes(gistId)) {
       logger.info('[Dispatch] selectLangTag')
-      logger.debug('The selected language tag is All')
       selectLangTag('All')
     }
     // logger.info('[Dispatch] selectGist')
     // this.props.selectGist(gistId)
 
-    logger.debug('>>>>> ' + 'update the searchIndex with ' + gistDetails.description)
     searchIndex.updateToIndex({
       id: gistId,
       description: gistDetails.description
@@ -232,14 +226,11 @@ class Snippet extends Component {
   }
 
   renderGistEditorModalBody (description, fileArray, isPrivate) {
-    logger.debug('Inside renderGistEditorModalBody')
     let initialData = Object.assign({
       description: description,
       gists: fileArray,
       private: isPrivate
     })
-
-    logger.debug(UPDATE_GIST)
 
     return (
       <GistEditorForm
@@ -250,7 +241,6 @@ class Snippet extends Component {
   }
 
   renderGistEditorModal (description, fileArray, isPrivate) {
-    logger.debug('Inside renderGistEditorModal')
     return (
       <Modal
         bsSize="large"

@@ -1,6 +1,6 @@
 'use strict'
 
-export default function (title, message) {
+export default function (title, message='') {
   let option = {
     title: title,
     body: message,

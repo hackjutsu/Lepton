@@ -13,8 +13,6 @@ export const UPDATE_GIST = 'UPDATE_GIST'
 class GistEditorForm extends Component {
   componentWillMount () {
     const { change, initialData } = this.props
-    logger.debug('props.initialData is ' + JSON.stringify(initialData))
-
     // Initialize the form
     initialData.private && change('private', initialData.private)
     initialData.description && change('description', initialData.description)
@@ -22,7 +20,6 @@ class GistEditorForm extends Component {
   }
 
   render () {
-    logger.debug('Inside gistEditorForm render method')
     const { handleSubmit, submitting, formStyle } = this.props
 
     return (

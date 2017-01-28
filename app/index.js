@@ -83,7 +83,6 @@ function launchAuthWindow (accessToken) {
 
     if (code || error) {
       // Close the browser if code found or error
-      logger.debug('** Clear the session and destroy the auth browser')
       authWindow.webContents.session.clearStorageData([], () => {})
       authWindow.destroy()
       updateAuthWindowStatusOff()
@@ -97,11 +96,10 @@ function launchAuthWindow (accessToken) {
         CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
       accessTokenPromise.then((response) => {
         let accessToken = response.access_token
-        logger.debug('Got access Token: ' + accessToken)
         initUserSession(accessToken)
       }).catch((err) => {
         logger.error('Failed: ' + JSON.stringify(err.error))
-        Notifier('Sync failed', JSON.stringify(err.error))
+        Notifier('Sync failed', 'Please check your network condition.')
       })
     } else if (error) {
       alert('Oops! Something went wrong and we couldn\'t' +
@@ -111,12 +109,10 @@ function launchAuthWindow (accessToken) {
 
   // Handle the response from GitHub - See Update from 4/12/2015
   authWindow.webContents.on('will-navigate', function (event, url) {
-    logger.debug('** Inside on will-navigate')
     handleCallback(url)
   })
 
   authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
-    logger.debug('** Inside did-get-redirect-request')
     handleCallback(newUrl)
   })
 
@@ -230,7 +226,6 @@ function updateUserGists (userLoginId, accessToken) {
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
     .then((gistList) => {
-      logger.debug('The length of the gist list is ' + gistList.length)
       let preGists = reduxStore.getState().gists
       let gists = {}
       let rawLangTags = {}
@@ -295,10 +290,9 @@ function updateUserGists (userLoginId, accessToken) {
 
       // testing
       let results = SearchIndex.searchFromIndex('node js')
-      logger.debug(JSON.stringify(results))
     })
     .catch(err => {
-      Notifier('Sync failed', JSON.stringify(err))
+      Notifier('Sync failed', 'Please check your network condition.')
       logger.error('The request has failed: ' + err)
     })
     .finally(() => {
@@ -334,14 +328,13 @@ function initUserSession (accessToken) {
       logger.info('[Dispatch] updateUserSession INACTIVE')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
     }
-    Notifier('Sync failed', JSON.stringify(err))
+    Notifier('Sync failed', 'Please check your network condition.')
   })
 }
 /** End: User session management **/
 
 /** Start: Local storage management **/
 function updateLocalStorage (localData) {
-  logger.debug('Updating local storage with ' + localData.profile)
   localStorage.setItem('token', localData.token)
   localStorage.setItem('profile', localData.profile)
   downloadImage(localData.image, localData.profile)
@@ -362,7 +355,6 @@ function downloadImage (imageUrl, filename) {
       if (err) logger.error(err)
 
       localStorage.setItem('image', imagePath)
-      logger.debug('File saved to', filename)
     },
   })
 }
