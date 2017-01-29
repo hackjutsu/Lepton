@@ -32,11 +32,11 @@ function createWindowAndAutoLogin () {
 function createWindow () {
   console.time('init')
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 900,
+    width: 1100,
+    height: 800,
     minWidth: 1000,
     minHeight: 700,
-    titleBarStyle: 'hidden',
+    // titleBarStyle: 'hidden',
     backgroundColor: '#808080',
     show: false
   })
