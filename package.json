@@ -70,7 +70,7 @@
     "winston": "^2.3.0"
   },
   "build": {
-    "appId": "com.hackjutsu.lepton",
+    "appId": "com.cosmox.lepton",
     "mac": {
       "category": "public.app-category.education"
     },
