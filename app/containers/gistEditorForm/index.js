@@ -50,9 +50,9 @@ class GistEditorForm extends Component {
 
 const required = value => value ? undefined : 'required'
 
-const renderTitleInputField = ({ input, label, type, meta: { touched, error, warning } }) => (
+const renderTitleInputField = ({ input, placeholder, type, meta: { touched, error, warning } }) => (
   <div className='title-input-field'>
-    <input className='gist-editor-filename-area' {...input} placeholder={label} type={type}/>
+    <input className='gist-editor-filename-area' {...input} placeholder={ placeholder } type={ type }/>
     { touched && ((error && <span className='error-msg'>{ error }</span>) ||
       (warning && <span className='error-msg'>{ warning }</span>)) }
   </div>
@@ -85,7 +85,7 @@ function renderGistFileHeader (member, fields, index) {
           name={ `${member}.filename` }
           type='text'
           component={ renderTitleInputField }
-          placeholder='File name...'
+          placeholder='File name... (e.g. snippet.js)'
           validate={ required }/>
         <a href='#'
           className={ index === 0 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
