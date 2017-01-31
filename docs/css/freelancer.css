@@ -590,6 +590,11 @@ header {
   color: #2C3E50;
 }
 
+.img-hidden {
+  width: 0px;
+  height: 0px;
+}
+
 /* DEMO-SPECIFIC STYLES */
 .typewriter {
   width: 350px;
