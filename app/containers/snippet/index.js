@@ -282,10 +282,14 @@ class Snippet extends Component {
           <Modal.Title>{ this.state.rawFile }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <textarea className='code-area-raw' defaultValue={ this.state.rawContent } />
+          <textarea ref="rawModalText" className='code-area-raw' defaultValue={ this.state.rawContent } onDoubleClick={ this.selectText.bind(this) } />
         </Modal.Body>
       </Modal>
     )
+  }
+
+  selectText() {
+    this.refs.rawModalText.select();
   }
 
   createMarkup (content, language) {

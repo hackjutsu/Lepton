@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "1.0.0",
+  "version": "1.0.0-beta",
   "description": "AWESOME Gist client for everyone",
   "main": "main.js",
   "scripts": {
@@ -75,7 +75,16 @@
       "category": "public.app-category.education"
     },
     "win": {
-      "target": "7z"
+      "title": "Lepton",
+      "author": "CosmoX",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "linux": {
+      "target": "AppImage"
     }
   }
 }
