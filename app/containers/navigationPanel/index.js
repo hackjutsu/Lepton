@@ -40,7 +40,6 @@ class NavigationPanel extends Component {
 
     return (
       <div className='lang-tag-section'>
-        <hr/>
         { this.renderTags() }
       </div>
     )
@@ -57,12 +56,14 @@ class NavigationPanel extends Component {
     return (
       <div className='menu-panel'>
         <UserPanel
+          className='user-panel'
           searchIndex = { searchIndex }
           updateLocalStorage = { updateLocalStorage }
           getLoggedInUserInfo = { getLoggedInUserInfo }
           reSyncUserGists = { reSyncUserGists }
           launchAuthWindow = { launchAuthWindow }
         />
+        <hr/>
         { this.renderTagSection() }
       </div>
     )
