@@ -29,6 +29,18 @@
     margin-left: 0px;
     /* 200px for user-panel and 40px for <hr/> */
     height: calc(100% - 200px - 40px);
+    position: relative;
+  }
+
+  .lang-tag-section {
+    // /* 200px for user-panel and 40px for <hr/> */
+    height: 30%;
+    overflow: auto;
+  }
+
+  .custom-tag-section {
+    /* 200px for user-panel and 40px for <hr/> */
+    max-height: calc(70% - 40px);
     overflow: auto;
   }
 

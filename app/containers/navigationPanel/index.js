@@ -21,13 +21,18 @@ class NavigationPanel extends Component {
     this.props.updateActiveGistAfterClicked(this.props.gists, this.props.gistTags, key)
   }
 
-  renderTags () {
+  renderLangTags () {
     let gistTags = this.props.gistTags
     let activeGistTag = this.props.activeGistTag
-    let tagList = []
+    let langTagList = []
 
-    Object.keys(gistTags).sort().forEach(prefixedLang => {
-      tagList.push(
+    Object.keys(gistTags)
+    .filter(tag => {
+      return tag.startsWith('lang@')
+    })
+    .sort()
+    .forEach(prefixedLang => {
+      langTagList.push(
         <div key={ prefixedLang }>
           <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
             onClick={ this.handleClicked.bind(this, prefixedLang) }>
@@ -37,8 +42,32 @@ class NavigationPanel extends Component {
       )
     })
 
-    return tagList
-  } // renderTags()
+    return langTagList
+  } // renderLangTags()
+
+  renderCustomTags () {
+    let gistTags = this.props.gistTags
+    let activeGistTag = this.props.activeGistTag
+    let customTagList = []
+
+    Object.keys(gistTags)
+    .filter(tag => {
+      return !tag.startsWith('lang@')
+    })
+    .sort()
+    .forEach(prefixedLang => {
+      customTagList.push(
+        <div key={ prefixedLang }>
+          <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
+            onClick={ this.handleClicked.bind(this, prefixedLang) }>
+            { '#' + Resolved(prefixedLang) }
+          </a>
+        </div>
+      )
+    })
+
+    return customTagList
+  }
 
   renderTagSection () {
     if (this.props.userSession.activeStatus !== 'ACTIVE') {
@@ -47,7 +76,13 @@ class NavigationPanel extends Component {
 
     return (
       <div className='gist-tag-section'>
-        { this.renderTags() }
+        <div className='lang-tag-section'>
+          { this.renderLangTags() }
+        </div>
+        <hr/>
+        <div className='custom-tag-section'>
+          { this.renderCustomTags() }
+        </div>
       </div>
     )
   }
