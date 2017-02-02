@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { selectGist, fetchSingleGist } from '../../actions'
-import descriptionParser from '../../utilities/descriptionParser'
+import { descriptionParser } from '../../utilities/parser'
 import './index.scss'
 
 import { remote } from 'electron'

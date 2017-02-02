@@ -10,7 +10,7 @@ import HighlightJS from 'highlight.js'
 import { shell, remote } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
-import descriptionParser from '../../utilities/descriptionParser'
+import { descriptionParser }  from '../../utilities/parser'
 import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github.css'
 

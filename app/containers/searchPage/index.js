@@ -9,7 +9,7 @@ import {
   fetchSingleGist,
   updateSearchWindowStatus} from '../../actions/index'
 import { bindActionCreators } from 'redux'
-import descriptionParser from '../../utilities/descriptionParser'
+import { descriptionParser } from '../../utilities/parser'
 
 import './index.scss'
 
