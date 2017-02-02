@@ -10,9 +10,12 @@ import HighlightJS from 'highlight.js'
 import { shell, remote } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
-import { descriptionParser }  from '../../utilities/parser'
-import './index.scss'
-import '../../utilities/vendor/highlightJS/styles/github.css'
+import {
+  addLangPrefix as Prefixed,
+  parseLangName as Resolved,
+  addKeywordsPrefix,
+  parseKeywords,
+  descriptionParser } from '../../utilities/parser'
 
 import {
   updateSingleGist,
@@ -24,6 +27,9 @@ import {
   EDIT_SINGLE_GIST,
   DELETE_SINGLE_GIST
 } from '../../utilities/githubApi'
+
+import './index.scss'
+import '../../utilities/vendor/highlightJS/styles/github.css'
 
 const logger = remote.getGlobal('logger')
 
@@ -168,13 +174,14 @@ class Snippet extends Component {
       let file = files[filename]
       let language = file.language
       newLangs.add(language)
-      if (langTags.hasOwnProperty(language)) {
-        if (langTags[language].indexOf(gistId) === -1) {
-          langTags[language].unshift(gistId)
+      let prefixedLang = Prefixed(language)
+      if (langTags.hasOwnProperty(prefixedLang)) {
+        if (langTags[prefixedLang].indexOf(gistId) === -1) {
+          langTags[prefixedLang].unshift(gistId)
         }
       } else {
-        langTags[language] = []
-        langTags[language].unshift(gistId)
+        langTags[prefixedLang] = []
+        langTags[prefixedLang].unshift(gistId)
       }
     })
 
@@ -184,11 +191,12 @@ class Snippet extends Component {
     // this tag at all.
     for (let language of preLangs) {
       if (!newLangs.has(language)) {
-        langTags[language] = langTags[language].filter((value) => {
+        let prefixedLang = Prefixed(language)
+          langTags[prefixedLang] = langTags[prefixedLang].filter(value => {
           return value !== gistId
         })
-        if (langTags[language].length === 0) {
-          delete langTags[language]
+        if (langTags[prefixedLang].length === 0) {
+          delete langTags[prefixedLang]
         }
       }
     }
@@ -212,7 +220,7 @@ class Snippet extends Component {
     // choose to fall back to 'All'.
     if (!langTags[activeLangTag] || !langTags[activeLangTag].includes(gistId)) {
       logger.info('[Dispatch] selectLangTag')
-      selectLangTag('All')
+      selectLangTag(Prefixed('All'))
     }
     // logger.info('[Dispatch] selectGist')
     // this.props.selectGist(gistId)

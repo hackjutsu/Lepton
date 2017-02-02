@@ -13,6 +13,11 @@ import AppContainer from './containers/appContainer'
 import HumanReadableTime from 'human-readable-time'
 import ImageDownloader from 'image-downloader'
 import SearchIndex from './utilities/search'
+import {
+  addLangPrefix as Prefixed,
+  parseLangName as Resolved,
+  addKeywordsPrefix,
+  parseKeywords } from './utilities/parser'
 
 let Account = null
 try {
@@ -229,8 +234,8 @@ function updateUserGists (userLoginId, accessToken) {
       let preGists = reduxStore.getState().gists
       let gists = {}
       let rawLangTags = {}
-      let activeTagCandidate = 'All'
-      rawLangTags['All'] = new Set()
+      let activeTagCandidate = Prefixed('All')
+      rawLangTags[Prefixed('All')] = new Set()
       let langTags = {}
 
       gistList.forEach((gist) => {
@@ -240,12 +245,13 @@ function updateUserGists (userLoginId, accessToken) {
           let file = gist.files[filename]
           let language = file.language || 'Other'
           langs.add(language)
-          rawLangTags['All'].add(gist.id)
-          if (rawLangTags.hasOwnProperty(language)) {
-            rawLangTags[language].add(gist.id)
+          rawLangTags[Prefixed('All')].add(gist.id)
+          let prefixedLang = Prefixed(language)
+          if (rawLangTags.hasOwnProperty(prefixedLang)) {
+            rawLangTags[prefixedLang].add(gist.id)
           } else {
-            rawLangTags[language] = new Set()
-            rawLangTags[language].add(gist.id)
+            rawLangTags[prefixedLang] = new Set()
+            rawLangTags[prefixedLang].add(gist.id)
           }
         })
 

@@ -5,6 +5,13 @@ import { connect } from 'react-redux'
 import UserPanel from '../userPanel'
 import { selectLangTag, selectGist, fetchSingleGist } from '../../actions/index'
 import { bindActionCreators } from 'redux'
+
+import {
+  addLangPrefix as Prefixed,
+  parseLangName as Resolved,
+  addKeywordsPrefix,
+  parseKeywords } from '../../utilities/parser'
+
 import './index.scss'
 
 class NavigationPanel extends Component {
@@ -19,12 +26,12 @@ class NavigationPanel extends Component {
     let activeLangTag = this.props.activeLangTag
     let tagList = []
 
-    Object.keys(langTags).sort().forEach(lang => {
+    Object.keys(langTags).sort().forEach(prefixedLang => {
       tagList.push(
-        <div key={ lang }>
-          <a className={ lang === activeLangTag ? 'active-lang-tag' : 'lang-tag' }
-            onClick={ this.handleClicked.bind(this, lang) }>
-            { '#' + lang }
+        <div key={ prefixedLang }>
+          <a className={ prefixedLang === activeLangTag ? 'active-lang-tag' : 'lang-tag' }
+            onClick={ this.handleClicked.bind(this, prefixedLang) }>
+            { '#' + Resolved(prefixedLang) }
           </a>
         </div>
       )

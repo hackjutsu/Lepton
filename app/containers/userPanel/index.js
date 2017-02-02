@@ -9,6 +9,11 @@ import { NEW_GIST } from '../gistEditorForm'
 import HumanReadableTime from 'human-readable-time'
 import Notifier from '../../utilities/notifier'
 import './index.scss'
+import {
+  addLangPrefix as Prefixed,
+  parseLangName as Resolved,
+  addKeywordsPrefix,
+  parseKeywords } from '../../utilities/parser'
 
 import {
   removeAccessToken,
@@ -88,15 +93,16 @@ class UserPanel extends Component {
     let files = gistDetails.files
 
     let langs = new Set()
-    langTags.All.unshift(gistId)
+    langTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
       let language = files[filename].language
       langs.add(language)
-      if (langTags.hasOwnProperty(language)) {
-        langTags[language].unshift(gistId)
+      let prefixedLang = Prefixed(language)
+      if (langTags.hasOwnProperty(prefixedLang)) {
+        langTags[prefixedLang].unshift(gistId)
       } else {
-        langTags[language] = []
-        langTags[language].unshift(gistId)
+        langTags[prefixedLang] = []
+        langTags[prefixedLang].unshift(gistId)
       }
     })
 
