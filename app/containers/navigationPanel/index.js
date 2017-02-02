@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import UserPanel from '../userPanel'
-import { selectLangTag, selectGist, fetchSingleGist } from '../../actions/index'
+import { selectGistTag, selectGist, fetchSingleGist } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 
 import { parseLangName as Resolved } from '../../utilities/parser'
@@ -13,7 +13,7 @@ import './index.scss'
 class NavigationPanel extends Component {
 
   handleClicked (key) {
-    this.props.selectLangTag(key)
+    this.props.selectGistTag(key)
     this.props.updateActiveGistAfterClicked(this.props.gists, this.props.gistTags, key)
   }
 
@@ -119,7 +119,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    selectLangTag: selectLangTag,
+    selectGistTag: selectGistTag,
     selectGist: selectGist,
     fetchSingleGist: fetchSingleGist
   }, dispatch)

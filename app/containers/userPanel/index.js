@@ -19,7 +19,7 @@ import {
   logoutUserSession,
   updateSingleGist,
   updateGistTags,
-  selectLangTag,
+  selectGistTag,
   selectGist } from '../../actions/index'
 
 import {
@@ -84,7 +84,7 @@ class UserPanel extends Component {
       gistTags,
       updateSingleGist,
       updateGistTags,
-      selectLangTag,
+      selectGistTag,
       selectGist,
       searchIndex } = this.props
 
@@ -110,7 +110,7 @@ class UserPanel extends Component {
     let customTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
     customTags.forEach(tag => {
       if (gistTags.hasOwnProperty(tag)) {
-        gistTags[tag].add(gistDetails.id)
+        gistTags[tag].unshift(gistDetails.id)
       } else {
         gistTags[tag] = []
         gistTags[tag].unshift(gistDetails.id)
@@ -129,8 +129,8 @@ class UserPanel extends Component {
     logger.info('[Dispatch] updateGistTags')
     updateGistTags(gistTags)
 
-    logger.info('[Dispatch] selectLangTag')
-    selectLangTag(Prefixed('All'))
+    logger.info('[Dispatch] selectGistTag')
+    selectGistTag(Prefixed('All'))
 
     logger.info('[Dispatch] selectGist')
     selectGist(gistId)
@@ -265,7 +265,7 @@ function mapDispatchToProps (dispatch) {
     logoutUserSession: logoutUserSession,
     updateSingleGist: updateSingleGist,
     updateGistTags: updateGistTags,
-    selectLangTag: selectLangTag,
+    selectGistTag: selectGistTag,
     selectGist: selectGist
   }, dispatch)
 }

@@ -37,7 +37,7 @@ import {
   updateGists,
   updateSyncTime,
   updateGistTags,
-  selectLangTag,
+  selectGistTag,
   updateAccessToken,
   updateUserSession,
   fetchSingleGist,
@@ -155,7 +155,7 @@ function updateGistTagsAfterSync (gistTags) {
 /** End: Language tags management **/
 
 /** Start: Acitive language tag management **/
-function getEffectiveActiveLangTagAfterSync (gistTags, newActiveTag) {
+function getEffectiveActiveGistTagAfterSync (gistTags, newActiveTag) {
   // The active language tag could be invalid if the specific language tag no
   // long exists after synchronization. However, if it is still valid, we should
   // keep it.
@@ -165,14 +165,14 @@ function getEffectiveActiveLangTagAfterSync (gistTags, newActiveTag) {
   return preSyncSnapshot.activeGistTag
 }
 
-function updateActiveLangTagAfterSync (gistTags, newActiveTagCandidate) {
+function updateActiveGistTagAfterSync (gistTags, newActiveTagCandidate) {
   // The active language tag could be invalid if the specific language tag no
   // long exists after synchronization. We should get the effective active tag
-  // by calling getEffectiveActiveLangTagAfterSync()
-  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(gistTags, newActiveTagCandidate)
-  if (effectiveLangTag !== preSyncSnapshot.activeGistTag) {
-    logger.info('[Dispatch] selectLangTag')
-    reduxStore.dispatch(selectLangTag(newActiveTagCandidate))
+  // by calling getEffectiveActiveGistTagAfterSync()
+  let effectiveGistTag = getEffectiveActiveGistTagAfterSync(gistTags, newActiveTagCandidate)
+  if (effectiveGistTag !== preSyncSnapshot.activeGistTag) {
+    logger.info('[Dispatch] selectGistTag')
+    reduxStore.dispatch(selectGistTag(newActiveTagCandidate))
   }
 }
 /** End: Acitive language tag management **/
@@ -196,16 +196,16 @@ function updateActiveGistAfterSync (gists, gistTags, newActiveTagCandidate) {
   let activeGist = preSyncSnapshot.activeGist
   if (!activeGist || !gists[activeGist]) {
     // If the previous active gist is not set or is deleted, we should reset it.
-    let effectiveLangTag = getEffectiveActiveLangTagAfterSync(gistTags, newActiveTagCandidate)
-    let gistListForActiveLangTag = gistTags[effectiveLangTag]
-    activeGist = gistListForActiveLangTag[0] // reset the active gist
+    let effectiveGistTag = getEffectiveActiveGistTagAfterSync(gistTags, newActiveTagCandidate)
+    let gistListForActiveGistTag = gistTags[effectiveGistTag]
+    activeGist = gistListForActiveGistTag[0] // reset the active gist
   }
   updateActiveGistBase(gists, activeGist)
 }
 
 function updateActiveGistAfterClicked (gists, gistTags, newActiveTag) {
-  let gistListForActiveLangTag = gistTags[newActiveTag]
-  let activeGist = gistListForActiveLangTag[0] // reset the active gist
+  let gistListForActiveGistTag = gistTags[newActiveTag]
+  let activeGist = gistListForActiveGistTag[0] // reset the active gist
   updateActiveGistBase(gists, activeGist)
 }
 /** End: Acitive gist management **/
@@ -304,7 +304,7 @@ function updateUserGists (userLoginId, accessToken) {
       setSyncTime(humanReadableSyncTime)
       updateGistStoreAfterSync(gists)
       updateGistTagsAfterSync(gistTags)
-      updateActiveLangTagAfterSync(gistTags, activeTagCandidate)
+      updateActiveGistTagAfterSync(gistTags, activeTagCandidate)
       updateActiveGistAfterSync(gists, gistTags, activeTagCandidate)
 
       // clean up the snapshot for the previous state

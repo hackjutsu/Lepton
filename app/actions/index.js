@@ -96,7 +96,7 @@ export function updateGistTags (tags) {
   }
 }
 
-export function selectLangTag (tag) {
+export function selectGistTag (tag) {
   return {
     type: SELECT_GIST_TAG,
     payload: tag

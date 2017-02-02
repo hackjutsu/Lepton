@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, ListGroupItem, ListGroup } from 'react-bootstrap'
 import {
-  selectLangTag,
+  selectGistTag,
   selectGist,
   fetchSingleGist,
   updateSearchWindowStatus} from '../../actions/index'
@@ -72,7 +72,7 @@ class SearchPage extends Component {
   }
 
   handleSnippetClicked (gistId) {
-    let { gists, selectLangTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
+    let { gists, selectGistTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
 
     if (!gists[gistId].details) {
       logger.info('[Dispatch] fetchSingleGist ' + gistId)
@@ -81,7 +81,7 @@ class SearchPage extends Component {
     logger.info('[Dispatch] selectGist ' + gistId)
     selectGist(gistId)
 
-    selectLangTag(Prefixed('All'))
+    selectGistTag(Prefixed('All'))
     updateSearchWindowStatus('OFF')
   }
 
@@ -202,7 +202,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    selectLangTag: selectLangTag,
+    selectGistTag: selectGistTag,
     selectGist: selectGist,
     fetchSingleGist: fetchSingleGist,
     updateSearchWindowStatus: updateSearchWindowStatus

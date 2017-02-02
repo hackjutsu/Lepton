@@ -1,6 +1,6 @@
 'use strict'
 
-/* [my_title] my_description #tags: key1, key2, key3
+/* [my_title] my_description #tags: tag1, tag2, tag3
    This method will parse the string formatted above into an object formatted as
    {
      title: 'my_title',
@@ -28,8 +28,9 @@ export function addLangPrefix (lang) {
 }
 
 export function parseLangName (rawlangTag) {
-  if (!rawlangTag.startsWith('lang@')) return rawlangTag
-  return rawlangTag.substring(5)
+  const prefix = 'lang@'
+  if (!rawlangTag.startsWith(prefix)) return rawlangTag
+  return rawlangTag.substring(prefix.length)
 }
 
 export function addCustomTagsPrefix (tags) {
@@ -43,6 +44,6 @@ export function parseCustomTags (rawTags) {
   const prefix = '#tags:'
   if (!rawTags.trim().startsWith(prefix)) return []
   const processedTags = rawTags.trim().substring(prefix.length)
-  const splitKeywords = processedTags.split(/[,，、]/).map(item => item.trim()).filter(item => item.length > 0)
-  return splitKeywords
+  const splitTags = processedTags.split(/[,，、]/).map(item => item.trim()).filter(item => item.length > 0)
+  return splitTags
 }

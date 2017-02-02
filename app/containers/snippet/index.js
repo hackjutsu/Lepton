@@ -17,7 +17,7 @@ import {
 
 import {
   updateSingleGist,
-  selectLangTag,
+  selectGistTag,
   updateGistTags } from '../../actions/index'
 
 import {
@@ -155,7 +155,7 @@ class Snippet extends Component {
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
     let { gistTags, activeGistTag, updateSingleGist,
-      updateGistTags, selectLangTag, searchIndex} = this.props
+      updateGistTags, selectGistTag, searchIndex} = this.props
 
     let gistId = gistDetails.id
     let files = gistDetails.files
@@ -242,8 +242,8 @@ class Snippet extends Component {
     // or the gist array for the preivous active language tag is empty, we
     // choose to fall back to 'All'.
     if (!gistTags[activeGistTag] || !gistTags[activeGistTag].includes(gistId)) {
-      logger.info('[Dispatch] selectLangTag')
-      selectLangTag(Prefixed('All'))
+      logger.info('[Dispatch] selectGistTag')
+      selectGistTag(Prefixed('All'))
     }
     // logger.info('[Dispatch] selectGist')
     // this.props.selectGist(gistId)
@@ -447,7 +447,7 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     updateSingleGist: updateSingleGist,
     updateGistTags: updateGistTags,
-    selectLangTag: selectLangTag
+    selectGistTag: selectGistTag
   }, dispatch)
 }
 
