@@ -16,8 +16,8 @@ import SearchIndex from './utilities/search'
 import {
   addLangPrefix as Prefixed,
   parseLangName as Resolved,
-  addKeywordsPrefix,
-  parseKeywords,
+  addCustomTagsPrefix,
+  parseCustomTags,
   descriptionParser } from './utilities/parser'
 
 let Account = null
@@ -258,13 +258,13 @@ function updateUserGists (userLoginId, accessToken) {
           }
 
           // update the custom tags
-          let keywords = parseKeywords(descriptionParser(gist.description).keywords)
-          keywords.forEach(keyword => {
-            if (rawGistTags.hasOwnProperty(keyword)) {
-              rawGistTags[keyword].add(gist.id)
+          let customTags = parseCustomTags(descriptionParser(gist.description).customTags)
+          customTags.forEach(tag => {
+            if (rawGistTags.hasOwnProperty(tag)) {
+              rawGistTags[tag].add(gist.id)
             } else {
-              rawGistTags[keyword] = new Set()
-              rawGistTags[keyword].add(gist.id)
+              rawGistTags[tag] = new Set()
+              rawGistTags[tag].add(gist.id)
             }
           })
         })

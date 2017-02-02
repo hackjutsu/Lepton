@@ -1,27 +1,27 @@
 'use strict'
 
-/* [my_title] my_description #keywords: key1, key2, key3
+/* [my_title] my_description #tags: key1, key2, key3
    This method will parse the string formatted above into an object formatted as
    {
      title: 'my_title',
      description: 'my_description',
-     keywords: '#keywords: key1, key2, key3'
+     tags: '#tags: tag1, tag2, tag3'
    } */
 export function descriptionParser (rawDescription = 'AWESOME GIST') {
-  let regexForTitle = rawDescription.match(/\[.*\]/)
-  let rawTitle = regexForTitle && regexForTitle[0] || ''
-  let title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length-1) || ''
+  const regexForTitle = rawDescription.match(/\[.*\]/)
+  const rawTitle = regexForTitle && regexForTitle[0] || ''
+  const title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length-1) || ''
 
-  let regextForKeywords = rawDescription.match(/#keywords:.*$/)
-  let keywords = regextForKeywords && regextForKeywords[0] || ''
+  const regextForCustomTags = rawDescription.match(/#tags:.*$/)
+  const customTags = regextForCustomTags && regextForCustomTags[0] || ''
 
-  let description = rawDescription.substring(rawTitle.length, rawDescription.length - keywords.length)
+  const description = rawDescription.substring(rawTitle.length, rawDescription.length - customTags.length)
 
-  return { title, description, keywords }
+  return { title, description, customTags }
 }
 
 export function addLangPrefix (lang) {
-  let prefix = 'lang@'
+  const prefix = 'lang@'
   return lang.trim().length > 0
     ? prefix + lang.trim()
 	: lang
@@ -32,16 +32,17 @@ export function parseLangName (rawlangTag) {
   return rawlangTag.substring(5)
 }
 
-export function addKeywordsPrefix (keywords) {
-  let prefix = '#keywords:'
-  return keywords.trim().length > 0
-    ? prefix + keywords.trim()
-	: keywords
+export function addCustomTagsPrefix (tags) {
+  const prefix = '#tags:'
+  return tags.trim().length > 0
+    ? prefix + tags.trim()
+	: tags
 }
 
-export function parseKeywords(rawKeywords) {
-  if (!rawKeywords.trim().startsWith('#keywords:')) return []
-  let processedKeywords = rawKeywords.trim().substring(10)
-  let splitKeywords = processedKeywords.split(/[,，、]/).map(item => item.trim()).filter(item => item.length>0)
+export function parseCustomTags(rawTags) {
+  const prefix = '#tags:'
+  if (!rawTags.trim().startsWith(prefix)) return []
+  const processedTags = rawTags.trim().substring(prefix.length)
+  const splitKeywords = processedTags.split(/[,，、]/).map(item => item.trim()).filter(item => item.length > 0)
   return splitKeywords
 }

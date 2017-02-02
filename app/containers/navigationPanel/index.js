@@ -9,8 +9,8 @@ import { bindActionCreators } from 'redux'
 import {
   addLangPrefix as Prefixed,
   parseLangName as Resolved,
-  addKeywordsPrefix,
-  parseKeywords } from '../../utilities/parser'
+  addCustomTagsPrefix,
+  parseCustomTags } from '../../utilities/parser'
 
 import './index.scss'
 

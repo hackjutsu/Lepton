@@ -12,8 +12,8 @@ import './index.scss'
 import {
   addLangPrefix as Prefixed,
   parseLangName as Resolved,
-  addKeywordsPrefix,
-  parseKeywords,
+  addCustomTagsPrefix,
+  parseCustomTags,
   descriptionParser } from '../../utilities/parser'
 
 import {
@@ -109,13 +109,13 @@ class UserPanel extends Component {
     })
 
     // update the custom tags
-    let keywords = parseKeywords(descriptionParser(gistDetails.description).keywords)
-    keywords.forEach(keyword => {
-      if (gistTags.hasOwnProperty(keyword)) {
-        gistTags[keyword].add(gistDetails.id)
+    let customTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
+    customTags.forEach(tag => {
+      if (gistTags.hasOwnProperty(tag)) {
+        gistTags[tag].add(gistDetails.id)
       } else {
-        gistTags[keyword] = []
-        gistTags[keyword].unshift(gistDetails.id)
+        gistTags[tag] = []
+        gistTags[tag].unshift(gistDetails.id)
       }
     })
 

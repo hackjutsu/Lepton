@@ -13,8 +13,8 @@ import HumanReadableTime from 'human-readable-time'
 import {
   addLangPrefix as Prefixed,
   parseLangName as Resolved,
-  addKeywordsPrefix,
-  parseKeywords,
+  addCustomTagsPrefix,
+  parseCustomTags,
   descriptionParser } from '../../utilities/parser'
 
 import {
@@ -164,7 +164,7 @@ class Snippet extends Component {
 
     let activeSnippet = this.props.gists[this.props.activeGist]
     let preLangs = activeSnippet.langs
-    let preKeywords = parseKeywords(descriptionParser(activeSnippet.brief.description).keywords)
+    let preCustomTags = parseCustomTags(descriptionParser(activeSnippet.brief.description).customTags)
 
     // Adding files in an eidt could introduce some changes to the gistTags.
     // 1) if a gist has a new language, we should add the gist id to this
@@ -203,28 +203,28 @@ class Snippet extends Component {
     })
 
     // We update the custom tags with the similar reasons mentioned above
-    let newKeywords = parseKeywords(descriptionParser(gistDetails.description).keywords)
-    newKeywords.forEach(keyword => {
-      if (gistTags.hasOwnProperty(keyword)) {
-        logger.debug(typeof gistTags[keyword])
-        logger.debug(JSON.stringify(gistTags[keyword]))
-        if (!gistTags[keyword].includes(gistId)) {
-          gistTags[keyword].unshift(gistId)
+    let newCustomTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
+    newCustomTags.forEach(tag => {
+      if (gistTags.hasOwnProperty(tag)) {
+        logger.debug(typeof gistTags[tag])
+        logger.debug(JSON.stringify(gistTags[tag]))
+        if (!gistTags[tag].includes(gistId)) {
+          gistTags[tag].unshift(gistId)
         }
       } else {
-        gistTags[keyword] = []
-        gistTags[keyword].unshift(gistId)
+        gistTags[tag] = []
+        gistTags[tag].unshift(gistId)
       }
     })
 
-    preKeywords.forEach(keyword => {
-      if (!newKeywords.includes(keyword)) {
-        gistTags[keyword] = gistTags[keyword].filter(value => {
+    preCustomTags.forEach(tag => {
+      if (!newCustomTags.includes(tag)) {
+        gistTags[tag] = gistTags[tag].filter(value => {
           return value !== gistId
         })
       }
-      if (gistTags[keyword].length === 0) {
-        delete gistTags[keyword]
+      if (gistTags[tag].length === 0) {
+        delete gistTags[tag]
       }
     })
 
@@ -365,15 +365,15 @@ class Snippet extends Component {
   }
 
   renderSnippetDescription (rawDescription) {
-    let { title, description, keywords } = descriptionParser(rawDescription)
+    let { title, description, customTags } = descriptionParser(rawDescription)
 
     let htmlForDescriptionSection = []
     if (title.length > 0) {
       htmlForDescriptionSection.push(<div className='title-section' key='title'>{ title }</div>)
     }
     htmlForDescriptionSection.push(<div className='description-section' key='description'>{ description }</div>)
-    if (keywords.length > 0) {
-      htmlForDescriptionSection.push(<div className='keywords-section' key='keywords'>{ keywords }</div>)
+    if (customTags.length > 0) {
+      htmlForDescriptionSection.push(<div className='custom-tags-section' key='customTags'>{ customTags }</div>)
     }
 
     return (
