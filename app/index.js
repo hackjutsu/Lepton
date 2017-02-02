@@ -282,10 +282,16 @@ function updateUserGists (userLoginId, accessToken) {
           gists[gist.id] = Object.assign(gists[gist.id], { details: preGist.details })
         }
 
+        let langSearchRecords = ''
+        langs.forEach(lang => {
+          langSearchRecords += ' ' + lang
+        })
+
         // Update the SearchIndex
         SearchIndex.addToIndex({
           id: gist.id,
-          description: gist.description
+          description: gist.description,
+          language: langSearchRecords
         })
       }) // gistList.forEach
 
@@ -307,9 +313,6 @@ function updateUserGists (userLoginId, accessToken) {
       preSyncSnapshot.activeGistTag = null
       preSyncSnapshot.activeGist = null
       Notifier('Sync succeeds', humanReadableSyncTime)
-
-      // testing
-      let results = SearchIndex.searchFromIndex('node js')
     })
     .catch(err => {
       Notifier('Sync failed', 'Please check your network condition.')

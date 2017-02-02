@@ -6,6 +6,7 @@ let index = null
 function resetIndex () {
   index = Elasticlunr()
   index.addField('description')
+  index.addField('language')
 }
 
 function addToIndex (item) {
@@ -28,6 +29,7 @@ function searchFromIndex (query) {
   return index.search(query, {
     fields: {
       description: { boost: 1, bool: 'AND' },
+      language: { boost: 1, bool: 'AND' }
     }
   })
 }

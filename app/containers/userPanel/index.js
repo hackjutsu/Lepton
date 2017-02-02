@@ -137,10 +137,16 @@ class UserPanel extends Component {
     logger.info('[Dispatch] selectGist')
     selectGist(gistId)
 
+    let langSearchRecords = ''
+    langs.forEach(lang => {
+      langSearchRecords += ' ' + lang
+    })
+
     // update the search index
     searchIndex.addToIndex({
       id: gistId,
-      description: gistDetails.description
+      description: gistDetails.description,
+      language: langSearchRecords
     })
 
     Notifier('Gist created', HumanReadableTime(new Date()))
