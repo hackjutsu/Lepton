@@ -9,7 +9,7 @@ import {
   fetchSingleGist,
   updateSearchWindowStatus} from '../../actions/index'
 import { bindActionCreators } from 'redux'
-import { descriptionParser } from '../../utilities/parser'
+import { descriptionParser, addLangPrefix as Prefixed } from '../../utilities/parser'
 
 import './index.scss'
 
@@ -81,7 +81,7 @@ class SearchPage extends Component {
     logger.info('[Dispatch] selectGist ' + gistId)
     selectGist(gistId)
 
-    selectLangTag('All')
+    selectLangTag(Prefixed('All'))
     updateSearchWindowStatus('OFF')
   }
 
