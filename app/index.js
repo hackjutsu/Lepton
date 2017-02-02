@@ -256,6 +256,17 @@ function updateUserGists (userLoginId, accessToken) {
             rawGistTags[prefixedLang] = new Set()
             rawGistTags[prefixedLang].add(gist.id)
           }
+
+          // update the custom tags
+          let keywords = parseKeywords(descriptionParser(gist.description).keywords)
+          keywords.forEach(keyword => {
+            if (rawGistTags.hasOwnProperty(keyword)) {
+              rawGistTags[keyword].add(gist.id)
+            } else {
+              rawGistTags[keyword] = new Set()
+              rawGistTags[keyword].add(gist.id)
+            }
+          })
         })
 
         gists[gist.id] = {

@@ -13,7 +13,8 @@ import {
   addLangPrefix as Prefixed,
   parseLangName as Resolved,
   addKeywordsPrefix,
-  parseKeywords } from '../../utilities/parser'
+  parseKeywords,
+  descriptionParser } from '../../utilities/parser'
 
 import {
   removeAccessToken,
@@ -92,10 +93,11 @@ class UserPanel extends Component {
     let gistId = gistDetails.id
     let files = gistDetails.files
 
+    // update the language tags
     let langs = new Set()
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
-      let language = files[filename].language
+      let language = files[filename].language || 'Other'
       langs.add(language)
       let prefixedLang = Prefixed(language)
       if (gistTags.hasOwnProperty(prefixedLang)) {
@@ -103,6 +105,17 @@ class UserPanel extends Component {
       } else {
         gistTags[prefixedLang] = []
         gistTags[prefixedLang].unshift(gistId)
+      }
+    })
+
+    // update the custom tags
+    let keywords = parseKeywords(descriptionParser(gistDetails.description).keywords)
+    keywords.forEach(keyword => {
+      if (gistTags.hasOwnProperty(keyword)) {
+        gistTags[keyword].add(gistDetails.id)
+      } else {
+        gistTags[keyword] = []
+        gistTags[keyword].unshift(gistDetails.id)
       }
     })
 
@@ -119,7 +132,7 @@ class UserPanel extends Component {
     updateGistTags(gistTags)
 
     logger.info('[Dispatch] selectLangTag')
-    selectLangTag('All')
+    selectLangTag(Prefixed('All'))
 
     logger.info('[Dispatch] selectGist')
     selectGist(gistId)

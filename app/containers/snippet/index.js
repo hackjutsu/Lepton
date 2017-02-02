@@ -164,6 +164,7 @@ class Snippet extends Component {
 
     let activeSnippet = this.props.gists[this.props.activeGist]
     let preLangs = activeSnippet.langs
+    let preKeywords = parseKeywords(descriptionParser(activeSnippet.brief.description).keywords)
 
     // Adding files in an eidt could introduce some changes to the gistTags.
     // 1) if a gist has a new language, we should add the gist id to this
@@ -172,11 +173,11 @@ class Snippet extends Component {
     let newLangs = new Set()
     Object.keys(files).forEach(filename => {
       let file = files[filename]
-      let language = file.language
+      let language = file.language || 'Other'
       newLangs.add(language)
       let prefixedLang = Prefixed(language)
       if (gistTags.hasOwnProperty(prefixedLang)) {
-        if (gistTags[prefixedLang].indexOf(gistId) === -1) {
+        if (!gistTags[prefixedLang].includes(gistId)) {
           gistTags[prefixedLang].unshift(gistId)
         }
       } else {
@@ -189,7 +190,7 @@ class Snippet extends Component {
     // 1) if a gist no long has a language, we should remove the gist id from
     // this language tag 2) if the updated language tag is empty, we should remove
     // this tag at all.
-    for (let language of preLangs) {
+    preLangs.forEach(language => {
       if (!newLangs.has(language)) {
         let prefixedLang = Prefixed(language)
           gistTags[prefixedLang] = gistTags[prefixedLang].filter(value => {
@@ -199,7 +200,33 @@ class Snippet extends Component {
           delete gistTags[prefixedLang]
         }
       }
-    }
+    })
+
+    // We update the custom tags with the similar reasons mentioned above
+    let newKeywords = parseKeywords(descriptionParser(gistDetails.description).keywords)
+    newKeywords.forEach(keyword => {
+      if (gistTags.hasOwnProperty(keyword)) {
+        logger.debug(typeof gistTags[keyword])
+        logger.debug(JSON.stringify(gistTags[keyword]))
+        if (!gistTags[keyword].includes(gistId)) {
+          gistTags[keyword].unshift(gistId)
+        }
+      } else {
+        gistTags[keyword] = []
+        gistTags[keyword].unshift(gistId)
+      }
+    })
+
+    preKeywords.forEach(keyword => {
+      if (!newKeywords.includes(keyword)) {
+        gistTags[keyword] = gistTags[keyword].filter(value => {
+          return value !== gistId
+        })
+      }
+      if (gistTags[keyword].length === 0) {
+        delete gistTags[keyword]
+      }
+    })
 
     let updatedGist = {}
     updatedGist[gistId] = {
