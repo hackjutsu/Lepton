@@ -167,18 +167,23 @@
                     <li class='faq-item'>
                         <div class="faq-question">Why I can't search my gist's content?</div>
                         <div class="faq-answer">
-                            Currently, <b>Lepton</b> only supports the whole word search for the snippet description.
+                            Currently, <b>Lepton</b> only supports the whole word search for the gist's description field.
                         </div>
                     </li>
                     <li class='faq-item'>
-                        <div class="faq-question">How to specify the title and keywords for my gist?</div>
+                        <div class="faq-question">How to specify the title and tags for my gist?</div>
                         <div class="faq-answer">
-                            GitHub Gist doesn't support title for its description section. <b>Lepton</b> makes enhancement by adding the title and keywords support. By following
-                            the format <code>[title] description #keywords: key1 key2</code> in the gist description, the <code>title</code> and <code>#keywords: key1 key2</code> will be seperated from the
-                            <code>description</code>.
-                            <div class="faq-img">
-                                <img class="img-responsive img-centered" src="./img/formatted_description.png"/>
-                            </div>
+                            GitHub Gist doesn't come with the native support for 'title' and 'tag' in the description field.
+                            <br/><br/>
+                            <b>Lepton</b> adds these support, if the format <code>[title] description #tags: tag1 tag2</code> is followed in the gist description field.
+                            <center>
+                                <div class="faq-img">
+                                    <img class="img-responsive img-centered" src="./img/formatted_description2.png"/>
+                                </div>
+                                <div class="faq-img">
+                                    <img class="img-responsive img-centered" src="./img/formatted_description.png"/>
+                                </div>
+                            <center/>
                         </div>
                     </li>
                     <li class='faq-item'>
@@ -247,8 +252,8 @@
                             <hr class="star-primary">
                             <img src="img/portfolio/stay_organized.png" class="img-responsive img-centered" alt="">
                             <p>
-                                Better organize your gists. It categorizes them based on the languages, and provides
-                                a formatted description section, which adds title and keywords support.
+                                <b>Lepton</b> categorizes your gists based on their languages and your custom tags. It also provides
+                                a formatted description section, which adds title and tags support.
                             </p>
                             <br/>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -277,8 +282,7 @@
                                 Instant search for your gists (<b>"Shift + Space"</b>).
                             </p>
                             <div class="faq-note">
-                                (Currently, only the description section will be searched. For better search accuracy,  you can specify keywords
-                                in the gist's description. Please refer to FAQ for how to specify keywords.)
+                                Currently, only the description field will be searched. For better accuracy,  you can specify custom tags. Please refer to FAQ for how to specify tags.
                             </div>
                             <br/>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -303,7 +307,10 @@
                             <h2>Edit Gist</h2>
                             <hr class="star-primary">
                             <img src="img/portfolio/edit.png" class="img-responsive img-centered" alt="">
-                            <p>Simply create/edit your gist from your desktop!</p>
+                            <p>Simply create/edit your gist from your desktop! You can even specify the title and the tags:)</p>
+                            <div class="faq-note">
+                                Note: Tags should be separated by comma ' , '
+                            </div>
                             <br/>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         </div>

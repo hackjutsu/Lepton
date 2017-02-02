@@ -562,6 +562,7 @@ header {
 .faq-img {
   /*margin-left: 80px;
   margin-right: 80px;*/
+  width: 80%;
   margin-top: 10px;
   border: solid 1px rgb(221, 221, 221);
 }
