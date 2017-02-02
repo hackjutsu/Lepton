@@ -12,8 +12,8 @@ export const REMOVE_ACCESS_TOKEN = 'REMOVE_ACCESS_TOKEN'
 export const UPDATE_GISTS = 'UPDATE_GISTS'
 export const UPDATE_SYNC_TIME = 'UPDATE_SYNC_TIME'
 export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
-export const UPDATE_LANG_TAGS = 'UPDATE_LANG_TAGS'
-export const SELECT_LANG_TAG = 'SELECT_LANG_TAG'
+export const UPDATE_GIST_TAGS = 'UPDATE_GIST_TAGS'
+export const SELECT_GIST_TAG = 'SELECT_GIST_TAG'
 export const SELECT_GIST = 'SELECT_GIST'
 export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
 export const UPDATE_GIST_SYNC_STATUS = 'UPDATE_GIST_SYNC_STATUS'
@@ -89,16 +89,16 @@ export function updateSingleGist (gist) {
   }
 }
 
-export function updateLangTags (tags) {
+export function updateGistTags (tags) {
   return {
-    type: UPDATE_LANG_TAGS,
+    type: UPDATE_GIST_TAGS,
     payload: tags
   }
 }
 
 export function selectLangTag (tag) {
   return {
-    type: SELECT_LANG_TAG,
+    type: SELECT_GIST_TAG,
     payload: tag
   }
 }

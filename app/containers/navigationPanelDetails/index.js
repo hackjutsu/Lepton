@@ -38,22 +38,22 @@ class NavigationPanelDetails extends Component {
 
   renderSnippetThumbnails () {
     let gists = this.props.gists
-    let langTags = this.props.langTags
-    let activeLangTag = this.props.activeLangTag
+    let gistTags = this.props.gistTags
+    let activeGistTag = this.props.activeGistTag
 
     let snippetThumbnails = []
 
     // When user has no gists, the default active language tag will be 'All' with
     // an empty array.
-    if (!langTags || !langTags[activeLangTag] || langTags[activeLangTag].length === 0) {
+    if (!gistTags || !gistTags[activeGistTag] || gistTags[activeGistTag].length === 0) {
       return (
         <div className='snippet-thumnail'></div>
       )
     }
 
-    langTags[activeLangTag].forEach((gistId) => {
-      // During the synchronization, gists will be updated before the langTags,
-      // which introduces an interval where a gist exists in langTags but not in
+    gistTags[activeGistTag].forEach((gistId) => {
+      // During the synchronization, gists will be updated before the gistTags,
+      // which introduces an interval where a gist exists in gistTags but not in
       // the gists. This guard makes sure we push the gist only when it is already
       // available in gists.
       if (gists[gistId]) {
@@ -96,8 +96,8 @@ class NavigationPanelDetails extends Component {
 function mapStateToProps (state) {
   return {
     gists: state.gists,
-    langTags: state.langTags,
-    activeLangTag: state.activeLangTag,
+    gistTags: state.gistTags,
+    activeGistTag: state.activeGistTag,
     activeGist: state.activeGist
   }
 }

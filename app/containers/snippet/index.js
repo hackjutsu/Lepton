@@ -20,7 +20,7 @@ import {
 import {
   updateSingleGist,
   selectLangTag,
-  updateLangTags } from '../../actions/index'
+  updateGistTags } from '../../actions/index'
 
 import {
   getGitHubApi,
@@ -156,8 +156,8 @@ class Snippet extends Component {
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
-    let { langTags, activeLangTag, updateSingleGist,
-      updateLangTags, selectLangTag, searchIndex} = this.props
+    let { gistTags, activeGistTag, updateSingleGist,
+      updateGistTags, selectLangTag, searchIndex} = this.props
 
     let gistId = gistDetails.id
     let files = gistDetails.files
@@ -165,38 +165,38 @@ class Snippet extends Component {
     let activeSnippet = this.props.gists[this.props.activeGist]
     let preLangs = activeSnippet.langs
 
-    // Adding files in an eidt could introduce some changes to the langTags.
+    // Adding files in an eidt could introduce some changes to the gistTags.
     // 1) if a gist has a new language, we should add the gist id to this
-    // language tag, ie langTags[language] 2) if the new language doesn't
-    // exist, we should add the new language to langTags.
+    // language tag, ie gistTags[language] 2) if the new language doesn't
+    // exist, we should add the new language to gistTags.
     let newLangs = new Set()
     Object.keys(files).forEach(filename => {
       let file = files[filename]
       let language = file.language
       newLangs.add(language)
       let prefixedLang = Prefixed(language)
-      if (langTags.hasOwnProperty(prefixedLang)) {
-        if (langTags[prefixedLang].indexOf(gistId) === -1) {
-          langTags[prefixedLang].unshift(gistId)
+      if (gistTags.hasOwnProperty(prefixedLang)) {
+        if (gistTags[prefixedLang].indexOf(gistId) === -1) {
+          gistTags[prefixedLang].unshift(gistId)
         }
       } else {
-        langTags[prefixedLang] = []
-        langTags[prefixedLang].unshift(gistId)
+        gistTags[prefixedLang] = []
+        gistTags[prefixedLang].unshift(gistId)
       }
     })
 
-    // Removing files in an eidt could introduce some changes to the langTags.
+    // Removing files in an eidt could introduce some changes to the gistTags.
     // 1) if a gist no long has a language, we should remove the gist id from
     // this language tag 2) if the updated language tag is empty, we should remove
     // this tag at all.
     for (let language of preLangs) {
       if (!newLangs.has(language)) {
         let prefixedLang = Prefixed(language)
-          langTags[prefixedLang] = langTags[prefixedLang].filter(value => {
+          gistTags[prefixedLang] = gistTags[prefixedLang].filter(value => {
           return value !== gistId
         })
-        if (langTags[prefixedLang].length === 0) {
-          delete langTags[prefixedLang]
+        if (gistTags[prefixedLang].length === 0) {
+          delete gistTags[prefixedLang]
         }
       }
     }
@@ -211,14 +211,14 @@ class Snippet extends Component {
     logger.info('[Dispatch] updateSingleGist')
     updateSingleGist(updatedGist)
 
-    logger.info('[Dispatch] updateLangTags')
-    updateLangTags(langTags)
+    logger.info('[Dispatch] updateGistTags')
+    updateGistTags(gistTags)
 
     // If the previous active language tag is no longer valid, for example,
     // user deletes all cpp files inside a gist when C++ tag is the ative tag,
     // or the gist array for the preivous active language tag is empty, we
     // choose to fall back to 'All'.
-    if (!langTags[activeLangTag] || !langTags[activeLangTag].includes(gistId)) {
+    if (!gistTags[activeGistTag] || !gistTags[activeGistTag].includes(gistId)) {
       logger.info('[Dispatch] selectLangTag')
       selectLangTag(Prefixed('All'))
     }
@@ -412,18 +412,18 @@ class Snippet extends Component {
 function mapStateToProps (state) {
   return {
     gists: state.gists,
-    activeLangTag: state.activeLangTag,
+    activeGistTag: state.activeGistTag,
     activeGist: state.activeGist,
     userSession: state.userSession,
     accessToken: state.accessToken,
-    langTags: state.langTags,
+    gistTags: state.gistTags,
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     updateSingleGist: updateSingleGist,
-    updateLangTags: updateLangTags,
+    updateGistTags: updateGistTags,
     selectLangTag: selectLangTag
   }, dispatch)
 }

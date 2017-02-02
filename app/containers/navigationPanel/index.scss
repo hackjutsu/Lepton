@@ -12,12 +12,12 @@
     font-size: 13px;
   }
 
-  .lang-tag {
+  .gist-tag {
     @extend .font-style-base;
     margin: 5px;
   }
 
-  .lang-tag:hover {
+  .gist-tag:hover {
     cursor: pointer;
   }
 
@@ -25,21 +25,21 @@
     height: 200px;
   }
 
-  .lang-tag-section {
+  .gist-tag-section {
     margin-left: 0px;
     /* 200px for user-panel and 40px for <hr/> */
     height: calc(100% - 200px - 40px);
     overflow: auto;
   }
 
-  .active-lang-tag {
+  .active-gist-tag {
     @extend .font-style-base;
     margin: 5px;
     color: #B0580E;
     font-weight: bold;
   }
 
-  .active-lang-tag:hover {
+  .active-gist-tag:hover {
     cursor: pointer;
   }
 }

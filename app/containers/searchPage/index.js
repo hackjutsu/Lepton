@@ -143,7 +143,7 @@ class SearchPage extends Component {
       let highlightedDescription = gistDescription
       let langs = [...gist.langs].map(lang => {
         return (
-          <div className='lang-tag' key={ lang }>{ '#' + lang }</div>
+          <div className='gist-tag' key={ lang }>{ '#' + lang }</div>
         )
       })
       resultsJSXGroup.push(
@@ -153,7 +153,7 @@ class SearchPage extends Component {
           key={ item.ref }
           onClick={ this.handleSnippetClicked.bind(this, item.ref) }>
           <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
-          <div className='lang-tag-group'>{ langs }</div>
+          <div className='gist-tag-group'>{ langs }</div>
         </ListGroupItem>
       )
     })

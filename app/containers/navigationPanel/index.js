@@ -18,18 +18,18 @@ class NavigationPanel extends Component {
 
   handleClicked (key) {
     this.props.selectLangTag(key)
-    this.props.updateActiveGistAfterClicked(this.props.gists, this.props.langTags, key)
+    this.props.updateActiveGistAfterClicked(this.props.gists, this.props.gistTags, key)
   }
 
   renderTags () {
-    let langTags = this.props.langTags
-    let activeLangTag = this.props.activeLangTag
+    let gistTags = this.props.gistTags
+    let activeGistTag = this.props.activeGistTag
     let tagList = []
 
-    Object.keys(langTags).sort().forEach(prefixedLang => {
+    Object.keys(gistTags).sort().forEach(prefixedLang => {
       tagList.push(
         <div key={ prefixedLang }>
-          <a className={ prefixedLang === activeLangTag ? 'active-lang-tag' : 'lang-tag' }
+          <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
             onClick={ this.handleClicked.bind(this, prefixedLang) }>
             { '#' + Resolved(prefixedLang) }
           </a>
@@ -46,7 +46,7 @@ class NavigationPanel extends Component {
     }
 
     return (
-      <div className='lang-tag-section'>
+      <div className='gist-tag-section'>
         { this.renderTags() }
       </div>
     )
@@ -80,9 +80,9 @@ class NavigationPanel extends Component {
 function mapStateToProps (state) {
   return {
     gists: state.gists,
-    langTags: state.langTags,
+    gistTags: state.gistTags,
     userSession: state.userSession,
-    activeLangTag: state.activeLangTag
+    activeGistTag: state.activeGistTag
   }
 }
 

@@ -17,7 +17,8 @@ import {
   addLangPrefix as Prefixed,
   parseLangName as Resolved,
   addKeywordsPrefix,
-  parseKeywords } from './utilities/parser'
+  parseKeywords,
+  descriptionParser } from './utilities/parser'
 
 let Account = null
 try {
@@ -37,7 +38,7 @@ import RootReducer from './reducers'
 import {
   updateGists,
   updateSyncTime,
-  updateLangTags,
+  updateGistTags,
   selectLangTag,
   updateAccessToken,
   updateUserSession,
@@ -59,7 +60,7 @@ const CONFIG_OPTIONS = {
 }
 
 let preSyncSnapshot = {
-  activeLangTag: null,
+  activeGistTag: null,
   activeGist: null
 }
 
@@ -149,29 +150,29 @@ function updateAuthWindowStatusOff () {
 }
 
 /** Start: Language tags management **/
-function updateLangTagsAfterSync (langTags) {
-  logger.info('[Dispatch] updateLangTags')
-  reduxStore.dispatch(updateLangTags(langTags))
+function updateGistTagsAfterSync (gistTags) {
+  logger.info('[Dispatch] updateGistTags')
+  reduxStore.dispatch(updateGistTags(gistTags))
 }
 /** End: Language tags management **/
 
 /** Start: Acitive language tag management **/
-function getEffectiveActiveLangTagAfterSync (langTags, newActiveTag) {
+function getEffectiveActiveLangTagAfterSync (gistTags, newActiveTag) {
   // The active language tag could be invalid if the specific language tag no
   // long exists after synchronization. However, if it is still valid, we should
   // keep it.
-  if (!langTags || !langTags[preSyncSnapshot.activeLangTag]) {
+  if (!gistTags || !gistTags[preSyncSnapshot.activeGistTag]) {
     return newActiveTag
   }
-  return preSyncSnapshot.activeLangTag
+  return preSyncSnapshot.activeGistTag
 }
 
-function updateActiveLangTagAfterSync (langTags, newActiveTagCandidate) {
+function updateActiveLangTagAfterSync (gistTags, newActiveTagCandidate) {
   // The active language tag could be invalid if the specific language tag no
   // long exists after synchronization. We should get the effective active tag
   // by calling getEffectiveActiveLangTagAfterSync()
-  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
-  if (effectiveLangTag !== preSyncSnapshot.activeLangTag) {
+  let effectiveLangTag = getEffectiveActiveLangTagAfterSync(gistTags, newActiveTagCandidate)
+  if (effectiveLangTag !== preSyncSnapshot.activeGistTag) {
     logger.info('[Dispatch] selectLangTag')
     reduxStore.dispatch(selectLangTag(newActiveTagCandidate))
   }
@@ -193,19 +194,19 @@ function updateActiveGistBase (gists, activeGist) {
   reduxStore.dispatch(selectGist(activeGist))
 }
 
-function updateActiveGistAfterSync (gists, langTags, newActiveTagCandidate) {
+function updateActiveGistAfterSync (gists, gistTags, newActiveTagCandidate) {
   let activeGist = preSyncSnapshot.activeGist
   if (!activeGist || !gists[activeGist]) {
     // If the previous active gist is not set or is deleted, we should reset it.
-    let effectiveLangTag = getEffectiveActiveLangTagAfterSync(langTags, newActiveTagCandidate)
-    let gistListForActiveLangTag = langTags[effectiveLangTag]
+    let effectiveLangTag = getEffectiveActiveLangTagAfterSync(gistTags, newActiveTagCandidate)
+    let gistListForActiveLangTag = gistTags[effectiveLangTag]
     activeGist = gistListForActiveLangTag[0] // reset the active gist
   }
   updateActiveGistBase(gists, activeGist)
 }
 
-function updateActiveGistAfterClicked (gists, langTags, newActiveTag) {
-  let gistListForActiveLangTag = langTags[newActiveTag]
+function updateActiveGistAfterClicked (gists, gistTags, newActiveTag) {
+  let gistListForActiveLangTag = gistTags[newActiveTag]
   let activeGist = gistListForActiveLangTag[0] // reset the active gist
   updateActiveGistBase(gists, activeGist)
 }
@@ -220,7 +221,7 @@ function updateGistStoreAfterSync (gists) {
 function reSyncUserGists () {
   let state = reduxStore.getState()
   preSyncSnapshot = {
-    activeLangTag: state.activeLangTag,
+    activeGistTag: state.activeGistTag,
     activeGist: state.activeGist
   }
   updateUserGists(state.userSession.profile.login, state.accessToken)
@@ -233,10 +234,10 @@ function updateUserGists (userLoginId, accessToken) {
     .then((gistList) => {
       let preGists = reduxStore.getState().gists
       let gists = {}
-      let rawLangTags = {}
+      let rawGistTags = {}
       let activeTagCandidate = Prefixed('All')
-      rawLangTags[Prefixed('All')] = new Set()
-      let langTags = {}
+      rawGistTags[Prefixed('All')] = new Set()
+      let gistTags = {}
 
       gistList.forEach((gist) => {
         let langs = new Set()
@@ -245,13 +246,15 @@ function updateUserGists (userLoginId, accessToken) {
           let file = gist.files[filename]
           let language = file.language || 'Other'
           langs.add(language)
-          rawLangTags[Prefixed('All')].add(gist.id)
+          rawGistTags[Prefixed('All')].add(gist.id)
+
+          // update the language tags
           let prefixedLang = Prefixed(language)
-          if (rawLangTags.hasOwnProperty(prefixedLang)) {
-            rawLangTags[prefixedLang].add(gist.id)
+          if (rawGistTags.hasOwnProperty(prefixedLang)) {
+            rawGistTags[prefixedLang].add(gist.id)
           } else {
-            rawLangTags[prefixedLang] = new Set()
-            rawLangTags[prefixedLang].add(gist.id)
+            rawGistTags[prefixedLang] = new Set()
+            rawGistTags[prefixedLang].add(gist.id)
           }
         })
 
@@ -275,22 +278,22 @@ function updateUserGists (userLoginId, accessToken) {
         })
       }) // gistList.forEach
 
-      for (let language in rawLangTags) {
+      for (let language in rawGistTags) {
         // Save the gist ids in an Array rather than a Set, which facilitate
         // many operations later, like displaying the gist id from an Array
-        langTags[language] = [...rawLangTags[language]]
+        gistTags[language] = [...rawGistTags[language]]
       }
 
       // refresh the redux state
       let humanReadableSyncTime = HumanReadableTime(new Date())
       setSyncTime(humanReadableSyncTime)
       updateGistStoreAfterSync(gists)
-      updateLangTagsAfterSync(langTags)
-      updateActiveLangTagAfterSync(langTags, activeTagCandidate)
-      updateActiveGistAfterSync(gists, langTags, activeTagCandidate)
+      updateGistTagsAfterSync(gistTags)
+      updateActiveLangTagAfterSync(gistTags, activeTagCandidate)
+      updateActiveGistAfterSync(gists, gistTags, activeTagCandidate)
 
       // clean up the snapshot for the previous state
-      preSyncSnapshot.activeLangTag = null
+      preSyncSnapshot.activeGistTag = null
       preSyncSnapshot.activeGist = null
       Notifier('Sync succeeds', humanReadableSyncTime)
 

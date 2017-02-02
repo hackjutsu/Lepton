@@ -60,19 +60,19 @@
     color: grey;
   }
 
-  .lang-tag-group {
+  .gist-tag-group {
     margin-top: 10px;
   }
 
-  .lang-tag {
+  .gist-tag {
     display: inline;
     margin-right: 10px;
     font-size: 11px;
     color: #4078C0;
   }
 
-  .lang-tag-selected {
-    @extend .lang-tag;
+  .gist-tag-selected {
+    @extend .gist-tag;
     border:solid 2px red;
   }
 

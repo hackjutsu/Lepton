@@ -19,7 +19,7 @@ import {
   removeAccessToken,
   logoutUserSession,
   updateSingleGist,
-  updateLangTags,
+  updateGistTags,
   selectLangTag,
   selectGist } from '../../actions/index'
 
@@ -82,9 +82,9 @@ class UserPanel extends Component {
 
   updateGistsStoreWithNewGist (gistDetails) {
     let {
-      langTags,
+      gistTags,
       updateSingleGist,
-      updateLangTags,
+      updateGistTags,
       selectLangTag,
       selectGist,
       searchIndex } = this.props
@@ -93,16 +93,16 @@ class UserPanel extends Component {
     let files = gistDetails.files
 
     let langs = new Set()
-    langTags[Prefixed('All')].unshift(gistId)
+    gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
       let language = files[filename].language
       langs.add(language)
       let prefixedLang = Prefixed(language)
-      if (langTags.hasOwnProperty(prefixedLang)) {
-        langTags[prefixedLang].unshift(gistId)
+      if (gistTags.hasOwnProperty(prefixedLang)) {
+        gistTags[prefixedLang].unshift(gistId)
       } else {
-        langTags[prefixedLang] = []
-        langTags[prefixedLang].unshift(gistId)
+        gistTags[prefixedLang] = []
+        gistTags[prefixedLang].unshift(gistId)
       }
     })
 
@@ -115,8 +115,8 @@ class UserPanel extends Component {
     logger.info('[Dispatch] updateSingleGist')
     updateSingleGist(newGist)
 
-    logger.info('[Dispatch] updateLangTags')
-    updateLangTags(langTags)
+    logger.info('[Dispatch] updateGistTags')
+    updateGistTags(gistTags)
 
     logger.info('[Dispatch] selectLangTag')
     selectLangTag('All')
@@ -238,7 +238,7 @@ function mapStateToProps (state) {
     userSession: state.userSession,
     syncTime: state.syncTime,
     accessToken: state.accessToken,
-    langTags: state.langTags,
+    gistTags: state.gistTags,
     gistSyncStatus: state.gistSyncStatus
   }
 }
@@ -247,7 +247,7 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     logoutUserSession: logoutUserSession,
     updateSingleGist: updateSingleGist,
-    updateLangTags: updateLangTags,
+    updateGistTags: updateGistTags,
     selectLangTag: selectLangTag,
     selectGist: selectGist
   }, dispatch)

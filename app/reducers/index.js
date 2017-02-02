@@ -6,8 +6,8 @@ import AccessTokenReducer from './reducer_token'
 import GistsReducer from './reducer_gists'
 import SyncTimeReducer from './reducer_sync_time'
 import ActiveGistReducer from './reducer_active_gist'
-import LangsReducer from './reducer_langs'
-import ActiveLangTagReducer from './reducer_active_lang_tag'
+import GistTagsReducer from './reducer_gist_tags'
+import ActiveGistTagReducer from './reducer_active_gist_tag'
 import UserSessionReducer from './reducer_user_session'
 import AuthWindowStatusReducer from './reducer_auth_window_status'
 import GistSyncStatusReducer from './reducer_gist_sync_status'
@@ -20,8 +20,8 @@ const rootReducer = combineReducers({
   gists: GistsReducer,
   syncTime: SyncTimeReducer,
   activeGist: ActiveGistReducer,
-  langTags: LangsReducer,
-  activeLangTag: ActiveLangTagReducer,
+  gistTags: GistTagsReducer,
+  activeGistTag: ActiveGistTagReducer,
   authWindowStatus: AuthWindowStatusReducer,
   gistSyncStatus: GistSyncStatusReducer,
   searchWindowStatus: SearchWindowStatusReducer
