@@ -4,9 +4,6 @@ import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 
 import './index.scss'
 
-import { remote } from 'electron'
-const logger = remote.getGlobal('logger')
-
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
 

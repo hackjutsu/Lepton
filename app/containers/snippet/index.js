@@ -12,8 +12,6 @@ import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
 import {
   addLangPrefix as Prefixed,
-  parseLangName as Resolved,
-  addCustomTagsPrefix,
   parseCustomTags,
   descriptionParser } from '../../utilities/parser'
 
@@ -193,7 +191,7 @@ class Snippet extends Component {
     preLangs.forEach(language => {
       if (!newLangs.has(language)) {
         let prefixedLang = Prefixed(language)
-          gistTags[prefixedLang] = gistTags[prefixedLang].filter(value => {
+        gistTags[prefixedLang] = gistTags[prefixedLang].filter(value => {
           return value !== gistId
         })
         if (gistTags[prefixedLang].length === 0) {
@@ -206,8 +204,6 @@ class Snippet extends Component {
     let newCustomTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
     newCustomTags.forEach(tag => {
       if (gistTags.hasOwnProperty(tag)) {
-        logger.debug(typeof gistTags[tag])
-        logger.debug(JSON.stringify(gistTags[tag]))
         if (!gistTags[tag].includes(gistId)) {
           gistTags[tag].unshift(gistId)
         }
@@ -323,8 +319,8 @@ class Snippet extends Component {
     )
   }
 
-  selectText() {
-    this.refs.rawModalText.select();
+  selectText () {
+    this.refs.rawModalText.select()
   }
 
   createMarkup (content, language) {

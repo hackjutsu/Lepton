@@ -6,11 +6,7 @@ import UserPanel from '../userPanel'
 import { selectLangTag, selectGist, fetchSingleGist } from '../../actions/index'
 import { bindActionCreators } from 'redux'
 
-import {
-  addLangPrefix as Prefixed,
-  parseLangName as Resolved,
-  addCustomTagsPrefix,
-  parseCustomTags } from '../../utilities/parser'
+import { parseLangName as Resolved } from '../../utilities/parser'
 
 import './index.scss'
 

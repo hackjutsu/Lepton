@@ -11,8 +11,6 @@ import Notifier from '../../utilities/notifier'
 import './index.scss'
 import {
   addLangPrefix as Prefixed,
-  parseLangName as Resolved,
-  addCustomTagsPrefix,
   parseCustomTags,
   descriptionParser } from '../../utilities/parser'
 

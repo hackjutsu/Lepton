@@ -15,8 +15,6 @@ import ImageDownloader from 'image-downloader'
 import SearchIndex from './utilities/search'
 import {
   addLangPrefix as Prefixed,
-  parseLangName as Resolved,
-  addCustomTagsPrefix,
   parseCustomTags,
   descriptionParser } from './utilities/parser'
 
