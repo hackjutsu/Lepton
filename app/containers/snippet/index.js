@@ -7,6 +7,7 @@ import { Panel, Modal, Button, ProgressBar } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
+import Markdown from 'marked'
 import { shell, remote } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
@@ -30,6 +31,13 @@ import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github-gist.css'
 
 const logger = remote.getGlobal('logger')
+
+// Synchronous highlighting with highlight.js
+Markdown.setOptions({
+  highlight: function (code) {
+    return HighlightJS.highlightAuto(code).value
+  }
+})
 
 class Snippet extends Component {
 
@@ -327,12 +335,19 @@ class Snippet extends Component {
     language = language === 'Shell' ? 'Bash' : language
     language = language.startsWith('Objective-C') ? 'objectivec' : language
 
-    let line = 0
-    let html = `<span class='line-number' data-pseudo-content=${++line}></span>` + HighlightJS.highlightAuto(content, [language, 'css']).value
-    let codeHtml = html.replace(/\r?\n/g, () => {
-      return `\n<span class='line-number' data-pseudo-content=${++line}></span>`
-    })
-    return { __html: `<pre><code>${codeHtml}</code></pre>` }
+    let htmlContent
+
+    if (language === 'Markdown') {
+      htmlContent = `<div class='markdown-section'>${Markdown(content)}</div>`
+    } else {
+      let line = 0
+      let html = `<span class='line-number' data-pseudo-content=${++line}></span>` + HighlightJS.highlightAuto(content, [language, 'css']).value
+      let htmlWithLineNumbers = html.replace(/\r?\n/g, () => {
+        return `\n<span class='line-number' data-pseudo-content=${++line}></span>`
+      })
+      htmlContent = `<pre><code>${htmlWithLineNumbers}</code></pre>`
+    }
+    return { __html: htmlContent }
   }
 
   renderPanelHeader (activeSnippet) {
@@ -398,11 +413,11 @@ class Snippet extends Component {
         fileHtmlArray.push(
           <div key={ key }>
             <hr/>
-            <div className='file-name'>
+            <div className={ gistFile.language === 'Markdown'? 'file-header-md' : 'file-header' }>
               <b>{ gistFile.filename }</b>
               <a
                 href='#'
-                className='customized-button'
+                className='customized-button-file-header'
                 onClick={ this.showRawModalModal.bind(this, gistFile) }>
                 #raw
             </a>
