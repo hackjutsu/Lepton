@@ -1,7 +1,7 @@
 'use strict'
 
 const electron = require('electron')
-const electronLocalshortcut = require('electron-localshortcut');
+const electronLocalshortcut = require('electron-localshortcut')
 const Menu = electron.Menu
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -39,6 +39,11 @@ function createWindow () {
     // titleBarStyle: 'hidden',
     backgroundColor: '#808080',
     show: false
+  })
+
+  mainWindow.webContents.on('will-navigate', function(e, url) {
+    e.preventDefault()
+    electron.shell.openExternal(url)
   })
 
   mainWindow.once('ready-to-show', () => {
