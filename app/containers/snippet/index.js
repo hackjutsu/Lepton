@@ -27,7 +27,7 @@ import {
 } from '../../utilities/githubApi'
 
 import './index.scss'
-import '../../utilities/vendor/highlightJS/styles/github.css'
+import '../../utilities/vendor/highlightJS/styles/github-gist.css'
 
 const logger = remote.getGlobal('logger')
 
@@ -325,6 +325,8 @@ class Snippet extends Component {
 
   createMarkup (content, language) {
     language = language === 'Shell' ? 'Bash' : language
+    language = language.startsWith('Objective-C') ? 'objectivec' : language
+
     let line = 0
     let html = `<span class='line-number' data-pseudo-content=${++line}></span>` + HighlightJS.highlightAuto(content, [language, 'css']).value
     let codeHtml = html.replace(/\r?\n/g, () => {
