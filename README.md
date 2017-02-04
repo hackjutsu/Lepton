@@ -1,10 +1,10 @@
 # Lepton
 
-![Screenshot](./docs_resource/screenshot.png)
+![Screenshot](./docs/img/portfolio/stay_organized.png)
 
 |      Create         |   Search    |
 | :-------------:| :-----:|
-| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs_resource/search_bar.png) |
+| ![Screenshot](./docs_resource/edit.png) | ![Screenshot](./docs_resource/search_bar.png) |
 |*Command + N*|*Shift + Space*|
 
 **Lepton** is a lean [GitHub Gist](https://gist.github.com/) Desktop Client based on Electron.
