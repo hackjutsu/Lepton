@@ -64,7 +64,7 @@ class NavigationPanelDetails extends Component {
         // to decide what to be shown in the thumbnail.
         let gist = gists[gistId]
         let firstFilename = Object.keys(gist.brief.files)[0]
-        let rawDescription = gist.brief.description.length === 0 ? firstFilename : gist.brief.description
+        let rawDescription = (!gist.brief.description || gist.brief.description.length === 0) ? firstFilename : gist.brief.description
 
         let { title, description } = descriptionParser(rawDescription)
         let thumbnailTitle = title.length > 0 ? title : description
