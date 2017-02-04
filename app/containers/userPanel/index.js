@@ -27,7 +27,7 @@ import {
   CREATE_SINGLE_GIST
 } from '../../utilities/githubApi'
 
-import { remote, ipcRenderer } from 'electron'
+import { shell, remote, ipcRenderer } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class UserPanel extends Component {
@@ -224,6 +224,11 @@ class UserPanel extends Component {
     this.props.reSyncUserGists()
   }
 
+  handleProfileImageClicked () {
+    logger.debug('profile image is clicked!! ' + this.props.userSession.profile.html_url)
+    shell.openExternal(this.props.userSession.profile.html_url)
+  }
+
   renderProfile () {
     let profile = this.props.userSession.profile
     if (!profile || this.props.userSession.activeStatus === 'INACTIVE') {
@@ -231,7 +236,9 @@ class UserPanel extends Component {
     }
 
     return (
-      <div><Image className='profile-image-section' src={ profile.avatar_url } rounded/></div>
+      <div>
+        <Image className='profile-image-section' src={ profile.avatar_url } onClick={ this.handleProfileImageClicked.bind(this) } rounded/>
+      </div>
     )
   }
 
