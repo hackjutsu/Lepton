@@ -7,7 +7,8 @@
      description: 'my_description',
      tags: '#tags: tag1, tag2, tag3'
    } */
-export function descriptionParser (rawDescription = 'AWESOME GIST') {
+export function descriptionParser (payload) {
+  const rawDescription = payload || 'No description'
   const regexForTitle = rawDescription.match(/\[.*\]/)
   const rawTitle = regexForTitle && regexForTitle[0] || ''
   const title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length - 1) || ''
@@ -20,14 +21,16 @@ export function descriptionParser (rawDescription = 'AWESOME GIST') {
   return { title, description, customTags }
 }
 
-export function addLangPrefix (lang) {
+export function addLangPrefix (payload) {
+  const lang = payload || 'Other'
   const prefix = 'lang@'
   return lang.trim().length > 0
     ? prefix + lang.trim()
     : lang
 }
 
-export function parseLangName (rawlangTag) {
+export function parseLangName (payload) {
+  const rawlangTag = payload || 'lang@Other'
   const prefix = 'lang@'
   if (!rawlangTag.startsWith(prefix)) return rawlangTag
   return rawlangTag.substring(prefix.length)
@@ -40,7 +43,8 @@ export function addCustomTagsPrefix (tags) {
     : tags
 }
 
-export function parseCustomTags (rawTags) {
+export function parseCustomTags (payload) {
+  const rawTags = payload || '#tags:'
   const prefix = '#tags:'
   if (!rawTags.trim().startsWith(prefix)) return []
   const processedTags = rawTags.trim().substring(prefix.length)

@@ -331,11 +331,13 @@ class Snippet extends Component {
     this.refs.rawModalText.select()
   }
 
-  createMarkup (content, language) {
+  createMarkup (content, lang) {
+    let language = lang || 'Other'
+
     language = language === 'Shell' ? 'Bash' : language
     language = language.startsWith('Objective-C') ? 'objectivec' : language
 
-    let htmlContent
+    let htmlContent = ''
 
     if (language === 'Markdown') {
       htmlContent = `<div class='markdown-section'>${Markdown(content)}</div>`
