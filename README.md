@@ -1,6 +1,6 @@
 # Lepton
 
-![Screenshot](./docs_resource/screenshot.png)
+![Screenshot](./docs/img/portfolio/stay_organized.png)
 
 |      Create         |   Search    |
 | :-------------:| :-----:|
