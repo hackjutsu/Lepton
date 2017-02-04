@@ -283,6 +283,7 @@ class Snippet extends Component {
     return (
       <Modal
         bsSize="large"
+        dialogClassName="edit-modal"
         show={ this.state.showGistEditorModal }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>

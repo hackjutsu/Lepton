@@ -166,7 +166,11 @@ class UserPanel extends Component {
 
   renderGistEditorModal () {
     return (
-      <Modal bsSize="large" show={ this.state.showGistEditorModal } onHide={ this.closeGistEditorModal.bind(this)}>
+      <Modal
+        bsSize="large"
+        dialogClassName="new-modal"
+        show={ this.state.showGistEditorModal }
+        onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>New Gist</Modal.Title>
         </Modal.Header>
