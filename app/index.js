@@ -216,13 +216,24 @@ function updateGistStoreAfterSync (gists) {
   reduxStore.dispatch(updateGists(gists))
 }
 
-function reSyncUserGists () {
+function takeSyncSnapshot () {
   let state = reduxStore.getState()
   preSyncSnapshot = {
     activeGistTag: state.activeGistTag,
     activeGist: state.activeGist
   }
-  updateUserGists(state.userSession.profile.login, state.accessToken)
+}
+
+function clearSyncSnapshot () {
+  preSyncSnapshot = {
+    activeGistTag: Prefixed('All'),
+    activeGist: null
+  }
+}
+
+function reSyncUserGists () {
+  let { userSession, accessToken } = reduxStore.getState()
+  updateUserGists(userSession.profile.login, accessToken)
 }
 
 function updateUserGists (userLoginId, accessToken) {
@@ -299,6 +310,9 @@ function updateUserGists (userLoginId, accessToken) {
         gistTags[language] = [...rawGistTags[language]]
       }
 
+      // take the state snapshot at this moment
+      takeSyncSnapshot()
+
       // refresh the redux state
       let humanReadableSyncTime = HumanReadableTime(new Date())
       setSyncTime(humanReadableSyncTime)
@@ -308,8 +322,8 @@ function updateUserGists (userLoginId, accessToken) {
       updateActiveGistAfterSync(gists, gistTags, activeTagCandidate)
 
       // clean up the snapshot for the previous state
-      preSyncSnapshot.activeGistTag = null
-      preSyncSnapshot.activeGist = null
+      clearSyncSnapshot()
+
       Notifier('Sync succeeds', humanReadableSyncTime)
     })
     .catch(err => {
