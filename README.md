@@ -2,10 +2,9 @@
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
-|      Organize         |   Search    |
+|      Organize         |   Search (*Shift + Space*) |
 | :-------------:| :-----:|
 | ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/search_bar.png) |
-|*Command + N*|*Shift + Space*|
 
 |      Markdown Renderding         |   Custom Tags    |
 | :-------------:| :-----:|
