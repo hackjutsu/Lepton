@@ -16,7 +16,7 @@
 - Group your gists by languages
 - Create/Edit/Delete gists
 - Instant search
-- Custome tags
+- Custom tags
 - Markdown rendering
 - Cross-platform support
 
