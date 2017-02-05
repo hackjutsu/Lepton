@@ -1,20 +1,21 @@
 {
   "name": "Lepton",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.7",
   "description": "AWESOME Gist client for everyone",
+  "productName": "Lepton",
   "main": "main.js",
   "scripts": {
     "lint": "eslint app",
     "dev": "node dev-server.js",
-    "pack": "webpack --display-modules",
     "watch": "webpack --watch",
     "start": "electron ./main.js",
     "test": "webpack --display-modules",
-    "dist": "build"
+    "dist": "build",
+    "release": "build"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/hackjutsu/Lepton.git"
   },
   "keywords": [
     "gist",
@@ -55,6 +56,7 @@
     "elasticlunr": "^0.9.5",
     "electron-context-menu": "^0.8.0",
     "electron-localshortcut": "^1.0.0",
+    "electron-updater": "^1.4.2",
     "highlight.js": "^9.9.0",
     "human-readable-time": "^0.2.4",
     "image-downloader": "^2.0.1",
@@ -73,19 +75,22 @@
   "build": {
     "appId": "com.cosmox.lepton",
     "mac": {
-      "category": "public.app-category.education"
+      "category": "public.app-category.education",
+      "publish": ["github"]
     },
     "win": {
       "title": "Lepton",
       "author": "CosmoX",
-      "target": "nsis"
+      "target": "nsis",
+      "publish": ["github"]
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "publish": ["github"]
     }
   }
 }

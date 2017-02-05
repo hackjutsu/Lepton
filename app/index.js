@@ -44,7 +44,9 @@ import {
   selectGist,
   updateAuthWindowStatus,
   updateGistSyncStatus,
-  updateSearchWindowStatus
+  updateSearchWindowStatus,
+  updateUpdateAvailableBarStatus,
+  updateNewVersionInfo
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
@@ -417,12 +419,21 @@ ipcRenderer.on('search-gist', data => {
   let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
   reduxStore.dispatch(updateSearchWindowStatus(newStatus))
 })
+
+ipcRenderer.on('update-available', payload => {
+  logger.debug('The renderer process receives update-available signal from the main process')
+  const newVersionInfo = remote.getGlobal('newVersionInfo')
+  if (localStorage.getItem('skipped-version') === newVersionInfo.version ) return
+
+  reduxStore.dispatch(updateNewVersionInfo(newVersionInfo))
+  reduxStore.dispatch(updateUpdateAvailableBarStatus('ON'))
+})
 /** End: Response to  main process events **/
 
 // Start
 const reduxStore = createStore(
-    RootReducer,
-    applyMiddleware(thunk)
+  RootReducer,
+  applyMiddleware(thunk)
 )
 
 ReactDom.render(

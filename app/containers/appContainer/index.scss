@@ -2,3 +2,24 @@
   margin: 5px 20px 5px 20px;
   max-height: 95vh;
 }
+
+.app-container {
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
+
+  .bar-button {
+    width: 100px;
+  }
+
+  .customized-button {
+    @extend .font-style-base;
+    float: right;
+    margin: 5px 5px 0px 10px;
+  }
+
+  .customized-button:hover {
+    cursor: pointer;
+  }
+}

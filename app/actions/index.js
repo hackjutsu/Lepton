@@ -18,6 +18,22 @@ export const SELECT_GIST = 'SELECT_GIST'
 export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
 export const UPDATE_GIST_SYNC_STATUS = 'UPDATE_GIST_SYNC_STATUS'
 export const UPDATE_SEARCHWINDOW_STATUS = 'UPDATE_SEARCHWINDOW_STATUS'
+export const UPDATE_UPDATEAVAILABLEBAR_STATUS = 'UPDATE_UPDATEAVAILABLEBAR_STATUS'
+export const UPDATE_NEW_VERSION_INFO = 'UPDATE_NEW_VERSION_INFO'
+
+export function updateNewVersionInfo (status) {
+  return {
+    type: UPDATE_NEW_VERSION_INFO,
+    payload: status
+  }
+}
+
+export function updateUpdateAvailableBarStatus (status) {
+  return {
+    type: UPDATE_UPDATEAVAILABLEBAR_STATUS,
+    payload: status
+  }
+}
 
 export function updateGistSyncStatus (status) {
   return {

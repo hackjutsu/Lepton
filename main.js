@@ -12,6 +12,10 @@ const logger = require('winston')
 const path = require('path')
 const fs = require('fs')
 
+const autoUpdater = require("electron-updater").autoUpdater
+autoUpdater.logger = logger
+autoUpdater.autoDownload = false
+
 initGlobalLogger()
 
 let mainWindow = null
@@ -61,6 +65,18 @@ function createWindow () {
     //   console.log('You pressed ' + keyEnter)
       mainWindow && mainWindow.webContents.send('key-enter')
     })
+    autoUpdater.on('error', data => {
+      logger.debug('[autoUpdater] error ' + JSON.stringify(data))
+    })
+    autoUpdater.on('update-not-available', () => {
+      logger.debug('[autoUpdater] update-not-available')
+    })
+    autoUpdater.on('update-available', (info) => {
+      logger.debug('[autoUpdater] update-available. ' + mainWindow)
+      global.newVersionInfo = info
+      mainWindow && mainWindow.webContents.send('update-available')
+    })
+    autoUpdater.checkForUpdates()
   })
 
   const ContextMenu = require('electron-context-menu')
