@@ -1,7 +1,7 @@
 {
   "name": "Lepton",
-  "version": "1.0.0-beta.7",
-  "description": "AWESOME Gist client for everyone",
+  "version": "1.0.0",
+  "description": "AWESOME Gist client for everyone, everywhere!",
   "productName": "Lepton",
   "main": "main.js",
   "scripts": {

@@ -4,7 +4,7 @@
 
 |      Organize         |   Search    |
 | :-------------:| :-----:|
-| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs_resource/search_bar.png) |
+| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/search_bar.png) |
 |*Command + N*|*Shift + Space*|
 
 |      Markdown Renderding         |   Custom Tags    |
