@@ -2,15 +2,22 @@
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
-|      Create         |   Search    |
+|      Organize         |   Search    |
 | :-------------:| :-----:|
 | ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs_resource/search_bar.png) |
 |*Command + N*|*Shift + Space*|
+
+|      Markdown Renderding         |   Custom Tags    |
+| :-------------:| :-----:|
+| ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/edit.png) |
+
 
 **Lepton** is a lean [GitHub Gist](https://gist.github.com/) Desktop Client based on Electron.
 - Group your gists by languages
 - Create/Edit/Delete gists
 - Instant search
+- Custome tags
+- Markdown rendering
 - Cross-platform support
 
 [![Build Status](https://travis-ci.org/hackjutsu/Lepton.svg?branch=master)](https://travis-ci.org/hackjutsu/Lepton)

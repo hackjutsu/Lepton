@@ -55,7 +55,7 @@ const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
 function getAllgists (accessToken, userLoginId) {
   let gistList = []
   return new Promise(function (resolve, reject) {
-    const maxPageNumber = 20
+    const maxPageNumber = 100
     let funcs = Promise.resolve(
       makeRangeArr(1, maxPageNumber).map(
         (n) => makeRequestForGetAllGists(makeOptionForGetAllGists(accessToken, userLoginId, n))))
