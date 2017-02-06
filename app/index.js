@@ -46,7 +46,8 @@ import {
   updateGistSyncStatus,
   updateSearchWindowStatus,
   updateUpdateAvailableBarStatus,
-  updateNewVersionInfo
+  updateNewVersionInfo,
+  updateImmersiveModeStatus
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
@@ -415,9 +416,29 @@ function getLoggedInUserInfo () {
 
 /** Start: Response to main process events **/
 ipcRenderer.on('search-gist', data => {
-  let preStatus = reduxStore.getState().searchWindowStatus
-  let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
-  reduxStore.dispatch(updateSearchWindowStatus(newStatus))
+  let state = reduxStore.getState()
+  let immersiveMode = state.immersiveMode
+
+  if (immersiveMode === 'OFF') {
+    let preStatus = state.searchWindowStatus
+    let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
+    reduxStore.dispatch(updateSearchWindowStatus(newStatus))
+  }
+})
+
+ipcRenderer.on('immersive-mode', data => {
+  let state = reduxStore.getState()
+  let searchWindowStatus = state.searchWindowStatus
+
+  if (searchWindowStatus === 'OFF') {
+    let preStatus = state.immersiveMode
+    let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
+    reduxStore.dispatch(updateImmersiveModeStatus(newStatus))
+  }
+})
+
+ipcRenderer.on('exit-immersive-mode', data => {
+  reduxStore.dispatch(updateImmersiveModeStatus('OFF'))
 })
 
 ipcRenderer.on('update-available', payload => {

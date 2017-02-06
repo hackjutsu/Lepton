@@ -9,17 +9,17 @@ import './index.scss'
 class SnippetTable extends Component {
 
   render () {
-    let { gists, activeGist, searchIndex, reSyncUserGists } = this.props
+    let { gists, activeGist, searchIndex, reSyncUserGists, immersiveMode } = this.props
     if (!gists || !activeGist || !gists[activeGist]) {
       return (
-        <div className='snippet-table'>
+        <div className={ immersiveMode === 'ON' ? 'snippet-table-immersive' : 'snippet-table' }>
           <Well className='welcome-section'>Click <b>#new</b> on the left panel to create a gist.</Well>
         </div>
       )
     } // This happens when the user has no gists
 
     return (
-      <div className='snippet-table'>
+      <div className={ immersiveMode === 'ON' ? 'snippet-table-immersive' : 'snippet-table' }>
           <Snippet
             searchIndex = { searchIndex }
             reSyncUserGists={ reSyncUserGists }
@@ -32,7 +32,8 @@ class SnippetTable extends Component {
 function mapStateToProps (state) {
   return {
     activeGist: state.activeGist,
-    gists: state.gists
+    gists: state.gists,
+    immersiveMode: state.immersiveMode
   }
 }
 

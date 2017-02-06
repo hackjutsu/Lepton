@@ -14,6 +14,7 @@ import GistSyncStatusReducer from './reducer_gist_sync_status'
 import SearchWindowStatusReducer from './reducer_search_window_status'
 import UpdateAvailableBarStatusReducer from './reducer_update_available_bar_status'
 import NewVersionInfoReducer from './reducer_new_version_info'
+import ImmersiveModeReducer from './reducer_immersive_mode'
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
   gistSyncStatus: GistSyncStatusReducer,
   searchWindowStatus: SearchWindowStatusReducer,
   updateAvailableBarStatus: UpdateAvailableBarStatusReducer,
-  newVersionInfo: NewVersionInfoReducer
+  newVersionInfo: NewVersionInfoReducer,
+  immersiveMode: ImmersiveModeReducer
 })
 
 export default rootReducer

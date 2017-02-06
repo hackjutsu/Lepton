@@ -31,7 +31,7 @@ class SearchPage extends Component {
     ipcRenderer.on('key-up', this.selectPreGist.bind(this))
     ipcRenderer.on('key-down', this.selectNextGist.bind(this))
     ipcRenderer.on('key-enter', this.selectCurrentGist.bind(this))
-    ipcRenderer.on('key-escape', () => {
+    ipcRenderer.on('exit-search', () => {
       this.props.updateSearchWindowStatus('OFF')
     })
   }

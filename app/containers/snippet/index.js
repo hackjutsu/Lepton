@@ -370,11 +370,15 @@ class Snippet extends Component {
           onClick={ shell.openExternal.bind(this, activeSnippet.brief.html_url + '/revisions') }>
           #revisions
         </a>
-        <a className='customized-button'
-          href='#'
-          onClick={ this.showDeleteModal.bind(this) }>
-          #delete
-        </a>
+        {
+          this.props.immersiveMode == 'OFF'
+            ? <a className='customized-button'
+               href='#'
+               onClick={ this.showDeleteModal.bind(this) }>
+               #delete
+              </a>
+            : null
+        }
       </div>
       </div>
     )
@@ -460,6 +464,7 @@ function mapStateToProps (state) {
     userSession: state.userSession,
     accessToken: state.accessToken,
     gistTags: state.gistTags,
+    immersiveMode: state.immersiveMode
   }
 }
 

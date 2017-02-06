@@ -22,6 +22,7 @@ let mainWindow = null
 
 const keyShortcutForSearch = 'Shift+Space'
 const keyNewGist = 'CommandOrControl+N'
+const keyImmersiveMode = 'CommandOrControl+I'
 const keyUp = 'Shift+Up'
 const keyDown = 'Shift+Down'
 const keyEnter = 'Shift+Enter'
@@ -130,9 +131,17 @@ function setUpApplicationMenu () {
         click: (item, mainWindow) => mainWindow && mainWindow.send('search-gist')
       },
       {
+        label: 'Immersive Mode',
+        accelerator: keyImmersiveMode,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('immersive-mode')
+      },
+      {
         label: 'Escape',
         accelerator: 'Escape',
-        click: (item, mainWindow) => mainWindow && mainWindow.send('key-escape')
+        click: (item, mainWindow) => {
+          mainWindow && mainWindow.send('exit-search')
+          mainWindow && mainWindow.send('exit-immersive-mode')
+        }
       }
     ]
   }

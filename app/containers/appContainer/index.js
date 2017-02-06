@@ -42,11 +42,8 @@ class AppContainer extends Component {
     this.dismissAlert()
   }
 
-  render () {
+  renderActiveNormalSection () {
     let {
-        userSession,
-        getLoggedInUserInfo,
-        launchAuthWindow,
         updateLocalStorage,
         updateActiveGistAfterClicked,
         reSyncUserGists,
@@ -55,31 +52,66 @@ class AppContainer extends Component {
         searchIndex,
         newVersionInfo } = this.props
 
+    return (
+      <div>
+        { this.renderSearchPage() }
+        { updateAvailableBarStatus === 'ON'
+          ? <Alert bsStyle="warning" onDismiss={ this.dismissAlert.bind(this) }>
+              { `New version ${newVersionInfo.version} is available!  ` }
+              <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
+              { newVersionInfo.url
+                ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#release</a>
+                : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#download</a> }
+              { newVersionInfo.url
+                ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>#download</a>
+                : null }
+            </Alert>
+          : null }
+        <NavigationPanel
+          searchIndex = { searchIndex }
+          updateLocalStorage = { updateLocalStorage }
+          updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
+          reSyncUserGists = { reSyncUserGists } />
+        <NavigationPanelDetails />
+        <SnippetTable
+          searchIndex = { searchIndex }
+          reSyncUserGists = { reSyncUserGists } />
+      </div>
+    )
+  }
+
+  renderActiveImmersiveSection () {
+    let {
+        updateLocalStorage,
+        updateActiveGistAfterClicked,
+        reSyncUserGists,
+        searchWindowStatus,
+        updateAvailableBarStatus,
+        searchIndex,
+        newVersionInfo } = this.props
+
+    return (
+      <div>
+        <SnippetTable
+          searchIndex = { searchIndex }
+          reSyncUserGists = { reSyncUserGists } />
+      </div>
+    )
+  }
+
+  render () {
+    let {
+        userSession,
+        getLoggedInUserInfo,
+        launchAuthWindow,
+        immersiveMode } = this.props
+
     if (userSession.activeStatus === 'ACTIVE') {
       return (
         <div className='app-container'>
-          { this.renderSearchPage() }
-          { updateAvailableBarStatus === 'ON'
-              ? <Alert bsStyle="warning" onDismiss={ this.dismissAlert.bind(this) }>
-                  { `New version ${newVersionInfo.version} is available!  ` }
-                  <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
-                  { newVersionInfo.url
-                    ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#release</a>
-                    : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#download</a> }
-                  { newVersionInfo.url
-                    ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>#download</a>
-                    : null }
-                </Alert>
-              : null }
-          <NavigationPanel
-            searchIndex = { searchIndex }
-            updateLocalStorage = { updateLocalStorage }
-            updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
-            reSyncUserGists = { reSyncUserGists } />
-          <NavigationPanelDetails />
-          <SnippetTable
-            searchIndex = { searchIndex }
-            reSyncUserGists = { reSyncUserGists } />
+          { immersiveMode === 'ON'
+              ? this.renderActiveImmersiveSection()
+              : this.renderActiveNormalSection() }
         </div>
       )
     }
@@ -99,7 +131,8 @@ function mapStateToProps (state) {
     userSession: state.userSession,
     searchWindowStatus: state.searchWindowStatus,
     newVersionInfo: state.newVersionInfo,
-    updateAvailableBarStatus: state.updateAvailableBarStatus
+    updateAvailableBarStatus: state.updateAvailableBarStatus,
+    immersiveMode: state.immersiveMode
   }
 }
 

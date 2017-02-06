@@ -5,6 +5,23 @@
   height: 97vh;
 }
 
+.snippet-table-immersive {
+  @extend .snippet-table;
+  width: 100%;
+
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
+
+  .welcome-section {
+    @extend .font-style-base;
+    font-size: 15px;
+    text-align: center;
+    height: 92vh;
+  }
+}
+
 .snippet-table {
   .font-style-base {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
