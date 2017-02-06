@@ -1,5 +1,7 @@
 # Lepton
 
+- [Download](https://github.com/hackjutsu/Lepton/releases)
+
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
 |      Organize         |   Search (*Shift + Space*) |
