@@ -57,7 +57,7 @@ module.exports = {
 
 ### Run
 ```bash
-$ npm run pack
+$ npm run test
 $ npm run start
 ```
 
