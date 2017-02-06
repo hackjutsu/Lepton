@@ -9,6 +9,7 @@
     "dev": "node dev-server.js",
     "watch": "webpack --watch",
     "start": "electron ./main.js",
+    "pack": "webpack --display-modules",
     "test": "webpack --display-modules",
     "dist": "build",
     "release": "build"
