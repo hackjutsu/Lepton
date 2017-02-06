@@ -20,7 +20,7 @@
 | :-------------:| :-----:|
 | ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/search_bar.png) |
 
-|      Markdown Renderding         |   Custom Tags    |
+|      Markdown Rendering         |   Custom Tags    |
 | :-------------:| :-----:|
 | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/edit.png) |
 
