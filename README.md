@@ -1,6 +1,18 @@
 # Lepton
 
-- [Download](https://github.com/hackjutsu/Lepton/releases)
+[![Build Status](https://travis-ci.org/hackjutsu/Lepton.svg?branch=master)](https://travis-ci.org/hackjutsu/Lepton)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
+[![Dependency Status](https://david-dm.org/hackjutsu/Lepton.svg?style=flat-square)](https://david-dm.org/hackjutsu/Lepton)
+[![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
+
+
+**Lepton** is a lean [GitHub Gist](https://gist.github.com/) Desktop Client based on Electron. [Checkout the latest release.](https://github.com/hackjutsu/Lepton/releases)
+- Group your gists by languages
+- Create/Edit/Delete gists
+- Instant search
+- Custom tags
+- Markdown rendering
+- Cross-platform support
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
@@ -11,20 +23,6 @@
 |      Markdown Renderding         |   Custom Tags    |
 | :-------------:| :-----:|
 | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/edit.png) |
-
-
-**Lepton** is a lean [GitHub Gist](https://gist.github.com/) Desktop Client based on Electron.
-- Group your gists by languages
-- Create/Edit/Delete gists
-- Instant search
-- Custom tags
-- Markdown rendering
-- Cross-platform support
-
-[![Build Status](https://travis-ci.org/hackjutsu/Lepton.svg?branch=master)](https://travis-ci.org/hackjutsu/Lepton)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
-[![Dependency Status](https://david-dm.org/hackjutsu/Lepton.svg?style=flat-square)](https://david-dm.org/hackjutsu/Lepton)
-[![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 ## Based on
 ![Based on](./docs_resource/erb-logo.png)
