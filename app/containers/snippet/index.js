@@ -8,7 +8,7 @@ import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
 import Markdown from 'marked'
-import { shell, remote } from 'electron'
+import { shell, remote, clipboard } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
 import {
@@ -353,6 +353,11 @@ class Snippet extends Component {
     return { __html: htmlContent }
   }
 
+  handleShareClicked (url) {
+    clipboard.writeText(url)
+    Notifier('Copied', 'The share link has been copied to the clipboard.')
+  }
+
   renderPanelHeader (activeSnippet) {
     return (
       <div className='header-table'>
@@ -364,6 +369,11 @@ class Snippet extends Component {
           href='#'
           onClick={ this.showGistEditorModal.bind(this, activeSnippet.details) }>
           #edit
+        </a>
+        <a className='customized-button'
+          href='#'
+          onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
+          #share
         </a>
         <a className='customized-button'
           href='#'
@@ -442,7 +452,7 @@ class Snippet extends Component {
         <Panel className='snippet-code'
           bsStyle={ activeSnippet.brief.public ? 'default' : 'danger' }
           header={ this.renderPanelHeader(activeSnippet) }>
-          <div className='snippet-decription'>{ this.renderSnippetDescription(activeSnippet.brief.description) }</div>
+          <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet.brief.description) }</div>
           { activeSnippet.details
               ? null
               : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }

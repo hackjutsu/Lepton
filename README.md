@@ -37,6 +37,8 @@
 
 
 ### Install
+>Only tested with Node.js v6.9.x
+
 Clone the repository.
 ```Bash
 $ git clone git@github.com:hackjutsu/Lepton.git
