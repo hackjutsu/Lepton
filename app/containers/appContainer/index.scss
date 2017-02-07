@@ -22,4 +22,61 @@
   .customized-button:hover {
     cursor: pointer;
   }
+
+  .SplitPane {
+    position: relative !important;
+  }
+}
+
+/*For the resizer handle*/
+.Resizer {
+  background: #000;
+  opacity: .2;
+  z-index: 1;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding;
+  background-clip: padding-box;
+}
+
+ .Resizer:hover {
+  -webkit-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
+ .Resizer.horizontal {
+  height: 11px;
+  margin: -2px 0;
+  border-top: 2px solid rgba(0, 0, 0, 0);
+  border-bottom: 2px solid rgba(0, 0, 0, 0);
+  cursor: row-resize;
+  width: 100%;
+}
+
+.Resizer.horizontal:hover {
+  border-top: 2px solid rgba(0, 0, 0, 0.0);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.0);
+}
+
+.Resizer.vertical {
+  width: 2px;
+  margin: 0 -2px;
+  border-left: 2px solid rgba(0, 0, 0, 0);
+  border-right: 2px solid rgba(0, 0, 0, 0);
+  cursor: col-resize;
+}
+
+.Resizer.vertical:hover {
+    border-left: 2px solid rgba(0, 0, 0, 0.0);
+    border-right: 2px solid rgba(0, 0, 0, 0.0);
+}
+
+.Resizer.disabled {
+  cursor: not-allowed;
+}
+
+.Resizer.disabled:hover {
+  border-color: transparent;
 }

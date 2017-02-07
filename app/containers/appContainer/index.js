@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Alert } from 'react-bootstrap'
-import { SplitPane } from 'react-split-pane'
+import SplitPane from 'react-split-pane'
 import NavigationPanelDetails from '../navigationPanelDetails'
 import NavigationPanel from '../navigationPanel'
 import LoginPage from '../loginPage'
@@ -55,7 +55,7 @@ class AppContainer extends Component {
     return (
       <div>
         { updateAvailableBarStatus === 'ON'
-              ? <Alert bsStyle="warning" onDismiss={ this.dismissUpdateAlert.bind(this) }>
+              ? <Alert bsStyle='warning' onDismiss={ this.dismissUpdateAlert.bind(this) }>
                   { `New version ${newVersionInfo.version} is available!  ` }
                   <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
                   { newVersionInfo.url
@@ -82,14 +82,16 @@ class AppContainer extends Component {
         { this.renderSearchPage() }
         { this.renderUpdateAlert() }
         <NavigationPanel
-          searchIndex = { searchIndex }
-          updateLocalStorage = { updateLocalStorage }
-          updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
-          reSyncUserGists = { reSyncUserGists } />
-        <NavigationPanelDetails />
-        <SnippetTable
-          searchIndex = { searchIndex }
-          reSyncUserGists = { reSyncUserGists } />
+            searchIndex = { searchIndex }
+            updateLocalStorage = { updateLocalStorage }
+            updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
+            reSyncUserGists = { reSyncUserGists } />
+        <SplitPane split='vertical' minSize={150} maxSize={300} defaultSize={200}>
+          <NavigationPanelDetails />
+          <SnippetTable
+              searchIndex = { searchIndex }
+              reSyncUserGists = { reSyncUserGists } />
+        </SplitPane>
       </div>
     )
   }

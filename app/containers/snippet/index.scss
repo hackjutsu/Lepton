@@ -38,11 +38,11 @@
   }
 
   .snippet-code {
-    margin: 5px;
+    margin: 5px 10px;
     min-height: 95vh;
   }
 
-  .snippet-decription {
+  .snippet-description {
     @extend .font-style-base;
   }
 
@@ -273,7 +273,7 @@
    }
 
    li {
-     margin: 0; 
+     margin: 0;
    }
 
    hr {

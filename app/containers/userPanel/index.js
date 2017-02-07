@@ -234,14 +234,18 @@ class UserPanel extends Component {
   }
 
   renderProfile () {
-    let profile = this.props.userSession.profile
-    if (!profile || this.props.userSession.activeStatus === 'INACTIVE') {
+    const { profile, activeStatus } = this.props.userSession
+    if (!profile || activeStatus === 'INACTIVE') {
       return
     }
 
     return (
       <div>
-        <Image className='profile-image-section' src={ profile.avatar_url } onClick={ this.handleProfileImageClicked.bind(this) } rounded/>
+        <Image
+            className='profile-image-section'
+            src={ profile.avatar_url }
+            onClick={ this.handleProfileImageClicked.bind(this) }
+            rounded/>
       </div>
     )
   }
