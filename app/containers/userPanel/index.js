@@ -137,11 +137,11 @@ class UserPanel extends Component {
 
     let langSearchRecords = ''
     langs.forEach(lang => {
-      langSearchRecords += ' ' + lang
+      langSearchRecords += ',' + lang
     })
 
     // update the search index
-    searchIndex.addToIndex({
+    searchIndex.addToFuseIndex({
       id: gistId,
       description: gistDetails.description,
       language: langSearchRecords

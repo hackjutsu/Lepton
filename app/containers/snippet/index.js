@@ -66,7 +66,7 @@ class Snippet extends Component {
   }
 
   handleDeleteClicked () {
-    let { accessToken, activeGist } = this.props
+    const { accessToken, activeGist } = this.props
     getGitHubApi(DELETE_SINGLE_GIST)(
       accessToken,
       activeGist)
@@ -162,7 +162,7 @@ class Snippet extends Component {
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
-    let { gistTags, activeGistTag, updateSingleGist,
+    const { gistTags, activeGistTag, updateSingleGist,
       updateGistTags, selectGistTag, searchIndex} = this.props
 
     let gistId = gistDetails.id
@@ -256,9 +256,16 @@ class Snippet extends Component {
     // logger.info('[Dispatch] selectGist')
     // this.props.selectGist(gistId)
 
-    searchIndex.updateToIndex({
+    // Update the search index
+    let langSearchRecords = ''
+    newLangs.forEach(lang => {
+      langSearchRecords += ',' + lang
+    })
+
+    searchIndex.updateFuseIndex({
       id: gistId,
-      description: gistDetails.description
+      description: gistDetails.description,
+      language: langSearchRecords
     })
 
     Notifier('Gist updated', HumanReadableTime(new Date()))
@@ -381,7 +388,7 @@ class Snippet extends Component {
           #revisions
         </a>
         {
-          this.props.immersiveMode == 'OFF'
+          this.props.immersiveMode === 'OFF'
             ? <a className='customized-button'
                href='#'
                onClick={ this.showDeleteModal.bind(this) }>
@@ -395,7 +402,7 @@ class Snippet extends Component {
   }
 
   renderSnippetDescription (rawDescription) {
-    let { title, description, customTags } = descriptionParser(rawDescription)
+    const { title, description, customTags } = descriptionParser(rawDescription)
 
     let htmlForDescriptionSection = []
     if (title.length > 0) {
@@ -430,7 +437,7 @@ class Snippet extends Component {
         fileHtmlArray.push(
           <div key={ key }>
             <hr/>
-            <div className={ gistFile.language === 'Markdown'? 'file-header-md' : 'file-header' }>
+            <div className={ gistFile.language === 'Markdown' ? 'file-header-md' : 'file-header' }>
               <b>{ gistFile.filename }</b>
               <a
                 href='#'

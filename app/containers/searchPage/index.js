@@ -28,12 +28,14 @@ class SearchPage extends Component {
   }
 
   componentWillMount () {
+    const { updateSearchWindowStatus, searchIndex } = this.props
     ipcRenderer.on('key-up', this.selectPreGist.bind(this))
     ipcRenderer.on('key-down', this.selectNextGist.bind(this))
     ipcRenderer.on('key-enter', this.selectCurrentGist.bind(this))
     ipcRenderer.on('exit-search', () => {
-      this.props.updateSearchWindowStatus('OFF')
+      updateSearchWindowStatus('OFF')
     })
+    searchIndex.initFuseSearch()
   }
 
   componentWillUnmount () {
@@ -65,14 +67,14 @@ class SearchPage extends Component {
   }
 
   selectCurrentGist () {
-    let { selectedIndex, searchResults } = this.state
+    const { selectedIndex, searchResults } = this.state
     if (searchResults && searchResults.length > 0) {
-      this.handleSnippetClicked(searchResults[selectedIndex].ref)
+      this.handleSnippetClicked(searchResults[selectedIndex].id)
     }
   }
 
   handleSnippetClicked (gistId) {
-    let { gists, selectGistTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
+    const { gists, selectGistTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
 
     if (!gists[gistId].details) {
       logger.info('[Dispatch] fetchSingleGist ' + gistId)
@@ -96,14 +98,14 @@ class SearchPage extends Component {
     let inputValue = evt.target.value
 
     let searchIndex = this.props.searchIndex
-    let results = searchIndex.searchFromIndex(inputValue)
+    let results = searchIndex.fuseSearch(inputValue)
     this.setState({
       searchResults: results
     })
   }
 
   renderSnippetDescription (rawDescription) {
-    let { title, description } = descriptionParser(rawDescription)
+    const { title, description } = descriptionParser(rawDescription)
 
     let htmlForDescriptionSection = []
     if (title.length > 0) {
@@ -119,8 +121,7 @@ class SearchPage extends Component {
   }
 
   renderSearchResults () {
-    let { searchResults, selectedIndex, inputValue } = this.state
-    let { gists } = this.props
+    const { searchResults, selectedIndex, inputValue } = this.state
 
     // In some unknown circumstance, searchResults is undefined. So we put a
     // guard here. We should remove it once we better understand the mechanism
@@ -136,22 +137,21 @@ class SearchPage extends Component {
     }
 
     let resultsJSXGroup = []
-    searchResults.forEach((item, index) => {
-      let gist = gists[item.ref]
-      let gistDescription = gist.brief.description
+    searchResults.forEach((gist, index) => {
+      let gistDescription = gist.description
       // let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
       let highlightedDescription = gistDescription
-      let langs = [...gist.langs].map(lang => {
+      let langs = gist.language.split(',').filter(lang => lang.trim()).map(lang => {
         return (
-          <div className='gist-tag' key={ lang }>{ '#' + lang }</div>
+          <div className='gist-tag' key={ lang.trim() }>{ '#' + lang }</div>
         )
       })
       resultsJSXGroup.push(
         <ListGroupItem
           className={ index === selectedIndex
               ? 'search-result-item-selected' : 'search-result-item' }
-          key={ item.ref }
-          onClick={ this.handleSnippetClicked.bind(this, item.ref) }>
+          key={ gist.id }
+          onClick={ this.handleSnippetClicked.bind(this, gist.id) }>
           <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
           <div className='gist-tag-group'>{ langs }</div>
         </ListGroupItem>
@@ -166,7 +166,7 @@ class SearchPage extends Component {
         <input
           type="text"
           className='search-box'
-          placeholder='Search...'
+          placeholder='Search in description fields...'
           autoFocus
           value={ this.state.inputValue }
           onChange={ this.updateInputValue.bind(this) }

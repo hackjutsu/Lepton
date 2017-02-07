@@ -240,7 +240,6 @@ function reSyncUserGists () {
 }
 
 function updateUserGists (userLoginId, accessToken) {
-  SearchIndex.resetIndex()
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
     .then((gistList) => {
@@ -250,6 +249,7 @@ function updateUserGists (userLoginId, accessToken) {
       let activeTagCandidate = Prefixed('All')
       rawGistTags[Prefixed('All')] = new Set()
       let gistTags = {}
+      let fuseSearchIndex = []
 
       gistList.forEach((gist) => {
         let langs = new Set()
@@ -296,16 +296,18 @@ function updateUserGists (userLoginId, accessToken) {
 
         let langSearchRecords = ''
         langs.forEach(lang => {
-          langSearchRecords += ' ' + lang
+          langSearchRecords += ',' + lang
         })
 
         // Update the SearchIndex
-        SearchIndex.addToIndex({
+        fuseSearchIndex.push({
           id: gist.id,
           description: gist.description,
           language: langSearchRecords
         })
       }) // gistList.forEach
+
+      SearchIndex.resetFuseIndex(fuseSearchIndex)
 
       for (let language in rawGistTags) {
         // Save the gist ids in an Array rather than a Set, which facilitate
@@ -444,7 +446,7 @@ ipcRenderer.on('exit-immersive-mode', data => {
 ipcRenderer.on('update-available', payload => {
   logger.debug('The renderer process receives update-available signal from the main process')
   const newVersionInfo = remote.getGlobal('newVersionInfo')
-  if (localStorage.getItem('skipped-version') === newVersionInfo.version ) return
+  if (localStorage.getItem('skipped-version') === newVersionInfo.version) return
 
   reduxStore.dispatch(updateNewVersionInfo(newVersionInfo))
   reduxStore.dispatch(updateUpdateAvailableBarStatus('ON'))

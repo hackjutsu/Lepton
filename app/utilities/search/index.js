@@ -1,43 +1,53 @@
 'use strict'
-const Elasticlunr = require('elasticlunr')
+const Fuse = require('fuse.js')
 
-let index = null
+let fuse = null
+let fuseIndex = []
 
-function resetIndex () {
-  index = Elasticlunr()
-  index.addField('description')
-  index.addField('language')
+const fuseOptions = {
+  shouldSort: true,
+  tokenize: true,
+  matchAllTokens: true,
+  findAllMatches: true,
+  threshold: 0.2,
+  location: 0,
+  distance: 100,
+  maxPatternLength: 32,
+  minMatchCharLength: 1,
+  keys: [
+    'description',
+    'language'
+  ]
 }
 
-function addToIndex (item) {
-  if (!item) return
-  index.addDoc(item)
+function resetFuseIndex (list) {
+  fuseIndex = list
 }
 
-function removeFromIndex (item) {
-  if (!item) return
-  index.removeDoc(item)
+function initFuseSearch () {
+  fuse = new Fuse(fuseIndex, fuseOptions)
 }
 
-function updateToIndex (item) {
-  if (!item) return
-  index.updateDoc(item)
+function addToFuseIndex (item) {
+  fuseIndex.push(item)
 }
 
-function searchFromIndex (query) {
-  if (!query) return
-  return index.search(query, {
-    fields: {
-      description: { boost: 1, bool: 'AND' },
-      language: { boost: 1, bool: 'AND' }
-    }
+function updateFuseIndex (item) {
+  let newIndex = fuseIndex.filter(gist => {
+    return gist.id !== item.id
   })
+  newIndex.push(item)
+  fuseIndex = newIndex
+}
+
+function fuseSearch (pattern) {
+  return fuse.search(pattern.trim() || '')
 }
 
 module.exports = {
-  resetIndex: resetIndex,
-  addToIndex: addToIndex,
-  removeFromIndex: removeFromIndex,
-  updateToIndex: updateToIndex,
-  searchFromIndex: searchFromIndex
+  resetFuseIndex: resetFuseIndex,
+  updateFuseIndex: updateFuseIndex,
+  addToFuseIndex: addToFuseIndex,
+  initFuseSearch: initFuseSearch,
+  fuseSearch: fuseSearch
 }
