@@ -1,72 +1,86 @@
 'use strict'
 
-import React, { Component } from 'react'
 import { shell } from 'electron'
+import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Alert } from 'react-bootstrap'
+import { SplitPane } from 'react-split-pane'
 import NavigationPanelDetails from '../navigationPanelDetails'
 import NavigationPanel from '../navigationPanel'
 import LoginPage from '../loginPage'
 import SnippetTable from '../snippetTable'
 import SearchPage from '../searchPage'
-import './index.scss'
-
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
+
+import './index.scss'
 
 class AppContainer extends Component {
 
   renderSearchPage () {
-    if (this.props.searchWindowStatus === 'OFF') return null
+    const { searchWindowStatus, searchIndex } = this.props
     return (
-      <SearchPage searchIndex = { this.props.searchIndex } />
+      <div>
+        { searchWindowStatus === 'OFF'
+              ? null
+              : <SearchPage searchIndex = { searchIndex } /> }
+      </div>
     )
   }
 
-  dismissAlert () {
-    this.props.updateUpdateAvailableBarStatus('OFF')
+  dismissUpdateAlert () {
+    const { updateUpdateAvailableBarStatus } = this.props
+    updateUpdateAvailableBarStatus('OFF')
   }
 
   handleDownloadClicked () {
-    shell.openExternal(this.props.newVersionInfo.url)
-    this.dismissAlert()
+    const { newVersionInfo } = this.props
+    shell.openExternal(newVersionInfo.url)
+    this.dismissUpdateAlert()
   }
 
   handleReleaseNotesClicked () {
     shell.openExternal('https://github.com/hackjutsu/Lepton/releases')
-    this.dismissAlert()
+    this.dismissUpdateAlert()
   }
 
   handleSkipClicked () {
-    localStorage.setItem('skipped-version', this.props.newVersionInfo.version)
-    this.dismissAlert()
+    const { newVersionInfo } = this.props
+    localStorage.setItem('skipped-version', newVersionInfo.version)
+    this.dismissUpdateAlert()
+  }
+
+  renderUpdateAlert () {
+    const { updateAvailableBarStatus, newVersionInfo } = this.props
+    return (
+      <div>
+        { updateAvailableBarStatus === 'ON'
+              ? <Alert bsStyle="warning" onDismiss={ this.dismissUpdateAlert.bind(this) }>
+                  { `New version ${newVersionInfo.version} is available!  ` }
+                  <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
+                  { newVersionInfo.url
+                        ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#release</a>
+                        : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#download</a> }
+                  { newVersionInfo.url
+                        ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>#download</a>
+                        : null }
+                </Alert>
+              : null }
+      </div>
+    )
   }
 
   renderActiveNormalSection () {
-    let {
+    const {
         updateLocalStorage,
         updateActiveGistAfterClicked,
         reSyncUserGists,
-        searchWindowStatus,
-        updateAvailableBarStatus,
-        searchIndex,
-        newVersionInfo } = this.props
+        searchIndex } = this.props
 
     return (
       <div>
         { this.renderSearchPage() }
-        { updateAvailableBarStatus === 'ON'
-          ? <Alert bsStyle="warning" onDismiss={ this.dismissAlert.bind(this) }>
-              { `New version ${newVersionInfo.version} is available!  ` }
-              <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
-              { newVersionInfo.url
-                ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#release</a>
-                : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#download</a> }
-              { newVersionInfo.url
-                ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>#download</a>
-                : null }
-            </Alert>
-          : null }
+        { this.renderUpdateAlert() }
         <NavigationPanel
           searchIndex = { searchIndex }
           updateLocalStorage = { updateLocalStorage }
@@ -81,46 +95,41 @@ class AppContainer extends Component {
   }
 
   renderActiveImmersiveSection () {
-    let {
-        updateLocalStorage,
-        updateActiveGistAfterClicked,
-        reSyncUserGists,
-        searchWindowStatus,
-        updateAvailableBarStatus,
-        searchIndex,
-        newVersionInfo } = this.props
+    const { searchIndex, reSyncUserGists } = this.props
+    return (
+      <SnippetTable
+        searchIndex = { searchIndex }
+        reSyncUserGists = { reSyncUserGists } />
+    )
+  }
 
+  renderActiveSection () {
+    const { immersiveMode } = this.props
     return (
       <div>
-        <SnippetTable
-          searchIndex = { searchIndex }
-          reSyncUserGists = { reSyncUserGists } />
+        { immersiveMode === 'ON'
+              ? this.renderActiveImmersiveSection()
+              : this.renderActiveNormalSection() }
       </div>
     )
   }
 
+  renderInactiveSection () {
+    const { getLoggedInUserInfo, launchAuthWindow } = this.props
+    return (
+      <LoginPage
+        getLoggedInUserInfo = { getLoggedInUserInfo }
+        launchAuthWindow = { launchAuthWindow } />
+    )
+  }
+
   render () {
-    let {
-        userSession,
-        getLoggedInUserInfo,
-        launchAuthWindow,
-        immersiveMode } = this.props
-
-    if (userSession.activeStatus === 'ACTIVE') {
-      return (
-        <div className='app-container'>
-          { immersiveMode === 'ON'
-              ? this.renderActiveImmersiveSection()
-              : this.renderActiveNormalSection() }
-        </div>
-      )
-    }
-
+    const { userSession } = this.props
     return (
       <div className='app-container'>
-        <LoginPage
-          getLoggedInUserInfo = { getLoggedInUserInfo }
-          launchAuthWindow = { launchAuthWindow }/>
+        { userSession.activeStatus === 'ACTIVE'
+              ? this.renderActiveSection()
+              : this.renderInactiveSection() }
       </div>
     )
   }

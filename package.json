@@ -66,6 +66,7 @@
     "react-bootstrap": "^0.30.7",
     "react-dom": "^15.4.1",
     "react-redux": "^5.0.1",
+    "react-split-pane": "^0.1.57",
     "redux": "^3.6.0",
     "redux-form": "^6.4.3",
     "redux-thunk": "^2.1.0",
@@ -76,14 +77,18 @@
   "build": {
     "appId": "com.cosmox.lepton",
     "mac": {
-      "category": "public.app-category.education",
-      "publish": ["github"]
+      "category": "public.app-category.productivity",
+      "publish": [
+        "github"
+      ]
     },
     "win": {
       "title": "Lepton",
       "author": "CosmoX",
       "target": "nsis",
-      "publish": ["github"]
+      "publish": [
+        "github"
+      ]
     },
     "nsis": {
       "oneClick": false,
@@ -91,7 +96,9 @@
     },
     "linux": {
       "target": "AppImage",
-      "publish": ["github"]
+      "publish": [
+        "github"
+      ]
     }
   }
 }
