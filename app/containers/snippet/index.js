@@ -343,6 +343,7 @@ class Snippet extends Component {
 
     language = language === 'Shell' ? 'Bash' : language
     language = language.startsWith('Objective-C') ? 'objectivec' : language
+    language = language === 'C#' ? 'cs' : language
 
     let htmlContent = ''
 
