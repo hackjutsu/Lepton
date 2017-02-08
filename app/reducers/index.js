@@ -15,6 +15,7 @@ import SearchWindowStatusReducer from './reducer_search_window_status'
 import UpdateAvailableBarStatusReducer from './reducer_update_available_bar_status'
 import NewVersionInfoReducer from './reducer_new_version_info'
 import ImmersiveModeReducer from './reducer_immersive_mode'
+import LogoutModalStatusReducer from './reducer_logout_modal';
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -30,7 +31,8 @@ const rootReducer = combineReducers({
   searchWindowStatus: SearchWindowStatusReducer,
   updateAvailableBarStatus: UpdateAvailableBarStatusReducer,
   newVersionInfo: NewVersionInfoReducer,
-  immersiveMode: ImmersiveModeReducer
+  immersiveMode: ImmersiveModeReducer,
+  logoutModalStatus: LogoutModalStatusReducer
 })
 
 export default rootReducer
