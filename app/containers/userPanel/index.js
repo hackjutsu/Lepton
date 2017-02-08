@@ -21,6 +21,7 @@ import {
   updateGistTags,
   selectGistTag,
   selectGist,
+  updateGistNewModeStatus,
   updateLogoutModalStatus } from '../../actions/index'
 
 import {
@@ -33,27 +34,14 @@ const logger = remote.getGlobal('logger')
 
 class UserPanel extends Component {
 
-  constructor (props) {
-    super(props)
-    this.state = {
-      showGistEditorModal: false
-    }
-  }
-
   componentWillMount () {
-    ipcRenderer.on('new-gist', () => {
+    ipcRenderer.on('new-gist-renderer', () => {
       this.handleNewGistClicked()
     })
   }
 
   componentWillUnmount () {
-    ipcRenderer.removeAllListeners('new-gist')
-  }
-
-  closeGistEditorModal () {
-    this.setState({
-      showGistEditorModal: false
-    })
+    ipcRenderer.removeAllListeners('new-gist-renderer')
   }
 
   handleCreateSingleGist (data) {
@@ -170,7 +158,7 @@ class UserPanel extends Component {
       <Modal
         bsSize="large"
         dialogClassName="new-modal"
-        show={ this.state.showGistEditorModal }
+        show={ this.props.gistNewModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>New Gist</Modal.Title>
@@ -213,9 +201,11 @@ class UserPanel extends Component {
   }
 
   handleNewGistClicked () {
-    this.setState({
-      showGistEditorModal: true
-    })
+    this.props.updateGistNewModeStatus('ON')
+  }
+
+  closeGistEditorModal () {
+    this.props.updateGistNewModeStatus('OFF')
   }
 
   handleSyncClicked () {
@@ -261,9 +251,9 @@ class UserPanel extends Component {
   }
 
   renderLogoutConfirmationModal () {
-      return (
+    return (
         <div className="static-modal">
-          <Modal show={ this.props.logoutModalStatus == 'ON' } bsSize="small">
+          <Modal show={ this.props.logoutModalStatus === 'ON' } bsSize="small">
             <Modal.Header>
               <Modal.Title>Confirm logout?</Modal.Title>
             </Modal.Header>
@@ -275,8 +265,8 @@ class UserPanel extends Component {
             </Modal.Footer>
           </Modal>
         </div>
-      )
-    }
+    )
+  }
 
   render () {
     return (
@@ -301,7 +291,8 @@ function mapStateToProps (state) {
     accessToken: state.accessToken,
     gistTags: state.gistTags,
     gistSyncStatus: state.gistSyncStatus,
-    logoutModalStatus: state.logoutModalStatus
+    logoutModalStatus: state.logoutModalStatus,
+    gistNewModalStatus: state.gistNewModalStatus
   }
 }
 
@@ -312,6 +303,7 @@ function mapDispatchToProps (dispatch) {
     updateGistTags: updateGistTags,
     selectGistTag: selectGistTag,
     selectGist: selectGist,
+    updateGistNewModeStatus: updateGistNewModeStatus,
     updateLogoutModalStatus: updateLogoutModalStatus
   }, dispatch)
 }

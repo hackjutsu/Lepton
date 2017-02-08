@@ -18,6 +18,9 @@ import {
 
 import {
   updateSingleGist,
+  updateGistRawModal,
+  updateGistEditModeStatus,
+  updateGistDeleteModeStatus,
   selectGistTag,
   updateGistTags } from '../../actions/index'
 
@@ -41,27 +44,12 @@ Markdown.setOptions({
 
 class Snippet extends Component {
 
-  constructor (props) {
-    super(props)
-    this.state = {
-      showDeleteModal: false,
-      showGistEditorModal: false,
-      showRawModal: false,
-      rawFile: null,
-      rawContent: null
-    }
-  }
-
   showDeleteModal () {
-    this.setState({
-      showDeleteModal: true
-    })
+    this.props.updateGistDeleteModeStatus('ON')
   }
 
   closeDeleteModal () {
-    this.setState({
-      showDeleteModal: false
-    })
+    this.props.updateGistDeleteModeStatus('OFF')
   }
 
   handleDeleteClicked () {
@@ -92,7 +80,7 @@ class Snippet extends Component {
   renderDeleteModal () {
     return (
       <div className="static-modal">
-        <Modal show={ this.state.showDeleteModal } bsSize="small">
+        <Modal show={ this.props.gistDeleteModalStatus === 'ON' } bsSize="small">
           <Modal.Header>
             <Modal.Title>Delete the gist?</Modal.Title>
           </Modal.Header>
@@ -108,17 +96,11 @@ class Snippet extends Component {
   }
 
   showGistEditorModal (details) {
-    details && this.setState({
-      showGistEditorModal: true,
-      rawFile: null,
-      rawContent: null
-    })
+    details && this.props.updateGistEditModeStatus('ON')
   }
 
   closeGistEditorModal () {
-    this.setState({
-      showGistEditorModal: false
-    })
+    this.props.updateGistEditModeStatus('OFF')
   }
 
   handleGistEditorFormSubmit (data) {
@@ -290,7 +272,7 @@ class Snippet extends Component {
       <Modal
         bsSize="large"
         dialogClassName="edit-modal"
-        show={ this.state.showGistEditorModal }
+        show={ this.props.gistEditModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Edit Gist</Modal.Title>
@@ -303,32 +285,37 @@ class Snippet extends Component {
   }
 
   closeRawModal () {
-    this.setState({
-      showRawModal: false,
-      rawFile: null,
-      rawContent: null
+    this.props.updateGistRawModal({
+      status: 'OFF',
+      file: null,
+      content: null
     })
   }
 
   showRawModalModal (gist) {
-    this.setState({
-      showRawModal: true,
-      rawFile: gist.filename,
-      rawContent: gist.content
+    this.props.updateGistRawModal({
+      status: 'ON',
+      file: gist.filename,
+      content: gist.content
     })
   }
 
   renderRawModal () {
+    const { gistRawModal } = this.props
     return (
       <Modal
         className='raw-modal'
-        show={ this.state.showRawModal }
+        show={ gistRawModal.status === 'ON' }
         onHide={ this.closeRawModal.bind(this) }>
         <Modal.Header closeButton>
-          <Modal.Title>{ this.state.rawFile }</Modal.Title>
+          <Modal.Title>{ gistRawModal.file }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <textarea ref="rawModalText" className='code-area-raw' defaultValue={ this.state.rawContent } onDoubleClick={ this.selectText.bind(this) } />
+          <textarea
+              ref="rawModalText"
+              className='code-area-raw'
+              defaultValue={ gistRawModal.content }
+              onDoubleClick={ this.selectText.bind(this) } />
         </Modal.Body>
       </Modal>
     )
@@ -351,7 +338,8 @@ class Snippet extends Component {
       htmlContent = `<div class='markdown-section'>${Markdown(content)}</div>`
     } else {
       let line = 0
-      let html = `<span class='line-number' data-pseudo-content=${++line}></span>` + HighlightJS.highlightAuto(content, [language, 'css']).value
+      let html = `<span class='line-number' data-pseudo-content=${++line}></span>` +
+          HighlightJS.highlightAuto(content, [language, 'css']).value
       let htmlWithLineNumbers = html.replace(/\r?\n/g, () => {
         return `\n<span class='line-number' data-pseudo-content=${++line}></span>`
       })
@@ -481,7 +469,10 @@ function mapStateToProps (state) {
     userSession: state.userSession,
     accessToken: state.accessToken,
     gistTags: state.gistTags,
-    immersiveMode: state.immersiveMode
+    immersiveMode: state.immersiveMode,
+    gistRawModal: state.gistRawModal,
+    gistEditModalStatus: state.gistEditModalStatus,
+    gistDeleteModalStatus: state.gistDeleteModalStatus
   }
 }
 
@@ -489,7 +480,10 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     updateSingleGist: updateSingleGist,
     updateGistTags: updateGistTags,
-    selectGistTag: selectGistTag
+    selectGistTag: selectGistTag,
+    updateGistEditModeStatus: updateGistEditModeStatus,
+    updateGistDeleteModeStatus: updateGistDeleteModeStatus,
+    updateGistRawModal: updateGistRawModal
   }, dispatch)
 }
 

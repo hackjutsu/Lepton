@@ -22,6 +22,38 @@ export const UPDATE_UPDATEAVAILABLEBAR_STATUS = 'UPDATE_UPDATEAVAILABLEBAR_STATU
 export const UPDATE_NEW_VERSION_INFO = 'UPDATE_NEW_VERSION_INFO'
 export const UPDATE_IMMERSIVE_MODE_STATUS = 'UPDATE_IMMERSIVE_MODE_STATUS'
 export const UPDATE_LOGOUT_MODAL_STATUS = 'UPDATE_LOGOUT_MODAL_STATUS'
+export const UPDATE_GIST_RAW_MODAL = 'UPDATE_GIST_RAW_MODAL'
+export const UPDATE_GIST_EDIT_MODAL = 'UPDATE_GIST_EDIT_MODAL'
+export const UPDATE_GIST_NEW_MODAL = 'UPDATE_GIST_NEW_MODAL'
+export const UPDATE_GIST_DELETE_MODAL_STATUS = 'UPDATE_GIST_DELETE_MODAL_STATUS'
+
+export function updateGistDeleteModeStatus (status) {
+  return {
+    type: UPDATE_GIST_DELETE_MODAL_STATUS,
+    payload: status
+  }
+}
+
+export function updateGistEditModeStatus (status) {
+  return {
+    type: UPDATE_GIST_EDIT_MODAL,
+    payload: status
+  }
+}
+
+export function updateGistNewModeStatus (status) {
+  return {
+    type: UPDATE_GIST_NEW_MODAL,
+    payload: status
+  }
+}
+
+export function updateGistRawModal (modalInfo) {
+  return {
+    type: UPDATE_GIST_RAW_MODAL,
+    payload: modalInfo
+  }
+}
 
 export function updateImmersiveModeStatus (status) {
   return {
@@ -135,10 +167,10 @@ export function selectGist (id) {
   }
 }
 
-export function updateLogoutModalStatus (newStatus) {
+export function updateLogoutModalStatus (status) {
   return {
     type: UPDATE_LOGOUT_MODAL_STATUS,
-    payload: newStatus
+    payload: status
   }
 }
 

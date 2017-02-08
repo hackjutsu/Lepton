@@ -1,13 +1,13 @@
 'use strict'
 
-import { UPDATE_LOGOUT_MODAL_STATUS } from '../actions/index'
+import { UPDATE_GIST_NEW_MODAL } from '../actions'
 
 export default function (state = 'OFF', action) {
   switch (action.type) {
-    case UPDATE_LOGOUT_MODAL_STATUS:
+    case UPDATE_GIST_NEW_MODAL:
       return action.payload
-
     default:
-      return state
   }
+
+  return state
 }

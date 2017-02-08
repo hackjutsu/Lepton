@@ -15,7 +15,11 @@ import SearchWindowStatusReducer from './reducer_search_window_status'
 import UpdateAvailableBarStatusReducer from './reducer_update_available_bar_status'
 import NewVersionInfoReducer from './reducer_new_version_info'
 import ImmersiveModeReducer from './reducer_immersive_mode'
-import LogoutModalStatusReducer from './reducer_logout_modal';
+import LogoutModalStatusReducer from './reducer_logout_modal'
+import GistRawModalReducer from './reducer_gist_raw_modal'
+import GistEditModalReducer from './reducer_gist_edit_modal'
+import GistNewModalReducer from './reducer_gist_new_modal'
+import GistDeleteModalReducer from './reducer_gist_delete_modal'
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -32,7 +36,11 @@ const rootReducer = combineReducers({
   updateAvailableBarStatus: UpdateAvailableBarStatusReducer,
   newVersionInfo: NewVersionInfoReducer,
   immersiveMode: ImmersiveModeReducer,
-  logoutModalStatus: LogoutModalStatusReducer
+  logoutModalStatus: LogoutModalStatusReducer,
+  gistRawModal: GistRawModalReducer,
+  gistEditModalStatus: GistEditModalReducer,
+  gistNewModalStatus: GistNewModalReducer,
+  gistDeleteModalStatus: GistDeleteModalReducer
 })
 
 export default rootReducer

@@ -417,34 +417,97 @@ function getLoggedInUserInfo () {
 /** End: Local storage management **/
 
 /** Start: Response to main process events **/
-ipcRenderer.on('search-gist', data => {
-  let state = reduxStore.getState()
-  let immersiveMode = state.immersiveMode
+function allDialogsClosed (dialogs) {
+  let status = true
+  dialogs.forEach(dialog => {
+    if (dialog !== 'OFF') status = false
+  })
+  return status
+}
 
-  if (immersiveMode === 'OFF') {
-    let preStatus = state.searchWindowStatus
-    let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
+ipcRenderer.on('search-gist', data => {
+  const state = reduxStore.getState()
+  const {
+      immersiveMode,
+      gistRawModal,
+      searchWindowStatus,
+      gistEditModalStatus,
+      gistNewModalStatus,
+      gistDeleteModalStatus,
+      logoutModalStatus } = state
+
+  const dialogs = [
+      immersiveMode,
+      gistRawModal.status,
+      gistEditModalStatus,
+      gistNewModalStatus,
+      gistDeleteModalStatus,
+      logoutModalStatus]
+  if (allDialogsClosed(dialogs)) {
+    const preStatus = searchWindowStatus
+    const newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
     reduxStore.dispatch(updateSearchWindowStatus(newStatus))
   }
 })
 
-ipcRenderer.on('immersive-mode', data => {
-  let state = reduxStore.getState()
-  let searchWindowStatus = state.searchWindowStatus
+ipcRenderer.on('new-gist', data => {
+  const state = reduxStore.getState()
+  const {
+      immersiveMode,
+      gistRawModal,
+      searchWindowStatus,
+      gistEditModalStatus,
+      gistDeleteModalStatus,
+      logoutModalStatus } = state
 
-  if (searchWindowStatus === 'OFF') {
-    let preStatus = state.immersiveMode
-    let newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
+  const dialogs = [
+      immersiveMode,
+      gistRawModal.status,
+      searchWindowStatus,
+      gistEditModalStatus,
+      gistDeleteModalStatus,
+      logoutModalStatus]
+  if (allDialogsClosed(dialogs)) {
+    ipcRenderer.emit('new-gist-renderer')
+  }
+})
+
+ipcRenderer.on('immersive-mode', data => {
+  const state = reduxStore.getState()
+  const {
+      searchWindowStatus,
+      immersiveMode,
+      gistRawModal,
+      gistEditModalStatus,
+      gistNewModalStatus,
+      gistDeleteModalStatus,
+      logoutModalStatus } = state
+
+  const dialogs = [
+      searchWindowStatus,
+      gistRawModal.status,
+      gistEditModalStatus,
+      gistNewModalStatus,
+      gistDeleteModalStatus,
+      logoutModalStatus]
+  if (allDialogsClosed(dialogs)) {
+    const preStatus = immersiveMode
+    const newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
     reduxStore.dispatch(updateImmersiveModeStatus(newStatus))
   }
 })
 
 ipcRenderer.on('exit-immersive-mode', data => {
-  reduxStore.dispatch(updateImmersiveModeStatus('OFF'))
+  const state = reduxStore.getState()
+  const { gistRawModal, gistEditModalStatus } = state
+
+  const dialogs = [gistRawModal.status, gistEditModalStatus]
+  if (allDialogsClosed(dialogs)) {
+    reduxStore.dispatch(updateImmersiveModeStatus('OFF'))
+  }
 })
 
 ipcRenderer.on('update-available', payload => {
-  logger.debug('The renderer process receives update-available signal from the main process')
   const newVersionInfo = remote.getGlobal('newVersionInfo')
   if (localStorage.getItem('skipped-version') === newVersionInfo.version) return
 
