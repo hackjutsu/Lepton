@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Image, Modal, ProgressBar } from 'react-bootstrap'
+import { Image, Modal, Button, ProgressBar } from 'react-bootstrap'
 import GistEditorForm from '../gistEditorForm'
 import { NEW_GIST } from '../gistEditorForm'
 import HumanReadableTime from 'human-readable-time'
@@ -20,7 +20,8 @@ import {
   updateSingleGist,
   updateGistTags,
   selectGistTag,
-  selectGist } from '../../actions/index'
+  selectGist,
+  updateLogoutModalStatus } from '../../actions/index'
 
 import {
   getGitHubApi,
@@ -208,14 +209,7 @@ class UserPanel extends Component {
   }
 
   handleLogoutClicked () {
-    logger.info('[Dispatch] logoutUserSession')
-    this.props.logoutUserSession()
-    this.props.updateLocalStorage({
-      token: null,
-      profile: null,
-      image: null
-    })
-    removeAccessToken()
+    this.props.updateLogoutModalStatus('ON')
   }
 
   handleNewGistClicked () {
@@ -231,6 +225,22 @@ class UserPanel extends Component {
   handleProfileImageClicked () {
     logger.debug('profile image is clicked!! ' + this.props.userSession.profile.html_url)
     shell.openExternal(this.props.userSession.profile.html_url)
+  }
+
+  handleLogoutModalCancelClicked () {
+    this.props.updateLogoutModalStatus('OFF')
+  }
+
+  handleLogoutModalConfirmClicked () {
+    logger.info('[Dispatch] logoutUserSession')
+    this.props.updateLogoutModalStatus('OFF')
+    this.props.logoutUserSession()
+    this.props.updateLocalStorage({
+      token: null,
+      profile: null,
+      image: null
+    })
+    removeAccessToken()
   }
 
   renderProfile () {
@@ -250,6 +260,24 @@ class UserPanel extends Component {
     )
   }
 
+  renderLogoutConfirmationModal () {
+      return (
+        <div className="static-modal">
+          <Modal show={ this.props.logoutModalStatus == 'ON' } bsSize="small">
+            <Modal.Header>
+              <Modal.Title>Confirm logout?</Modal.Title>
+            </Modal.Header>
+            <Modal.Footer>
+              <Button onClick={ this.handleLogoutModalCancelClicked.bind(this) }>cancel</Button>
+              <Button
+                bsStyle="danger"
+                onClick={ this.handleLogoutModalConfirmClicked.bind(this) }>logout</Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      )
+    }
+
   render () {
     return (
       <div className='user-panel'>
@@ -260,6 +288,7 @@ class UserPanel extends Component {
               : null }
         </div>
         { this.renderInSection() }
+        { this.renderLogoutConfirmationModal() }
       </div>
     )
   }
@@ -271,7 +300,8 @@ function mapStateToProps (state) {
     syncTime: state.syncTime,
     accessToken: state.accessToken,
     gistTags: state.gistTags,
-    gistSyncStatus: state.gistSyncStatus
+    gistSyncStatus: state.gistSyncStatus,
+    logoutModalStatus: state.logoutModalStatus
   }
 }
 
@@ -281,7 +311,8 @@ function mapDispatchToProps (dispatch) {
     updateSingleGist: updateSingleGist,
     updateGistTags: updateGistTags,
     selectGistTag: selectGistTag,
-    selectGist: selectGist
+    selectGist: selectGist,
+    updateLogoutModalStatus: updateLogoutModalStatus
   }, dispatch)
 }
 

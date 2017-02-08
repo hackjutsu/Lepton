@@ -21,6 +21,7 @@ export const UPDATE_SEARCHWINDOW_STATUS = 'UPDATE_SEARCHWINDOW_STATUS'
 export const UPDATE_UPDATEAVAILABLEBAR_STATUS = 'UPDATE_UPDATEAVAILABLEBAR_STATUS'
 export const UPDATE_NEW_VERSION_INFO = 'UPDATE_NEW_VERSION_INFO'
 export const UPDATE_IMMERSIVE_MODE_STATUS = 'UPDATE_IMMERSIVE_MODE_STATUS'
+export const UPDATE_LOGOUT_MODAL_STATUS = 'UPDATE_LOGOUT_MODAL_STATUS'
 
 export function updateImmersiveModeStatus (status) {
   return {
@@ -131,6 +132,13 @@ export function selectGist (id) {
   return {
     type: SELECT_GIST,
     payload: id
+  }
+}
+
+export function updateLogoutModalStatus (newStatus) {
+  return {
+    type: UPDATE_LOGOUT_MODAL_STATUS,
+    payload: newStatus
   }
 }
 
