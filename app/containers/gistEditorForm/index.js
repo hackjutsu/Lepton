@@ -1,6 +1,42 @@
 import React, { Component } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
 import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
+import CodeMirror from 'react-codemirror'
+// TODO: Is there any better method to include these js?
+import 'codemirror/addon/comment/comment'
+import 'codemirror/addon/comment/continuecomment'
+import 'codemirror/addon/dialog/dialog'
+import 'codemirror/addon/display/fullscreen'
+import 'codemirror/addon/display/placeholder'
+import 'codemirror/addon/display/rulers'
+import 'codemirror/addon/edit/closebrackets'
+import 'codemirror/addon/edit/closetag'
+import 'codemirror/addon/edit/continuelist'
+import 'codemirror/addon/edit/matchbrackets'
+import 'codemirror/addon/edit/matchtags'
+import 'codemirror/addon/edit/trailingspace'
+import 'codemirror/addon/fold/brace-fold'
+import 'codemirror/addon/fold/comment-fold'
+import 'codemirror/addon/fold/foldcode'
+import 'codemirror/addon/fold/foldgutter'
+import 'codemirror/addon/fold/indent-fold'
+import 'codemirror/addon/fold/markdown-fold'
+import 'codemirror/addon/fold/xml-fold'
+import 'codemirror/addon/hint/anyword-hint'
+import 'codemirror/addon/hint/show-hint'
+import 'codemirror/addon/lint/lint'
+import 'codemirror/addon/mode/loadmode'
+import 'codemirror/addon/mode/overlay'
+import 'codemirror/addon/runmode/colorize'
+import 'codemirror/addon/search/search'
+import 'codemirror/addon/search/searchcursor'
+import 'codemirror/addon/selection/active-line'
+import 'codemirror/addon/selection/mark-selection'
+import 'codemirror/addon/tern/tern'
+import 'codemirror/addon/wrap/hardwrap'
+import 'codemirror/mode/markdown/markdown'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/keymap/sublime'
 
 import './index.scss'
 
@@ -69,7 +105,29 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
 
 const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning } }) => (
   <div>
-    <textarea className='gist-editor-content-area' { ...input } type={ type } placeholder={ placeholder }/>
+    <CodeMirror
+      options={{
+        mode: 'markdown',
+        lineNumbers: true,
+        lineWrapping: true,
+        matchBrackets: true,
+        autoCloseBrackets: true,
+        showTrailingSpace: true,
+        foldGutter: true,
+        extraKeys: {
+          "Ctrl-Q": function(cm){
+            cm.foldCode(cm.getCursor());
+          },
+          "F11": function(cm) {
+            cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+          },
+          "Esc": function(cm) {
+            if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+          }
+        },
+        gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+      }}
+      { ...input } type={ type } placeholder={ placeholder } />
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>
