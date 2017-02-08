@@ -1,14 +1,19 @@
-.panel-details {
+.panel-thumnails-scroll {
   margin: 5px;
   float: left;
   width: 100%;
   overflow: auto;
   height: 95vh;
   background: rgba(0,0,0,0.015);
-  border-radius: 5px;
+  visibility: hidden;
 }
 
-.panel-details {
+.panel-thumnails-content,
+.panel-thumnails-scroll:hover {
+  visibility: visible;
+}
+
+.panel-thumnails-scroll {
 
   .font-style-base {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;

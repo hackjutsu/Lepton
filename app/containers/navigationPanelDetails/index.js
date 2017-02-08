@@ -1,11 +1,12 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { selectGist, fetchSingleGist } from '../../actions'
 import { descriptionParser } from '../../utilities/parser'
+
 import './index.scss'
 
 import { remote } from 'electron'
@@ -14,7 +15,7 @@ const logger = remote.getGlobal('logger')
 class NavigationPanelDetails extends Component {
 
   handleClicked (gistId) {
-    let { gists, fetchSingleGist, selectGist } = this.props
+    const { gists, fetchSingleGist, selectGist } = this.props
 
     logger.info('A new gist is selected: ' + gistId)
     if (!gists[gistId].details) {
@@ -37,11 +38,8 @@ class NavigationPanelDetails extends Component {
   }
 
   renderSnippetThumbnails () {
-    let gists = this.props.gists
-    let gistTags = this.props.gistTags
-    let activeGistTag = this.props.activeGistTag
-
-    let snippetThumbnails = []
+    const { gists, gistTags, activeGistTag } = this.props
+    const snippetThumbnails = []
 
     // When user has no gists, the default active language tag will be 'All' with
     // an empty array.
@@ -62,14 +60,14 @@ class NavigationPanelDetails extends Component {
         // pick up "Apple is delicious" as the title. If no brackets are found,
         // it shows to the original description. It provides users the flexibility
         // to decide what to be shown in the thumbnail.
-        let gist = gists[gistId]
-        let firstFilename = Object.keys(gist.brief.files)[0]
+        const gist = gists[gistId]
+        const firstFilename = Object.keys(gist.brief.files)[0]
         // '' will be converted to false, so this statement can handle situations
         // for null, '' and undefined
-        let rawDescription = gist.brief.description || firstFilename
+        const rawDescription = gist.brief.description || firstFilename
 
-        let { title, description } = descriptionParser(rawDescription)
-        let thumbnailTitle = title.length > 0 ? title : description
+        const { title, description } = descriptionParser(rawDescription)
+        const thumbnailTitle = title.length > 0 ? title : description
         snippetThumbnails.push(
           <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>
             <div className={ this.decideSnippetListItemClass(gistId) }
@@ -86,10 +84,12 @@ class NavigationPanelDetails extends Component {
 
   render () {
     return (
-      <div className='panel-details'>
-        <ListGroup>
-          { this.renderSnippetThumbnails() }
-        </ListGroup>
+      <div className='panel-thumnails-scroll'>
+        <div className='panel-thumnails-content'>
+          <ListGroup>
+            { this.renderSnippetThumbnails() }
+          </ListGroup>
+        </div>
       </div>
     )
   }

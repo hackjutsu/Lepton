@@ -1,12 +1,13 @@
-.snippet-table {
+.snippet-panel {
   float: right;
   width: 100%;
   overflow: auto;
   height: 97vh;
+  visibility: hidden;
 }
 
-.snippet-table-immersive {
-  @extend .snippet-table;
+.snippet-panel-immersive {
+  @extend .snippet-panel;
   width: 100%;
 
   .font-style-base {
@@ -22,7 +23,13 @@
   }
 }
 
-.snippet-table {
+.snippet-panel-content,
+.snippet-panel:hover,
+.snippet-panel-immersive:hover {
+  visibility: visible;
+}
+
+.snippet-panel {
   .font-style-base {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
     font-size: 13px;

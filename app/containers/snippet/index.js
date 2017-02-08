@@ -48,8 +48,7 @@ class Snippet extends Component {
       showGistEditorModal: false,
       showRawModal: false,
       rawFile: null,
-      rawContent: null,
-      files: null
+      rawContent: null
     }
   }
 

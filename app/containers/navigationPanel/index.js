@@ -1,11 +1,10 @@
 'use strict'
 
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import UserPanel from '../userPanel'
 import { selectGistTag, selectGist, fetchSingleGist } from '../../actions/index'
-import { bindActionCreators } from 'redux'
-
 import { parseLangName as Resolved } from '../../utilities/parser'
 
 import './index.scss'
@@ -13,14 +12,14 @@ import './index.scss'
 class NavigationPanel extends Component {
 
   handleClicked (key) {
-    this.props.selectGistTag(key)
-    this.props.updateActiveGistAfterClicked(this.props.gists, this.props.gistTags, key)
+    const { selectGistTag, updateActiveGistAfterClicked, gists, gistTags } = this.props
+    selectGistTag(key)
+    updateActiveGistAfterClicked(gists, gistTags, key)
   }
 
   renderLangTags () {
-    let gistTags = this.props.gistTags
-    let activeGistTag = this.props.activeGistTag
-    let langTagList = []
+    const { gistTags, activeGistTag } = this.props
+    const langTagList = []
 
     Object.keys(gistTags)
     .filter(tag => {
@@ -42,9 +41,8 @@ class NavigationPanel extends Component {
   } // renderLangTags()
 
   renderCustomTags () {
-    let gistTags = this.props.gistTags
-    let activeGistTag = this.props.activeGistTag
-    let customTagList = []
+    const { gistTags, activeGistTag } = this.props
+    const customTagList = []
 
     Object.keys(gistTags)
     .filter(tag => {
@@ -72,19 +70,23 @@ class NavigationPanel extends Component {
 
     return (
       <div className='gist-tag-section'>
-        <div className='lang-tag-section'>
-          { this.renderLangTags() }
+        <div className='lang-tag-section-scroll'>
+          <div className='lang-tag-section-content'>
+            { this.renderLangTags() }
+          </div>
         </div>
         <hr/>
-        <div className='custom-tag-section'>
-          { this.renderCustomTags() }
+        <div className='custom-tag-section-scroll'>
+          <div className='lang-tag-section-content'>
+            { this.renderCustomTags() }
+          </div>
         </div>
       </div>
     )
   }
 
   render () {
-    let {
+    const {
       searchIndex,
       updateLocalStorage,
       getLoggedInUserInfo,

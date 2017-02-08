@@ -9,7 +9,7 @@ import SplitPane from 'react-split-pane'
 import NavigationPanelDetails from '../navigationPanelDetails'
 import NavigationPanel from '../navigationPanel'
 import LoginPage from '../loginPage'
-import SnippetTable from '../snippetTable'
+import SnippetPanel from '../snippetPanel'
 import SearchPage from '../searchPage'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
 
@@ -88,7 +88,7 @@ class AppContainer extends Component {
             reSyncUserGists = { reSyncUserGists } />
         <SplitPane split='vertical' minSize={150} maxSize={300} defaultSize={200}>
           <NavigationPanelDetails />
-          <SnippetTable
+          <SnippetPanel
               searchIndex = { searchIndex }
               reSyncUserGists = { reSyncUserGists } />
         </SplitPane>
@@ -99,7 +99,7 @@ class AppContainer extends Component {
   renderActiveImmersiveSection () {
     const { searchIndex, reSyncUserGists } = this.props
     return (
-      <SnippetTable
+      <SnippetPanel
         searchIndex = { searchIndex }
         reSyncUserGists = { reSyncUserGists } />
     )
