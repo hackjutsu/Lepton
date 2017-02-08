@@ -104,11 +104,11 @@ class Snippet extends Component {
   }
 
   handleGistEditorFormSubmit (data) {
-    const description = data.description
+    const description = data.description.trim()
     const processedFiles = {}
 
     data.gistFiles.forEach((file) => {
-      processedFiles[file.filename] = {
+      processedFiles[file.filename.trim()] = {
         content: file.content
       }
     })
