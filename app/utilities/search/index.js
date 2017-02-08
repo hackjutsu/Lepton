@@ -41,7 +41,10 @@ function updateFuseIndex (item) {
 }
 
 function fuseSearch (pattern) {
-  return fuse.search(pattern.trim() || '')
+  const trimmedPattern = pattern.trim()
+  if (!trimmedPattern || trimmedPattern.length <= 1) return []
+
+  return fuse.search(trimmedPattern)
 }
 
 module.exports = {
