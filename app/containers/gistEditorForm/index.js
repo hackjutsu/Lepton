@@ -61,7 +61,7 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
       className='gist-editor-input-area'
       { ...input }
       type={ type }
-      placeholder='Gist description...'/>
+      placeholder='[title] gist description #tags: tag1, tag2'/>
       { touched && ((error && <span className='error-msg'>{ error }</span>) ||
         (warning && <span className='error-msg'>{ warning }</span>)) }
   </div>
@@ -82,7 +82,7 @@ function renderGistFileHeader (member, fields, index) {
           name={ `${member}.filename` }
           type='text'
           component={ renderTitleInputField }
-          placeholder='File name... (e.g. snippet.js)'
+          placeholder='file name... (e.g. snippet.js)'
           validate={ required }/>
         <a href='#'
           className={ index === 0 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
