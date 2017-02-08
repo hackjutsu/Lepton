@@ -11,7 +11,7 @@ import './index.scss'
 class LoginPage extends Component {
 
   componentWillMount () {
-    let loggedInUserInfo = this.props.getLoggedInUserInfo()
+    const loggedInUserInfo = this.props.getLoggedInUserInfo()
 
     this.setState({
       loggedInUserToken: loggedInUserInfo ? loggedInUserInfo.token : null,
@@ -44,8 +44,8 @@ class LoginPage extends Component {
   }
 
   renderControlSection () {
-    let { loggedInUserName } = this.state
-    let { authWindowStatus, userSessionStatus } = this.props
+    const { loggedInUserName } = this.state
+    const { authWindowStatus, userSessionStatus } = this.props
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
@@ -93,7 +93,7 @@ class LoginPage extends Component {
   }
 
   renderLoginModalBody () {
-    let { loggedInUserName, loggedInUserImage } = this.state
+    const { loggedInUserName, loggedInUserImage } = this.state
 
     let profileImage = loggedInUserImage || defaultImage
     if (loggedInUserName === null || loggedInUserName === 'null') {

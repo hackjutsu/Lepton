@@ -33,7 +33,7 @@ function addToFuseIndex (item) {
 }
 
 function updateFuseIndex (item) {
-  let newIndex = fuseIndex.filter(gist => {
+  const newIndex = fuseIndex.filter(gist => {
     return gist.id !== item.id
   })
   newIndex.push(item)

@@ -45,24 +45,24 @@ class SearchPage extends Component {
   }
 
   selectPreGist () {
-    let { selectedIndex, searchResults } = this.state
-    selectedIndex = selectedIndex - 1
-    if (!searchResults || selectedIndex < 0) {
-      selectedIndex = searchResults.length - 1
+    const { selectedIndex, searchResults } = this.state
+    let newSelectedIndex = selectedIndex - 1
+    if (!searchResults || newSelectedIndex < 0) {
+      newSelectedIndex = searchResults.length - 1
     }
     this.setState({
-      selectedIndex: selectedIndex,
+      selectedIndex: newSelectedIndex,
     })
   }
 
   selectNextGist () {
-    let { selectedIndex, searchResults } = this.state
-    selectedIndex = selectedIndex + 1
-    if (!searchResults || selectedIndex >= searchResults.length) {
-      selectedIndex = 0
+    const { selectedIndex, searchResults } = this.state
+    let newSelectedIndex = selectedIndex + 1
+    if (!searchResults || newSelectedIndex >= searchResults.length) {
+      newSelectedIndex = 0
     }
     this.setState({
-      selectedIndex: selectedIndex,
+      selectedIndex: newSelectedIndex,
     })
   }
 
@@ -95,10 +95,10 @@ class SearchPage extends Component {
   }
 
   queryInputValue (evt) {
-    let inputValue = evt.target.value
+    const inputValue = evt.target.value
 
-    let searchIndex = this.props.searchIndex
-    let results = searchIndex.fuseSearch(inputValue)
+    const searchIndex = this.props.searchIndex
+    const results = searchIndex.fuseSearch(inputValue)
     this.setState({
       searchResults: results
     })
@@ -107,7 +107,7 @@ class SearchPage extends Component {
   renderSnippetDescription (rawDescription) {
     const { title, description } = descriptionParser(rawDescription)
 
-    let htmlForDescriptionSection = []
+    const htmlForDescriptionSection = []
     if (title.length > 0) {
       htmlForDescriptionSection.push(<div className='title-section' key='title'>{ title }</div>)
     }
@@ -136,7 +136,7 @@ class SearchPage extends Component {
       )
     }
 
-    let resultsJSXGroup = []
+    const resultsJSXGroup = []
     searchResults.forEach((gist, index) => {
       let gistDescription = gist.description
       // let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')

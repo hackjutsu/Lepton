@@ -56,9 +56,9 @@ class UserPanel extends Component {
   }
 
   handleCreateSingleGist (data) {
-    let isPublic = data.private === undefined ? true : !data.private
-    let description = data.description
-    let processedFiles = {}
+    const isPublic = data.private === undefined ? true : !data.private
+    const description = data.description
+    const processedFiles = {}
 
     data.gistFiles.forEach((file) => {
       processedFiles[file.filename] = {
@@ -80,7 +80,7 @@ class UserPanel extends Component {
   }
 
   updateGistsStoreWithNewGist (gistDetails) {
-    let {
+    const {
       gistTags,
       updateSingleGist,
       updateGistTags,
@@ -88,16 +88,16 @@ class UserPanel extends Component {
       selectGist,
       searchIndex } = this.props
 
-    let gistId = gistDetails.id
-    let files = gistDetails.files
+    const gistId = gistDetails.id
+    const files = gistDetails.files
 
     // update the language tags
-    let langs = new Set()
+    const langs = new Set()
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
-      let language = files[filename].language || 'Other'
+      const language = files[filename].language || 'Other'
       langs.add(language)
-      let prefixedLang = Prefixed(language)
+      const prefixedLang = Prefixed(language)
       if (gistTags.hasOwnProperty(prefixedLang)) {
         gistTags[prefixedLang].unshift(gistId)
       } else {
@@ -107,7 +107,7 @@ class UserPanel extends Component {
     })
 
     // update the custom tags
-    let customTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
+    const customTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
     customTags.forEach(tag => {
       if (gistTags.hasOwnProperty(tag)) {
         gistTags[tag].unshift(gistDetails.id)
@@ -117,7 +117,7 @@ class UserPanel extends Component {
       }
     })
 
-    let newGist = {}
+    const newGist = {}
     newGist[gistId] = {
       langs: langs,
       brief: gistDetails,
@@ -151,7 +151,7 @@ class UserPanel extends Component {
   }
 
   renderGistEditorModalBody () {
-    let initialData = {
+    const initialData = {
       description: '',
       gists: [
           {filename: '', content: ''}

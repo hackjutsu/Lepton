@@ -122,8 +122,8 @@ class Snippet extends Component {
   }
 
   handleGistEditorFormSubmit (data) {
-    let description = data.description
-    let processedFiles = {}
+    const description = data.description
+    const processedFiles = {}
 
     data.gistFiles.forEach((file) => {
       processedFiles[file.filename] = {
@@ -131,8 +131,8 @@ class Snippet extends Component {
       }
     })
 
-    let activeSnippet = this.props.gists[this.props.activeGist]
-    for (let preFile in activeSnippet.details.files) {
+    const activeSnippet = this.props.gists[this.props.activeGist]
+    for (const preFile in activeSnippet.details.files) {
       if (!processedFiles[preFile]) {
         processedFiles[preFile] = null
       }
@@ -164,23 +164,23 @@ class Snippet extends Component {
     const { gistTags, activeGistTag, updateSingleGist,
       updateGistTags, selectGistTag, searchIndex} = this.props
 
-    let gistId = gistDetails.id
-    let files = gistDetails.files
+    const gistId = gistDetails.id
+    const files = gistDetails.files
 
-    let activeSnippet = this.props.gists[this.props.activeGist]
-    let preLangs = activeSnippet.langs
-    let preCustomTags = parseCustomTags(descriptionParser(activeSnippet.brief.description).customTags)
+    const activeSnippet = this.props.gists[this.props.activeGist]
+    const preLangs = activeSnippet.langs
+    const preCustomTags = parseCustomTags(descriptionParser(activeSnippet.brief.description).customTags)
 
     // Adding files in an eidt could introduce some changes to the gistTags.
     // 1) if a gist has a new language, we should add the gist id to this
     // language tag, ie gistTags[language] 2) if the new language doesn't
     // exist, we should add the new language to gistTags.
-    let newLangs = new Set()
+    const newLangs = new Set()
     Object.keys(files).forEach(filename => {
-      let file = files[filename]
-      let language = file.language || 'Other'
+      const file = files[filename]
+      const language = file.language || 'Other'
       newLangs.add(language)
-      let prefixedLang = Prefixed(language)
+      const prefixedLang = Prefixed(language)
       if (gistTags.hasOwnProperty(prefixedLang)) {
         if (!gistTags[prefixedLang].includes(gistId)) {
           gistTags[prefixedLang].unshift(gistId)
@@ -197,7 +197,7 @@ class Snippet extends Component {
     // this tag at all.
     preLangs.forEach(language => {
       if (!newLangs.has(language)) {
-        let prefixedLang = Prefixed(language)
+        const prefixedLang = Prefixed(language)
         gistTags[prefixedLang] = gistTags[prefixedLang].filter(value => {
           return value !== gistId
         })
@@ -208,7 +208,7 @@ class Snippet extends Component {
     })
 
     // We update the custom tags with the similar reasons mentioned above
-    let newCustomTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
+    const newCustomTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
     newCustomTags.forEach(tag => {
       if (gistTags.hasOwnProperty(tag)) {
         if (!gistTags[tag].includes(gistId)) {
@@ -231,7 +231,7 @@ class Snippet extends Component {
       }
     })
 
-    let updatedGist = {}
+    const updatedGist = {}
     updatedGist[gistId] = {
       langs: newLangs,
       brief: gistDetails,
@@ -271,7 +271,7 @@ class Snippet extends Component {
   }
 
   renderGistEditorModalBody (description, fileArray, isPrivate) {
-    let initialData = Object.assign({
+    const initialData = Object.assign({
       description: description,
       gists: fileArray,
       private: isPrivate
@@ -403,7 +403,7 @@ class Snippet extends Component {
   renderSnippetDescription (rawDescription) {
     const { title, description, customTags } = descriptionParser(rawDescription)
 
-    let htmlForDescriptionSection = []
+    const htmlForDescriptionSection = []
     if (title.length > 0) {
       htmlForDescriptionSection.push(<div className='title-section' key='title'>{ title }</div>)
     }
@@ -420,15 +420,15 @@ class Snippet extends Component {
   }
 
   render () {
-    let activeSnippet = this.props.gists[this.props.activeGist]
+    const activeSnippet = this.props.gists[this.props.activeGist]
     if (!activeSnippet) return null
 
-    let fileHtmlArray = []
-    let fileArray = []
+    const fileHtmlArray = []
+    const fileArray = []
     if (activeSnippet.details) {
-      let fileList = activeSnippet.details.files
-      for (let key in fileList) {
-        let gistFile = fileList[key]
+      const fileList = activeSnippet.details.files
+      for (const key in fileList) {
+        const gistFile = fileList[key]
         fileArray.push(Object.assign({
           filename: gistFile.filename,
           content: gistFile.content
