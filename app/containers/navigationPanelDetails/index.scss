@@ -1,10 +1,13 @@
+.panel-thumnails-background {
+  background: rgba(0,0,0,0.015);
+  height: 100%;
+}
+
 .panel-thumnails-scroll {
-  margin: 5px;
   float: left;
   width: 100%;
   overflow: auto;
   height: 95vh;
-  background: rgba(0,0,0,0.015);
   visibility: hidden;
 }
 

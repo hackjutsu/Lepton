@@ -84,11 +84,13 @@ class NavigationPanelDetails extends Component {
 
   render () {
     return (
-      <div className='panel-thumnails-scroll'>
-        <div className='panel-thumnails-content'>
-          <ListGroup>
-            { this.renderSnippetThumbnails() }
-          </ListGroup>
+      <div className='panel-thumnails-background'>
+        <div className='panel-thumnails-scroll'>
+          <div className='panel-thumnails-content'>
+            <ListGroup>
+              { this.renderSnippetThumbnails() }
+            </ListGroup>
+          </div>
         </div>
       </div>
     )
