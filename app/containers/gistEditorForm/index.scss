@@ -94,4 +94,10 @@
     font-weight: bold;
     color: #B0580E;
   }
+
+  .CodeMirror {
+    @extend .font-style-base;
+  }
 }
+
+@import '../../../node_modules/codemirror/lib/codemirror.css';

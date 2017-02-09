@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
 import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
+import CodeMirror from 'react-codemirror'
+import 'codemirror/mode/markdown/markdown'
 
 import './index.scss'
 
@@ -69,7 +71,9 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
 
 const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning } }) => (
   <div>
-    <textarea className='gist-editor-content-area' { ...input } type={ type } placeholder={ placeholder }/>
+    <CodeMirror
+      options={{ mode: "markdown", lineNumbers: "true" }}
+      { ...input } type={ type } placeholder={ placeholder } />
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>
