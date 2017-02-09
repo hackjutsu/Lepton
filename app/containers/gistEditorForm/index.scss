@@ -94,13 +94,10 @@
     font-weight: bold;
     color: #B0580E;
   }
+
+  .CodeMirror {
+    @extend .font-style-base;
+  }
 }
 
-// TODO: Is there any better method to include these css?
 @import '../../../node_modules/codemirror/lib/codemirror.css';
-@import '../../../node_modules/codemirror/addon/dialog/dialog.css';
-@import '../../../node_modules/codemirror/addon/display/fullscreen.css';
-@import '../../../node_modules/codemirror/addon/fold/foldgutter.css';
-@import '../../../node_modules/codemirror/addon/hint/show-hint.css';
-@import '../../../node_modules/codemirror/addon/lint/lint.css';
-@import '../../../node_modules/codemirror/addon/tern/tern.css';
