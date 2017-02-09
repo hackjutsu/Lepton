@@ -72,12 +72,10 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
 const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning } }) => (
   <div>
     <CodeMirror
-      options={{
-          mode: 'markdown',
-          lineNumbers: 'true' ,
-          lineWrapping: 'true',
-          scrollbarStyle: null}}
-      { ...input } type={ type } placeholder={ placeholder } />
+      options={{ lineNumbers: 'true', lineWrapping: 'true', scrollbarStyle: null }}
+      { ...input }
+      type={ type }
+      placeholder={ placeholder } />
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>

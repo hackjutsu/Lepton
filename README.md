@@ -16,13 +16,13 @@
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
-|      Organize         |   Search (*Shift + Space*) |
-| :-------------:| :-----:|
-| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/search_bar.png) |
+|      Organize         |  Markdown Rendering  | Immersive Mode (*Command/Control + i*) |
+| :-------------:| :-----:| :-----: |
+| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/immersive.png)
 
-|      Markdown Rendering         |   Custom Tags    |
-| :-------------:| :-----:|
-| ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/edit.png) |
+|      Search (*Shift + Space*)         |   Custom Tags    | GitHub Login |
+| :-------------:| :-----:| :-----: |
+| ![Screenshot](./docs/img/portfolio/search_bar.png) | ![Screenshot](./docs/img/portfolio/edit.png) | ![Screenshot](./docs/img/portfolio/oauth.png)
 
 ## Based on
 ![Based on](./docs_resource/erb-logo.png)
@@ -86,5 +86,23 @@ Build app for the current OS with the current arch.
 ```bash
 $ npm run dist
 ```
+
+## FAQ
+#### Why is my gist's language classified as "Other"?
+Lepton depends on GitHub API to detect the language. If this fails, you can put `// vim: syntax=<your_language>` at the top of the gist to specify the language.
+```
+// vim: syntax=javascript
+let test = 'This is a javascript file'
+```
+
+#### Why I can't search my gist's content?
+Currently, Lepton only supports the whole word search for the gist's description field.
+
+#### How to specify the title and tags for my gist?
+GitHub Gist doesn't come with the native support for 'title' and 'tag' in the description field. Lepton adds these support, if the format `[title] description #tags: tag1, tag2` is followed in the gist description field.
+
+#### How to provide feedback?
+Please submit an issue ticket in the [GitHub Issue page](https://github.com/hackjutsu/Lepton/issues). Or, if you like, send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
+
 ## License
 MIT © [hackjutsu](https://github.com/hackjutsu)
