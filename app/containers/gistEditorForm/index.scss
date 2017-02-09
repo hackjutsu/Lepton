@@ -97,7 +97,10 @@
 
   .CodeMirror {
     @extend .font-style-base;
-    height: 100%;
+    height: auto;
+  }
+
+  .CodeMirror-scroll {
     min-height: 400px;
   }
 }
