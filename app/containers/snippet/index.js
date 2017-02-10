@@ -292,6 +292,11 @@ class Snippet extends Component {
     })
   }
 
+  handleCopyGistFileClicked (gist) {
+    clipboard.writeText(gist.content)
+    Notifier('Copied', 'The content has been copied to the clipboard.')
+  }
+
   showRawModalModal (gist) {
     this.props.updateGistRawModal({
       status: 'ON',
@@ -432,7 +437,13 @@ class Snippet extends Component {
                 className='customized-button-file-header'
                 onClick={ this.showRawModalModal.bind(this, gistFile) }>
                 #raw
-            </a>
+              </a>
+              <a
+                href='#'
+                className='customized-button-file-header'
+                onClick={ this.handleCopyGistFileClicked.bind(this, gistFile) }>
+                #copy
+              </a>
             </div>
             <div
               className='code-area'
