@@ -16,11 +16,11 @@
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
-|      Organize         |  Markdown Rendering  | Immersive Mode (*Command/Control + i*) |
+|      Organize         |  Markdown Rendering  | Immersive Mode *(⌘/Ctrl + i)* |
 | :-------------:| :-----:| :-----: |
 | ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/immersive.png)
 
-|      Search (*Shift + Space*)         |   Custom Tags    | GitHub Login |
+|      Search (*⇧ + Space*)         |   Custom Tags    | GitHub Login |
 | :-------------:| :-----:| :-----: |
 | ![Screenshot](./docs/img/portfolio/search_bar.png) | ![Screenshot](./docs/img/portfolio/edit.png) | ![Screenshot](./docs/img/portfolio/oauth.png)
 
