@@ -8,7 +8,7 @@ import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
 import Markdown from 'marked'
-import { shell, remote, clipboard } from 'electron'
+import { shell, remote, clipboard, ipcRenderer } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
 import {
@@ -43,6 +43,16 @@ Markdown.setOptions({
 })
 
 class Snippet extends Component {
+
+  componentWillMount () {
+    ipcRenderer.on('edit-gist-renderer', () => {
+      this.showGistEditorModal()
+    })
+  }
+
+  componentWillUnmount () {
+    ipcRenderer.removeAllListeners('edit-gist-renderer')
+  }
 
   showDeleteModal () {
     this.props.updateGistDeleteModeStatus('ON')
@@ -95,8 +105,11 @@ class Snippet extends Component {
     )
   }
 
-  showGistEditorModal (details) {
-    details && this.props.updateGistEditModeStatus('ON')
+  showGistEditorModal () {
+    const { gist, activeGist } = this.props
+    if (gist && gist[activeGist && gist[activeGist].details) {
+      details && this.props.updateGistEditModeStatus('ON')
+    }
   }
 
   closeGistEditorModal () {
@@ -401,7 +414,7 @@ class Snippet extends Component {
         </div>
         <a className='customized-button'
           href='#'
-          onClick={ this.showGistEditorModal.bind(this, activeSnippet.details) }>
+          onClick={ this.showGistEditorModal.bind(this) }>
           #edit
         </a>
         <a className='customized-button'
