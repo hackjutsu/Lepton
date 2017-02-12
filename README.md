@@ -96,7 +96,7 @@ let test = 'This is a javascript file'
 ```
 
 #### Why I can't search my gist's content?
-Currently, Lepton only supports the whole word search for the gist's description field.
+Currently, Lepton only supports the search for the gist's description field.
 
 #### How to specify the title and tags for my gist?
 GitHub Gist doesn't come with the native support for 'title' and 'tag' in the description field. Lepton adds these support, if the format `[title] description #tags: tag1, tag2` is followed in the gist description field.
