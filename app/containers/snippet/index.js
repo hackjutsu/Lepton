@@ -106,9 +106,9 @@ class Snippet extends Component {
   }
 
   showGistEditorModal () {
-    const { gist, activeGist } = this.props
-    if (gist && gist[activeGist && gist[activeGist].details) {
-      details && this.props.updateGistEditModeStatus('ON')
+    const { gists, activeGist, updateGistEditModeStatus } = this.props
+    if (gists && gists[activeGist] && gists[activeGist].details) {
+      updateGistEditModeStatus('ON')
     }
   }
 
@@ -117,6 +117,7 @@ class Snippet extends Component {
   }
 
   handleGistEditorFormSubmit (data) {
+    const { gists, activeGist, accessToken } = this.props
     const description = data.description.trim()
     const processedFiles = {}
 
@@ -126,7 +127,7 @@ class Snippet extends Component {
       }
     })
 
-    const activeSnippet = this.props.gists[this.props.activeGist]
+    const activeSnippet = gists[activeGist]
     for (const preFile in activeSnippet.details.files) {
       if (!processedFiles[preFile]) {
         processedFiles[preFile] = null
@@ -142,8 +143,8 @@ class Snippet extends Component {
     this.closeGistEditorModal()
 
     return getGitHubApi(EDIT_SINGLE_GIST)(
-        this.props.accessToken,
-        this.props.activeGist,
+        accessToken,
+        activeGist,
         description,
         processedFiles)
       .catch((err) => {
@@ -156,13 +157,13 @@ class Snippet extends Component {
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
-    const { gistTags, activeGistTag, updateSingleGist,
+    const { gists, activeGist, gistTags, activeGistTag, updateSingleGist,
       updateGistTags, selectGistTag, searchIndex} = this.props
 
     const gistId = gistDetails.id
     const files = gistDetails.files
 
-    const activeSnippet = this.props.gists[this.props.activeGist]
+    const activeSnippet = gists[activeGist]
     const preLangs = activeSnippet.langs
     const preCustomTags = parseCustomTags(descriptionParser(activeSnippet.brief.description).customTags)
 
@@ -461,7 +462,8 @@ class Snippet extends Component {
   }
 
   render () {
-    const activeSnippet = this.props.gists[this.props.activeGist]
+    const { gists, activeGist } = this.props
+    const activeSnippet = gists[activeGist]
     if (!activeSnippet) return null
 
     const fileHtmlArray = []
