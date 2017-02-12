@@ -55,17 +55,17 @@ class UserPanel extends Component {
       }
     })
 
-    getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
-    .catch((err) => {
-      Notifier('Gist creation failed')
-      logger.error(JSON.stringify(err))
-    })
-    .then((response) => {
-      this.updateGistsStoreWithNewGist(response)
-    })
-    .finally(() => {
-      this.closeGistEditorModal()
-    })
+    return getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
+      .catch((err) => {
+        Notifier('Gist creation failed')
+        logger.error(JSON.stringify(err))
+      })
+      .then((response) => {
+        this.updateGistsStoreWithNewGist(response)
+      })
+      .finally(() => {
+        this.closeGistEditorModal()
+      })
   }
 
   updateGistsStoreWithNewGist (gistDetails) {

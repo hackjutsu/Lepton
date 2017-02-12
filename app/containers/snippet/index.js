@@ -128,18 +128,18 @@ class Snippet extends Component {
     // response, which provides better user experience.
     this.closeGistEditorModal()
 
-    getGitHubApi(EDIT_SINGLE_GIST)(
-      this.props.accessToken,
-      this.props.activeGist,
-      description,
-      processedFiles)
-    .catch((err) => {
-      Notifier('Gist update failed')
-      logger.error(JSON.stringify(err))
-    })
-    .then((response) => {
-      this.updateGistsStoreWithUpdatedGist(response)
-    })
+    return getGitHubApi(EDIT_SINGLE_GIST)(
+        this.props.accessToken,
+        this.props.activeGist,
+        description,
+        processedFiles)
+      .catch((err) => {
+        Notifier('Gist update failed')
+        logger.error(JSON.stringify(err))
+      })
+      .then((response) => {
+        this.updateGistsStoreWithUpdatedGist(response)
+      })
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
