@@ -46,10 +46,14 @@
     @extend .font-style-base;
   }
 
+  .code-table {
+    @extend .font-style-base;
+    font-size: 12px !important;
+  }
+
   .code-area {
     @extend .font-style-base;
     width: 100%;
-    // white-space: pre-wrap;
     border: 0px;
   }
 
@@ -99,11 +103,6 @@
     margin-top: 20px;
   }
 
-  pre {
-    font-size: 11px !important;
-    // border-radius: 0 0 5px 5px;
-  }
-
   .line-number {
     text-align: right;
     padding-right: 20px;
@@ -120,6 +119,10 @@
     border: 1px solid rgb(204, 204, 204);
     padding: 10px 15px;
     border-radius: 0 0 5px 5px;
+
+    pre {
+      font-size: 11px !important;
+    }
   }
 }
 

@@ -437,12 +437,12 @@ ipcRenderer.on('search-gist', data => {
       logoutModalStatus } = state
 
   const dialogs = [
-      immersiveMode,
-      gistRawModal.status,
-      gistEditModalStatus,
-      gistNewModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus]
+    immersiveMode,
+    gistRawModal.status,
+    gistEditModalStatus,
+    gistNewModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus ]
   if (allDialogsClosed(dialogs)) {
     const preStatus = searchWindowStatus
     const newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
@@ -461,12 +461,12 @@ ipcRenderer.on('new-gist', data => {
       logoutModalStatus } = state
 
   const dialogs = [
-      immersiveMode,
-      gistRawModal.status,
-      searchWindowStatus,
-      gistEditModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus]
+    immersiveMode,
+    gistRawModal.status,
+    searchWindowStatus,
+    gistEditModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus ]
   if (allDialogsClosed(dialogs)) {
     ipcRenderer.emit('new-gist-renderer')
   }
@@ -484,12 +484,12 @@ ipcRenderer.on('immersive-mode', data => {
       logoutModalStatus } = state
 
   const dialogs = [
-      searchWindowStatus,
-      gistRawModal.status,
-      gistEditModalStatus,
-      gistNewModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus]
+    searchWindowStatus,
+    gistRawModal.status,
+    gistEditModalStatus,
+    gistNewModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus ]
   if (allDialogsClosed(dialogs)) {
     const preStatus = immersiveMode
     const newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
