@@ -22,6 +22,7 @@ let mainWindow = null
 
 const keyShortcutForSearch = 'Shift+Space'
 const keyNewGist = 'CommandOrControl+N'
+const keyEditGist = 'CommandOrControl+E'
 const keyImmersiveMode = 'CommandOrControl+I'
 const keyUp = 'Shift+Up'
 const keyDown = 'Shift+Down'
@@ -124,6 +125,11 @@ function setUpApplicationMenu () {
         label: 'New Gist',
         accelerator: keyNewGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('new-gist')
+      },
+      {
+        label: 'Edit Gist',
+        accelerator: keyEditGist,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('edit-gist')
       },
       {
         label: 'Search Gist',
