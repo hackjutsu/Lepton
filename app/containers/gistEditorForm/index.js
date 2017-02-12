@@ -72,7 +72,7 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
 const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning } }) => (
   <div>
     <CodeMirror
-      options={{ lineNumbers: 'true', lineWrapping: 'true', viewportMargin: Infinity }}
+      options={{ mode:'plaintext', lineNumbers: 'true', lineWrapping: 'true', viewportMargin: Infinity }}
       { ...input }
       type={ type }
       placeholder={ placeholder } />
