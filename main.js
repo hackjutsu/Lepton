@@ -145,7 +145,6 @@ function setUpApplicationMenu () {
         label: 'Escape',
         accelerator: 'Escape',
         click: (item, mainWindow) => {
-          mainWindow && mainWindow.send('exit-search')
           mainWindow && mainWindow.send('exit-immersive-mode')
         }
       }
