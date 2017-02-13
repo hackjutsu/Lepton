@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal, ListGroupItem, ListGroup } from 'react-bootstrap'
+import { Modal } from 'react-bootstrap'
 import {
   selectGistTag,
   selectGist,
@@ -13,7 +13,7 @@ import { descriptionParser, addLangPrefix as Prefixed } from '../../utilities/pa
 
 import './index.scss'
 
-import { remote, ipcRenderer } from 'electron'
+import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class SearchPage extends Component {
@@ -41,6 +41,7 @@ class SearchPage extends Component {
     this.setState({
       selectedIndex: newSelectedIndex,
     })
+    this.refs[newSelectedIndex].scrollIntoView(true)
   }
 
   selectNextGist () {
@@ -52,6 +53,7 @@ class SearchPage extends Component {
     this.setState({
       selectedIndex: newSelectedIndex,
     })
+    this.refs[newSelectedIndex].scrollIntoView(false)
   }
 
   selectCurrentGist () {
@@ -152,14 +154,15 @@ class SearchPage extends Component {
         )
       })
       resultsJSXGroup.push(
-        <ListGroupItem
+        <li
           className={ index === selectedIndex
               ? 'search-result-item-selected' : 'search-result-item' }
           key={ gist.id }
+          ref={ index }
           onClick={ this.handleSnippetClicked.bind(this, gist.id) }>
           <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
           <div className='gist-tag-group'>{ langs }</div>
-        </ListGroupItem>
+        </li>
       )
     })
     return resultsJSXGroup
@@ -177,9 +180,9 @@ class SearchPage extends Component {
           onChange={ this.updateInputValue.bind(this) }
           onKeyDown={ this.handleKeyDown.bind(this) }
           onKeyUp={ this.queryInputValue.bind(this) }/>
-        <ListGroup className='result-group'>
+        <ul className='result-group'>
           { this.renderSearchResults() }
-        </ListGroup>
+        </ul>
       </div>
     )
   }

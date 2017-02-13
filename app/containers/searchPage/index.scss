@@ -19,14 +19,18 @@
 
   .result-group {
     max-height: 70vh;
+    list-style-type: none;
+    padding: 0px;
     overflow: auto;
   }
 
   .search-result-item {
-
+    padding: 10px 10px;
+    border-top: solid 1.5px rgb(237, 237, 237);
   }
 
   .search-result-item-selected {
+     @extend .search-result-item;
      background: rgb(237, 237, 237);
   }
 
