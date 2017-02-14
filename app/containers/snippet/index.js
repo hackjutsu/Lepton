@@ -173,7 +173,10 @@ class Snippet extends Component {
     // language tag, ie gistTags[language] 2) if the new language doesn't
     // exist, we should add the new language to gistTags.
     const newLangs = new Set()
+    let filenameRecords = ''
+    
     Object.keys(files).forEach(filename => {
+      filenameRecords = ',' + filename
       const file = files[filename]
       const language = file.language || 'Other'
       newLangs.add(language)
@@ -232,7 +235,8 @@ class Snippet extends Component {
     updatedGist[gistId] = {
       langs: newLangs,
       brief: gistDetails,
-      details: gistDetails
+      details: gistDetails,
+      filename: filenameRecords
     }
 
     logger.info('[Dispatch] updateSingleGist')

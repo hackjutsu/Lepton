@@ -148,9 +148,9 @@ class SearchPage extends Component {
       let gistDescription = gist.description
       // let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
       let highlightedDescription = gistDescription
-      let langs = gist.language.split(',').filter(lang => lang.trim()).map(lang => {
+      let filenames = gist.filename.split(',').filter(file => file.trim()).map(file => {
         return (
-          <div className='gist-tag' key={ lang.trim() }>{ '#' + lang }</div>
+          <div className='gist-tag' key={ file.trim() }>{ file }</div>
         )
       })
       resultsJSXGroup.push(
@@ -161,7 +161,7 @@ class SearchPage extends Component {
           ref={ index }
           onClick={ this.handleSnippetClicked.bind(this, gist.id) }>
           <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
-          <div className='gist-tag-group'>{ langs }</div>
+          <div className='gist-tag-group'>{ filenames }</div>
         </li>
       )
     })

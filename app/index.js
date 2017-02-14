@@ -253,8 +253,10 @@ function updateUserGists (userLoginId, accessToken) {
 
       gistList.forEach((gist) => {
         let langs = new Set()
+        let filenameRecords = ''
 
         Object.keys(gist.files).forEach(filename => {
+          filenameRecords += ',' + filename
           let file = gist.files[filename]
           let language = file.language || 'Other'
           langs.add(language)
@@ -303,7 +305,8 @@ function updateUserGists (userLoginId, accessToken) {
         fuseSearchIndex.push({
           id: gist.id,
           description: gist.description,
-          language: langSearchRecords
+          language: langSearchRecords,
+          filename: filenameRecords
         })
       }) // gistList.forEach
 
