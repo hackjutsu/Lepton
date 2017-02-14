@@ -8,7 +8,7 @@ import GistEditorForm from '../gistEditorForm'
 import { UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
 import Markdown from 'marked'
-import { shell, remote, clipboard, ipcRenderer } from 'electron'
+import { remote, clipboard, ipcRenderer } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
 import Autolinker from 'autolinker'
@@ -174,7 +174,7 @@ class Snippet extends Component {
     // exist, we should add the new language to gistTags.
     const newLangs = new Set()
     let filenameRecords = ''
-    
+
     Object.keys(files).forEach(filename => {
       filenameRecords = ',' + filename
       const file = files[filename]
@@ -412,37 +412,37 @@ class Snippet extends Component {
   }
 
   renderPanelHeader (activeSnippet) {
+    const { userSession } = this.props
     return (
       <div className='header-table'>
-      <div className='line'>
-        <div className='header-title'>
-          { activeSnippet.brief.public ? 'public gist' : 'secret gist' }
+        <div className='line'>
+          <div className='header-title'>
+            { activeSnippet.brief.public ? 'public gist' : 'secret gist' }
+          </div>
+          <a className='customized-button'
+            href='#'
+            onClick={ this.showGistEditorModal.bind(this) }>
+            #edit
+          </a>
+          <a className='customized-button'
+            href='#'
+            onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
+            #share
+          </a>
+          <a className='customized-button'
+            href={ 'https://gist.github.com/' + userSession.profile.login + '/starred' }>
+            #starred
+          </a>
+          {
+            this.props.immersiveMode === 'OFF'
+              ? <a className='customized-button'
+                 href='#'
+                 onClick={ this.showDeleteModal.bind(this) }>
+                 #delete
+                </a>
+              : null
+          }
         </div>
-        <a className='customized-button'
-          href='#'
-          onClick={ this.showGistEditorModal.bind(this) }>
-          #edit
-        </a>
-        <a className='customized-button'
-          href='#'
-          onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
-          #share
-        </a>
-        <a className='customized-button'
-          href='#'
-          onClick={ shell.openExternal.bind(this, activeSnippet.brief.html_url + '/revisions') }>
-          #revisions
-        </a>
-        {
-          this.props.immersiveMode === 'OFF'
-            ? <a className='customized-button'
-               href='#'
-               onClick={ this.showDeleteModal.bind(this) }>
-               #delete
-              </a>
-            : null
-        }
-      </div>
       </div>
     )
   }
