@@ -480,7 +480,9 @@ class Snippet extends Component {
           <div key={ key }>
             <hr/>
             <div className={ gistFile.language === 'Markdown' ? 'file-header-md' : 'file-header' }>
-              <b>{ gistFile.filename }</b>
+              <a href={ activeSnippet.details.html_url + '#file-' + gistFile.filename.replace(/\./g, '-') }>
+                <b>{ gistFile.filename }</b>
+              </a>
               <a
                 href='#'
                 className='customized-button-file-header'
