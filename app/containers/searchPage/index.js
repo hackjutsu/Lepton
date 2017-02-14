@@ -41,7 +41,7 @@ class SearchPage extends Component {
     this.setState({
       selectedIndex: newSelectedIndex,
     })
-    this.refs[newSelectedIndex].scrollIntoView(true)
+    this.refs[newSelectedIndex].scrollIntoView(false)
   }
 
   selectNextGist () {
