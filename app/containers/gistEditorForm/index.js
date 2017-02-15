@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
-import { Field, FieldArray, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
+import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
 import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import CodeMirror from 'react-codemirror'
+import { modeInfo } from './meta'
+import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/markdown/markdown'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/mode/javascript/javascript'
+// TODO: list all mode here ?
 
 import './index.scss'
 
@@ -19,7 +25,7 @@ class GistEditorForm extends Component {
   }
 
   render () {
-    const { handleSubmit, submitting, formStyle } = this.props
+    const { handleSubmit, submitting, formStyle, modes } = this.props
 
     return (
       <form className='gist-editor-form' onSubmit={ handleSubmit }>
@@ -31,6 +37,7 @@ class GistEditorForm extends Component {
         <FieldArray
           name='gistFiles'
           formStyle={ formStyle }
+          modes={ modes }
           component={ renderGistFiles }/>
         <hr/>
         <div className='control-button-group'>
@@ -69,10 +76,10 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
   </div>
 )
 
-const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning } }) => (
+const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning }, mode }) => (
   <div>
     <CodeMirror
-      options={{ mode: 'plaintext', lineNumbers: 'true', lineWrapping: 'true', viewportMargin: Infinity }}
+      options={{ mode: mode, lineNumbers: 'true', lineWrapping: 'true', viewportMargin: Infinity }}
       { ...input }
       type={ type }
       placeholder={ placeholder } />
@@ -83,27 +90,28 @@ const renderContentField = ({ input, type, placeholder, meta: { touched, error, 
 
 function renderGistFileHeader (member, fields, index) {
   return (
-      <div>
-        <Field
-          name={ `${member}.filename` }
-          type='text'
-          component={ renderTitleInputField }
-          placeholder='file name... (e.g. snippet.js)'
-          validate={ required }/>
-        <a href='#'
-          className={ index === 0 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
-          onClick={ () => fields.remove(index) }>#remove</a>
-      </div>
+    <div>
+      <Field
+        name={ `${member}.filename` }
+        type='text'
+        component={ renderTitleInputField }
+        placeholder='file name... (e.g. snippet.js)'
+        validate={ required }/>
+      <a href='#'
+        className={ index === 0 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
+        onClick={ () => fields.remove(index) }>#remove</a>
+    </div>
   )
 }
 
-const renderGistFiles = ({ fields, formStyle }) => (
+const renderGistFiles = ({ fields, formStyle, modes }) => (
   <ListGroup className='gist-editor-section'>
     { fields.map((member, index) =>
       <ListGroupItem className='gist-editor-gist-file' key={index}>
         <Panel header={ renderGistFileHeader(member, fields, index) }>
           <Field name={ `${member}.content` }
             type='text'
+            mode={ modes && modes[index] }
             component={ renderContentField }
             validate={ required }/>
         </Panel>
@@ -122,6 +130,35 @@ const renderGistFiles = ({ fields, formStyle }) => (
     </div>
   </ListGroup>
 )
+
+function findModeByFileName(filename) {
+  for (let i = 0; i < modeInfo.length; i++) {
+    const info = modeInfo[i];
+    if (info.file && info.file.test(filename)) return info.mode;
+  }
+  const dot = filename.lastIndexOf(".");
+  const ext = dot > -1 && filename.substring(dot + 1, filename.length);
+  if (ext) {
+    for (let i = 0; i < modeInfo.length; i++) {
+      const info = modeInfo[i];
+      if (info.ext) for (let j = 0; j < info.ext.length; j++)
+        if (info.ext[j] == ext) return info.mode;
+    }
+  }
+  return 'plaintext'
+}
+
+const selector = formValueSelector('gistEditorForm')
+GistEditorForm = connect(
+  state => {
+    const gistFiles = selector(state, 'gistFiles')
+    const modes = gistFiles && gistFiles.map(({filename}) =>
+      filename && findModeByFileName(filename))
+    return {
+      modes
+    }
+  }
+)(GistEditorForm)
 
 export default reduxForm({
   form: 'gistEditorForm'
