@@ -16,10 +16,6 @@
   color: #969896
 }
 
-.cm-s-github .CodeMirror-selected {
-  background: #c8c8fa
-}
-
 .cm-s-github .cm-comment {
   color: #969896
 }
@@ -62,5 +58,5 @@
 @import '../../../node_modules/codemirror/lib/codemirror.css';
 @import '../../../node_modules/codemirror/mode/tiddlywiki/tiddlywiki.css';
 @import '../../../node_modules/codemirror/mode/tiki/tiki.css';
-@import '../../../node_modules/codemirror/addon/search/matchesonscrollbar.css';
+@import '../../../node_modules/codemirror/addon/dialog/dialog.css';
 @import '../../../node_modules/codemirror/addon/fold/foldgutter.css';

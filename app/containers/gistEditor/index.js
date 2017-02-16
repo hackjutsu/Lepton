@@ -121,11 +121,11 @@ import 'codemirror/mode/tcl/tcl'
 import 'codemirror/mode/protobuf/protobuf'
 import 'codemirror/mode/yacas/yacas'
 import 'codemirror/mode/sass/sass'
-import 'codemirror/addon/comment/continuecomment'
-import 'codemirror/addon/comment/comment'
+import 'codemirror/addon/edit/matchbrackets'
+import 'codemirror/addon/edit/matchtags'
+import 'codemirror/addon/dialog/dialog'
 import 'codemirror/addon/mode/loadmode'
 import 'codemirror/addon/search/search'
-import 'codemirror/addon/search/matchesonscrollbar'
 import 'codemirror/addon/search/match-highlighter'
 import 'codemirror/addon/search/searchcursor'
 import 'codemirror/addon/fold/comment-fold'
@@ -135,7 +135,6 @@ import 'codemirror/addon/fold/indent-fold'
 import 'codemirror/addon/fold/brace-fold'
 import 'codemirror/addon/fold/foldcode'
 import 'codemirror/addon/fold/markdown-fold'
-import 'codemirror/addon/selection/active-line'
 import 'codemirror/addon/display/placeholder'
 
 import './index.scss'
@@ -159,21 +158,31 @@ class GistEditor extends Component {
   }
 
   setMode (filename) {
-    let modeInfo = filename && this.CodeMirror.findModeByFileName(filename)
-    if (modeInfo == null) modeInfo = this.CodeMirror.findModeByName('Plain Text')
-    this.editor.getCodeMirror().setOption('mode', modeInfo.mime)
-    this.CodeMirror.autoLoadMode(this.editor.getCodeMirror(), modeInfo.mode)
+    const modeInfo = filename ? this.CodeMirror.findModeByFileName(filename) : this.CodeMirror.findModeByName('Plain Text')
+    modeInfo && this.editor.getCodeMirror().setOption('mode', modeInfo.mime)
+    modeInfo && this.CodeMirror.autoLoadMode(this.editor.getCodeMirror(), modeInfo.mode)
   }
 
   render () {
-    const { options, value, placeholder } = this.props
+    const { value, placeholder } = this.props
+
+    const options = {
+      theme: 'github',
+      lineNumbers: true,
+      matchBrackets: true,
+      matchTags: true,
+      lineWrapping: true,
+      viewportMargin: Infinity,
+      placeholder: placeholder,
+      foldGutter: true,
+      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+    }
 
     return (
       <CodeMirror
         ref="editor"
         value={ value }
         options={ options }
-        placeholder={ placeholder }
         onChange={ value => this.props.onChange(value) }
       />
     )
