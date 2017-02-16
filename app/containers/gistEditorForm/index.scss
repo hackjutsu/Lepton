@@ -94,15 +94,4 @@
     font-weight: bold;
     color: #B0580E;
   }
-
-  .CodeMirror {
-    @extend .font-style-base;
-    height: auto;
-  }
-
-  .CodeMirror-scroll {
-    min-height: 400px;
-  }
 }
-
-@import '../../../node_modules/codemirror/lib/codemirror.css';

@@ -1,0 +1,23 @@
+.font-style-base {
+  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-size: 13px;
+}
+
+.CodeMirror {
+  @extend .font-style-base;
+  height: auto;
+}
+
+.CodeMirror-scroll {
+  min-height: 400px;
+}
+
+.CodeMirror-empty {
+  color: #969896
+}
+
+@import '../../../node_modules/codemirror/lib/codemirror.css';
+@import '../../../node_modules/codemirror-minified/mode/tiddlywiki/tiddlywiki.css';
+@import '../../../node_modules/codemirror-minified/mode/tiki/tiki.css';
+@import '../../../node_modules/codemirror-minified/addon/search/matchesonscrollbar.css';
+@import '../../../node_modules/codemirror-minified/addon/fold/foldgutter.css';

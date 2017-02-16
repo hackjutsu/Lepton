@@ -2,13 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
 import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
-import CodeMirror from 'react-codemirror'
-import { modeInfo } from './meta'
-import 'codemirror/mode/xml/xml'
-import 'codemirror/mode/markdown/markdown'
-import 'codemirror/mode/clike/clike'
-import 'codemirror/mode/javascript/javascript'
-// TODO: list all mode here ?
+import GistEditor from '../gistEditor'
 
 import './index.scss'
 
@@ -25,7 +19,7 @@ class GistEditorForm extends Component {
   }
 
   render () {
-    const { handleSubmit, submitting, formStyle, modes } = this.props
+    const { handleSubmit, submitting, formStyle, filenameList } = this.props
 
     return (
       <form className='gist-editor-form' onSubmit={ handleSubmit }>
@@ -37,7 +31,7 @@ class GistEditorForm extends Component {
         <FieldArray
           name='gistFiles'
           formStyle={ formStyle }
-          modes={ modes }
+          filenameList={ filenameList }
           component={ renderGistFiles }/>
         <hr/>
         <div className='control-button-group'>
@@ -76,13 +70,13 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
   </div>
 )
 
-const renderContentField = ({ input, type, placeholder, meta: { touched, error, warning }, mode }) => (
+const renderContentField = ({ input, type, meta: { touched, error, warning }, filename }) => (
   <div>
-    <CodeMirror
-      options={{ mode: mode, lineNumbers: 'true', lineWrapping: 'true', viewportMargin: Infinity }}
+    <GistEditor
+      options={{ lineNumbers: 'true', lineWrapping: 'true', viewportMargin: Infinity, placeholder: '// Code' }}
+      filename={ filename }
       { ...input }
-      type={ type }
-      placeholder={ placeholder } />
+      type={ type } />
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>
@@ -104,14 +98,14 @@ function renderGistFileHeader (member, fields, index) {
   )
 }
 
-const renderGistFiles = ({ fields, formStyle, modes }) => (
+const renderGistFiles = ({ fields, formStyle, filenameList }) => (
   <ListGroup className='gist-editor-section'>
     { fields.map((member, index) =>
       <ListGroupItem className='gist-editor-gist-file' key={index}>
         <Panel header={ renderGistFileHeader(member, fields, index) }>
           <Field name={ `${member}.content` }
             type='text'
-            mode={ modes && modes[index] }
+            filename={ filenameList && filenameList[index] }
             component={ renderContentField }
             validate={ required }/>
         </Panel>
@@ -131,31 +125,14 @@ const renderGistFiles = ({ fields, formStyle, modes }) => (
   </ListGroup>
 )
 
-function findModeByFileName(filename) {
-  for (let i = 0; i < modeInfo.length; i++) {
-    const info = modeInfo[i];
-    if (info.file && info.file.test(filename)) return info.mode;
-  }
-  const dot = filename.lastIndexOf(".");
-  const ext = dot > -1 && filename.substring(dot + 1, filename.length);
-  if (ext) {
-    for (let i = 0; i < modeInfo.length; i++) {
-      const info = modeInfo[i];
-      if (info.ext) for (let j = 0; j < info.ext.length; j++)
-        if (info.ext[j] == ext) return info.mode;
-    }
-  }
-  return 'plaintext'
-}
-
 const selector = formValueSelector('gistEditorForm')
 GistEditorForm = connect(
   state => {
     const gistFiles = selector(state, 'gistFiles')
-    const modes = gistFiles && gistFiles.map(({filename}) =>
-      filename && findModeByFileName(filename))
+    const filenameList = gistFiles && gistFiles.map(({filename}) =>
+      filename)
     return {
-      modes
+      filenameList
     }
   }
 )(GistEditorForm)
