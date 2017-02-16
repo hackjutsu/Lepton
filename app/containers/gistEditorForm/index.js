@@ -73,7 +73,7 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
 const renderContentField = ({ input, type, meta: { touched, error, warning }, filename }) => (
   <div>
     <GistEditor
-      options={{ lineNumbers: 'true', lineWrapping: 'true', viewportMargin: Infinity, placeholder: '// Code' }}
+      options={{ lineNumbers: 'true', theme: 'github', lineWrapping: 'true', viewportMargin: Infinity, placeholder: '// Code' }}
       filename={ filename }
       { ...input }
       type={ type } />
