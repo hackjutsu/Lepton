@@ -13,6 +13,7 @@ export const UPDATE_GISTS = 'UPDATE_GISTS'
 export const UPDATE_SYNC_TIME = 'UPDATE_SYNC_TIME'
 export const UPDATE_SINGLE_GIST = 'UPDATE_SINGLE_GIST'
 export const UPDATE_GIST_TAGS = 'UPDATE_GIST_TAGS'
+export const UPDATE_PINNED_TAGS = 'UPDATE_PINNED_TAGS'
 export const SELECT_GIST_TAG = 'SELECT_GIST_TAG'
 export const SELECT_GIST = 'SELECT_GIST'
 export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
@@ -26,6 +27,14 @@ export const UPDATE_GIST_RAW_MODAL = 'UPDATE_GIST_RAW_MODAL'
 export const UPDATE_GIST_EDIT_MODAL = 'UPDATE_GIST_EDIT_MODAL'
 export const UPDATE_GIST_NEW_MODAL = 'UPDATE_GIST_NEW_MODAL'
 export const UPDATE_GIST_DELETE_MODAL_STATUS = 'UPDATE_GIST_DELETE_MODAL_STATUS'
+export const UPDATE_PINNED_TAGS_MODAL_STATUS = 'UPDATE_PINNED_TAGS_MODAL_STATUS'
+
+export function updatePinnedTagsModalStatus (status) {
+  return {
+    type: UPDATE_PINNED_TAGS_MODAL_STATUS,
+    payload: status
+  }
+}
 
 export function updateGistDeleteModeStatus (status) {
   return {
@@ -149,6 +158,13 @@ export function updateSingleGist (gist) {
 export function updateGistTags (tags) {
   return {
     type: UPDATE_GIST_TAGS,
+    payload: tags
+  }
+}
+
+export function updatePinnedTags (tags) {
+  return {
+    type: UPDATE_PINNED_TAGS,
     payload: tags
   }
 }

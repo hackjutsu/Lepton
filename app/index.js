@@ -47,7 +47,8 @@ import {
   updateSearchWindowStatus,
   updateUpdateAvailableBarStatus,
   updateNewVersionInfo,
-  updateImmersiveModeStatus
+  updateImmersiveModeStatus,
+  updatePinnedTags
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
@@ -360,6 +361,15 @@ function initUserSession (accessToken) {
           image: profile.avatar_url
         })
       })
+
+      // Update the pinned tags from local storage
+      const localPref = JSON.parse(localStorage.getItem('localPref'))
+      logger.debug('Fetched local preference from local storage... ' + JSON.stringify(localPref))
+      if (localPref && localPref[profile.login]) {
+        const pinnedTags = localPref[profile.login].pinnedTags || []
+        logger.info('[Dispatch] updatePinnedTags')
+        reduxStore.dispatch(updatePinnedTags(pinnedTags))
+      }
     })
   .catch((err) => {
     logger.error('The request has failed: \n' + JSON.stringify(err))

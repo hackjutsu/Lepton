@@ -7,6 +7,11 @@
 
 .menu-panel {
 
+  hr {
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+
   .font-style-base {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
     font-size: 13px;
@@ -17,8 +22,21 @@
     margin: 5px;
   }
 
+  .configure-tag:hover,
   .gist-tag:hover {
     cursor: pointer;
+  }
+
+  .configure-tag {
+    @extend .font-style-base;
+    color: rgb(180, 180, 180);
+    font-size: 10px;
+    margin-left: 50px;
+    position: fixed;
+  }
+
+  .configure-tag-line {
+    // margin-top: 15px;
   }
 
   .user-panel {
@@ -27,14 +45,29 @@
 
   .gist-tag-section {
     margin-left: 0px;
-    /* 200px for user-panel and 40px for <hr/> */
-    height: calc(100% - 200px - 40px);
+    /* 200px for user-panel and 30px for <hr/> */
+    height: calc(100% - 200px - 30px);
     position: relative;
   }
 
+  .pinned-tag-section-scroll {
+    height: 80px;
+    position: relative;
+    overflow: auto;
+    visibility: hidden;
+  }
+
+  .pinned-tag-section-content {
+    visibility: visible;
+    height: 100%
+  }
+
+  .pinned-tag-section-scroll:hover {
+    visibility: visible;
+  }
+
   .lang-tag-section-scroll {
-    // /* 200px for user-panel and 40px for <hr/> */
-    height: 30%;
+    height: 100px;
     overflow: auto;
     visibility: hidden;
   }
@@ -45,8 +78,7 @@
   }
 
   .custom-tag-section-scroll {
-    /* 200px for user-panel and 40px for <hr/> */
-    max-height: calc(70% - 40px);
+    max-height: calc(100% - 100px - 80px - 60px);
     overflow: auto;
     visibility: hidden;
   }
@@ -64,6 +96,34 @@
   }
 
   .active-gist-tag:hover {
+    cursor: pointer;
+  }
+}
+
+.pinned-tags-modal {
+  .pin-tag-table {
+    width: 100%;
+  }
+
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+  }
+
+  .gist-tag-not-pinned {
+    @extend .font-style-base;
+    margin: 5px;
+  }
+
+  .gist-tag-pinned {
+    @extend .font-style-base;
+    margin: 5px;
+    color: #B0580E;
+    font-weight: bold;
+  }
+
+  .gist-tag-not-pinned:hover,
+  .gist-tag-pinned {
     cursor: pointer;
   }
 }

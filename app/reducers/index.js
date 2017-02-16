@@ -7,6 +7,7 @@ import GistsReducer from './reducer_gists'
 import SyncTimeReducer from './reducer_sync_time'
 import ActiveGistReducer from './reducer_active_gist'
 import GistTagsReducer from './reducer_gist_tags'
+import PinnedTagsReducer from './reducer_pinned_tags'
 import ActiveGistTagReducer from './reducer_active_gist_tag'
 import UserSessionReducer from './reducer_user_session'
 import AuthWindowStatusReducer from './reducer_auth_window_status'
@@ -20,6 +21,7 @@ import GistRawModalReducer from './reducer_gist_raw_modal'
 import GistEditModalReducer from './reducer_gist_edit_modal'
 import GistNewModalReducer from './reducer_gist_new_modal'
 import GistDeleteModalReducer from './reducer_gist_delete_modal'
+import PinnedTagsSelectionModalReducer from './reducer_pinned_tags_selections_modal'
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -29,6 +31,7 @@ const rootReducer = combineReducers({
   syncTime: SyncTimeReducer,
   activeGist: ActiveGistReducer,
   gistTags: GistTagsReducer,
+  pinnedTags: PinnedTagsReducer,
   activeGistTag: ActiveGistTagReducer,
   authWindowStatus: AuthWindowStatusReducer,
   gistSyncStatus: GistSyncStatusReducer,
@@ -40,7 +43,8 @@ const rootReducer = combineReducers({
   gistRawModal: GistRawModalReducer,
   gistEditModalStatus: GistEditModalReducer,
   gistNewModalStatus: GistNewModalReducer,
-  gistDeleteModalStatus: GistDeleteModalReducer
+  gistDeleteModalStatus: GistDeleteModalReducer,
+  pinnedTagsModalStatus: PinnedTagsSelectionModalReducer
 })
 
 export default rootReducer
