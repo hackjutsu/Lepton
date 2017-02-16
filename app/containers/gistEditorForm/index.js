@@ -73,10 +73,10 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
 const renderContentField = ({ input, type, meta: { touched, error, warning }, filename }) => (
   <div>
     <GistEditor
-      options={{ lineNumbers: 'true', theme: 'github', lineWrapping: 'true', viewportMargin: Infinity, placeholder: '// Code' }}
       filename={ filename }
       { ...input }
-      type={ type } />
+      type={ type }
+      placeholder='// Code'/>
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>
