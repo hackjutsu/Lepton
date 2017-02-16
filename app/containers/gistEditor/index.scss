@@ -16,8 +16,51 @@
   color: #969896
 }
 
+.cm-s-github .CodeMirror-selected {
+  background: #c8c8fa
+}
+
+.cm-s-github .cm-comment {
+  color: #969896
+}
+
+.cm-s-github .cm-string {
+  color: #183691
+}
+
+.cm-s-github .cm-string-2 {
+  color: #0086b3
+}
+
+.cm-s-github .cm-tag {
+  color: #63a35c
+}
+
+.cm-s-github .cm-keyword, .cm-s-github .cm-operator {
+  color: #a71d5d
+}
+
+.cm-s-github .cm-property {
+  color: #333
+}
+
+.cm-s-github .cm-atom {
+  color: #0086b3
+}
+
+.cm-s-github .cm-error, .cm-s-github .cm-invalidchar {
+  font-style: italic;
+  font-weight: 600;
+  color: #bd2c00;
+  text-decoration: underline
+}
+
+.cm-s-github .cm-variable-2, .cm-s-github .cm-number {
+  color: #0086b3
+}
+
 @import '../../../node_modules/codemirror/lib/codemirror.css';
-@import '../../../node_modules/codemirror-minified/mode/tiddlywiki/tiddlywiki.css';
-@import '../../../node_modules/codemirror-minified/mode/tiki/tiki.css';
-@import '../../../node_modules/codemirror-minified/addon/search/matchesonscrollbar.css';
-@import '../../../node_modules/codemirror-minified/addon/fold/foldgutter.css';
+@import '../../../node_modules/codemirror/mode/tiddlywiki/tiddlywiki.css';
+@import '../../../node_modules/codemirror/mode/tiki/tiki.css';
+@import '../../../node_modules/codemirror/addon/search/matchesonscrollbar.css';
+@import '../../../node_modules/codemirror/addon/fold/foldgutter.css';
