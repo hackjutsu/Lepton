@@ -90,15 +90,15 @@ class Snippet extends Component {
 
   renderDeleteModal () {
     return (
-      <div className="static-modal">
-        <Modal show={ this.props.gistDeleteModalStatus === 'ON' } bsSize="small">
+      <div className='static-modal'>
+        <Modal show={ this.props.gistDeleteModalStatus === 'ON' } bsSize='small'>
           <Modal.Header>
             <Modal.Title>Delete the gist?</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
             <Button onClick={ this.closeDeleteModal.bind(this) }>cancel</Button>
             <Button
-              bsStyle="danger"
+              bsStyle='danger'
               onClick={ this.handleDeleteClicked.bind(this) }>delete</Button>
           </Modal.Footer>
         </Modal>
@@ -289,8 +289,9 @@ class Snippet extends Component {
   renderGistEditorModal (description, fileArray, isPrivate) {
     return (
       <Modal
-        bsSize="large"
-        dialogClassName="edit-modal"
+        bsSize='large'
+        dialogClassName='edit-modal'
+        backdrop={ false }
         show={ this.props.gistEditModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
@@ -336,7 +337,7 @@ class Snippet extends Component {
         </Modal.Header>
         <Modal.Body>
           <textarea
-              ref="rawModalText"
+              ref='rawModalText'
               className='code-area-raw'
               defaultValue={ gistRawModal.content }
               onDoubleClick={ this.selectText.bind(this) } />
@@ -373,17 +374,17 @@ class Snippet extends Component {
     const highlightedContent = HighlightJS.highlightAuto(content, [language]).value
 
     /*
-      Highlight.js wraps comment blocks inside <span class="hljs-comment"></span>.
+      Highlight.js wraps comment blocks inside <span class='hljs-comment'></span>.
       However, when the multi-line comment block is broken down into diffirent
       table rows, only the first row, which is appended by the <span> tag, is
       highlighted. The following code fixes it by appending <span> to each line
       of the comment block.
     */
-    const commentPattern = /<span class="hljs-comment">(.|\n)*?<\/span>/g
+    const commentPattern = /<span class='hljs-comment'>(.|\n)*?<\/span>/g
     const adaptedHighlightedContent = highlightedContent.replace(commentPattern, data => {
       return data.replace(/\r?\n/g, () => {
          // Chromium is smart enough to add the closing </span>
-        return '\n<span class="hljs-comment">'
+        return "\n<span class='hljs-comment'>"
       })
     })
 
