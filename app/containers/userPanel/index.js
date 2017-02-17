@@ -83,7 +83,7 @@ class UserPanel extends Component {
     // update the language tags
     const langs = new Set()
     let filenameRecords = ''
-    
+
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
       filenameRecords = ',' + filename
@@ -136,7 +136,8 @@ class UserPanel extends Component {
     searchIndex.addToFuseIndex({
       id: gistId,
       description: gistDetails.description,
-      language: langSearchRecords
+      language: langSearchRecords,
+      filename: filenameRecords
     })
 
     Notifier('Gist created', HumanReadableTime(new Date()))

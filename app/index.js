@@ -13,6 +13,7 @@ import AppContainer from './containers/appContainer'
 import HumanReadableTime from 'human-readable-time'
 import ImageDownloader from 'image-downloader'
 import SearchIndex from './utilities/search'
+import Store from './utilities/store'
 import {
   addLangPrefix as Prefixed,
   parseCustomTags,
@@ -52,6 +53,13 @@ import {
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
+
+// First instantiate the class
+const localPref = new Store({
+  // We'll call our data file 'user-preferences'
+  configName: 'user-preferences',
+  defaults: {}
+})
 
 const logger = remote.getGlobal('logger')
 
@@ -347,7 +355,6 @@ function updateUserGists (userLoginId, accessToken) {
 
 /** Start: User session management **/
 function initUserSession (accessToken) {
-  logger.info('[Dispatch] updateUserSession IN_PROGRESS')
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(accessToken)
   getGitHubApi(GET_USER_PROFILE)(accessToken)
@@ -360,16 +367,9 @@ function initUserSession (accessToken) {
           profile: profile.login,
           image: profile.avatar_url
         })
-      })
 
-      // Update the pinned tags from local storage
-      const localPref = JSON.parse(localStorage.getItem('localPref'))
-      logger.debug('Fetched local preference from local storage... ' + JSON.stringify(localPref))
-      if (localPref && localPref[profile.login]) {
-        const pinnedTags = localPref[profile.login].pinnedTags || []
-        logger.info('[Dispatch] updatePinnedTags')
-        reduxStore.dispatch(updatePinnedTags(pinnedTags))
-      }
+        syncLocalPref(profile.login)
+      })
     })
   .catch((err) => {
     logger.error('The request has failed: \n' + JSON.stringify(err))
@@ -413,9 +413,8 @@ function downloadImage (imageUrl, filename) {
 }
 
 function getLoggedInUserInfo () {
-  let loggedInUserProfile = localStorage.getItem('profile')
-  let loggedInUserToken = localStorage.getItem('token')
-  logger.info('Found user profile ' + loggedInUserProfile)
+  const loggedInUserProfile = localStorage.getItem('profile')
+  const loggedInUserToken = localStorage.getItem('token')
 
   if (loggedInUserProfile && loggedInUserToken) {
     return {
@@ -426,6 +425,14 @@ function getLoggedInUserInfo () {
   }
 
   return null
+}
+
+function syncLocalPref (userName) {
+  const pinnedTags = localPref && localPref.get(userName)
+    ? localPref.get(userName).pinnedTags
+    : []
+  logger.info('[Dispatch] updatePinnedTags')
+  reduxStore.dispatch(updatePinnedTags(pinnedTags))
 }
 /** End: Local storage management **/
 
@@ -560,6 +567,7 @@ ReactDom.render(
   <Provider store={ reduxStore }>
     <AppContainer
       searchIndex = { SearchIndex }
+      localPref = { localPref }
       updateLocalStorage = { updateLocalStorage }
       getLoggedInUserInfo = { getLoggedInUserInfo }
       launchAuthWindow = { launchAuthWindow }

@@ -21,8 +21,8 @@ const logger = remote.getGlobal('logger')
 
 class NavigationPanel extends Component {
 
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       tmpPinnedTags: new Set()
     }
@@ -152,7 +152,7 @@ class NavigationPanel extends Component {
   }
 
   renderAllTagsForPin () {
-    const { gistTags, activeGistTag } = this.props
+    const { gistTags } = this.props
     const { tmpPinnedTags } = this.state
 
     const langTags = []
@@ -196,7 +196,7 @@ class NavigationPanel extends Component {
 
   handlePinnedTagSaved () {
     const { tmpPinnedTags } = this.state
-    const { updatePinnedTags, userSession } = this.props
+    const { updatePinnedTags, userSession, localPref } = this.props
 
     const pinnedTags = Array.from(tmpPinnedTags)
     logger.info('[Dispatch] updatePinnedTags')
@@ -204,15 +204,13 @@ class NavigationPanel extends Component {
     this.closePinnedTagsModal()
 
     // Saving the pinnedTags to local storage
+    // FIXME: not able to preserve two users' pinnedTags??
     const userName = userSession.profile.login
-    const localPref = JSON.parse(localStorage.getItem('localPref')) || {}
-    localPref[userName] = Object.assign({}, localPref[userName], { pinnedTags })
-    logger.debug('Saving... ' + JSON.stringify(localPref))
-    localStorage.setItem('localPref', JSON.stringify(localPref))
+    localPref.set(userName, Object.assign({}, localPref.get(userName), { pinnedTags }))
   }
 
   renderPinnedTagsModal () {
-    const { pinnedTagsModalStatus, pinnedTags } = this.props
+    const { pinnedTagsModalStatus } = this.props
 
     return (
       <Modal

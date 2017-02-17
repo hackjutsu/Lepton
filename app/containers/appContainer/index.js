@@ -75,6 +75,7 @@ class AppContainer extends Component {
         updateLocalStorage,
         updateActiveGistAfterClicked,
         reSyncUserGists,
+        localPref,
         searchIndex } = this.props
 
     return (
@@ -82,6 +83,7 @@ class AppContainer extends Component {
         { this.renderSearchPage() }
         { this.renderUpdateAlert() }
         <NavigationPanel
+            localPref = { localPref }
             searchIndex = { searchIndex }
             updateLocalStorage = { updateLocalStorage }
             updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
