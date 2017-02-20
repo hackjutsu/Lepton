@@ -282,6 +282,7 @@ class Snippet extends Component {
       <GistEditorForm
         initialData={ initialData }
         formStyle = { UPDATE_GIST }
+        handleCancel = { this.closeGistEditorModal.bind(this) }
         onSubmit={ this.handleGistEditorFormSubmit.bind(this) }/>
     )
   }

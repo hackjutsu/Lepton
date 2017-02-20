@@ -153,6 +153,7 @@ class UserPanel extends Component {
       <GistEditorForm
         initialData={ initialData }
         formStyle={ NEW_GIST }
+        handleCancel = { this.closeGistEditorModal.bind(this) }
         onSubmit={ this.handleCreateSingleGist.bind(this) }></GistEditorForm>
     )
   }

@@ -19,7 +19,7 @@ class GistEditorForm extends Component {
   }
 
   render () {
-    const { handleSubmit, submitting, formStyle, filenameList } = this.props
+    const { handleSubmit, handleCancel, submitting, formStyle, filenameList } = this.props
 
     return (
       <form className='gist-editor-form' onSubmit={ handleSubmit }>
@@ -41,6 +41,13 @@ class GistEditorForm extends Component {
             bsStyle='success'
             disabled={ submitting }>
             Submit
+          </Button>
+          <Button
+            className='gist-editor-control-button'
+            onClick={ handleCancel }
+              bsStyle='default'
+              disabled={ submitting }>
+              Cancel
           </Button>
         </div>
       </form>

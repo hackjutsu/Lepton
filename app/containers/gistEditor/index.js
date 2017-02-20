@@ -169,7 +169,6 @@ class GistEditor extends Component {
   setMode (filename) {
     const modeInfo = filename ? this.CodeMirror.findModeByFileName(filename) : this.CodeMirror.findModeByName('Plain Text')
     modeInfo && this.editor.getCodeMirror().setOption('mode', modeInfo.mime)
-    modeInfo && this.CodeMirror.autoLoadMode(this.editor.getCodeMirror(), modeInfo.mode)
   }
 
   render () {
