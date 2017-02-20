@@ -110,8 +110,16 @@ class NavigationPanel extends Component {
   }
 
   renderTagSection () {
+    const { userSession } = this.props
+
     return (
       <div className='gist-tag-section'>
+        <div className='starred-tag-section-scroll'>
+          <div className='starred-tag-section-content'>
+            <a className='gist-tag' href={ 'https://gist.github.com/' + userSession.profile.login + '/starred' }>#starred</a>
+          </div>
+        </div>
+        <hr/>
         <div className='lang-tag-section-scroll'>
           <div className='lang-tag-section-content'>
             { this.renderLangTags() }

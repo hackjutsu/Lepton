@@ -25,14 +25,19 @@
     font-size: 13px;
   }
 
-  .list-group-item:first-child {
+  ul {
+    padding-left: 0px;
+  }
+
+  ul:first-child {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
   }
 
-  .list-group-item:last-child {
+  ul:last-child {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
+    border-bottom: solid 1px rgb(238, 238, 238);
   }
 
   .snippet-thumnail-list-item {
@@ -76,9 +81,5 @@
     margin: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  ul {
-    padding-left: 0px;
   }
 }

@@ -50,8 +50,14 @@
     position: relative;
   }
 
+  .starred-tag-section-scroll {
+    height: 22px;
+    position: relative;
+    overflow: auto;
+  }
+
   .pinned-tag-section-scroll {
-    height: 80px;
+    height: 82px;
     position: relative;
     overflow: auto;
     visibility: hidden;
@@ -78,7 +84,8 @@
   }
 
   .custom-tag-section-scroll {
-    max-height: calc(100% - 100px - 80px - 60px);
+    // The last 15px is for decoration purpose
+    max-height: calc(100% - 22px - 100px - 82px - 90px - 15px);
     overflow: auto;
     visibility: hidden;
   }

@@ -425,7 +425,6 @@ class Snippet extends Component {
   }
 
   renderPanelHeader (activeSnippet) {
-    const { userSession } = this.props
     return (
       <div className='header-table'>
         <div className='line'>
@@ -443,8 +442,8 @@ class Snippet extends Component {
             #share
           </a>
           <a className='customized-button'
-            href={ 'https://gist.github.com/' + userSession.profile.login + '/starred' }>
-            #starred
+            href={ activeSnippet.brief.html_url + '/revisions' }>
+            #revisions
           </a>
           {
             this.props.immersiveMode === 'OFF'
