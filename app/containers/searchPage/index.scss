@@ -29,6 +29,11 @@
     border-top: solid 1.5px rgb(237, 237, 237);
   }
 
+  .search-result-item:hover {
+    background: rgb(249, 249, 249);
+    cursor: pointer;
+  }
+
   .search-result-item-selected {
      @extend .search-result-item;
      background: rgb(237, 237, 237);
