@@ -1,3 +1,5 @@
+'use strict'
+
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
@@ -15,7 +17,7 @@ const tooltip = (
   <Tooltip id='tooltip'>{ descriptionTips }</Tooltip>
 )
 
-class GistEditorForm extends Component {
+class GistEditorFormImpl extends Component {
   componentWillMount () {
     const { change, initialData } = this.props
     // Initialize the form
@@ -141,7 +143,7 @@ const renderGistFiles = ({ fields, formStyle, filenameList }) => (
 )
 
 const selector = formValueSelector('gistEditorForm')
-GistEditorForm = connect(
+const GistEditorForm = connect(
   state => {
     const gistFiles = selector(state, 'gistFiles')
     const filenameList = gistFiles && gistFiles.map(({filename}) =>
@@ -150,7 +152,7 @@ GistEditorForm = connect(
       filenameList
     }
   }
-)(GistEditorForm)
+)(GistEditorFormImpl)
 
 export default reduxForm({
   form: 'gistEditorForm'

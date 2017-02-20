@@ -153,7 +153,7 @@ class GistEditor extends Component {
     const { filename } = this.props
 
     this.editor = this.refs.editor
-    this.CodeMirror = this.editor.getCodeMirrorInstance();
+    this.CodeMirror = this.editor.getCodeMirrorInstance()
     this.CodeMirror.modeURL = '../../../node_modules/codemirror/mode/%N/%N.js'
     this.setMode(filename)
   }

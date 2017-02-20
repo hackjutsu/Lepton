@@ -310,7 +310,8 @@ class Snippet extends Component {
     this.props.updateGistRawModal({
       status: 'OFF',
       file: null,
-      content: null
+      content: null,
+      link: null
     })
   }
 
@@ -323,7 +324,8 @@ class Snippet extends Component {
     this.props.updateGistRawModal({
       status: 'ON',
       file: gist.filename,
-      content: gist.content
+      content: gist.content,
+      link: gist.raw_url
     })
   }
 
@@ -335,7 +337,10 @@ class Snippet extends Component {
         show={ gistRawModal.status === 'ON' }
         onHide={ this.closeRawModal.bind(this) }>
         <Modal.Header closeButton>
-          <Modal.Title>{ gistRawModal.file }</Modal.Title>
+          <Modal.Title>
+            { gistRawModal.file }
+            <a className='copy-raw-link' href='#' onClick={ this.handleCopyRawLinkClicked.bind(this, gistRawModal.link) }>#link</a>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <textarea
@@ -414,6 +419,11 @@ class Snippet extends Component {
     Notifier('Copied', 'The share link has been copied to the clipboard.')
   }
 
+  handleCopyRawLinkClicked (url) {
+    clipboard.writeText(url)
+    Notifier('Copied', 'The raw file link has been copied to the clipboard.')
+  }
+
   renderPanelHeader (activeSnippet) {
     const { userSession } = this.props
     return (
@@ -467,7 +477,7 @@ class Snippet extends Component {
               ? <span className='custom-tags'>{ customTags }</span>
               : null }
           <span className='update-date'>
-              { 'Last updated ' +  Moment(gist.brief.updated_at).fromNow() }
+              { 'Last updated ' + Moment(gist.brief.updated_at).fromNow() }
           </span>
         </div>)
 

@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { selectGist, fetchSingleGist } from '../../actions'
 import { descriptionParser } from '../../utilities/parser'
 
