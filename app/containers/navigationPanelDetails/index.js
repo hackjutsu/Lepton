@@ -69,12 +69,12 @@ class NavigationPanelDetails extends Component {
         const { title, description } = descriptionParser(rawDescription)
         const thumbnailTitle = title.length > 0 ? title : description
         snippetThumbnails.push(
-          <ListGroupItem className='snippet-thumnail-list-item' key={ gistId }>
+          <li className='snippet-thumnail-list-item' key={ gistId }>
             <div className={ this.decideSnippetListItemClass(gistId) }
                 onClick={ this.handleClicked.bind(this, gistId) }>
                 <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
             </div>
-          </ListGroupItem>
+         </li>
         )
       }
     })
@@ -84,12 +84,12 @@ class NavigationPanelDetails extends Component {
 
   render () {
     return (
-      <div className='panel-thumnails-background'>
-        <div className='panel-thumnails-scroll'>
-          <div className='panel-thumnails-content'>
-            <ListGroup>
+      <div className='panel-thumbnails-background'>
+        <div className='panel-thumbnails-scroll'>
+          <div className='panel-thumbnails-content'>
+            <ul>
               { this.renderSnippetThumbnails() }
-            </ListGroup>
+            </ul>
           </div>
         </div>
       </div>

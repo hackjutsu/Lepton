@@ -12,6 +12,7 @@ import { remote, clipboard, ipcRenderer } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
 import Autolinker from 'autolinker'
+import Moment from 'moment'
 import {
   addLangPrefix as Prefixed,
   parseCustomTags,
@@ -449,8 +450,8 @@ class Snippet extends Component {
     )
   }
 
-  renderSnippetDescription (rawDescription) {
-    const { title, description, customTags } = descriptionParser(rawDescription)
+  renderSnippetDescription (gist) {
+    const { title, description, customTags } = descriptionParser(gist.brief.description)
 
     const htmlForDescriptionSection = []
     if (title.length > 0) {
@@ -460,9 +461,15 @@ class Snippet extends Component {
         <div className='description-section' key='description'
             dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { newWindow: false })} }/>
     )
-    if (customTags.length > 0) {
-      htmlForDescriptionSection.push(<div className='custom-tags-section' key='customTags'>{ customTags }</div>)
-    }
+    htmlForDescriptionSection.push(
+        <div className='custom-tags-section' key='customTags'>
+          { customTags.length > 0
+              ? <span className='custom-tags'>{ customTags }</span>
+              : null }
+          <span className='update-date'>
+              { 'Last updated ' +  Moment(gist.brief.updated_at).fromNow() }
+          </span>
+        </div>)
 
     return (
       <div>
@@ -519,7 +526,7 @@ class Snippet extends Component {
         <Panel className='snippet-code'
           bsStyle={ activeSnippet.brief.public ? 'default' : 'danger' }
           header={ this.renderPanelHeader(activeSnippet) }>
-          <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet.brief.description) }</div>
+          <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet) }</div>
           { activeSnippet.details
               ? null
               : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }

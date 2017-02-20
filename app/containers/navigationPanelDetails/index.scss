@@ -1,11 +1,11 @@
-.panel-thumnails-background {
+.panel-thumbnails-background {
   background: rgba(0, 0, 0, 0.015);
   height: 95vh;
   margin-top: 5px;
   position: relative;
 }
 
-.panel-thumnails-scroll {
+.panel-thumbnails-scroll {
   float: left;
   width: 100%;
   overflow: auto;
@@ -13,12 +13,12 @@
   visibility: hidden;
 }
 
-.panel-thumnails-content,
-.panel-thumnails-scroll:hover {
+.panel-thumbnails-content,
+.panel-thumbnails-scroll:hover {
   visibility: visible;
 }
 
-.panel-thumnails-scroll {
+.panel-thumbnails-scroll {
 
   .font-style-base {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
@@ -39,6 +39,8 @@
     padding: 0 !important;
     border-right-width: 0 !important;
     border-left-width: 0 !important;
+    border-top: solid 1px rgb(238, 238, 238);
+    background: white;
   }
 
   .snippet-thumnail-list-item:hover {
@@ -48,7 +50,7 @@
 
   .snippet-thumnail {
     @extend .font-style-base;
-    margin: 5px;
+    padding: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -74,5 +76,9 @@
     margin: 5px;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  ul {
+    padding-left: 0px;
   }
 }
