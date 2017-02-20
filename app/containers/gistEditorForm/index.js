@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
-import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
+import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 
 import './index.scss'
 
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
+
+const descriptionTips = '[title] description #tags: tag1, tag2'
+
+const tooltip = (
+  <Tooltip id='tooltip'>{ descriptionTips }</Tooltip>
+)
 
 class GistEditorForm extends Component {
   componentWillMount () {
@@ -71,9 +77,12 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
       className='gist-editor-input-area'
       { ...input }
       type={ type }
-      placeholder='[title] gist description #tags: tag1, tag2'/>
+      placeholder={ descriptionTips }/>
       { touched && ((error && <span className='error-msg'>{ error }</span>) ||
         (warning && <span className='error-msg'>{ warning }</span>)) }
+      <OverlayTrigger placement="top" overlay={ tooltip }>
+        <a className='tips' href='#'>tips</a>
+      </OverlayTrigger>
   </div>
 )
 

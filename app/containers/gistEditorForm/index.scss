@@ -33,11 +33,12 @@
 
   .gist-editor-input-area {
     @extend .font-style-base;
-    width: 100%;
+    width: 95%;
     padding: 5px;
     border: solid  1px;
     border-color: #D3D3D3;
     border-radius: 3px;
+    margin-right: 10px;
   }
 
   .gist-editor-filename-area {
@@ -93,5 +94,11 @@
     font-size: 11px;
     font-weight: bold;
     color: #B0580E;
+  }
+
+  .tips {
+    @extend .font-style-base;
+    font-size: 12px;
+    font-style: italic;
   }
 }
