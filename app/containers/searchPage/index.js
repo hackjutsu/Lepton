@@ -174,7 +174,7 @@ class SearchPage extends Component {
         <input
           type="text"
           className='search-box'
-          placeholder='Search in description fields...'
+          placeholder='Search for description, tags or file names...'
           autoFocus
           value={ this.state.inputValue }
           onChange={ this.updateInputValue.bind(this) }
