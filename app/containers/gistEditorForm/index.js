@@ -75,8 +75,7 @@ const renderContentField = ({ input, type, meta: { touched, error, warning }, fi
     <GistEditor
       filename={ filename }
       { ...input }
-      type={ type }
-      placeholder='// Code'/>
+      type={ type }/>
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>

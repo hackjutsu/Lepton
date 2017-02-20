@@ -1,5 +1,16 @@
 import React, { Component } from 'react'
 import CodeMirror from 'react-codemirror'
+import 'codemirror/mode/meta'
+
+// When Webpack imports these AMD modules for modes, the first one will be set as
+// the default mode for CodeMirror, which then analyzes the content accordingly
+// under the hood for syntax highlight. However, some mode will report errors if
+// the content doesn't comply with its syntax, like dylan which doesn't allow the
+// word 'constructor' (though this could be a bug in CodeMirror). Therefore the
+// first mode matters. We intentionally select markdown as the first(default) mode
+// because of its flexibility in syntax.
+import 'codemirror/mode/markdown/markdown'
+
 import 'codemirror/mode/dylan/dylan'
 import 'codemirror/mode/textile/textile'
 import 'codemirror/mode/pegjs/pegjs'
@@ -64,7 +75,6 @@ import 'codemirror/mode/diff/diff'
 import 'codemirror/mode/idl/idl'
 import 'codemirror/mode/rst/rst'
 import 'codemirror/mode/smalltalk/smalltalk'
-import 'codemirror/mode/markdown/markdown'
 import 'codemirror/mode/nsis/nsis'
 import 'codemirror/mode/mbox/mbox'
 import 'codemirror/mode/spreadsheet/spreadsheet'
@@ -83,7 +93,6 @@ import 'codemirror/mode/xquery/xquery'
 import 'codemirror/mode/asciiarmor/asciiarmor'
 import 'codemirror/mode/erlang/erlang'
 import 'codemirror/mode/scheme/scheme'
-import 'codemirror/mode/meta'
 import 'codemirror/mode/python/python'
 import 'codemirror/mode/coffeescript/coffeescript'
 import 'codemirror/mode/clojure/clojure'
@@ -175,12 +184,12 @@ class GistEditor extends Component {
       viewportMargin: Infinity,
       placeholder: placeholder,
       foldGutter: true,
-      gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+      gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
     }
 
     return (
       <CodeMirror
-        ref="editor"
+        ref='editor'
         value={ value }
         options={ options }
         onChange={ value => this.props.onChange(value) }
