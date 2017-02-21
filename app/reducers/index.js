@@ -13,6 +13,7 @@ import UserSessionReducer from './reducer_user_session'
 import AuthWindowStatusReducer from './reducer_auth_window_status'
 import GistSyncStatusReducer from './reducer_gist_sync_status'
 import SearchWindowStatusReducer from './reducer_search_window_status'
+import ScrollRequestStatusReducer from './reducer_scroll_request_status'
 import UpdateAvailableBarStatusReducer from './reducer_update_available_bar_status'
 import NewVersionInfoReducer from './reducer_new_version_info'
 import ImmersiveModeReducer from './reducer_immersive_mode'
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   authWindowStatus: AuthWindowStatusReducer,
   gistSyncStatus: GistSyncStatusReducer,
   searchWindowStatus: SearchWindowStatusReducer,
+  scrollRequestStatus: ScrollRequestStatusReducer,
   updateAvailableBarStatus: UpdateAvailableBarStatusReducer,
   newVersionInfo: NewVersionInfoReducer,
   immersiveMode: ImmersiveModeReducer,

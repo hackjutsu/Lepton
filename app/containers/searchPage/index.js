@@ -7,7 +7,8 @@ import {
   selectGistTag,
   selectGist,
   fetchSingleGist,
-  updateSearchWindowStatus} from '../../actions/index'
+  updateSearchWindowStatus,
+  updatescrollRequestStatus} from '../../actions'
 import { bindActionCreators } from 'redux'
 import { descriptionParser, addLangPrefix as Prefixed } from '../../utilities/parser'
 
@@ -81,12 +82,16 @@ class SearchPage extends Component {
   }
 
   handleSnippetClicked (gistId) {
-    const { gists, selectGistTag, selectGist, updateSearchWindowStatus, fetchSingleGist } = this.props
+    const { gists, selectGistTag, selectGist, updateSearchWindowStatus, updatescrollRequestStatus, fetchSingleGist } = this.props
 
     if (!gists[gistId].details) {
       logger.info('[Dispatch] fetchSingleGist ' + gistId)
       fetchSingleGist(gists[gistId], gistId)
     }
+
+    logger.info('[Dispatch] update scroll request to ON')
+    updatescrollRequestStatus('ON')
+
     logger.info('[Dispatch] selectGist ' + gistId)
     selectGist(gistId)
 
@@ -213,7 +218,8 @@ function mapDispatchToProps (dispatch) {
     selectGistTag: selectGistTag,
     selectGist: selectGist,
     fetchSingleGist: fetchSingleGist,
-    updateSearchWindowStatus: updateSearchWindowStatus
+    updateSearchWindowStatus: updateSearchWindowStatus,
+    updatescrollRequestStatus: updatescrollRequestStatus
   }, dispatch)
 }
 

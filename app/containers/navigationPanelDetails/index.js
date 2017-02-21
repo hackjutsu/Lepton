@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { selectGist, fetchSingleGist } from '../../actions'
+import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
 import { descriptionParser } from '../../utilities/parser'
 
 import './index.scss'
@@ -12,6 +12,17 @@ import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class NavigationPanelDetails extends Component {
+
+  componentDidUpdate () {
+    const { updatescrollRequestStatus, scrollRequestStatus, activeGist } = this.props
+
+    if (scrollRequestStatus === 'ON') {
+      this.refs[activeGist].scrollIntoView(true)
+
+      logger.info('[Dispatch] update scroll request to OFF')
+      updatescrollRequestStatus('OFF')
+    }
+  }
 
   handleClicked (gistId) {
     const { gists, fetchSingleGist, selectGist } = this.props
@@ -68,7 +79,7 @@ class NavigationPanelDetails extends Component {
         const { title, description } = descriptionParser(rawDescription)
         const thumbnailTitle = title.length > 0 ? title : description
         snippetThumbnails.push(
-          <li className='snippet-thumnail-list-item' key={ gistId }>
+          <li className='snippet-thumnail-list-item' key={ gistId } ref={ gistId }>
             <div className={ this.decideSnippetListItemClass(gistId) }
                 onClick={ this.handleClicked.bind(this, gistId) }>
                 <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
@@ -101,14 +112,16 @@ function mapStateToProps (state) {
     gists: state.gists,
     gistTags: state.gistTags,
     activeGistTag: state.activeGistTag,
-    activeGist: state.activeGist
+    activeGist: state.activeGist,
+    scrollRequestStatus: state.scrollRequestStatus
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     selectGist: selectGist,
-    fetchSingleGist: fetchSingleGist
+    fetchSingleGist: fetchSingleGist,
+    updatescrollRequestStatus: updatescrollRequestStatus
   }, dispatch)
 }
 

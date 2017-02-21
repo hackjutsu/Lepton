@@ -19,6 +19,7 @@ export const SELECT_GIST = 'SELECT_GIST'
 export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
 export const UPDATE_GIST_SYNC_STATUS = 'UPDATE_GIST_SYNC_STATUS'
 export const UPDATE_SEARCHWINDOW_STATUS = 'UPDATE_SEARCHWINDOW_STATUS'
+export const UPDATE_SCROLL_REQUEST_STATUS = 'UPDATE_SCROLL_REQUEST_STATUS'
 export const UPDATE_UPDATEAVAILABLEBAR_STATUS = 'UPDATE_UPDATEAVAILABLEBAR_STATUS'
 export const UPDATE_NEW_VERSION_INFO = 'UPDATE_NEW_VERSION_INFO'
 export const UPDATE_IMMERSIVE_MODE_STATUS = 'UPDATE_IMMERSIVE_MODE_STATUS'
@@ -102,6 +103,13 @@ export function updateAuthWindowStatus (status) {
 export function updateSearchWindowStatus (status) {
   return {
     type: UPDATE_SEARCHWINDOW_STATUS,
+    payload: status
+  }
+}
+
+export function updatescrollRequestStatus (status) {
+  return {
+    type: UPDATE_SCROLL_REQUEST_STATUS,
     payload: status
   }
 }
