@@ -142,7 +142,7 @@ function setUpApplicationMenu () {
         click: (item, mainWindow) => mainWindow && mainWindow.send('immersive-mode')
       },
       {
-        label: 'Escape',
+        label: 'Back to Normal Mode',
         accelerator: 'Escape',
         click: (item, mainWindow) => {
           mainWindow && mainWindow.send('exit-immersive-mode')

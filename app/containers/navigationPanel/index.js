@@ -211,8 +211,7 @@ class NavigationPanel extends Component {
     updatePinnedTags(pinnedTags)
     this.closePinnedTagsModal()
 
-    // Saving the pinnedTags to local storage
-    // FIXME: not able to preserve two users' pinnedTags??
+    // Saving the pinnedTags to local preference
     const userName = userSession.profile.login
     localPref.set(userName, Object.assign({}, localPref.get(userName), { pinnedTags }))
   }

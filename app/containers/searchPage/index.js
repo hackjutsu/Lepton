@@ -3,14 +3,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
-import {
-  selectGistTag,
-  selectGist,
-  fetchSingleGist,
-  updateSearchWindowStatus,
-  updatescrollRequestStatus} from '../../actions'
 import { bindActionCreators } from 'redux'
-import { descriptionParser, addLangPrefix as Prefixed } from '../../utilities/parser'
+import {
+    descriptionParser,
+    addLangPrefix as Prefixed } from '../../utilities/parser'
+import {
+    selectGistTag,
+    selectGist,
+    fetchSingleGist,
+    updateSearchWindowStatus,
+    updatescrollRequestStatus} from '../../actions'
 
 import './index.scss'
 
@@ -82,7 +84,13 @@ class SearchPage extends Component {
   }
 
   handleSnippetClicked (gistId) {
-    const { gists, selectGistTag, selectGist, updateSearchWindowStatus, updatescrollRequestStatus, fetchSingleGist } = this.props
+    const {
+        gists,
+        selectGistTag,
+        selectGist,
+        updateSearchWindowStatus,
+        updatescrollRequestStatus,
+        fetchSingleGist } = this.props
 
     if (!gists[gistId].details) {
       logger.info('[Dispatch] fetchSingleGist ' + gistId)
@@ -135,7 +143,7 @@ class SearchPage extends Component {
   renderSearchResults () {
     const { searchResults, selectedIndex, inputValue } = this.state
 
-    // In some unknown circumstance, searchResults is undefined. So we put a
+    // FIXME: In some unknown circumstance, searchResults is undefined. So we put a
     // guard here. We should remove it once we better understand the mechanism
     // behind it.
     if (!inputValue || !searchResults) return null
@@ -150,14 +158,18 @@ class SearchPage extends Component {
 
     const resultsJSXGroup = []
     searchResults.forEach((gist, index) => {
-      let gistDescription = gist.description
-      // let highlightedDescription = gistDescription.replace(inputValue, '**' + inputValue + '**')
-      let highlightedDescription = gistDescription
-      let filenames = gist.filename.split(',').filter(file => file.trim()).map(file => {
-        return (
-          <div className='gist-tag' key={ file.trim() }>{ file }</div>
-        )
-      })
+      const highlightedDescription = gist.description
+      let filenames = []
+
+      // FIXME: In some rare cases, gist.filename is undefined in runtime for some unknown reason. So
+      // we place a guard here as a workaround.
+      if (gist.filename) {
+        filenames = gist.filename.split(',').filter(file => file.trim()).map(file => {
+            return (
+              <div className='gist-tag' key={ file.trim() }>{ file }</div>
+            )
+        })
+      }
       resultsJSXGroup.push(
         <li
           className={ index === selectedIndex
@@ -179,7 +191,7 @@ class SearchPage extends Component {
         <input
           type="text"
           className='search-box'
-          placeholder='Search for description, tags or file names...'
+          placeholder='Search for description, tags, file names...'
           autoFocus
           value={ this.state.inputValue }
           onChange={ this.updateInputValue.bind(this) }

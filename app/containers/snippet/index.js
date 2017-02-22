@@ -476,7 +476,7 @@ class Snippet extends Component {
               ? <span className='custom-tags'>{ customTags }</span>
               : null }
           <span className='update-date'>
-              { 'Last updated ' + Moment(gist.brief.updated_at).fromNow() }
+              { 'Last active ' + Moment(gist.brief.updated_at).fromNow() }
           </span>
         </div>)
 
