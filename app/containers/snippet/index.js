@@ -34,8 +34,8 @@ import {
 
 import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github-gist.css'
-import collapsedIcon from '../../../resource/ic_collapsed.svg'
-import expandedIcon from '../../../resource/ic_expanded.svg'
+import collapsedIcon from './ic_collapsed.svg'
+import expandedIcon from './ic_expanded.svg'
 
 const logger = remote.getGlobal('logger')
 

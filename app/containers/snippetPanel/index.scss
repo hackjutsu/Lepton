@@ -1,7 +1,7 @@
 .snippet-panel {
   float: right;
   width: 100%;
-  overflow: auto;
+  overflow: overlay;
   height: 97vh;
   visibility: hidden;
 }
