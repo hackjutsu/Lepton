@@ -165,9 +165,9 @@ class SearchPage extends Component {
       // we place a guard here as a workaround.
       if (gist.filename) {
         filenames = gist.filename.split(',').filter(file => file.trim()).map(file => {
-            return (
-              <div className='gist-tag' key={ file.trim() }>{ file }</div>
-            )
+          return (
+            <div className='gist-tag' key={ file.trim() }>{ file }</div>
+          )
         })
       }
       resultsJSXGroup.push(
