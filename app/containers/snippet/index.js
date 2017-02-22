@@ -24,6 +24,7 @@ import {
   updateGistEditModeStatus,
   updateGistDeleteModeStatus,
   selectGistTag,
+  updateFileExpandStatus,
   updateGistTags } from '../../actions/index'
 
 import {
@@ -47,26 +48,6 @@ Markdown.setOptions({
 })
 
 class Snippet extends Component {
-
-  constructor (props) {
-    super(props)
-
-    const { gists, activeGist } = this.props
-    if (gists && gists[activeGist] && gists[activeGist].brief) {
-      const fileList = gists[activeGist].brief.files
-      const expandStatus = {}
-      for (const fileKey in fileList) {
-        expandStatus[fileKey] = true
-      }
-      this.state = {
-        expandStatus: expandStatus
-      }
-    } else {
-      this.state = {
-        expandStatus: {}
-      }
-    }
-  }
 
   componentWillMount () {
     ipcRenderer.on('edit-gist-renderer', () => {
@@ -509,22 +490,23 @@ class Snippet extends Component {
     )
   }
 
-  handleCollapseClick (fileKey) {
-    const newExpandStatus = this.state.expandStatus
+  handleCollapseClicked (filename) {
+    const { activeGist, fileExpandStatus, updateFileExpandStatus } = this.props
 
-    if (newExpandStatus[fileKey] === false) {
-      newExpandStatus[fileKey] = true
+    const key = activeGist + '-' + filename
+    if (fileExpandStatus[key] === undefined) {
+      // If the file is clicked for the first time, it has no records in the
+      // fileExpandStatus list. Therefore, its value would be undefined, but we still
+      // treat it as true because the file is expanded by default.
+      fileExpandStatus[key] = false
     } else {
-      newExpandStatus[fileKey] = false
+      fileExpandStatus[key] = !fileExpandStatus[key]
     }
-
-    this.setState({
-      expandStatus: newExpandStatus
-    })
+    updateFileExpandStatus(fileExpandStatus)
   }
 
   render () {
-    const { gists, activeGist } = this.props
+    const { gists, activeGist, fileExpandStatus } = this.props
     const activeSnippet = gists[activeGist]
     if (!activeSnippet) return null
 
@@ -538,17 +520,18 @@ class Snippet extends Component {
           filename: gistFile.filename,
           content: gistFile.content
         }))
-        let currentExpanded = true
-        if (this.state.expandStatus[key] === false) {
-          currentExpanded = false
-        }
+
+        const expandStatusKey = activeGist + '-' + key
+        // undefined should be treated as true as explained above
+        const isExpanded = fileExpandStatus[expandStatusKey] === false ? false : true
+
         fileHtmlArray.push(
           <div key={ key }>
             <hr/>
             <div className={ gistFile.language === 'Markdown' ? 'file-header-md' : 'file-header' }>
               <img
-                src={ currentExpanded ? expandedIcon : collapsedIcon }
-                onClick={ this.handleCollapseClick.bind(this, key) }
+                src={ isExpanded ? expandedIcon : collapsedIcon }
+                onClick={ this.handleCollapseClicked.bind(this, key) }
                 className='expand-icon'/>
               <a href={ activeSnippet.details.html_url + '#file-' + gistFile.filename.replace(/\./g, '-') }>
                 <b>{ gistFile.filename }</b>
@@ -566,7 +549,7 @@ class Snippet extends Component {
                 #copy
               </a>
             </div>
-            <Collapse in={ currentExpanded }>
+            <Collapse in={ isExpanded }>
               <div
                 className='code-area'
                 dangerouslySetInnerHTML={ this.createMarkup(gistFile.content, gistFile.language) }/>
@@ -606,7 +589,8 @@ function mapStateToProps (state) {
     immersiveMode: state.immersiveMode,
     gistRawModal: state.gistRawModal,
     gistEditModalStatus: state.gistEditModalStatus,
-    gistDeleteModalStatus: state.gistDeleteModalStatus
+    gistDeleteModalStatus: state.gistDeleteModalStatus,
+    fileExpandStatus: state.fileExpandStatus
   }
 }
 
@@ -617,7 +601,8 @@ function mapDispatchToProps (dispatch) {
     selectGistTag: selectGistTag,
     updateGistEditModeStatus: updateGistEditModeStatus,
     updateGistDeleteModeStatus: updateGistDeleteModeStatus,
-    updateGistRawModal: updateGistRawModal
+    updateGistRawModal: updateGistRawModal,
+    updateFileExpandStatus: updateFileExpandStatus
   }, dispatch)
 }
 

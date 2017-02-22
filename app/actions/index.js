@@ -29,6 +29,14 @@ export const UPDATE_GIST_EDIT_MODAL = 'UPDATE_GIST_EDIT_MODAL'
 export const UPDATE_GIST_NEW_MODAL = 'UPDATE_GIST_NEW_MODAL'
 export const UPDATE_GIST_DELETE_MODAL_STATUS = 'UPDATE_GIST_DELETE_MODAL_STATUS'
 export const UPDATE_PINNED_TAGS_MODAL_STATUS = 'UPDATE_PINNED_TAGS_MODAL_STATUS'
+export const UPDATE_FILE_EXPAND_STATUS = 'UPDATE_FILE_EXPAND_STATUS'
+
+export function updateFileExpandStatus (status) {
+  return {
+    type: UPDATE_FILE_EXPAND_STATUS,
+    payload: status
+  }
+}
 
 export function updatePinnedTagsModalStatus (status) {
   return {

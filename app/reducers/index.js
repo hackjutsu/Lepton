@@ -23,6 +23,7 @@ import GistEditModalReducer from './reducer_gist_edit_modal'
 import GistNewModalReducer from './reducer_gist_new_modal'
 import GistDeleteModalReducer from './reducer_gist_delete_modal'
 import PinnedTagsSelectionModalReducer from './reducer_pinned_tags_selections_modal'
+import FileExpandStatusReducer from './reducer_file_expand_status'
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -46,7 +47,8 @@ const rootReducer = combineReducers({
   gistEditModalStatus: GistEditModalReducer,
   gistNewModalStatus: GistNewModalReducer,
   gistDeleteModalStatus: GistDeleteModalReducer,
-  pinnedTagsModalStatus: PinnedTagsSelectionModalReducer
+  pinnedTagsModalStatus: PinnedTagsSelectionModalReducer,
+  fileExpandStatus: FileExpandStatusReducer
 })
 
 export default rootReducer
