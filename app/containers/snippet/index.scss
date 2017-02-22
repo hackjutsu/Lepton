@@ -67,10 +67,16 @@
     @extend .file-header;
     // background: rgba(0,0,0,0.03);
     border: rgb(204,204,204) 1px solid;
-    border-bottom: 0px;
     border-radius: 5px 5px 0px 0px;
     padding: 10px 10px 10px 10px;
-    margin-bottom: 0px;
+    margin-bottom: -1px;
+  }
+
+  .expand-icon {
+    width: 24px;
+    height: 24px;
+    padding: 2px;
+    padding-top: 0;
   }
 
   .customized-button-file-header {

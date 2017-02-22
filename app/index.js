@@ -495,7 +495,6 @@ ipcRenderer.on('new-gist', data => {
 ipcRenderer.on('edit-gist', data => {
   const state = reduxStore.getState()
   const {
-      immersiveMode,
       gistRawModal,
       searchWindowStatus,
       gistNewModalStatus,
