@@ -1,0 +1,92 @@
+.preference-modal {
+
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 13px;
+    color: rgb(100,100,100);
+  }
+
+  .section-base {
+    height: 75vh;
+  }
+
+  .general-section {
+    @extend .section-base;
+  }
+
+  .about-section {
+    @extend .section-base;
+  }
+
+  .logo-section {
+    @extend .font-style-base;
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .logo {
+    width: 100px;
+    margin: 5px;
+  }
+
+  .contributor-section {
+    overflow: auto;
+    height: 15%;
+    border-radius: 5px;
+    padding: 0 20px;
+    border: solid 1px rgb(200,200,200);
+  }
+
+  .license-section {
+    overflow: auto;
+    height: 28vh;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    padding: 0 20px;
+    border: solid 1px rgb(200,200,200);
+  }
+
+  .license-item {
+    margin: 10px 0px;
+  }
+
+  .license-project {
+    @extend .font-style-base;
+    font-weight: bold;
+  }
+
+  .license-type {
+    @extend .font-style-base;
+    font-size: 11px;
+  }
+
+  .setting-title {
+    @extend .font-style-base;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 10px;
+  }
+
+  .modal-sm {
+    width: 375px;
+  }
+
+  .logo-sub {
+    margin: 0 5px;
+  }
+
+  .contributor {
+    @extend .font-style-base;
+    margin: 5px;
+  }
+
+  hr {
+    margin-bottom: 5px;
+  }
+}
+
+/* This is a global setting affecting all dialogs */
+.modal {
+  -webkit-app-region: drag;
+  background: rgba(0, 0, 0, 0.5);
+}

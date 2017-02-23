@@ -95,7 +95,7 @@ class Snippet extends Component {
   renderDeleteModal () {
     return (
       <div className='static-modal'>
-        <Modal show={ this.props.gistDeleteModalStatus === 'ON' } bsSize='small'>
+        <Modal show={ this.props.gistDeleteModalStatus === 'ON' } bsSize='small' keyboard={ true }>
           <Modal.Header>
             <Modal.Title>Delete the gist?</Modal.Title>
           </Modal.Header>
@@ -296,7 +296,8 @@ class Snippet extends Component {
       <Modal
         bsSize='large'
         dialogClassName='edit-modal'
-        backdrop={ false }
+        animation={ false }
+        backdrop='static'
         show={ this.props.gistEditModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>

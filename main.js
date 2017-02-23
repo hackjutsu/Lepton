@@ -24,6 +24,7 @@ const keyShortcutForSearch = 'Shift+Space'
 const keyNewGist = 'CommandOrControl+N'
 const keyEditGist = 'CommandOrControl+E'
 const keyImmersiveMode = 'CommandOrControl+I'
+const keyPreference = 'CommandOrControl+,'
 const keyUp = 'Shift+Up'
 const keyDown = 'Shift+Down'
 const keyEnter = 'Shift+Enter'
@@ -145,7 +146,14 @@ function setUpApplicationMenu () {
         label: 'Back to Normal Mode',
         accelerator: 'Escape',
         click: (item, mainWindow) => {
-          mainWindow && mainWindow.send('exit-immersive-mode')
+          mainWindow && mainWindow.send('back-to-normal-mode')
+        }
+      },
+      {
+        label: 'About',
+        accelerator: keyPreference,
+        click: (item, mainWindow) => {
+          mainWindow && mainWindow.send('local-preference')
         }
       }
     ]
