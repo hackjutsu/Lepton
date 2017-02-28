@@ -11,7 +11,7 @@ import NavigationPanel from '../navigationPanel'
 import LoginPage from '../loginPage'
 import SnippetPanel from '../snippetPanel'
 import SearchPage from '../searchPage'
-import SettingPage from '../SettingPage'
+import SettingPage from '../settingPage'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
 
 import './index.scss'
