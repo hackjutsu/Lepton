@@ -83,10 +83,10 @@
   hr {
     margin-bottom: 5px;
   }
-}
 
-/* This is a global setting affecting all dialogs */
-.modal {
-  -webkit-app-region: drag;
-  background: rgba(0, 0, 0, 0.5);
+  /* Settings only affecting the preference dialog */
+  .modal {
+    -webkit-app-region: drag;
+    background: rgba(0, 0, 0, 0.5);
+  }
 }

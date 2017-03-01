@@ -35,3 +35,9 @@
 .new-modal {
   width: 90vw;
 }
+
+/* Global setting affecting all dialogs (NEW/EDIT) if not overwritten. */
+.modal {
+  -webkit-app-region: drag;
+  background: rgba(0, 0, 0, 0.1);
+}
