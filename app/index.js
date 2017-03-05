@@ -81,11 +81,16 @@ function launchAuthWindow (accessToken) {
     return
   }
 
+  const webPreferences = {
+    nodeIntegration: false
+  }
+
   let authWindow = new remote.BrowserWindow({
     parent: remote.getGlobal('mainWindow'),
     width: 400,
     height: 600,
-    show: false })
+    show: false,
+    webPreferences })
   let githubUrl = 'https://github.com/login/oauth/authorize?'
   let authUrl = githubUrl + 'client_id=' + CONFIG_OPTIONS.client_id + '&scope=' + CONFIG_OPTIONS.scopes
   authWindow.loadURL(authUrl)
