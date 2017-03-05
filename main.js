@@ -95,7 +95,8 @@ function createWindow () {
 }
 
 app.on('ready', function() {
-    createWindow()
+    // createWindow()
+    createWindowAndAutoLogin()
 })
 
 app.on('window-all-closed', function() {

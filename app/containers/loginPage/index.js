@@ -73,23 +73,27 @@ class LoginPage extends Component {
       )
     }
 
-    return (
-      <div className='button-group-modal'>
-        <Button
-          autoFocus
-          className='modal-button'
-          bsStyle="success"
-          onClick={ this.handleContinueButtonClicked.bind(this) }>
-          Continue as { loggedInUserName }
-        </Button>
-        <br/>
-        <Button
-          className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
-          onClick={ this.handleLoginClicked.bind(this) }>
-          Switch Account
-        </Button>
-      </div>
-    )
+    return null
+
+    // Uncomment this block if we want the "Continue as { loggedInUserName }" button shown up
+    // Other than logging in automatically.
+    // return (
+    //   <div className='button-group-modal'>
+    //     <Button
+    //       autoFocus
+    //       className='modal-button'
+    //       bsStyle="success"
+    //       onClick={ this.handleContinueButtonClicked.bind(this) }>
+    //       Continue as { loggedInUserName }
+    //     </Button>
+    //     <br/>
+    //     <Button
+    //       className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
+    //       onClick={ this.handleLoginClicked.bind(this) }>
+    //       Switch Account
+    //     </Button>
+    //   </div>
+    // )
   }
 
   renderLoginModalBody () {
