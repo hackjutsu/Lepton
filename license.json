@@ -1,10 +1,4 @@
 {
-  "Lepton@1.2.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/hackjutsu/Lepton",
-    "publisher": "CosmoX",
-    "licenseFile": "license.json"
-  },
   "ansi-regex@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/ansi-regex",
