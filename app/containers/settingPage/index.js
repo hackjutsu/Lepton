@@ -13,6 +13,9 @@ class SettingPage extends Component {
   renderAboutSection () {
     const licenseList = []
     Object.keys(LicenseInfo).forEach(item => {
+      if (item.startsWith(appInfo.name)) {
+        return;
+      }
       licenseList.push(
         <div key={ item } className='license-item'>
           <div className='license-project'>

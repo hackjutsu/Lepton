@@ -1,4 +1,10 @@
 {
+  "Lepton@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/hackjutsu/Lepton",
+    "publisher": "CosmoX",
+    "licenseFile": "license.json"
+  },
   "ansi-regex@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/ansi-regex",
@@ -57,7 +63,7 @@
     "email": "iam@alexindigo.com",
     "licenseFile": "node_modules/asynckit/LICENSE"
   },
-  "autolinker@1.4.0": {
+  "autolinker@1.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/gregjacobs/Autolinker.js",
     "publisher": "Gregory Jacobs",
@@ -89,7 +95,7 @@
   "bcrypt-pbkdf@1.0.1": {
     "licenses": "BSD-3-Clause"
   },
-  "bluebird-lst-c@1.0.6": {
+  "bluebird-lst@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
     "publisher": "Vladimir Krivosheev"
@@ -133,7 +139,7 @@
     "publisher": "Jed Watson",
     "licenseFile": "node_modules/classnames/LICENSE"
   },
-  "codemirror@5.23.0": {
+  "codemirror@5.24.0": {
     "licenses": "MIT",
     "repository": "https://github.com/codemirror/CodeMirror",
     "licenseFile": "node_modules/codemirror/LICENSE"
@@ -185,12 +191,12 @@
     "url": "http://trentm.com",
     "licenseFile": "node_modules/dashdash/LICENSE.txt"
   },
-  "debug@2.6.0": {
+  "debug@2.6.1": {
     "licenses": "MIT",
     "repository": "https://github.com/visionmedia/debug",
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
-    "licenseFile": "node_modules/debug/LICENSE"
+    "licenseFile": "node_modules/electron-builder-http/node_modules/debug/LICENSE"
   },
   "deep-equal@1.0.1": {
     "licenses": "MIT",
@@ -222,7 +228,7 @@
     "url": "http://jeremie.com/",
     "licenseFile": "node_modules/ecc-jsbn/LICENSE"
   },
-  "electron-builder-http@13.4.0": {
+  "electron-builder-http@13.10.1": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev"
@@ -257,7 +263,7 @@
     "publisher": "andrea@parro.it",
     "licenseFile": "node_modules/electron-localshortcut/license"
   },
-  "electron-updater@1.6.1": {
+  "electron-updater@1.7.1": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev"
@@ -329,7 +335,7 @@
     "url": "http://debuggable.com/",
     "licenseFile": "node_modules/form-data/License"
   },
-  "fs-extra-p@3.1.0": {
+  "fs-extra-p@4.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p"
   },
