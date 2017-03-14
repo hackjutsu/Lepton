@@ -1,5 +1,5 @@
 {
-  "Lepton@1.2.0": {
+  "Lepton@1.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -54,7 +54,7 @@
     "licenses": "MIT",
     "repository": "https://github.com/caolan/async",
     "publisher": "Caolan McMahon",
-    "licenseFile": "node_modules/async/LICENSE"
+    "licenseFile": "node_modules/winston/node_modules/async/LICENSE"
   },
   "asynckit@0.4.0": {
     "licenses": "MIT",
@@ -63,7 +63,7 @@
     "email": "iam@alexindigo.com",
     "licenseFile": "node_modules/asynckit/LICENSE"
   },
-  "autolinker@1.4.1": {
+  "autolinker@1.4.2": {
     "licenses": "MIT",
     "repository": "https://github.com/gregjacobs/Autolinker.js",
     "publisher": "Gregory Jacobs",
@@ -86,7 +86,7 @@
     "url": "http://github.com/mhart",
     "licenseFile": "node_modules/aws4/LICENSE"
   },
-  "babel-runtime@6.22.0": {
+  "babel-runtime@6.23.0": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-runtime",
     "publisher": "Sebastian McKenzie",
@@ -139,7 +139,7 @@
     "publisher": "Jed Watson",
     "licenseFile": "node_modules/classnames/LICENSE"
   },
-  "codemirror@5.24.0": {
+  "codemirror@5.24.2": {
     "licenses": "MIT",
     "repository": "https://github.com/codemirror/CodeMirror",
     "licenseFile": "node_modules/codemirror/LICENSE"
@@ -179,6 +179,13 @@
     "repository": "https://github.com/hapijs/cryptiles",
     "licenseFile": "node_modules/cryptiles/LICENSE"
   },
+  "css-in-js-utils@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rofrischmann/css-in-js-utils",
+    "publisher": "Robin Frischmann",
+    "email": "robin@rofrischmann.de",
+    "licenseFile": "node_modules/css-in-js-utils/LICENSE"
+  },
   "cycle@1.0.3": {
     "licenses": "UNKNOWN",
     "repository": "https://github.com/dscape/cycle"
@@ -215,6 +222,12 @@
     "licenseFile": "node_modules/delayed-stream/License"
   },
   "dom-helpers@2.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jquense/dom-helpers",
+    "publisher": "Jason Quense",
+    "email": "monastic.panic@gmail.com"
+  },
+  "dom-helpers@3.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jquense/dom-helpers",
     "publisher": "Jason Quense",
@@ -263,7 +276,7 @@
     "publisher": "andrea@parro.it",
     "licenseFile": "node_modules/electron-localshortcut/license"
   },
-  "electron-updater@1.7.1": {
+  "electron-updater@1.8.1": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev"
@@ -346,7 +359,7 @@
     "email": "jprichardson@gmail.com",
     "licenseFile": "node_modules/fs-extra/LICENSE"
   },
-  "fuse.js@2.6.1": {
+  "fuse.js@2.6.2": {
     "licenses": "Apache",
     "repository": "https://github.com/krisk/Fuse",
     "publisher": "Kirollos Risk",
@@ -457,7 +470,7 @@
     "publisher": "Sébastien Demanou",
     "licenseFile": "node_modules/image-downloader/LICENSE"
   },
-  "inline-style-prefixer@2.0.5": {
+  "inline-style-prefixer@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/rofrischmann/inline-style-prefixer",
     "publisher": "Robin Frischmann",
@@ -530,7 +543,7 @@
     "publisher": "Simon Lydell",
     "licenseFile": "node_modules/js-tokens/LICENSE"
   },
-  "js-yaml@3.8.1": {
+  "js-yaml@3.8.2": {
     "licenses": "MIT",
     "repository": "https://github.com/nodeca/js-yaml",
     "publisher": "Vladimir Zapparov",
@@ -681,7 +694,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "licenseFile": "node_modules/path-exists/license"
+    "licenseFile": "node_modules/unused-filename/node_modules/path-exists/license"
   },
   "pinkie-promise@2.0.1": {
     "licenses": "MIT",
@@ -742,7 +755,7 @@
     "repository": "https://github.com/facebook/react",
     "licenseFile": "node_modules/react-dom/LICENSE"
   },
-  "react-overlays@0.6.10": {
+  "react-overlays@0.6.11": {
     "licenses": "MIT",
     "repository": "https://github.com/react-bootstrap/react-overlays",
     "publisher": "Jason Quense",
@@ -756,7 +769,7 @@
     "email": "mtscout6@gmail.com",
     "licenseFile": "node_modules/react-prop-types/LICENSE"
   },
-  "react-redux@5.0.2": {
+  "react-redux@5.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/reactjs/react-redux",
     "publisher": "Dan Abramov",
@@ -764,14 +777,14 @@
     "url": "http://github.com/gaearon",
     "licenseFile": "node_modules/react-redux/LICENSE.md"
   },
-  "react-split-pane@0.1.57": {
+  "react-split-pane@0.1.58": {
     "licenses": "MIT",
     "repository": "https://github.com/tomkp/react-split-pane",
     "publisher": "tomkp",
     "email": "tom@tomkp.com",
     "licenseFile": "node_modules/react-split-pane/LICENSE"
   },
-  "react-style-proptype@1.4.0": {
+  "react-style-proptype@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/brigand/react-style-proptype",
     "publisher": "Frankie Bagnardi",
@@ -802,7 +815,7 @@
     "repository": "https://github.com/reactjs/redux",
     "licenseFile": "node_modules/redux/LICENSE.md"
   },
-  "regenerator-runtime@0.10.1": {
+  "regenerator-runtime@0.10.3": {
     "licenses": "MIT",
     "repository": "https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime",
     "publisher": "Ben Newman",
@@ -954,6 +967,12 @@
     "publisher": "Jason Quense",
     "email": "monastic.panic@gmail.com"
   },
+  "unitless-css-property@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/rofrischmann/unitless-css-property/",
+    "publisher": "Robin Frischmann",
+    "licenseFile": "node_modules/unitless-css-property/LICENSE"
+  },
   "unused-filename@0.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/unused-filename",
@@ -980,7 +999,7 @@
     "url": "http://www.freecodecamp.com",
     "licenseFile": "node_modules/warning/LICENSE.md"
   },
-  "whatwg-fetch@2.0.2": {
+  "whatwg-fetch@2.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/github/fetch",
     "licenseFile": "node_modules/whatwg-fetch/LICENSE"
