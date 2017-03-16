@@ -99,6 +99,7 @@ function getAllgists (accessToken, userLoginId) {
   }
 }
 
+const GISTS_PER_PAGE = 200
 function makeOptionForGetAllGists (accessToken, userLoginId, pageNumber) {
   return {
     uri: 'https://api.github.com/users/' + userLoginId + '/gists',
@@ -108,6 +109,7 @@ function makeOptionForGetAllGists (accessToken, userLoginId, pageNumber) {
     method: 'GET',
     qs: {
       access_token: accessToken,
+      per_page: GISTS_PER_PAGE,
       page: pageNumber
     },
     json: true
