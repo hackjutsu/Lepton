@@ -6,7 +6,6 @@
   "main": "main.js",
   "scripts": {
     "lint": "eslint app",
-    "dev": "node dev-server.js",
     "license": "license-checker --production --relativeLicensePath --json > license.json",
     "watch": "webpack --watch",
     "start": "electron ./main.js",
