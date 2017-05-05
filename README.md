@@ -25,7 +25,7 @@
 | ![Screenshot](./docs/img/portfolio/search_bar.png) | ![Screenshot](./docs/img/portfolio/edit.png) | ![Screenshot](./docs/img/portfolio/oauth.png)
 
 ## Based on
-![Based on](./docs_resource/erb-logo.png)
+![Based on](./docs/img/erb-logo.png)
 
 1. Framework: [Electron](http://electron.atom.io/)
 2. Bundler: [Webpack](http://webpack.github.io/docs/), [Babel](https://babeljs.io), [electron-builder](https://github.com/electron-userland/electron-builder)
