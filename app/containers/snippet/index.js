@@ -4,8 +4,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Panel, Modal, Button, ProgressBar, Collapse } from 'react-bootstrap'
-import GistEditorForm from '../gistEditorForm'
-import { UPDATE_GIST } from '../gistEditorForm'
+import { default as GistEditorForm, UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
 import Markdown from 'marked'
 import { remote, clipboard, ipcRenderer } from 'electron'
@@ -524,7 +523,10 @@ class Snippet extends Component {
 
         const expandStatusKey = activeGist + '-' + key
         // undefined should be treated as true as explained above
-        const isExpanded = fileExpandStatus[expandStatusKey] === false ? false : true
+        let isExpanded = true
+        if (fileExpandStatus[expandStatusKey] === false) {
+          isExpanded = false
+        }
 
         fileHtmlArray.push(
           <div key={ key }>
