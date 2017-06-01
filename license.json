@@ -1,5 +1,5 @@
 {
-  "Lepton@1.2.2": {
+  "Lepton@1.3.0-beta": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -957,6 +957,12 @@
     "repository": "https://github.com/dchest/tweetnacl-js",
     "publisher": "TweetNaCl-js contributors",
     "licenseFile": "node_modules/tweetnacl/LICENSE"
+  },
+  "twitter-text@1.14.3": {
+    "licenses": "Apache*",
+    "repository": "https://github.com/twitter/twitter-text-js",
+    "publisher": "Twitter Inc.",
+    "licenseFile": "node_modules/twitter-text/LICENSE"
   },
   "ua-parser-js@0.7.12": {
     "licenses": "(GPL-2.0 OR MIT)",

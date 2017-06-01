@@ -1,7 +1,10 @@
 'use strict'
+const twitter = require('twitter-text')
 
-/* [my_title] my_description #tags: tag1, tag2, tag3
-   This method will parse the string formatted above into an object formatted as
+/* Old(Legacy) Style:  [my_title] my_description #tags: tag1, tag2, tag3
+   New(Twitter) Style: [my_title] my_description #tag1 #tag2 #tag3
+
+   This method will parse the string formatted above(both) into an object formatted as
    {
      title: 'my_title',
      description: 'my_description',
@@ -13,10 +16,17 @@ export function descriptionParser (payload) {
   const rawTitle = regexForTitle && regexForTitle[0] || ''
   const title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length - 1) || ''
 
-  const regextForCustomTags = rawDescription.match(/#tags:.*$/)
-  const customTags = regextForCustomTags && regextForCustomTags[0] || ''
+  let tagStyle = 'legacy'
+  let customTags = parseCustomTagsLegacy(rawDescription)
+  if (customTags.length === 0) {
+    customTags = parseCustomTagsTwitter(rawDescription)
+    tagStyle = customTags.length > 0 ? 'twitter' : 'legacy'
+  }
 
-  const description = rawDescription.substring(rawTitle.length, rawDescription.length - customTags.length)
+  const descriptionLength = tagStyle === 'legacy'
+      ? rawDescription.length - customTags.length
+      : rawDescription.length
+  const description = rawDescription.substring(rawTitle.length, descriptionLength)
 
   return { title, description, customTags }
 }
@@ -50,4 +60,21 @@ export function parseCustomTags (payload) {
   const processedTags = rawTags.trim().substring(prefix.length)
   const splitTags = processedTags.split(/[,，、]/).map(item => item.trim()).filter(item => item.length > 0)
   return splitTags
+}
+
+function parseCustomTagsLegacy (payload) {
+  const regextForCustomTags = payload.match(/#tags:.*$/)
+  const customTags = regextForCustomTags && regextForCustomTags[0] || ''
+  return customTags
+}
+
+function parseCustomTagsTwitter (payload) {
+  const rawCustomTags = twitter.extractHashtags(payload)
+  if (rawCustomTags.length === 0) {
+    return ''
+  }
+
+  const prefix = '#tags: '
+  const customTags = prefix + rawCustomTags.reduce((acc, cur) => acc + ', ' + cur)
+  return customTags
 }

@@ -11,7 +11,7 @@ import './index.scss'
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
 
-const descriptionTips = '[title] description #tags: tag1, tag2'
+const descriptionTips = '[title] description #tag1 #tag2'
 
 const tooltip = (
   <Tooltip id='tooltip'>{ descriptionTips }</Tooltip>
