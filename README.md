@@ -89,17 +89,19 @@ $ npm run dist
 
 ## FAQ
 #### Why is my gist's language classified as "Other"?
-Lepton depends on GitHub API to detect the language. If this fails, you can put `// vim: syntax=<your_language>` at the top of the gist to specify the language.
+Lepton depends on GitHub API to detect the language. If this fails, you can still put `// vim: syntax=<your_language>` at the top of the gist to specify the language.
 ```
 // vim: syntax=javascript
 let test = 'This is a javascript file'
 ```
 
-#### Why I can't search my gist's content?
-Currently, Lepton only supports the search for the gist's description field.
+#### Why I can't search the gists' content?
+Currently, Lepton only supports the search for the gist's description field. This is limited by GitHub's API support.
 
 #### How to specify the title and tags for my gist?
-GitHub Gist doesn't come with the native support for 'title' and 'tag' in the description field. Lepton adds these support, if the format `[title] description #tags: tag1, tag2` is followed in the gist description field.
+```
+[title] description #tag1 #tag2
+```
 
 #### How to provide feedback?
 Please submit an issue ticket in the [GitHub Issue page](https://github.com/hackjutsu/Lepton/issues). Or, if you like, send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
