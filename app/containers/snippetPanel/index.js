@@ -7,7 +7,6 @@ import Snippet from '../snippet'
 import './index.scss'
 
 class SnippetPanel extends Component {
-
   renderEmptySnippetSection () {
     // This happens when the user has no gists
     return (

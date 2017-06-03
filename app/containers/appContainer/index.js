@@ -17,7 +17,6 @@ import { updateUpdateAvailableBarStatus } from '../../actions/index'
 import './index.scss'
 
 class AppContainer extends Component {
-
   renderSettingPage () {
     const { preferenceModalStatus } = this.props
     return (

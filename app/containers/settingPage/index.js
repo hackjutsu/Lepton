@@ -9,7 +9,6 @@ import appInfo from '../../../package.json'
 import './index.scss'
 
 class SettingPage extends Component {
-
   renderAboutSection () {
     const licenseList = []
     Object.keys(LicenseInfo).forEach(item => {

@@ -20,7 +20,6 @@ import './index.scss'
 const logger = remote.getGlobal('logger')
 
 class NavigationPanel extends Component {
-
   constructor (props) {
     super(props)
     this.state = {

@@ -13,8 +13,8 @@ const twitter = require('twitter-text')
 export function descriptionParser (payload) {
   const rawDescription = payload || 'No description'
   const regexForTitle = rawDescription.match(/\[.*\]/)
-  const rawTitle = regexForTitle && regexForTitle[0] || ''
-  const title = (rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length - 1) || ''
+  const rawTitle = (regexForTitle && regexForTitle[0]) || ''
+  const title = ((rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length - 1)) || ''
 
   let tagStyle = 'legacy'
   let customTags = parseCustomTagsLegacy(rawDescription)
@@ -64,7 +64,7 @@ export function parseCustomTags (payload) {
 
 function parseCustomTagsLegacy (payload) {
   const regextForCustomTags = payload.match(/#tags:.*$/)
-  const customTags = regextForCustomTags && regextForCustomTags[0] || ''
+  const customTags = (regextForCustomTags && regextForCustomTags[0]) || ''
   return customTags
 }
 

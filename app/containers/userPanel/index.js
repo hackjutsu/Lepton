@@ -32,7 +32,6 @@ import { shell, remote, ipcRenderer } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class UserPanel extends Component {
-
   componentWillMount () {
     ipcRenderer.on('new-gist-renderer', () => {
       this.handleNewGistClicked()

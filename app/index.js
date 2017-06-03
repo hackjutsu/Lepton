@@ -19,14 +19,6 @@ import {
   parseCustomTags,
   descriptionParser } from './utilities/parser'
 
-let Account = null
-try {
-  Account = require('../configs/account')
-} catch (e) {
-  if (e.code !== 'MODULE_NOT_FOUND') throw e
-  Account = require('../configs/accountDummy')
-}
-
 import {
   getGitHubApi,
   GET_ALL_GISTS,
@@ -54,6 +46,14 @@ import {
 } from './actions/index'
 
 import Notifier from './utilities/notifier'
+
+let Account = null
+try {
+  Account = require('../configs/account')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+  Account = require('../configs/accountDummy')
+}
 
 // First instantiate the class
 const localPref = new Store({

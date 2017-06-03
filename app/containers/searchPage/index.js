@@ -20,7 +20,6 @@ import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class SearchPage extends Component {
-
   constructor (props) {
     super(props)
     this.state = {

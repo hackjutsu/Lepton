@@ -12,7 +12,6 @@ import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class NavigationPanelDetails extends Component {
-
   componentDidUpdate () {
     const { updatescrollRequestStatus, scrollRequestStatus, activeGist } = this.props
 

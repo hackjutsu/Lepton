@@ -47,7 +47,6 @@ Markdown.setOptions({
 })
 
 class Snippet extends Component {
-
   componentWillMount () {
     ipcRenderer.on('edit-gist-renderer', () => {
       this.showGistEditorModal()

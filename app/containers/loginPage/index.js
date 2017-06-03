@@ -9,7 +9,6 @@ import defaultImage from './github.jpg'
 import './index.scss'
 
 class LoginPage extends Component {
-
   componentWillMount () {
     const loggedInUserInfo = this.props.getLoggedInUserInfo()
 
