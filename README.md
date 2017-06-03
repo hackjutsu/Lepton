@@ -106,5 +106,14 @@ Currently, Lepton only supports the search for the gist's description field. Thi
 #### How to provide feedback?
 Please submit an issue ticket in the [GitHub Issue page](https://github.com/hackjutsu/Lepton/issues). Or, if you like, send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
 
+
+## Contributors
+- [hackjutsu](https://github.com/hackjutsu)
+- [wujysh](https://github.com/wujysh)
+- [meilinz](https://github.com/meilinz)
+- [lcgforever](https://github.com/lcgforever)
+- [Calinou](https://github.com/Calinou)
+- [rogersachan](https://github.com/rogersachan)
+
 ## License
 MIT © [hackjutsu](https://github.com/hackjutsu)
