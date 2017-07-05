@@ -1,7 +1,6 @@
 .panel-thumbnails-background {
   background: rgba(0, 0, 0, 0.015);
-  height: 95vh;
-  margin-top: 5px;
+  height: 100vh;
   position: relative;
 }
 
@@ -21,8 +20,8 @@
 .panel-thumbnails-scroll {
 
   .font-style-base {
-    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
+    font-size: 14px;
   }
 
   ul {
@@ -55,14 +54,15 @@
 
   .snippet-thumnail {
     @extend .font-style-base;
-    padding: 5px;
+    padding: 6px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .active-snippet-thumnail-base {
     @extend .font-style-base;
-    padding: 5px;
+    padding: 6px;
+    font-weight: 500;
     background: rgb(237, 237, 237);
   }
 
