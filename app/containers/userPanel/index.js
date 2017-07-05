@@ -180,21 +180,21 @@ class UserPanel extends Component {
       <div>
         { this.renderGistEditorModal() }
         <a href='#'
-          className='customized-tag'
+          className='user-panel-button'
           onClick={ this.handleLogoutClicked.bind(this) }>
-          #logout
-        </a>
-        <br/><br/>
-        <a href='#'
-          className='customized-tag'
-          onClick={ this.handleNewGistClicked.bind(this) }>
-          #new
+          Logout
         </a>
         <br/>
         <a href='#'
-          className='customized-tag'
+          className='user-panel-button'
+          onClick={ this.handleNewGistClicked.bind(this) }>
+          New
+        </a>
+        <br/>
+        <a href='#'
+          className='user-panel-button'
           onClick={ this.handleSyncClicked.bind(this) }>
-          #sync
+          Sync
         </a>
         <div className='customized-tag-small'>{ this.props.syncTime }</div>
       </div>

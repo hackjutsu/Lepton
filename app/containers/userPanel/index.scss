@@ -6,8 +6,8 @@
   }
 
   .profile-image-section {
-    width: 90px;
-    margin: 5px;
+    max-width: 100%;
+    margin: 3px 0 5px;
   }
 
   .profile-image-section:hover {
@@ -20,15 +20,21 @@
     margin-bottom: 0;
   }
 
-  .customized-tag {
+  .user-panel-button {
     @extend .font-style-base;
-    margin: 5px;
+    font-size: 14px;
+    margin-top: 8px;
+    color: inherit;
+    transition: color .1s;
+
+    &:hover {
+      color: #000
+    }
   }
 
   .customized-tag-small {
     @extend .font-style-base;
     font-size: 10px;
-    margin: 3px;
   }
 }
 
