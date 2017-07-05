@@ -113,28 +113,35 @@ class NavigationPanel extends Component {
 
     return (
       <div className='gist-tag-section'>
-        <div className='starred-tag-section-scroll'>
-          <div className='starred-tag-section-content'>
+        <div className='starred-tag-section'>
+          <div className='tag-section-content'>
             <a className='gist-tag' href={ 'https://gist.github.com/' + userSession.profile.login + '/starred' }>#starred</a>
           </div>
         </div>
-        <hr/>
-        <div className='lang-tag-section-scroll'>
-          <div className='lang-tag-section-content'>
-            { this.renderLangTags() }
+        <div className='tag-section-list'>
+          <div className='tag-section lang-tag-section'>
+            <a href='#' className='tag-section-title'>Languages</a>
+            <div className='tag-section-content'>
+              { this.renderLangTags() }
+            </div>
           </div>
-        </div>
-        <hr/>
-        <div className='pinned-tag-section-scroll'>
-          <div className='pinned-tag-section-content'>
-            { this.renderPinnedTags() }
+          <div className='tag-section pinned-tag-section'>
+            <div className='pinned-tag-header'>
+              <a href='#' className='tag-section-title'>
+                Pinned
+              </a>
+              <a className='configure-tag' onClick={ this.handleConfigurePinnedTagClicked.bind(this) }>
+              </a>
+            </div>
+            <div className='tag-section-content'>
+              { this.renderPinnedTags() }
+            </div>
           </div>
-          <a className='configure-tag' onClick={ this.handleConfigurePinnedTagClicked.bind(this) }>shortcuts...</a>
-        </div>
-        <hr/>
-        <div className='custom-tag-section-scroll'>
-          <div className='custom-tag-section-content'>
-            { this.renderCustomTags() }
+          <div className='tag-section custom-tag-section'>
+            <a href='#' className='tag-section-title'>Tags</a>
+            <div className='tag-section-content'>
+              { this.renderCustomTags() }
+            </div>
           </div>
         </div>
       </div>
