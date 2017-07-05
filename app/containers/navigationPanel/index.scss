@@ -19,7 +19,7 @@
   }
 
   .font-style-base {
-    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
     font-size: 13px;
   }
 
@@ -96,7 +96,6 @@
 
   .active-gist-tag {
     @extend .font-style-base;
-    margin: 5px;
     color: #000;
     font-weight: bold;
     cursor: pointer;
@@ -120,7 +119,7 @@
   }
 
   .font-style-base {
-    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
     font-size: 13px;
   }
 

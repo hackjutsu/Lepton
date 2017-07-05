@@ -1,5 +1,5 @@
 .font-style-base {
-  font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
   font-size: 13px;
 }
 
@@ -16,8 +16,9 @@
   }
 
   .line {
-    display: table-cell;
-    vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .welcome-section {
@@ -26,20 +27,31 @@
 
   .header-title {
     @extend .font-style-base;
-    float: left;
-    margin-top: 4px;
     font-size: 14px;
+  }
+
+  .snippet-control {
+    @extend .font-style-base;
+    margin-left: 10px;
   }
 
   .customized-button {
     @extend .font-style-base;
-    float: right;
     margin: 5px 5px 0px 10px;
   }
 
   .snippet-code {
-    margin: 5px 10px;
-    min-height: 95vh;
+    min-height: 100vh;
+    border-color: #e3e3e3;
+    border-radius: 0;
+
+    & > .panel-heading {
+      position: absolute;
+      top: 0;
+      left: 1px;
+      width: 100%;
+      background-color: #fff;
+    }
   }
 
   .snippet-description {
@@ -47,7 +59,7 @@
   }
 
   .code-table {
-    @extend .font-style-base;
+    font-family: Consolas, Menlo, Monaco, "Courier New", 'Ubuntu Mono', monospace;
     font-size: 12px !important;
   }
 

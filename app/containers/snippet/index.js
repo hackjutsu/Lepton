@@ -433,29 +433,31 @@ class Snippet extends Component {
           <div className='header-title'>
             { activeSnippet.brief.public ? 'public gist' : 'secret gist' }
           </div>
-          <a className='customized-button'
-            href='#'
-            onClick={ this.showGistEditorModal.bind(this) }>
-            #edit
-          </a>
-          <a className='customized-button'
-            href='#'
-            onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
-            #share
-          </a>
-          <a className='customized-button'
-            href={ activeSnippet.brief.html_url + '/revisions' }>
-            #revisions
-          </a>
-          {
-            this.props.immersiveMode === 'OFF'
-              ? <a className='customized-button'
-                 href='#'
-                 onClick={ this.showDeleteModal.bind(this) }>
-                 #delete
-                </a>
-              : null
-          }
+          <div className='header-controls'>
+            <a className='snippet-control'
+              href='#'
+              onClick={ this.showGistEditorModal.bind(this) }>
+              #edit
+            </a>
+            <a className='snippet-control'
+              href='#'
+              onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
+              #share
+            </a>
+            <a className='snippet-control'
+              href={ activeSnippet.brief.html_url + '/revisions' }>
+              #revisions
+            </a>
+            {
+              this.props.immersiveMode === 'OFF'
+                ? <a className='snippet-control'
+                  href='#'
+                  onClick={ this.showDeleteModal.bind(this) }>
+                  #delete
+                  </a>
+                : null
+            }
+          </div>
         </div>
       </div>
     )
