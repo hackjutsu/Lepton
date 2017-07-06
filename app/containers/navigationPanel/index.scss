@@ -34,14 +34,20 @@
   }
 
   .configure-tag {
-    height: 10px;
-    width: 10px;
     transition: opacity .1s;
     opacity: .55;
-    margin-bottom: 2px;
-    background-image: url('~./plus_icon.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
+    padding: 3px;
+
+    &:after {
+      content: '';
+      display: block;
+      height: 10px;
+      width: 10px;
+      background-image: url('~./plus_icon.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+
+    }
 
     &:hover {
       opacity: .8;

@@ -27,7 +27,8 @@
 
   .header-title {
     @extend .font-style-base;
-    font-size: 14px;
+    font-size: 13px;
+    text-transform: uppercase;
   }
 
   .snippet-control {
@@ -51,28 +52,99 @@
       left: 1px;
       width: 100%;
       background-color: #fff;
+      border: none!important;
+
+      &:after {
+        content: '';
+        position: absolute;
+        height: 7px;
+        bottom: -7px;
+        left: 0;
+        right: 0;
+        box-shadow: rgba(55, 55, 55, .3) 0 7px 7px -7px inset;
+      }
     }
+  }
+
+  .panel-body {
+    margin-top: 50px;
+    padding: 0;
   }
 
   .snippet-description {
     @extend .font-style-base;
+    padding: 0 15px 7px;
   }
 
   .code-table {
-    font-family: Consolas, Menlo, Monaco, "Courier New", 'Ubuntu Mono', monospace;
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
     font-size: 12px !important;
   }
 
   .code-area {
     @extend .font-style-base;
-    width: 100%;
     border: 0px;
+    border-bottom: 1px solid #e3e3e3;
+
+    pre {
+      padding: 8px 12px 8px 2px;
+      margin: 0 0 10px;
+      background-color: #fff;
+      border: none;
+      border-radius: 0;
+      font-size: 13px;
+    }
   }
 
   .file-header {
     @extend .font-style-base;
-    color: #4078C0;
-    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: #f6f5f6;
+    border-top: 1px solid #e3e3e3;
+    border-bottom: 1px solid #e3e3e3;
+  }
+
+  .file-expand {
+    font-size: 15px;
+
+    &.is-expanded:before {
+      transform: rotate(90deg);
+    }
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    &:before {
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      position: relative;
+      top: 1px;
+      width: 18px;
+      height: 18px;
+      opacity: .8;
+      margin-right: 5px;
+      background-image: url('~./ic_collapsed.svg');
+      background-size: contain;
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      transition: transform .15s ease, opacity .15s;
+    }
+
+    &:hover:before {
+      opacity: .65;
+    }
+  }
+
+  .file-header-control {
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
   }
 
   .file-header-md {
@@ -98,9 +170,9 @@
 
   .title-section {
     @extend .font-style-base;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 25px;
+    font-weight: normal;
+    margin-bottom: 7px;
   }
 
   .description-section {
@@ -109,9 +181,13 @@
   }
 
   .custom-tags-section {
-    width: 100%;
-    height: 5px;
     margin-top: 10px;
+
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
   }
 
   .custom-tags {
@@ -156,7 +232,9 @@
   }
 
   hr {
-    margin-top: 12px;
+    margin-top: 0 !important;
+    margin-bottom: 7px !important;
+    border: none !important;
   }
 }
 
