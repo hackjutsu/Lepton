@@ -533,25 +533,31 @@ class Snippet extends Component {
           <div key={ key }>
             <hr/>
             <div className={ gistFile.language === 'Markdown' ? 'file-header-md' : 'file-header' }>
-              <img
-                src={ isExpanded ? expandedIcon : collapsedIcon }
-                onClick={ this.handleCollapseClicked.bind(this, key) }
-                className='expand-icon'/>
-              <a href={ activeSnippet.details.html_url + '#file-' + gistFile.filename.replace(/\./g, '-') }>
-                <b>{ gistFile.filename }</b>
+              <a href='#'
+                className={isExpanded ? 'file-expand is-expanded' : 'file-expand'}
+                onClick={ this.handleCollapseClicked.bind(this, key) }>
+                <span>{ gistFile.filename }</span>
               </a>
-              <a
-                href='#'
-                className='customized-button-file-header'
-                onClick={ this.showRawModalModal.bind(this, gistFile) }>
-                #raw
-              </a>
-              <a
-                href='#'
-                className='customized-button-file-header'
-                onClick={ this.handleCopyGistFileClicked.bind(this, gistFile) }>
-                #copy
-              </a>
+              <div className='file-header-controls'>
+                <a
+                  href={ activeSnippet.details.html_url + '#file-' + gistFile.filename.replace(/\./g, '-') }
+                  className='file-header-control'
+                  onClick={ this.showRawModalModal.bind(this, gistFile) }>
+                  #link
+                </a>
+                <a
+                  href='#'
+                  className='file-header-control'
+                  onClick={ this.showRawModalModal.bind(this, gistFile) }>
+                  #raw
+                </a>
+                <a
+                  href='#'
+                  className='file-header-control'
+                  onClick={ this.handleCopyGistFileClicked.bind(this, gistFile) }>
+                  #copy
+                </a>
+              </div>
             </div>
             <Collapse in={ isExpanded }>
               <div
