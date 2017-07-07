@@ -1,5 +1,4 @@
 .panel-thumbnails-background {
-  background: rgba(0, 0, 0, 0.015);
   height: 100vh;
   position: relative;
 }
@@ -36,20 +35,20 @@
   ul:last-child {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    border-bottom: solid 1px rgb(238, 238, 238);
+    // border-bottom: solid 1px #e3e3e3;
   }
 
   .snippet-thumnail-list-item {
     padding: 0 !important;
     border-right-width: 0 !important;
     border-left-width: 0 !important;
-    border-top: solid 1px rgb(238, 238, 238);
+    border-bottom: solid 1px #e3e3e3;
     background: white;
+    cursor: pointer;
   }
 
   .snippet-thumnail-list-item:hover {
     background-color: #F9F9F9;
-    cursor: pointer;
   }
 
   .snippet-thumnail {

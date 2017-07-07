@@ -45,12 +45,15 @@
     min-height: 100vh;
     border-color: #e3e3e3;
     border-radius: 0;
+    border-bottom: none;
+    margin-bottom: 0;
 
     & > .panel-heading {
       position: absolute;
       top: 0;
       left: 1px;
       width: 100%;
+      z-index: 5;
       background-color: #fff;
       border: none!important;
 
@@ -87,7 +90,7 @@
     border-bottom: 1px solid #e3e3e3;
 
     pre {
-      padding: 8px 12px 8px 2px;
+      padding: 8px 12px 5px 2px;
       margin: 0 0 10px;
       background-color: #fff;
       border: none;
@@ -125,12 +128,12 @@
       vertical-align: middle;
       position: relative;
       top: 1px;
-      width: 18px;
-      height: 18px;
+      width: 19px;
+      height: 19px;
       opacity: .8;
-      margin-right: 5px;
+      margin-right: 3px;
       background-image: url('~./ic_collapsed.svg');
-      background-size: contain;
+      background-size: cover;
       background-position: 50% 50%;
       background-repeat: no-repeat;
       transition: transform .15s ease, opacity .15s;
@@ -156,13 +159,6 @@
     margin-bottom: -1px;
   }
 
-  .expand-icon {
-    width: 24px;
-    height: 24px;
-    padding: 2px;
-    padding-top: 0;
-  }
-
   .customized-button-file-header {
     @extend .customized-button;
     margin-top: 2px;
@@ -177,7 +173,7 @@
 
   .description-section {
     @extend .font-style-base;
-    color: #808080;
+    color: #787282;
   }
 
   .custom-tags-section {
@@ -190,18 +186,39 @@
     }
   }
 
-  .custom-tags {
+  .custom-tags,
+  .update-date {
     @extend .font-style-base;
-    color: grey;
-    font-size: 10px;
+    color: #787282;
+    font-size: 11px;
     font-style: italic;
+  }
+
+  .custom-tags {
     float: left;
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    &:before {
+      content: '';
+      display: inline-block;
+      vertical-align: middle;
+      height: 16px;
+      width: 16px;
+      margin-right: 2px;
+      position: relative;
+      background-image: url('~./tags.svg');
+      background-size: contain;
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+    }
   }
 
   .update-date {
-    @extend .custom-tags;
     float: right;
-    margin-right: 5px;
   }
 
   .snippet-progressbar {

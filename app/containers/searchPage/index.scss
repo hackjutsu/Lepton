@@ -66,7 +66,7 @@
     @extend .font-style-base;
     font-size: 15px;
     padding: 10px;
-    color: grey;
+    color: #787282;
   }
 
   .gist-tag-group {
@@ -108,7 +108,7 @@
     width: 100%;
     text-align: right;
     font-size: 10px;
-    color: grey;
+    color: #787282;
     font-style: italic;
   }
 
@@ -122,13 +122,13 @@
   .description-section {
     @extend .font-style-base;
     font-size: 12px;
-    color: #808080;
+    color: #787282;
   }
 
   .custom-tags-section {
     @extend .font-style-base;
-    color: grey;
-    font-size: 9px;
+    color: #787282;
+    font-size: 10px;
     margin-left: 2px;
     margin-top: 3px;
   }

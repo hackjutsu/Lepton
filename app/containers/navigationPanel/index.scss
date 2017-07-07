@@ -6,7 +6,7 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid #e3e3e3;
-  color: #47414d;
+  color: #413D45;
   background-color: #f6f5f6;
 }
 
@@ -16,6 +16,7 @@
     margin-top: 15px;
     margin-bottom: 15px;
     width: 100%;
+    border-top: 1px solid #e3e3e3;
   }
 
   .font-style-base {
@@ -25,32 +26,27 @@
 
   .gist-tag {
     @extend .font-style-base;
-    color: inherit;
-  }
-
-  .configure-tag:hover,
-  .gist-tag:hover {
+    color: #746F7D;
     cursor: pointer;
   }
 
   .configure-tag {
-    transition: opacity .1s;
-    opacity: .55;
     padding: 3px;
+    width: 10px;
+    height: 14px;
+    box-sizing: content-box;
+    cursor: pointer;
+    fill: #787282;
+    transition: fill .15s;
 
-    &:after {
-      content: '';
+    svg {
       display: block;
-      height: 10px;
-      width: 10px;
-      background-image: url('~./plus_icon.svg');
-      background-size: contain;
-      background-repeat: no-repeat;
-
+      width: 100%;
+      height: 100%
     }
 
     &:hover {
-      opacity: .8;
+      fill: #413D45;
     }
   }
 
@@ -79,9 +75,11 @@
 
   .tag-section-title {
     @extend .font-style-base;
-    font-size: 15px;
+    font-size: 12px;
+    letter-spacing: .25px;
+    text-transform: uppercase;
     color: inherit;
-    margin-bottom: 7px;
+    margin-bottom: 6px;
     position: relative;
   }
 
@@ -97,7 +95,7 @@
   .tag-section-content {
     height: 100%;
     overflow: auto;
-    padding-left: 20px;
+    padding-left: 16px;
   }
 
   .active-gist-tag {

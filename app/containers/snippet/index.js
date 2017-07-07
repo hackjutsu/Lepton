@@ -435,22 +435,26 @@ class Snippet extends Component {
           </div>
           <div className='header-controls'>
             <a className='snippet-control'
+              title='Edit'
               href='#'
               onClick={ this.showGistEditorModal.bind(this) }>
               #edit
             </a>
             <a className='snippet-control'
+              title='Share'
               href='#'
               onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
               #share
             </a>
             <a className='snippet-control'
+              title='Revisions'
               href={ activeSnippet.brief.html_url + '/revisions' }>
               #revisions
             </a>
             {
               this.props.immersiveMode === 'OFF'
                 ? <a className='snippet-control'
+                  title='Delete'
                   href='#'
                   onClick={ this.showDeleteModal.bind(this) }>
                   #delete
@@ -477,7 +481,7 @@ class Snippet extends Component {
     htmlForDescriptionSection.push(
         <div className='custom-tags-section' key='customTags'>
           { customTags.length > 0
-              ? <span className='custom-tags'>{ customTags }</span>
+              ? <span className='custom-tags'><span>{ customTags }</span></span>
               : null }
           <span className='update-date'>
               { 'Last active ' + Moment(gist.brief.updated_at).fromNow() }
