@@ -22,7 +22,7 @@
 
   .user-panel-button {
     @extend .font-style-base;
-    font-size: 14px;
+    font-size: 15px;
     margin-top: 8px;
     color: inherit;
     transition: color .1s;
@@ -34,7 +34,9 @@
 
   .customized-tag-small {
     @extend .font-style-base;
+    margin: 3px;
     font-size: 10px;
+    color: #787282;
   }
 }
 
