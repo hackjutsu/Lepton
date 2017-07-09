@@ -20,7 +20,7 @@
 
   .font-style-base {
     font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   ul {
@@ -35,14 +35,14 @@
   ul:last-child {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    // border-bottom: solid 1px #e3e3e3;
+    // border-bottom: solid 1px #dadee3;
   }
 
   .snippet-thumnail-list-item {
     padding: 0 !important;
     border-right-width: 0 !important;
     border-left-width: 0 !important;
-    border-bottom: solid 1px #e3e3e3;
+    border-bottom: solid 1px #dadee3;
     background: white;
     cursor: pointer;
   }
