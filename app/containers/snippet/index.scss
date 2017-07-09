@@ -1,10 +1,10 @@
 .font-style-base {
   font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .font-style-md {
-  font-family: Helvetica, arial, sans-serif ;
+  font-family: Helvetica, Arial, sans-serif;
   font-size: 13px;
 }
 
@@ -31,9 +31,39 @@
     text-transform: uppercase;
   }
 
+  .header-controls {
+    display: flex;
+    align-items: center;
+  }
+
   .snippet-control {
     @extend .font-style-base;
-    margin-left: 10px;
+    margin-left: 15px;
+    height: 20px;
+    width: 20px;
+    display: block;
+    position: relative;
+
+    svg {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 28px;
+      width: 28px;
+      transform: translate(-50%, -50%);
+      fill: #6b6a6f;
+      transition: fill .15s;
+    }
+
+    &:hover svg {
+      fill: #2E2C33;
+    }
+  }
+
+  .customized-button {
+    @extend .font-style-base;
+    margin: 5px 5px 0px 10px;
   }
 
   .customized-button {
@@ -43,7 +73,7 @@
 
   .snippet-code {
     min-height: 100vh;
-    border-color: #e3e3e3;
+    border-color: #dadee3;
     border-radius: 0;
     border-bottom: none;
     margin-bottom: 0;
@@ -56,6 +86,8 @@
       z-index: 5;
       background-color: #fff;
       border: none!important;
+      color: inherit;
+      padding: 12px 15px;
 
       &:after {
         content: '';
@@ -70,7 +102,7 @@
   }
 
   .panel-body {
-    margin-top: 50px;
+    margin-top: 56px;
     padding: 0;
   }
 
@@ -81,13 +113,13 @@
 
   .code-table {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-    font-size: 12px !important;
+    font-size: 13px !important;
   }
 
   .code-area {
     @extend .font-style-base;
     border: 0px;
-    border-bottom: 1px solid #e3e3e3;
+    border-bottom: 1px solid #dadee3;
 
     pre {
       padding: 8px 12px 5px 2px;
@@ -106,8 +138,8 @@
     justify-content: space-between;
     padding: 8px 12px;
     background-color: #f6f5f6;
-    border-top: 1px solid #e3e3e3;
-    border-bottom: 1px solid #e3e3e3;
+    border-top: 1px solid #dadee3;
+    border-bottom: 1px solid #dadee3;
   }
 
   .file-expand {
@@ -118,7 +150,7 @@
     }
 
     span {
-      display: inline-block;
+			display: inline-block;
       vertical-align: middle;
     }
 
@@ -136,8 +168,8 @@
       background-size: cover;
       background-position: 50% 50%;
       background-repeat: no-repeat;
-      transition: transform .15s ease, opacity .15s;
-    }
+		  transition: transform .15s ease, opacity .15s;
+		}
 
     &:hover:before {
       opacity: .65;
@@ -145,6 +177,7 @@
   }
 
   .file-header-control {
+
     &:not(:last-child) {
       margin-right: 10px;
     }
@@ -169,6 +202,8 @@
     font-size: 25px;
     font-weight: normal;
     margin-bottom: 7px;
+    padding-right: 15px;
+    margin-bottom: 1px;
   }
 
   .description-section {
@@ -190,7 +225,7 @@
   .update-date {
     @extend .font-style-base;
     color: #787282;
-    font-size: 11px;
+    font-size: 12px;
     font-style: italic;
   }
 
@@ -212,7 +247,7 @@
       position: relative;
       background-image: url('~./tags.svg');
       background-size: contain;
-      background-position: 50% 50%;
+      background-position: 40% 50%;
       background-repeat: no-repeat;
     }
   }
@@ -232,7 +267,7 @@
     display: inline-block;
     color: rgba(0,0,0,0.25);
     width: 40px;
-    font-size: 11px;
+    font-size: 12px;
     font-style: normal;
     font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
   }

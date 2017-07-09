@@ -27,6 +27,17 @@
     color: inherit;
     transition: color .1s;
 
+    svg {
+      display: inline-block;
+      vertical-align: middle;
+      position: relative;
+      bottom: 1px;
+      height: 30px;
+      width: 30px;
+      margin-left: -3px;
+      fill: currentColor;
+    }
+
     &:hover {
       color: #000
     }
@@ -35,7 +46,7 @@
   .customized-tag-small {
     @extend .font-style-base;
     margin: 3px;
-    font-size: 10px;
+    font-size: 11px;
     color: #787282;
   }
 }

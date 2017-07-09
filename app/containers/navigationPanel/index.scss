@@ -5,7 +5,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #e3e3e3;
+  border-right: 1px solid #dadee3;
   color: #413D45;
   background-color: #f6f5f6;
 }
@@ -16,17 +16,17 @@
     margin-top: 15px;
     margin-bottom: 15px;
     width: 100%;
-    border-top: 1px solid #e3e3e3;
+    border-top: 1px solid #dadee3;
   }
 
   .font-style-base {
     font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .gist-tag {
     @extend .font-style-base;
-    color: #746F7D;
+    color: #5F5B66;
     cursor: pointer;
   }
 
@@ -75,9 +75,10 @@
 
   .tag-section-title {
     @extend .font-style-base;
-    font-size: 12px;
+    font-size: 13px;
     letter-spacing: .25px;
     text-transform: uppercase;
+    font-weight: 500;
     color: inherit;
     margin-bottom: 6px;
     position: relative;
@@ -89,7 +90,7 @@
     display: flex;
     flex-direction: column;
     padding: 15px 0;
-    border-top: 1px solid #e3e3e3;
+    border-top: 1px solid #dadee3;
   }
 
   .tag-section-content {
@@ -100,7 +101,7 @@
 
   .active-gist-tag {
     @extend .font-style-base;
-    color: #000;
+    color: #353138;
     font-weight: bold;
     cursor: pointer;
   }
@@ -124,7 +125,7 @@
 
   .font-style-base {
     font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .gist-tag-not-pinned {
