@@ -23,7 +23,8 @@ class NavigationPanel extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      tmpPinnedTags: new Set()
+      tmpPinnedTags: new Set(),
+      activeSection: -1
     }
   }
 
@@ -108,8 +109,17 @@ class NavigationPanel extends Component {
     updatePinnedTagsModalStatus('ON')
   }
 
+  handleSectionClick (index) {
+    const { activeSection } = this.state
+
+    this.setState({
+      activeSection: activeSection === index ? -1 : index
+    })
+  }
+
   renderTagSection () {
     const { userSession } = this.props
+    const { activeSection } = this.state
 
     return (
       <div className='gist-tag-section'>
@@ -119,15 +129,28 @@ class NavigationPanel extends Component {
           </div>
         </div>
         <div className='tag-section-list'>
-          <div className='tag-section lang-tag-section'>
-            <a href='#' className='tag-section-title'>Languages</a>
+          <div
+            className={
+              activeSection === 0 ? 'tag-section tag-section-active'
+            : activeSection === -1 ? 'tag-section'
+            : 'tag-section tag-section-hidden'}>
+            <a href='#'
+              className='tag-section-title'
+              onClick={this.handleSectionClick.bind(this, 0)}>
+              Languages</a>
             <div className='tag-section-content'>
               { this.renderLangTags() }
             </div>
           </div>
-          <div className='tag-section pinned-tag-section'>
+          <div
+            className={
+                activeSection === 1 ? 'tag-section tag-section-active'
+              : activeSection === -1 ? 'tag-section'
+              : 'tag-section tag-section-hidden'}>
             <div className='pinned-tag-header'>
-              <a href='#' className='tag-section-title'>
+              <a href='#'
+                onClick={this.handleSectionClick.bind(this, 1)}
+                className='tag-section-title'>
                 Pinned
               </a>
               <a className='configure-tag' onClick={ this.handleConfigurePinnedTagClicked.bind(this) }>
@@ -138,8 +161,13 @@ class NavigationPanel extends Component {
               { this.renderPinnedTags() }
             </div>
           </div>
-          <div className='tag-section custom-tag-section'>
-            <a href='#' className='tag-section-title'>Tags</a>
+          <div className={
+              activeSection === 2 ? 'tag-section tag-section-active'
+            : activeSection === -1 ? 'tag-section'
+            : 'tag-section tag-section-hidden'}>
+            <a href='#'
+              onClick={this.handleSectionClick.bind(this, 2)}
+              className='tag-section-title'>Tags</a>
             <div className='tag-section-content'>
               { this.renderCustomTags() }
             </div>

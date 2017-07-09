@@ -5930,8 +5930,8 @@ button.close {
   opacity: .5;
 }
 .modal-header {
-  padding: 15px;
-  border-bottom: 1px solid #e5e5e5;
+  padding: 20px;
+  border-bottom: 1px solid #dadee3;
 }
 .modal-header .close {
   margin-top: -2px;
@@ -5942,12 +5942,12 @@ button.close {
 }
 .modal-body {
   position: relative;
-  padding: 15px;
+  padding: 20px;
 }
 .modal-footer {
-  padding: 15px;
+  padding: 20px;
   text-align: right;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid #dadee3;
 }
 .modal-footer .btn + .btn {
   margin-bottom: 0;
