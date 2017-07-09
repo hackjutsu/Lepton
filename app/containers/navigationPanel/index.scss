@@ -93,6 +93,19 @@
     border-top: 1px solid #dadee3;
   }
 
+  .tag-section-active {
+    flex: 1 0 auto;
+    max-height: none;
+  }
+
+  .tag-section-hidden {
+    flex: 0 0 auto;
+
+    .tag-section-content {
+      height: 0;
+    }
+  }
+
   .tag-section-content {
     height: 100%;
     overflow: auto;
@@ -131,17 +144,14 @@
   .gist-tag-not-pinned {
     @extend .font-style-base;
     margin: 5px;
+    cursor: pointer;
   }
 
   .gist-tag-pinned {
     @extend .font-style-base;
     margin: 5px;
-    color: #B0580E;
+    color: #353138;
     font-weight: bold;
-  }
-
-  .gist-tag-not-pinned:hover,
-  .gist-tag-pinned {
     cursor: pointer;
   }
 }

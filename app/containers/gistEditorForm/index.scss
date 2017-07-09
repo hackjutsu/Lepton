@@ -1,8 +1,8 @@
 .gist-editor-form {
 
   .font-style-base {
-    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
+    font-size: 14px;
   }
 
   .font-style-blue {
@@ -11,7 +11,7 @@
   }
 
   .gist-editor-control-button {
-    margin: 5px 2px;
+    margin: 5px;
     float: right;
   }
 
@@ -23,20 +23,29 @@
     margin: 5px 5px;
   }
 
+  .gist-editor-name {
+    display: flex;
+    align-items: center;
+    padding-right: 15px;
+  }
+
   .gist-editor-section .panel-body {
     padding: 0px !important;
   }
 
   .gist-editor-section .panel-heading {
     padding: 2px 5px !important;
+    color: inherit;
+    border-color: #dadee3;
+    background-color: #f6f5f6;
   }
 
   .gist-editor-input-area {
     @extend .font-style-base;
-    width: 95%;
-    padding: 5px;
-    border: solid  1px;
-    border-color: #D3D3D3;
+    flex: 1 1 95%;
+    padding: 5px 10px;
+    border: solid 1px;
+    border-color: #dadee3;
     border-radius: 3px;
     margin-right: 10px;
   }
@@ -45,10 +54,15 @@
     @extend .font-style-base;
     width: 80%;
     margin: 5px 20px 5px 0px;
-    padding: 5px;
+    padding: 5px 10px;
     border: solid  1px;
-    border-color: #D3D3D3;
+    border-color: #dadee3;
     border-radius: 3px;
+  }
+
+  .panel {
+    border-color: #dadee3;
+    border-radius: 0;
   }
 
   .gist-editor-content-area {
@@ -91,14 +105,31 @@
 
   .error-msg {
     @extend .font-style-base;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: bold;
     color: #B0580E;
   }
 
   .tips {
     @extend .font-style-base;
-    font-size: 12px;
+    font-size: 13px;
     font-style: italic;
+    flex: 0 0 auto;
+    position: relative;
+    padding-left: 25px;
+
+    &:before {
+      content: '';
+      height: 25px;
+      width: 25px;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      background-image: url('~./ei-question.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      transform: translateY(-50%);
+    }
   }
 }

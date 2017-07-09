@@ -8,6 +8,11 @@
   height: auto;
 }
 
+.CodeMirror-gutters {
+  border-right: 1px solid #dadee3;
+  background-color: #f6f5f6;
+}
+
 .CodeMirror-scroll {
   min-height: 400px;
 }

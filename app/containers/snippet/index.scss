@@ -120,15 +120,15 @@
     @extend .font-style-base;
     border: 0px;
     border-bottom: 1px solid #dadee3;
+  }
 
-    pre {
-      padding: 8px 12px 5px 2px;
-      margin: 0 0 10px;
-      background-color: #fff;
-      border: none;
-      border-radius: 0;
-      font-size: 13px;
-    }
+  pre {
+    padding: 8px 12px 5px 2px;
+    margin: 0 0 10px;
+    background-color: #fff;
+    border: none;
+    border-radius: 0;
+    font-size: 13px;
   }
 
   .file-header {
@@ -186,10 +186,10 @@
   .file-header-md {
     @extend .file-header;
     // background: rgba(0,0,0,0.03);
-    border: rgb(204,204,204) 1px solid;
-    border-radius: 5px 5px 0px 0px;
-    padding: 10px 10px 10px 10px;
-    margin-bottom: -1px;
+    // border: rgb(204,204,204) 1px solid;
+    // border-radius: 5px 5px 0px 0px;
+    // padding: 10px 10px 10px 10px;
+    // margin-bottom: -1px;
   }
 
   .customized-button-file-header {
@@ -274,12 +274,12 @@
 
   .markdown-section {
     @extend .font-style-md;
-    border: 1px solid rgb(204, 204, 204);
-    padding: 10px 15px;
-    border-radius: 0 0 5px 5px;
+    // border: 1px solid rgb(204, 204, 204);
+    padding: 15px 20px;
+    // border-radius: 0 0 5px 5px;
 
     pre {
-      font-size: 11px !important;
+      font-size: 13px !important;
     }
   }
 
@@ -333,14 +333,13 @@
 // GitHub style markdown css
 .markdown-section {
    body {
-    font-family: Helvetica, arial, sans-serif;
-    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Segoe UI Symbol';
+    font-size: 14px;
     line-height: 1.6 !important;
     padding-top: 10px;
     padding-bottom: 10px;
     background-color: white;
     padding: 30px;
-    color: #333;
    }
 
    body > *:first-child {
@@ -415,13 +414,11 @@
 
    h1 {
     font-size: 28px;
-    color: black;
    }
 
    h2 {
     font-size: 24px;
     border-bottom: 1px solid #cccccc;
-    color: black;
    }
 
    h3 {
@@ -618,7 +615,6 @@
 
    span.frame span span {
     clear: both;
-    color: #333333;
     display: block;
     padding: 5px 0 0;
    }
@@ -689,35 +685,35 @@
     padding: 0 5px;
     white-space: nowrap;
     border: 1px solid #eaeaea;
-    background-color: #f8f8f8;
+    background-color: #f8f7fa;
     border-radius: 3px;
    }
 
    pre code {
     margin: 0;
     padding: 0;
-    white-space: pre;
+    white-space: pre-wrap;
     border: none;
     background: transparent;
    }
 
    .highlight pre {
-    background-color: #f8f8f8;
-    border: 1px solid #cccccc;
+    background-color: #f8f7fa;
+    border: 1px solid #dadee3;
     font-size: 13px;
     line-height: 19px;
     overflow: auto;
-    padding: 6px 10px;
+    padding: 12px 12px;
     border-radius: 3px;
    }
 
    pre {
-    background-color: #f8f8f8;
-    border: 1px solid #cccccc;
+    background-color: #f8f7fa;
+    border: 1px solid #dadee3;
     font-size: 13px;
     line-height: 19px;
     overflow: auto;
-    padding: 6px 10px;
+    padding: 12px 12px;
     border-radius: 3px;
    }
 

@@ -74,7 +74,7 @@ const renderTitleInputField = ({ input, placeholder, type, meta: { touched, erro
 )
 
 const renderDescriptionField = ({ input, type, meta: { touched, error, warning } }) => (
-  <div className='gist-editor-section'>
+  <div className='gist-editor-section gist-editor-name'>
     <input
       className='gist-editor-input-area'
       { ...input }
