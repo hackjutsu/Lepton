@@ -20,6 +20,17 @@
     margin-bottom: 0;
   }
 
+  .user-panel-icon {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    bottom: 1px;
+    height: 30px;
+    width: 30px;
+    margin-left: -3px;
+    fill: currentColor;
+  }
+
   .user-panel-button {
     @extend .font-style-base;
     font-size: 15px;
@@ -27,19 +38,8 @@
     color: inherit;
     transition: color .1s;
 
-    svg {
-      display: inline-block;
-      vertical-align: middle;
-      position: relative;
-      bottom: 1px;
-      height: 30px;
-      width: 30px;
-      margin-left: -3px;
-      fill: currentColor;
-    }
-
     &:hover {
-      color: #000
+      color:#313133;
     }
   }
 

@@ -116,20 +116,12 @@
     font-style: italic;
     flex: 0 0 auto;
     position: relative;
-    padding-left: 25px;
+  }
 
-    &:before {
-      content: '';
-      height: 25px;
-      width: 25px;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      background-image: url('~./ei-question.svg');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: 50% 50%;
-      transform: translateY(-50%);
-    }
+  .tips-icon {
+    height: 25px;
+    width: 25px;
+    display: inline-block;
+    vertical-align: middle;
   }
 }

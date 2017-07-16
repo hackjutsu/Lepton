@@ -101,6 +101,11 @@
   .tag-section-hidden {
     flex: 0 0 auto;
 
+    .tag-section-title,
+    .pinned-tag-header {
+      margin-bottom: 0;
+    }
+
     .tag-section-content {
       height: 0;
     }

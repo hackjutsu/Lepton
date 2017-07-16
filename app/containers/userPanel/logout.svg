@@ -1,0 +1,8 @@
+<svg viewBox="0 0 50 50" x="0px" y="0px">
+  <g stroke-miterlimit="10" stroke-width="5" stroke-linecap="square" stroke="currentColor" fill="none" transform="matrix(0.416233, 0, 0, 0.416233, 6.18835, 4.188349)">
+    <path d="M51.5,72c0,3.72-2.22,6.69-4.94,6.69H23.94c-2.71,0-4.94-3-4.94-6.69V28c0-3.72,2.22-6.69,4.94-6.69H46.56c2.71,0,4.94,3,4.94,6.69"/>
+    <line class="cls-1" x1="38.82" y1="50" x2="78.24" y2="50"/>
+    <line class="cls-1" x1="65.58" y1="34.58" x2="81" y2="50"/>
+    <line class="cls-1" x1="65.58" y1="65.42" x2="81" y2="50"/>
+  </g>
+</svg>

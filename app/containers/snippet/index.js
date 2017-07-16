@@ -35,6 +35,13 @@ import {
 import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github-gist.css'
 
+import editIcon from './ei-edit.svg'
+import shareIcon from './ei-share.svg'
+import eyeIcon from './ei-eye.svg'
+import trashIcon from './ei-trash.svg'
+import collapseIcon from './ic_collapsed.svg'
+import tagsIcon from './tags.svg'
+
 const logger = remote.getGlobal('logger')
 
 // Synchronous highlighting with highlight.js
@@ -436,27 +443,27 @@ class Snippet extends Component {
               title='Edit'
               href='#'
               onClick={ this.showGistEditorModal.bind(this) }>
-              <svg viewBox="0 0 50 50"><path d="M9.6 40.4l2.5-9.9L27 15.6l7.4 7.4-14.9 14.9-9.9 2.5zm4.3-8.9l-1.5 6.1 6.1-1.5L31.6 23 27 18.4 13.9 31.5z"/><path d="M17.8 37.3c-.6-2.5-2.6-4.5-5.1-5.1l.5-1.9c3.2.8 5.7 3.3 6.5 6.5l-1.9.5z"/><path d="M29.298 19.287l1.414 1.414-13.01 13.02-1.414-1.41z"/><path d="M11 39l2.9-.7c-.3-1.1-1.1-1.9-2.2-2.2L11 39z"/><path d="M35 22.4L27.6 15l3-3 .5.1c3.6.5 6.4 3.3 6.9 6.9l.1.5-3.1 2.9zM30.4 15l4.6 4.6.9-.9c-.5-2.3-2.3-4.1-4.6-4.6l-.9.9z"/></svg>
-           </a>
+              <div dangerouslySetInnerHTML={{__html: editIcon}} />
+              </a>
             <a className='snippet-control'
               title='Share'
               href='#'
               onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
-              <svg style={{marginTop: 1}} viewBox="0 0 50 50"><path d="M38.288 10.297l1.414 1.415-14.99 14.99-1.414-1.414z"/><path d="M40 20h-2v-8h-8v-2h10z"/><path d="M35 38H15c-1.7 0-3-1.3-3-3V15c0-1.7 1.3-3 3-3h11v2H15c-.6 0-1 .4-1 1v20c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V24h2v11c0 1.7-1.3 3-3 3z"/></svg>
-          </a>
+              <div dangerouslySetInnerHTML={{__html: shareIcon}} />
+              </a>
             <a className='snippet-control'
               title='Revisions'
               href={ activeSnippet.brief.html_url + '/revisions' }>
-              <svg viewBox="0 0 50 50"><path d="M25 36C13.5 36 8.3 25.9 8.1 25.4c-.1-.3-.1-.6 0-.9C8.3 24.1 13.5 14 25 14s16.7 10.1 16.9 10.6c.1.3.1.6 0 .9-.2.4-5.4 10.5-16.9 10.5zM10.1 25c1.1 1.9 5.9 9 14.9 9s13.7-7.1 14.9-9c-1.1-1.9-5.9-9-14.9-9s-13.7 7.1-14.9 9z"/><path d="M25 34c-5 0-9-4-9-9s4-9 9-9 9 4 9 9-4 9-9 9zm0-16c-3.9 0-7 3.1-7 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7z"/><path d="M25 30c-2.8 0-5-2.2-5-5 0-.6.4-1 1-1s1 .4 1 1c0 1.7 1.3 3 3 3s3-1.3 3-3-1.3-3-3-3c-.6 0-1-.4-1-1s.4-1 1-1c2.8 0 5 2.2 5 5s-2.2 5-5 5z"/></svg>
-          </a>
+              <div dangerouslySetInnerHTML={{__html: eyeIcon}} />
+              </a>
             {
               this.props.immersiveMode === 'OFF'
                 ? <a className='snippet-control'
                   title='Delete'
                   href='#'
                   onClick={ this.showDeleteModal.bind(this) }>
-                  <svg viewBox="0 0 50 50"><path d="M20 18h2v16h-2z"/><path d="M24 18h2v16h-2z"/><path d="M28 18h2v16h-2z"/><path d="M12 12h26v2H12z"/><path d="M30 12h-2v-1c0-.6-.4-1-1-1h-4c-.6 0-1 .4-1 1v1h-2v-1c0-1.7 1.3-3 3-3h4c1.7 0 3 1.3 3 3v1z"/><path d="M31 40H19c-1.6 0-3-1.3-3.2-2.9l-1.8-24 2-.2 1.8 24c0 .6.6 1.1 1.2 1.1h12c.6 0 1.1-.5 1.2-1.1l1.8-24 2 .2-1.8 24C34 38.7 32.6 40 31 40z"/></svg>
-                 </a>
+                    <div dangerouslySetInnerHTML={{__html: trashIcon}} />
+                  </a>
                 : null
             }
           </div>
@@ -479,7 +486,12 @@ class Snippet extends Component {
     htmlForDescriptionSection.push(
         <div className='custom-tags-section' key='customTags'>
           { customTags.length > 0
-              ? <span className='custom-tags'><span>{ customTags }</span></span>
+              ? <span className='custom-tags'>
+                  <div
+                    className='custom-tags-icon'
+                    dangerouslySetInnerHTML={{ __html: tagsIcon }} />
+                  <span>{ customTags }</span>
+                </span>
               : null }
           <span className='update-date'>
               { 'Last active ' + Moment(gist.brief.updated_at).fromNow() }
@@ -538,6 +550,9 @@ class Snippet extends Component {
               <a href='#'
                 className={isExpanded ? 'file-expand is-expanded' : 'file-expand'}
                 onClick={ this.handleCollapseClicked.bind(this, key) }>
+                <div
+                  className='expand-icon'
+                  dangerouslySetInnerHTML={{ __html: collapseIcon }} />
                 <span>{ gistFile.filename }</span>
               </a>
               <div className='file-header-controls'>
