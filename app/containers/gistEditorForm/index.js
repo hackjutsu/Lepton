@@ -6,6 +6,8 @@ import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 
+import tipsIcon from './ei-question.svg';
+
 import './index.scss'
 
 export const NEW_GIST = 'NEW_GIST'
@@ -83,7 +85,12 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
       { touched && ((error && <span className='error-msg'>{ error }</span>) ||
         (warning && <span className='error-msg'>{ warning }</span>)) }
       <OverlayTrigger placement="top" overlay={ tooltip }>
-        <a className='tips' href='#'>tips</a>
+        <a className='tips' href='#'>
+          <div
+            className='tips-icon'
+            dangerouslySetInnerHTML={{ __html: tipsIcon }} />
+          <span>tips</span>
+         </a>
       </OverlayTrigger>
   </div>
 )

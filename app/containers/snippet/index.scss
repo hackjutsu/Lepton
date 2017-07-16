@@ -145,7 +145,7 @@
   .file-expand {
     font-size: 15px;
 
-    &.is-expanded:before {
+    &.is-expanded .expand-icon {
       transform: rotate(90deg);
     }
 
@@ -153,27 +153,17 @@
 			display: inline-block;
       vertical-align: middle;
     }
+  }
 
-    &:before {
-      content: '';
-      display: inline-block;
-      vertical-align: middle;
-      position: relative;
-      top: 1px;
-      width: 19px;
-      height: 19px;
-      opacity: .8;
-      margin-right: 3px;
-      background-image: url('~./ic_collapsed.svg');
-      background-size: cover;
-      background-position: 50% 50%;
-      background-repeat: no-repeat;
-		  transition: transform .15s ease, opacity .15s;
-		}
-
-    &:hover:before {
-      opacity: .65;
-    }
+  .expand-icon {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    top: 1px;
+    width: 19px;
+    height: 19px;
+    margin-right: 3px;
+    transition: transform .15s ease;
   }
 
   .file-header-control {
@@ -236,20 +226,15 @@
       display: inline-block;
       vertical-align: middle;
     }
+  }
 
-    &:before {
-      content: '';
-      display: inline-block;
-      vertical-align: middle;
-      height: 16px;
-      width: 16px;
-      margin-right: 2px;
-      position: relative;
-      background-image: url('~./tags.svg');
-      background-size: contain;
-      background-position: 40% 50%;
-      background-repeat: no-repeat;
-    }
+  .custom-tags-icon {
+    display: inline-block;
+    vertical-align: middle;
+    height: 16px;
+    width: 16px;
+    margin-right: 2px;
+    position: relative;
   }
 
   .update-date {
