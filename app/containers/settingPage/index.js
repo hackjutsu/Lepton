@@ -32,7 +32,7 @@ class SettingPage extends Component {
           <div>{ appInfo.name + ' v' + appInfo.version }</div>
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton'>GitHub</a>
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/issues'>Feedback</a>
-          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE.md'>License</a>
+          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE'>License</a>
         </div>
         <hr/>
         <div className='setting-title'>Contributors</div>
