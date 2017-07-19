@@ -48,6 +48,11 @@ Install the dependencies.
 $ cd Lepton && npm i
 ```
 
+### Install via Homebrew
+```Bash
+brew cask install lepton
+```
+
 ### Client ID/Secret
 [Register your application](https://github.com/settings/applications/new), and put your client id and client secret in `./configs/account.js`.
 ```js
@@ -114,6 +119,7 @@ Please submit an issue ticket in the [GitHub Issue page](https://github.com/hack
 - [lcgforever](https://github.com/lcgforever)
 - [Calinou](https://github.com/Calinou)
 - [rogersachan](https://github.com/rogersachan)
+- [passerbyid](https://github.com/passerbyid)
 
 ## License
 MIT © [hackjutsu](https://github.com/hackjutsu)
