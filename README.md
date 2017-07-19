@@ -48,6 +48,11 @@ Install the dependencies.
 $ cd Lepton && npm i
 ```
 
+### Install via Homebrew
+```Bash
+brew cask install lepton
+```
+
 ### Client ID/Secret
 [Register your application](https://github.com/settings/applications/new), and put your client id and client secret in `./configs/account.js`.
 ```js
