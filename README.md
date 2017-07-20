@@ -33,6 +33,14 @@
 4. Library: [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [Redux Thunk](https://github.com/gaearon/redux-thunk), [Redux Form](http://redux-form.com/)
 5. Lint: [ESLint](http://eslint.org/)
 
+## Installation
+- Download released binaries(macOS/Windows/Linux) from here:
+[https://github.com/hackjutsu/Lepton/releases](https://github.com/hackjutsu/Lepton/releases)
+- Install via Homebrew (macOS)
+```bash
+brew cask install lepton
+```
+
 ## Development
 
 
