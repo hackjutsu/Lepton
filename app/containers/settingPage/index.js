@@ -43,6 +43,8 @@ class SettingPage extends Component {
           <div className='contributor'><a href='https://github.com/lcgforever'>lcgforever</a></div>
           <div className='contributor'><a href='https://github.com/Calinou'>Calinou</a></div>
           <div className='contributor'><a href='https://github.com/rogersachan'>rogersachan</a></div>
+          <div className='contributor'><a href='https://github.com/passerbyid'>passerbyid</a></div>
+          <div className='contributor'><a href='https://github.com/YYSU'>YYSU</a></div>
         </div>
         <hr/>
         <div>
