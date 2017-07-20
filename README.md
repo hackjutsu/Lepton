@@ -114,6 +114,8 @@ Please submit an issue ticket in the [GitHub Issue page](https://github.com/hack
 - [lcgforever](https://github.com/lcgforever)
 - [Calinou](https://github.com/Calinou)
 - [rogersachan](https://github.com/rogersachan)
+- [passerbyid](https://github.com/passerbyid)
+- [YYSU](https://github.com/YYSU)
 
 ## License
 MIT © [hackjutsu](https://github.com/hackjutsu)
