@@ -444,18 +444,18 @@ class Snippet extends Component {
               href='#'
               onClick={ this.showGistEditorModal.bind(this) }>
               <div dangerouslySetInnerHTML={{__html: editIcon}} />
-              </a>
+            </a>
             <a className='snippet-control'
               title='Share'
               href='#'
               onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
               <div dangerouslySetInnerHTML={{__html: shareIcon}} />
-              </a>
+            </a>
             <a className='snippet-control'
               title='Revisions'
               href={ activeSnippet.brief.html_url + '/revisions' }>
               <div dangerouslySetInnerHTML={{__html: eyeIcon}} />
-              </a>
+            </a>
             {
               this.props.immersiveMode === 'OFF'
                 ? <a className='snippet-control'
