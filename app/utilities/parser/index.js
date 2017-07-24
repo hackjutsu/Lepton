@@ -47,15 +47,15 @@ export function parseLangName (payload) {
 }
 
 export function addCustomTagsPrefix (tags) {
-  const prefix = ''
+  const prefix = '#tags:'
   return tags.trim().length > 0
     ? prefix + tags.trim()
     : tags
 }
 
 export function parseCustomTags (payload) {
-  const rawTags = payload || ''
-  const prefix = ''
+  const rawTags = payload || '#tags:'
+  const prefix = '#tags:'
   if (!rawTags.trim().startsWith(prefix)) return []
   const processedTags = rawTags.trim().substring(prefix.length)
   const splitTags = processedTags.split(/[,，、]/).map(item => item.trim()).filter(item => item.length > 0)
@@ -74,7 +74,7 @@ function parseCustomTagsTwitter (payload) {
     return ''
   }
 
-  const prefix = ''
+  const prefix = '#tags:'
   const customTags = prefix + rawCustomTags.reduce((acc, cur) => acc + ', ' + cur)
   return customTags
 }

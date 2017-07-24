@@ -118,6 +118,7 @@ Please submit an issue ticket in the [GitHub Issue page](https://github.com/hack
 ## Contributors
 - [hackjutsu](https://github.com/hackjutsu)
 - [wujysh](https://github.com/wujysh)
+- [DNLHC](https://github.com/DNLHC)
 - [meilinz](https://github.com/meilinz)
 - [lcgforever](https://github.com/lcgforever)
 - [Calinou](https://github.com/Calinou)

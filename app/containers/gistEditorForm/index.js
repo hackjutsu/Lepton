@@ -6,7 +6,7 @@ import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 
-import tipsIcon from './ei-question.svg';
+import tipsIcon from './ei-question.svg'
 
 import './index.scss'
 

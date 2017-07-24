@@ -28,9 +28,9 @@ import {
   CREATE_SINGLE_GIST
 } from '../../utilities/githubApi'
 
-import logoutIcon from './logout.svg';
-import newIcon from './new.svg';
-import syncIcon from './sync.svg';
+import logoutIcon from './logout.svg'
+import newIcon from './new.svg'
+import syncIcon from './sync.svg'
 
 import { shell, remote, ipcRenderer } from 'electron'
 const logger = remote.getGlobal('logger')

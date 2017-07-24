@@ -15,7 +15,7 @@ import {
     updatePinnedTagsModalStatus
 } from '../../actions'
 
-import plusIcon from './plus.svg';
+import plusIcon from './plus.svg'
 
 import './index.scss'
 

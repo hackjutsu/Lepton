@@ -490,7 +490,7 @@ class Snippet extends Component {
                   <div
                     className='custom-tags-icon'
                     dangerouslySetInnerHTML={{ __html: tagsIcon }} />
-                  <span>{ customTags }</span>
+                  <span>{ customTags.substring('#tags:'.length) }</span>
                 </span>
               : null }
           <span className='update-date'>

@@ -39,6 +39,7 @@ class SettingPage extends Component {
         <div className='contributor-section'>
           <div className='contributor'><a href='https://github.com/hackjutsu'>hackjutsu</a></div>
           <div className='contributor'><a href='https://github.com/wujysh'>wujysh</a></div>
+          <div className='contributor'><a href='https://github.com/DNLHC'>DNLHC</a></div>
           <div className='contributor'><a href='https://github.com/meilinz'>meilinz</a></div>
           <div className='contributor'><a href='https://github.com/lcgforever'>lcgforever</a></div>
           <div className='contributor'><a href='https://github.com/Calinou'>Calinou</a></div>
