@@ -68,6 +68,7 @@
     "image-downloader": "^3.2.1",
     "marked": "^0.3.6",
     "moment": "^2.17.1",
+    "nconf": "^0.8.4",
     "proxy-agent": "^2.0.0",
     "react": "^15.5.1",
     "react-bootstrap": "^0.31.0",
