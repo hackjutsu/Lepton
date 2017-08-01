@@ -116,15 +116,21 @@ Please submit an issue ticket in the [GitHub Issue page](https://github.com/hack
 
 
 ## Contributors
-- [hackjutsu](https://github.com/hackjutsu)
-- [wujysh](https://github.com/wujysh)
-- [DNLHC](https://github.com/DNLHC)
-- [meilinz](https://github.com/meilinz)
-- [lcgforever](https://github.com/lcgforever)
-- [Calinou](https://github.com/Calinou)
-- [rogersachan](https://github.com/rogersachan)
-- [passerbyid](https://github.com/passerbyid)
-- [YYSU](https://github.com/YYSU)
+<table id="contributors">
+   <tr>
+      <td><img src=https://avatars1.githubusercontent.com/u/7756581?v=3><a href="https://github.com/hackjutsu">hackjutsu</a></td>
+      <td><img src=https://avatars1.githubusercontent.com/u/5550402?v=3><a href="https://github.com/wujysh">wujysh</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/14959483?v=3><a href="https://github.com/DNLHC">DNLHC</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/13786673?v=3><a href="https://github.com/meilinz">meilinz</a></td>
+      <td><img src=https://avatars3.githubusercontent.com/u/5697293?v=3><a href="https://github.com/lcgforever">lcgforever</a></td>
+      <td><img src=https://avatars1.githubusercontent.com/u/180032?v=3><a href="https://github.com/Calinou">Calinou</a></td>
+   </tr>
+   <tr>
+      <td><img src=https://avatars0.githubusercontent.com/u/7173984?v=3><a href="https://github.com/rogersachan">rogersachan</a></td>
+      <td><img src=https://avatars3.githubusercontent.com/u/2075566?v=3><a href="https://github.com/passerbyid">passerbyid</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/12994810?v=3><a href="https://github.com/YYSU">YYSU</a></td>
+   </tr>
+</table>
 
 ## License
 MIT © [hackjutsu](https://github.com/hackjutsu)
