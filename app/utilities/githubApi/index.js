@@ -8,18 +8,14 @@ import Notifier from '../notifier'
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
-// TODO: move to global configuration
-let Network = null
-try {
-  Network = require('../../../configs/network')
-} catch (e) {
-  if (e.code !== 'MODULE_NOT_FOUND') throw e
-  Network = require('../../../configs/networkDummy')
-}
+import nconf from 'nconf'
+nconf.argv()
+  .env()
+  .file({ file: remote.app.getPath('home') + '/.leptonrc' })
 
 import ProxyAgent from 'proxy-agent'
 let proxyAgent = null
-const proxyUri = process.env.http_proxy || Network.proxy
+const proxyUri = nconf.get('proxy:address')
 if (proxyUri) {
   logger.info("use proxy", proxyUri)
   proxyAgent = new ProxyAgent(proxyUri)
