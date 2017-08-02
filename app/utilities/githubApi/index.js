@@ -8,10 +8,28 @@ import Notifier from '../notifier'
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
+// TODO: move to global configuration
+let Network = null
+try {
+  Network = require('../../../configs/network')
+} catch (e) {
+  if (e.code !== 'MODULE_NOT_FOUND') throw e
+  Network = require('../../../configs/networkDummy')
+}
+
+import ProxyAgent from 'proxy-agent'
+let proxyAgent = null
+const proxyUri = process.env.http_proxy || Network.proxy
+if (proxyUri) {
+  logger.info("use proxy", proxyUri)
+  proxyAgent = new ProxyAgent(proxyUri)
+}
+
 function exchangeAccessToken (clientId, clientSecret, authCode) {
   return ReqPromise({
     method: 'POST',
     uri: 'https://github.com/login/oauth/access_token',
+    agent: proxyAgent,
     form: {
       'client_id': clientId,
       'client_secret': clientSecret,
@@ -25,6 +43,7 @@ function getUserProfile (accessToken) {
   const USER_PROFILE_URI = 'https://api.github.com/user'
   return ReqPromise({
     uri: USER_PROFILE_URI,
+    agent: proxyAgent,
     headers: {
       'User-Agent': 'Request-Promise',
     },
@@ -40,6 +59,7 @@ function getSingleGist (accessToken, gistId) {
   const SINGLE_GIST_URI = 'https://api.github.com/gists/'
   return ReqPromise({
     uri: SINGLE_GIST_URI + gistId,
+    agent: proxyAgent,
     headers: {
       'User-Agent': 'Request-Promise'
     },
@@ -103,6 +123,7 @@ const GISTS_PER_PAGE = 200
 function makeOptionForGetAllGists (accessToken, userLoginId, pageNumber) {
   return {
     uri: 'https://api.github.com/users/' + userLoginId + '/gists',
+    agent: proxyAgent,
     headers: {
       'User-Agent': 'request',
     },
@@ -129,6 +150,7 @@ function createSingleGist (accessToken, description, files, isPublic) {
     },
     method: 'POST',
     uri: 'https://api.github.com/gists',
+    agent: proxyAgent,
     qs: {
       access_token: accessToken
     },
@@ -148,6 +170,7 @@ function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) 
     },
     method: 'PATCH',
     uri: 'https://api.github.com/gists/' + gistId,
+    agent: proxyAgent,
     qs: {
       access_token: accessToken
     },
@@ -166,6 +189,7 @@ function deleteSingleGist (accessToken, gistId) {
     },
     method: 'DELETE',
     uri: 'https://api.github.com/gists/' + gistId,
+    agent: proxyAgent,
     qs: {
       access_token: accessToken
     },

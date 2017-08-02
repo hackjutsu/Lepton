@@ -3,7 +3,9 @@ bundle
 dist
 .DS_Store
 configs/account.js
+configs/network.js
 npm-debug.log
 test
 screenshots
 *backup*
+.idea
