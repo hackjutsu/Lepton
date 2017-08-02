@@ -9,16 +9,20 @@ import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
 import nconf from 'nconf'
-nconf.argv()
-  .env()
-  .file({ file: remote.app.getPath('home') + '/.leptonrc' })
-
 import ProxyAgent from 'proxy-agent'
+const configFilePath = remote.app.getPath('home') + '/.leptonrc'
 let proxyAgent = null
-const proxyUri = nconf.get('proxy:address')
-if (proxyUri) {
-  logger.info("use proxy", proxyUri)
-  proxyAgent = new ProxyAgent(proxyUri)
+try {
+  nconf.argv()
+    .env()
+    .file({ file: configFilePath })
+  if (nconf.get('proxy:enable')) {
+    const proxyUri = nconf.get('proxy:address')
+    proxyAgent = new ProxyAgent(proxyUri)
+    logger.info('use proxy', proxyUri)
+  }
+} catch (error) {
+  logger.error('Please correct the mistakes in your configuration file: [%s].\n' + error, configFilePath)
 }
 
 function exchangeAccessToken (clientId, clientSecret, authCode) {
