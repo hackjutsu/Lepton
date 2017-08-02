@@ -111,6 +111,17 @@ Currently, Lepton only supports the search for the gist's description field. Thi
 [title] description #tag1 #tag2
 ```
 
+#### Can I use Lepton behind a proxy server?
+Yes. Copy and paste the following snippet to `~/.leptonrc`. Create the file if it does not exist, and don't forgot to change the address to your own one.
+```
+{
+  "proxy": {
+    "enable": true,
+    "address": "socks://localhost:1080"
+  }
+}
+```
+
 #### How to provide feedback?
 Please submit an issue ticket in the [GitHub Issue page](https://github.com/hackjutsu/Lepton/issues). Or, if you like, send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
 
