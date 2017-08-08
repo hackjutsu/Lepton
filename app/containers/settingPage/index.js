@@ -11,6 +11,13 @@ import './index.scss'
 class SettingPage extends Component {
   renderAboutSection () {
     const licenseList = []
+    /* Add Evil icons license as an exception */
+    licenseList.push(
+      <div key='Evil icons@1.9.0' className='license-item'>
+        <div className='license-project'>Evil icons@1.9.0</div>
+        <div className='license-type'>License: MIT</div>
+      </div>
+    )
     Object.keys(LicenseInfo).forEach(item => {
       if (item.startsWith(appInfo.name)) {
         return
