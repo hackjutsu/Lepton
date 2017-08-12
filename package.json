@@ -52,8 +52,8 @@
     "style-loader": "^0.18.1",
     "text-loader": "0.0.1",
     "url-loader": "^0.5.7",
-    "webpack": "^2.2.0",
-    "webpack-node-externals": "^1.5.4"
+    "webpack": "^3.5.2",
+    "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
     "autolinker": "^1.4.0",
