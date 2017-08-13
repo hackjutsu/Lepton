@@ -39,7 +39,6 @@ import editIcon from './ei-edit.svg'
 import shareIcon from './ei-share.svg'
 import eyeIcon from './ei-eye.svg'
 import trashIcon from './ei-trash.svg'
-import collapseIcon from './ic_collapsed.svg'
 import tagsIcon from './tags.svg'
 
 const logger = remote.getGlobal('logger')
@@ -550,9 +549,6 @@ class Snippet extends Component {
               <a href='#'
                 className={isExpanded ? 'file-expand is-expanded' : 'file-expand'}
                 onClick={ this.handleCollapseClicked.bind(this, key) }>
-                <div
-                  className='expand-icon'
-                  dangerouslySetInnerHTML={{ __html: collapseIcon }} />
                 <span>{ gistFile.filename }</span>
               </a>
               <div className='file-header-controls'>
