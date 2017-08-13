@@ -6,7 +6,7 @@
 .panel-thumbnails-scroll {
   float: left;
   width: 100%;
-  overflow: auto;
+  overflow-y: overlay;
   height: 100%;
   visibility: hidden;
 }
