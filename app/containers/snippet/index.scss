@@ -136,7 +136,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 12px;
+    padding: 8px 15px;
     background-color: #f6f5f6;
     border-top: 1px solid #dadee3;
     border-bottom: 1px solid #dadee3;
@@ -145,8 +145,23 @@
   .file-expand {
     font-size: 15px;
 
-    &.is-expanded .expand-icon {
-      transform: rotate(90deg);
+    &::before {
+      content: '';
+      display: inline-block;
+      vertical-align: baseline;
+      position: relative;
+      width: 7px;
+      height: 7px;
+      margin-right: 8px;
+      border-width: 0 0 2px 2px;
+      border-color: currentColor;
+      border-style: solid;
+      transform: rotate(-45deg);
+      transition: transform .12s ease-in-out;
+    }
+
+    &.is-expanded::before {
+      transform: translateX(-2px) rotate(-135deg);
     }
 
     span {
@@ -155,16 +170,6 @@
     }
   }
 
-  .expand-icon {
-    display: inline-block;
-    vertical-align: middle;
-    position: relative;
-    top: 1px;
-    width: 19px;
-    height: 19px;
-    margin-right: 3px;
-    transition: transform .15s ease;
-  }
 
   .file-header-control {
 
