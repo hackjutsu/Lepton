@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "1.4.0-beta",
+  "version": "1.4.0",
   "description": "AWESOME Gist client for everyone, everywhere!",
   "productName": "Lepton",
   "main": "main.js",
@@ -93,7 +93,7 @@
       ]
     },
     "win": {
-      "target": "nsis",
+      "target": ["nsis", "7z"],
       "publish": [
         "github"
       ]
