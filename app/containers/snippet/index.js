@@ -554,8 +554,7 @@ class Snippet extends Component {
               <div className='file-header-controls'>
                 <a
                   href={ activeSnippet.details.html_url + '#file-' + gistFile.filename.replace(/\./g, '-') }
-                  className='file-header-control'
-                  onClick={ this.showRawModalModal.bind(this, gistFile) }>
+                  className='file-header-control'>
                   #link
                 </a>
                 <a
