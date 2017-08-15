@@ -45,7 +45,7 @@
     "html-loader": "^0.4.4",
     "json-loader": "^0.5.4",
     "license-checker": "^13.0.3",
-    "node-sass": "^4.1.1",
+    "node-sass": "^4.5.3",
     "raw-loader": "^0.5.1",
     "redux-devtools": "^3.3.1",
     "sass-loader": "^6.0.5",
