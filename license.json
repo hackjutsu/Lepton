@@ -1,5 +1,5 @@
 {
-  "Lepton@1.4.0-beta": {
+  "Lepton@1.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -152,7 +152,7 @@
     "repository": "https://github.com/hapijs/boom",
     "licenseFile": "node_modules/boom/LICENSE"
   },
-  "bowser@1.7.0": {
+  "bowser@1.7.1": {
     "licenses": "MIT",
     "repository": "https://github.com/ded/bowser",
     "publisher": "Dustin Diaz",
@@ -209,7 +209,7 @@
     "url": "sindresorhus.com",
     "licenseFile": "node_modules/code-point-at/license"
   },
-  "codemirror@5.27.4": {
+  "codemirror@5.28.0": {
     "licenses": "MIT",
     "repository": "https://github.com/codemirror/CodeMirror",
     "licenseFile": "node_modules/codemirror/LICENSE"
@@ -602,6 +602,13 @@
     "email": "mridgway@yahoo-inc.com",
     "licenseFile": "node_modules/hoist-non-react-statics/LICENSE.md"
   },
+  "hoist-non-react-statics@2.2.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/mridgway/hoist-non-react-statics",
+    "publisher": "Michael Ridgway",
+    "email": "mcridgway@gmail.com",
+    "licenseFile": "node_modules/react-redux/node_modules/hoist-non-react-statics/LICENSE.md"
+  },
   "http-errors@1.6.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/http-errors",
@@ -671,7 +678,7 @@
     "url": "http://blog.izs.me/",
     "licenseFile": "node_modules/ini/LICENSE"
   },
-  "inline-style-prefixer@3.0.6": {
+  "inline-style-prefixer@3.0.7": {
     "licenses": "MIT",
     "repository": "https://github.com/rofrischmann/inline-style-prefixer",
     "publisher": "Robin Frischmann",
@@ -1031,6 +1038,13 @@
     "publisher": "ForbesLindesay",
     "licenseFile": "node_modules/promise/LICENSE"
   },
+  "prop-types-extra@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/react-bootstrap/react-prop-types",
+    "publisher": "Matthew L Smith",
+    "email": "mtscout6@gmail.com",
+    "licenseFile": "node_modules/prop-types-extra/LICENSE"
+  },
   "prop-types@15.5.10": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/reactjs/prop-types",
@@ -1072,7 +1086,7 @@
     "url": "http://jongleberry.com",
     "licenseFile": "node_modules/raw-body/LICENSE"
   },
-  "react-bootstrap@0.31.0": {
+  "react-bootstrap@0.31.2": {
     "licenses": "MIT",
     "repository": "https://github.com/react-bootstrap/react-bootstrap",
     "publisher": "Stephen J. Collings",
@@ -1104,7 +1118,7 @@
     "email": "mtscout6@gmail.com",
     "licenseFile": "node_modules/react-prop-types/LICENSE"
   },
-  "react-redux@5.0.5": {
+  "react-redux@5.0.6": {
     "licenses": "MIT",
     "repository": "https://github.com/reactjs/react-redux",
     "publisher": "Dan Abramov",
@@ -1112,7 +1126,7 @@
     "url": "http://github.com/gaearon",
     "licenseFile": "node_modules/react-redux/LICENSE.md"
   },
-  "react-split-pane@0.1.63": {
+  "react-split-pane@0.1.66": {
     "licenses": "MIT",
     "repository": "https://github.com/tomkp/react-split-pane",
     "publisher": "tomkp",
@@ -1159,7 +1173,7 @@
     "email": "dan.abramov@me.com",
     "licenseFile": "node_modules/redux-thunk/LICENSE.md"
   },
-  "redux@3.7.1": {
+  "redux@3.7.2": {
     "licenses": "MIT",
     "repository": "https://github.com/reactjs/redux",
     "licenseFile": "node_modules/redux/LICENSE.md"

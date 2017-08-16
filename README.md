@@ -13,6 +13,7 @@
 - Custom tags
 - Markdown rendering
 - Cross-platform support
+- Proxy
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
@@ -45,7 +46,7 @@ brew cask install lepton
 
 
 ### Install
->Only tested with Node.js v6.9.x
+>Tested with Node.js 6/7/8 
 
 Clone the repository.
 ```Bash
@@ -67,7 +68,7 @@ module.exports = {
 
 ### Run
 ```bash
-$ npm run pack
+$ npm run build
 $ npm run start
 ```
 
@@ -96,23 +97,26 @@ $ npm run dist
 ```
 
 ## FAQ
-#### Why is my gist's language classified as "Other"?
+#### My gist's language is classified as "Other"
 Lepton depends on GitHub API to detect the language. If this fails, you can still put `// vim: syntax=<your_language>` at the top of the gist to specify the language.
 ```
 // vim: syntax=javascript
 let test = 'This is a javascript file'
 ```
 
-#### Why I can't search the gists' content?
-Currently, Lepton only supports the search for the gist's description field. This is limited by GitHub's API support.
+#### I can't search the gist content
+Limited by GitHub API, Lepton only supports the search for the following fields.
+- file name
+- description
+- tag
 
-#### How to specify the title and tags for my gist?
+#### Title and Tags
 ```
 [title] description #tag1 #tag2
 ```
 
-#### Can I use Lepton behind a proxy server?
-Yes. Copy and paste the following snippet to `~/.leptonrc`. Create the file if it does not exist, and don't forgot to change the address to your own one.
+#### Proxy (Optional)
+Copy and paste the following snippet to `~/.leptonrc`. Create the file if it does not exist, and don't forgot to change the address to your own one.
 ```
 {
   "proxy": {
@@ -122,8 +126,9 @@ Yes. Copy and paste the following snippet to `~/.leptonrc`. Create the file if i
 }
 ```
 
-#### How to provide feedback?
-Please submit an issue ticket in the [GitHub Issue page](https://github.com/hackjutsu/Lepton/issues). Or, if you like, send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
+#### Feedback?
+- Submit an [issue](https://github.com/hackjutsu/Lepton/issues).
+- Send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
 
 
 ## Contributors
