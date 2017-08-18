@@ -11,6 +11,7 @@ const BrowserWindow = electron.BrowserWindow
 const logger = require('winston')
 const path = require('path')
 const fs = require('fs')
+const isDev = require('electron-is-dev')
 
 const autoUpdater = require("electron-updater").autoUpdater
 autoUpdater.logger = logger
@@ -79,7 +80,11 @@ function createWindow () {
       global.newVersionInfo = info
       mainWindow && mainWindow.webContents.send('update-available')
     })
-    autoUpdater.checkForUpdates()
+
+    // Only run auto update checker in production.
+    if (!isDev) {
+        autoUpdater.checkForUpdates()
+    }
   })
 
   const ContextMenu = require('electron-context-menu')

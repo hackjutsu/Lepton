@@ -61,6 +61,7 @@
     "bluebird": "^3.4.7",
     "codemirror": "^5.28.0",
     "electron-context-menu": "^0.9.0",
+    "electron-is-dev": "^0.3.0",
     "electron-localshortcut": "^1.1.0",
     "electron-updater": "^1.4.2",
     "fuse.js": "^3.0.0",
