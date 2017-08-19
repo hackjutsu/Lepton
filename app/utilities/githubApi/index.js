@@ -4,12 +4,12 @@ import { Promise } from 'bluebird'
 import Request from 'request'
 import ReqPromise from 'request-promise'
 import Notifier from '../notifier'
-
-import { remote } from 'electron'
-const logger = remote.getGlobal('logger')
-
 import nconf from 'nconf'
 import ProxyAgent from 'proxy-agent'
+import { remote } from 'electron'
+
+const logger = remote.getGlobal('logger')
+
 const configFilePath = remote.app.getPath('home') + '/.leptonrc'
 let proxyAgent = null
 try {

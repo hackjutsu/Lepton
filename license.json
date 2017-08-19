@@ -1,5 +1,5 @@
 {
-  "Lepton@1.4.0": {
+  "Lepton@1.4.1-alpha": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -400,6 +400,12 @@
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
     "licenseFile": "node_modules/electron-updater/README.md"
+  },
+  "electron-window-state@4.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mawie81/electron-window-state",
+    "publisher": "Marcel Wiehle",
+    "licenseFile": "node_modules/electron-window-state/license"
   },
   "encoding@0.1.12": {
     "licenses": "MIT",
@@ -810,6 +816,13 @@
     "url": "http://blog.izs.me",
     "licenseFile": "node_modules/json-stringify-safe/LICENSE"
   },
+  "jsonfile@2.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jprichardson/node-jsonfile",
+    "publisher": "JP Richardson",
+    "email": "jprichardson@gmail.com",
+    "licenseFile": "node_modules/electron-window-state/node_modules/jsonfile/LICENSE"
+  },
   "jsonfile@3.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-jsonfile",
@@ -912,6 +925,22 @@
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-types",
     "licenseFile": "node_modules/mime-types/LICENSE"
+  },
+  "minimist@0.0.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/minimist",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "licenseFile": "node_modules/minimist/LICENSE"
+  },
+  "mkdirp@0.5.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/node-mkdirp",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "licenseFile": "node_modules/mkdirp/LICENSE"
   },
   "modify-filename@1.1.0": {
     "licenses": "MIT",
