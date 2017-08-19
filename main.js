@@ -128,10 +128,12 @@ app.on('before-quit', function() {
   electronLocalshortcut.unregisterAll(mainWindow)
 })
 
-app.on('activate', () => {
+// 'activate' is a macOS specific signal mapped to 
+// 'applicationShouldHandleReopen' event
+app.on('activate', (event, hasVisibleWindows) => {
   // On macOS, if an app is not fully closed, it is expected to open again
   // when the icon is clicked.
-  if (process.platform === 'darwin' && mainWindow === null) {
+  if (mainWindow === null && !hasVisibleWindows && app.isReady()) {
     createWindowAndAutoLogin()
   }
 })
