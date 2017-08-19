@@ -32,7 +32,7 @@ import logoutIcon from './logout.svg'
 import newIcon from './new.svg'
 import syncIcon from './sync.svg'
 
-import { shell, remote, ipcRenderer } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class UserPanel extends Component {
@@ -230,11 +230,6 @@ class UserPanel extends Component {
     this.props.reSyncUserGists()
   }
 
-  handleProfileImageClicked () {
-    logger.debug('profile image is clicked!! ' + this.props.userSession.profile.html_url)
-    shell.openExternal(this.props.userSession.profile.html_url)
-  }
-
   handleLogoutModalCancelClicked () {
     this.props.updateLogoutModalStatus('OFF')
   }
@@ -259,11 +254,19 @@ class UserPanel extends Component {
 
     return (
       <div>
-        <Image
+        <figure className="sticker-img">
+          <Image
             className='profile-image-section'
-            src={ profile.avatar_url }
-            onClick={ this.handleProfileImageClicked.bind(this) }
-            rounded/>
+            src={ profile.avatar_url }/>
+          <div>
+            <div className='profile-username-section'>
+              <h4><span>{ this.props.userSession.profile.login }</span></h4>
+            </div>
+            <i className="ion-ios-play-outline"></i>
+            <div className="curl"></div>
+            <a href={ this.props.userSession.profile.html_url }></a>
+          </div>
+        </figure>
       </div>
     )
   }
