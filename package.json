@@ -64,6 +64,7 @@
     "electron-is-dev": "^0.3.0",
     "electron-localshortcut": "^1.1.0",
     "electron-updater": "^1.4.2",
+    "electron-window-state": "^4.1.1",
     "fuse.js": "^3.0.0",
     "highlight.js": "^9.9.0",
     "human-readable-time": "^0.2.4",

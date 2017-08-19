@@ -1,6 +1,7 @@
 'use strict'
 
 const electron = require('electron')
+const windowStateKeeper = require('electron-window-state')
 const electronLocalshortcut = require('electron-localshortcut')
 const Menu = electron.Menu
 const app = electron.app
@@ -39,15 +40,28 @@ function createWindowAndAutoLogin () {
 
 function createWindow () {
   console.time('init')
+    // Load the previous state with fallback to defaults
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 1100,
+    defaultHeight: 800
+  })
+
   mainWindow = new BrowserWindow({
-    width: 1100,
-    height: 800,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
     minWidth: 1000,
     minHeight: 700,
     // titleBarStyle: 'hidden',
     backgroundColor: '#808080',
     show: false
   })
+
+  // Let us register listeners on the window, so we can update the state
+  // automatically (the listeners will be removed when the window is closed)
+  // and restore the maximized or full screen state
+  mainWindowState.manage(mainWindow);
 
   mainWindow.webContents.on('will-navigate', function(e, url) {
     e.preventDefault()
