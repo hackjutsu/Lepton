@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 import { Panel, Modal, Button, ProgressBar, Collapse } from 'react-bootstrap'
 import { default as GistEditorForm, UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
-import Markdown from 'marked'
+import Markdown from '../../utilities/markdown'
 import { remote, clipboard, ipcRenderer } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
@@ -42,13 +42,6 @@ import trashIcon from './ei-trash.svg'
 import tagsIcon from './tags.svg'
 
 const logger = remote.getGlobal('logger')
-
-// Synchronous highlighting with highlight.js
-Markdown.setOptions({
-  highlight: function (code) {
-    return HighlightJS.highlightAuto(code).value
-  }
-})
 
 class Snippet extends Component {
   componentWillMount () {
@@ -379,7 +372,7 @@ class Snippet extends Component {
   }
 
   createMarkdownCodeBlock (content) {
-    return `<div class='markdown-section'>${Markdown(content)}</div>`
+    return `<div class='markdown-section'>${Markdown.render(content)}</div>`
   }
 
   createHighlightedCodeBlock (content, language) {
