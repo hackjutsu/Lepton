@@ -115,7 +115,8 @@ figure.sticker-img > div::before {
   transition-delay: 0.3s;
   background-image: linear-gradient(45deg, #000000 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.8));
 }
-figure.sticker-img h4 {
+figure.sticker-img h5 {
+  font-size: 0.75em;
   width: 100%;
   word-spacing: -0.1em;
   font-weight: 100;
@@ -133,7 +134,7 @@ figure.sticker-img h4 {
   -webkit-transition-delay: 0s;
   transition-delay: 0s;
 }
-figure.sticker-img h4 span {
+figure.sticker-img h5 span {
    font-weight: 800;
 }
 figure.sticker-img i {
@@ -190,8 +191,8 @@ figure.sticker-img a {
   position: absolute;
   color: #ffffff;
 }
-figure.sticker-img:hover > div h4,
-figure.sticker-img.hover > div h4 {
+figure.sticker-img:hover > div h5,
+figure.sticker-img.hover > div h5 {
   opacity: 1;
   text-shadow: 0 0 0px #ffffff;
   -webkit-transition-delay: 0.3s;

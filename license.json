@@ -387,6 +387,14 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "licenseFile": "node_modules/electron-context-menu/node_modules/electron-is-dev/license"
+  },
+  "electron-is-dev@0.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/electron-is-dev",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
     "licenseFile": "node_modules/electron-is-dev/license"
   },
   "electron-localshortcut@1.1.1": {
@@ -412,6 +420,13 @@
     "repository": "https://github.com/andris9/encoding",
     "publisher": "Andris Reinman",
     "licenseFile": "node_modules/encoding/LICENSE"
+  },
+  "entities@1.1.1": {
+    "licenses": "BSD*",
+    "repository": "https://github.com/fb55/node-entities",
+    "publisher": "Felix Boehm",
+    "email": "me@feedic.com",
+    "licenseFile": "node_modules/entities/LICENSE"
   },
   "es6-error@4.0.2": {
     "licenses": "MIT",
@@ -864,6 +879,11 @@
     "email": "z@georgezahariev.com",
     "licenseFile": "node_modules/levn/LICENSE"
   },
+  "linkify-it@2.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/markdown-it/linkify-it",
+    "licenseFile": "node_modules/linkify-it/LICENSE"
+  },
   "lodash-es@4.17.4": {
     "licenses": "MIT",
     "repository": "https://github.com/lodash/lodash",
@@ -910,11 +930,21 @@
     "email": "i@izs.me",
     "licenseFile": "node_modules/proxy-agent/node_modules/lru-cache/LICENSE"
   },
-  "marked@0.3.6": {
+  "markdown-it-task-lists@2.0.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/revin/markdown-it-task-lists",
+    "publisher": "Revin Guillen",
+    "licenseFile": "node_modules/markdown-it-task-lists/LICENSE"
+  },
+  "markdown-it@8.3.2": {
     "licenses": "MIT",
-    "repository": "https://github.com/chjj/marked",
-    "publisher": "Christopher Jeffrey",
-    "licenseFile": "node_modules/marked/LICENSE"
+    "repository": "https://github.com/markdown-it/markdown-it",
+    "licenseFile": "node_modules/markdown-it/LICENSE"
+  },
+  "mdurl@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/markdown-it/mdurl",
+    "licenseFile": "node_modules/mdurl/LICENSE"
   },
   "mime-db@1.27.0": {
     "licenses": "MIT",
@@ -1455,6 +1485,11 @@
     "email": "fyzlman@gmail.com",
     "url": "http://faisalman.com",
     "licenseFile": "node_modules/ua-parser-js/readme.md"
+  },
+  "uc.micro@1.0.3": {
+    "licenses": "WTFPL",
+    "repository": "https://github.com/markdown-it/uc.micro",
+    "licenseFile": "node_modules/uc.micro/README.md"
   },
   "uncontrollable@4.1.0": {
     "licenses": "MIT",
