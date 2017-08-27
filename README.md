@@ -126,10 +126,12 @@ Copy and paste the following snippet to `~/.leptonrc`. Create the file if it doe
 }
 ```
 
-#### Feedback?
+#### Feedback
 - Submit an [issue](https://github.com/hackjutsu/Lepton/issues).
 - Send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
 
+#### Donation
+*We DON'T accept donation personally.* If you like, feel free to donate to [Wikimedia Foundation](https://wikimediafoundation.org/wiki/Ways_to_Give), which helps sustain free knowledge through Wikipedia and its sister projects for people around the world. You are welcome to create an issue to share how much you have contributed.
 
 ## Contributors
 <table id="contributors">
