@@ -6,13 +6,14 @@
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 
 
-**Lepton** is a lean [GitHub Gist](https://gist.github.com/) Desktop Client based on Electron. [Checkout the latest release.](https://github.com/hackjutsu/Lepton/releases)
-- Group your gists by languages
+**Lepton** is a lean snippet manager based on *GitHub Gist*. [Check out its latest release.](https://github.com/hackjutsu/Lepton/releases)
+- Group gists by languages
 - Create/Edit/Delete gists
 - Instant search
 - Custom tags
 - Markdown rendering
 - Cross-platform support
+- Immersive mode(Zen mode)
 - Proxy
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
@@ -35,8 +36,7 @@
 5. Lint: [ESLint](http://eslint.org/)
 
 ## Installation
-- Download released binaries(macOS/Windows/Linux) from here:
-[https://github.com/hackjutsu/Lepton/releases](https://github.com/hackjutsu/Lepton/releases)
+- Download released binaries(macOS/Windows/Linux) [here](https://github.com/hackjutsu/Lepton/releases).
 - Install via Homebrew (macOS)
 ```bash
 brew cask install lepton
@@ -73,7 +73,7 @@ $ npm run start
 ```
 
 ## Build Installer App
->Read [electron-builder docs](https://github.com/electron-userland/electron-builder#readme) and checkout [Code Signing](https://github.com/electron-userland/electron-builder#code-signing) before building the installer app.
+>Read [electron-builder docs](https://github.com/electron-userland/electron-builder#readme) and check out the [code signing wiki](https://github.com/electron-userland/electron-builder#code-signing) before building the installer app.
 
 Build app for macOS.
 ```bash
@@ -98,14 +98,14 @@ $ npm run dist
 
 ## FAQ
 #### My gist's language is classified as "Other"
-Lepton depends on GitHub API to detect the language. If this fails, you can still put `// vim: syntax=<your_language>` at the top of the gist to specify the language.
+Lepton depends on GitHub API to detect the language. If it fails, the gist's language is marked as "Other". However, we can put `// vim: syntax=<your_language>` at the top to explicitly specify the language.
 ```
 // vim: syntax=javascript
 let test = 'This is a javascript file'
 ```
 
-#### I can't search the gist content
-Limited by GitHub API, Lepton only supports the search for the following fields.
+#### Search
+Limited by GitHub API, Lepton supports searching for following fields.
 - file name
 - description
 - tag
@@ -116,7 +116,7 @@ Limited by GitHub API, Lepton only supports the search for the following fields.
 ```
 
 #### Proxy (Optional)
-Copy and paste the following snippet to `~/.leptonrc`. Create the file if it does not exist, and don't forgot to change the address to your own one.
+Copy and paste the following snippet to `~/.leptonrc`. Create the file if it does not exist, and don't forgot to change the address to your own.
 ```
 {
   "proxy": {
