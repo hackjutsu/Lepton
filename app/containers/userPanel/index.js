@@ -262,7 +262,6 @@ class UserPanel extends Component {
             <div className='profile-username-section'>
               <h5><span>{ this.props.userSession.profile.login }</span></h5>
             </div>
-            <i className="ion-ios-play-outline"></i>
             <div className="curl"></div>
             <a href={ this.props.userSession.profile.html_url }></a>
           </div>

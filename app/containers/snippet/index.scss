@@ -204,6 +204,15 @@
   .description-section {
     @extend .font-style-base;
     color: #787282;
+
+    a {
+      color: rgb(3, 123, 183);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
   }
 
   .custom-tags-section {

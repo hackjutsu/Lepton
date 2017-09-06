@@ -473,7 +473,7 @@ class Snippet extends Component {
     }
     htmlForDescriptionSection.push(
         <div className='description-section' key='description'
-            dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { newWindow: false })} }/>
+            dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { stripPrefix: false, newWindow: false })} }/>
     )
     htmlForDescriptionSection.push(
         <div className='custom-tags-section' key='customTags'>
