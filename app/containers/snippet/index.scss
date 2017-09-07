@@ -156,12 +156,12 @@
       border-width: 0 0 2px 2px;
       border-color: currentColor;
       border-style: solid;
-      transform: rotate(-45deg);
+      transform: rotate(-135deg);
       transition: transform .12s ease-in-out;
     }
 
     &.is-expanded::before {
-      transform: translateX(-2px) rotate(-135deg);
+      transform: translateX(-2px) rotate(-45deg);
     }
 
     span {
