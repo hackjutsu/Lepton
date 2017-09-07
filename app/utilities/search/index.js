@@ -15,6 +15,7 @@ const fuseOptions = {
   maxPatternLength: 32,
   minMatchCharLength: 1,
   keys: [
+    'id',
     'description',
     'language',
     'filename'
