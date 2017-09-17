@@ -30,8 +30,8 @@ class SnippetPanel extends Component {
       <div className={ immersiveMode === 'ON' ? 'snippet-panel-immersive' : 'snippet-panel' }>
         <div className='snippet-panel-content'>
           { !gists || !activeGist || !gists[activeGist]
-                ? this.renderEmptySnippetSection()
-                : this.renderNormalSnippetSection() }
+            ? this.renderEmptySnippetSection()
+            : this.renderNormalSnippetSection() }
         </div>
       </div>
     )

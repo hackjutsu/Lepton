@@ -6,6 +6,7 @@ module.exports = {
       "node": true
     },
     "rules": {
+      "indent": [2, 2, {"SwitchCase": 1}],
       "no-new": 0,
       "react/jsx-uses-react": 2,
       "react/jsx-uses-vars": 2,
@@ -23,5 +24,4 @@ module.exports = {
         "standard",
         "react"
     ],
-    "indent": [2, 2]
 };

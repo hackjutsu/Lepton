@@ -377,18 +377,18 @@ function initUserSession (accessToken) {
         syncLocalPref(profile.login)
       })
     })
-  .catch((err) => {
-    logger.error('The request has failed: \n' + JSON.stringify(err))
+    .catch((err) => {
+      logger.error('The request has failed: \n' + JSON.stringify(err))
 
-    if (err.statusCode === 401) {
-      logger.info('[Dispatch] updateUserSession EXPIRED')
-      reduxStore.dispatch(updateUserSession({ activeStatus: 'EXPIRED' }))
-    } else {
-      logger.info('[Dispatch] updateUserSession INACTIVE')
-      reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
-    }
-    Notifier('Sync failed', 'Please check your network condition.')
-  })
+      if (err.statusCode === 401) {
+        logger.info('[Dispatch] updateUserSession EXPIRED')
+        reduxStore.dispatch(updateUserSession({ activeStatus: 'EXPIRED' }))
+      } else {
+        logger.info('[Dispatch] updateUserSession INACTIVE')
+        reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+      }
+      Notifier('Sync failed', 'Please check your network condition.')
+    })
 }
 /** End: User session management **/
 
@@ -454,14 +454,14 @@ function allDialogsClosed (dialogs) {
 ipcRenderer.on('search-gist', data => {
   const state = reduxStore.getState()
   const {
-      immersiveMode,
-      gistRawModal,
-      searchWindowStatus,
-      gistEditModalStatus,
-      gistNewModalStatus,
-      preferenceModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus } = state
+    immersiveMode,
+    gistRawModal,
+    searchWindowStatus,
+    gistEditModalStatus,
+    gistNewModalStatus,
+    preferenceModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus } = state
 
   // FIXME: This should be able to extracted to the allDialogsClosed method.
   const dialogs = [
@@ -482,14 +482,14 @@ ipcRenderer.on('search-gist', data => {
 ipcRenderer.on('local-preference', data => {
   const state = reduxStore.getState()
   const {
-      immersiveMode,
-      gistRawModal,
-      searchWindowStatus,
-      preferenceModalStatus,
-      gistEditModalStatus,
-      gistNewModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus } = state
+    immersiveMode,
+    gistRawModal,
+    searchWindowStatus,
+    preferenceModalStatus,
+    gistEditModalStatus,
+    gistNewModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus } = state
 
   // FIXME: This should be able to extracted to the allDialogsClosed method.
   const dialogs = [
@@ -511,14 +511,14 @@ ipcRenderer.on('local-preference', data => {
 ipcRenderer.on('new-gist', data => {
   const state = reduxStore.getState()
   const {
-      immersiveMode,
-      gistRawModal,
-      searchWindowStatus,
-      preferenceModalStatus,
-      gistNewModalStatus,
-      gistEditModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus } = state
+    immersiveMode,
+    gistRawModal,
+    searchWindowStatus,
+    preferenceModalStatus,
+    gistNewModalStatus,
+    gistEditModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus } = state
 
   // FIXME: This should be able to extracted to the allDialogsClosed method.
   const dialogs = [
@@ -538,13 +538,13 @@ ipcRenderer.on('new-gist', data => {
 ipcRenderer.on('edit-gist', data => {
   const state = reduxStore.getState()
   const {
-      gistRawModal,
-      searchWindowStatus,
-      preferenceModalStatus,
-      gistNewModalStatus,
-      gistEditModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus } = state
+    gistRawModal,
+    searchWindowStatus,
+    preferenceModalStatus,
+    gistNewModalStatus,
+    gistEditModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus } = state
 
   // FIXME: This should be able to extracted to the allDialogsClosed method.
   const dialogs = [
@@ -563,14 +563,14 @@ ipcRenderer.on('edit-gist', data => {
 ipcRenderer.on('immersive-mode', data => {
   const state = reduxStore.getState()
   const {
-      searchWindowStatus,
-      preferenceModalStatus,
-      immersiveMode,
-      gistRawModal,
-      gistEditModalStatus,
-      gistNewModalStatus,
-      gistDeleteModalStatus,
-      logoutModalStatus } = state
+    searchWindowStatus,
+    preferenceModalStatus,
+    immersiveMode,
+    gistRawModal,
+    gistEditModalStatus,
+    gistNewModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus } = state
 
   const dialogs = [
     searchWindowStatus,

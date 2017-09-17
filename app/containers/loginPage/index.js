@@ -49,7 +49,7 @@ class LoginPage extends Component {
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
         <div className='button-group-modal'>
-           <ProgressBar active now={ 100 }/>
+          <ProgressBar active now={ 100 }/>
         </div>
       )
     }
@@ -58,10 +58,10 @@ class LoginPage extends Component {
       return (
         <div className='button-group-modal'>
           { userSessionStatus === 'EXPIRED'
-              ? <Alert bsStyle="warning">
-                  <strong>Token expired.</strong> Please login again.
-                </Alert>
-              : null }
+            ? <Alert bsStyle="warning">
+              <strong>Token expired.</strong> Please login again.
+            </Alert>
+            : null }
           <Button
             autoFocus
             className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
@@ -123,7 +123,7 @@ class LoginPage extends Component {
           <Modal.Body>
             { this.renderLoginModalBody() }
           </Modal.Body>
-      </Modal.Dialog>
+        </Modal.Dialog>
       </div>
     )
   }

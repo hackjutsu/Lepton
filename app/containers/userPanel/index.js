@@ -149,7 +149,7 @@ class UserPanel extends Component {
     const initialData = {
       description: '',
       gists: [
-          {filename: '', content: ''}
+        {filename: '', content: ''}
       ]}
     return (
       <GistEditorForm
@@ -272,19 +272,19 @@ class UserPanel extends Component {
 
   renderLogoutConfirmationModal () {
     return (
-        <div className='static-modal'>
-          <Modal show={ this.props.logoutModalStatus === 'ON' } bsSize='small'>
-            <Modal.Header>
-              <Modal.Title>Confirm logout?</Modal.Title>
-            </Modal.Header>
-            <Modal.Footer>
-              <Button onClick={ this.handleLogoutModalCancelClicked.bind(this) }>cancel</Button>
-              <Button
-                bsStyle='danger'
-                onClick={ this.handleLogoutModalConfirmClicked.bind(this) }>logout</Button>
-            </Modal.Footer>
-          </Modal>
-        </div>
+      <div className='static-modal'>
+        <Modal show={ this.props.logoutModalStatus === 'ON' } bsSize='small'>
+          <Modal.Header>
+            <Modal.Title>Confirm logout?</Modal.Title>
+          </Modal.Header>
+          <Modal.Footer>
+            <Button onClick={ this.handleLogoutModalCancelClicked.bind(this) }>cancel</Button>
+            <Button
+              bsStyle='danger'
+              onClick={ this.handleLogoutModalConfirmClicked.bind(this) }>logout</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     )
   }
 
@@ -294,8 +294,8 @@ class UserPanel extends Component {
         <div>
           { this.renderProfile() }
           { this.props.gistSyncStatus === 'IN_PROGRESS'
-              ? <ProgressBar className='resync-progress-bar' active now={ 100 }/>
-              : null }
+            ? <ProgressBar className='resync-progress-bar' active now={ 100 }/>
+            : null }
         </div>
         { this.renderInSection() }
         { this.renderLogoutConfirmationModal() }

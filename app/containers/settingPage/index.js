@@ -70,9 +70,9 @@ class SettingPage extends Component {
 
   renderSettingModalBody () {
     return (
-        <div>
-          { this.renderAboutSection() }
-        </div>
+      <div>
+        { this.renderAboutSection() }
+      </div>
     )
   }
 

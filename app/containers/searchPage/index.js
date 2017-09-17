@@ -5,14 +5,14 @@ import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import { bindActionCreators } from 'redux'
 import {
-    descriptionParser,
-    addLangPrefix as Prefixed } from '../../utilities/parser'
+  descriptionParser,
+  addLangPrefix as Prefixed } from '../../utilities/parser'
 import {
-    selectGistTag,
-    selectGist,
-    fetchSingleGist,
-    updateSearchWindowStatus,
-    updatescrollRequestStatus} from '../../actions'
+  selectGistTag,
+  selectGist,
+  fetchSingleGist,
+  updateSearchWindowStatus,
+  updatescrollRequestStatus} from '../../actions'
 
 import './index.scss'
 
@@ -67,7 +67,7 @@ class SearchPage extends Component {
 
   handleKeyDown (e) {
     const { updateSearchWindowStatus } = this.props
-    if (e.keyCode === 40) {  // Down
+    if (e.keyCode === 40) { // Down
       e.preventDefault()
       this.selectNextGist()
     } else if (e.keyCode === 38) { // Up
@@ -84,12 +84,12 @@ class SearchPage extends Component {
 
   handleSnippetClicked (gistId) {
     const {
-        gists,
-        selectGistTag,
-        selectGist,
-        updateSearchWindowStatus,
-        updatescrollRequestStatus,
-        fetchSingleGist } = this.props
+      gists,
+      selectGistTag,
+      selectGist,
+      updateSearchWindowStatus,
+      updatescrollRequestStatus,
+      fetchSingleGist } = this.props
 
     if (!gists[gistId].details) {
       logger.info('[Dispatch] fetchSingleGist ' + gistId)
@@ -172,7 +172,7 @@ class SearchPage extends Component {
       resultsJSXGroup.push(
         <li
           className={ index === selectedIndex
-              ? 'search-result-item-selected' : 'search-result-item' }
+            ? 'search-result-item-selected' : 'search-result-item' }
           key={ gist.id }
           ref={ index }
           onClick={ this.handleSnippetClicked.bind(this, gist.id) }>

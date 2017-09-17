@@ -22,8 +22,8 @@ class AppContainer extends Component {
     return (
       <div>
         { preferenceModalStatus === 'OFF'
-              ? null
-              : <SettingPage/> }
+          ? null
+          : <SettingPage/> }
       </div>
     )
   }
@@ -33,8 +33,8 @@ class AppContainer extends Component {
     return (
       <div>
         { searchWindowStatus === 'OFF'
-              ? null
-              : <SearchPage searchIndex = { searchIndex } /> }
+          ? null
+          : <SearchPage searchIndex = { searchIndex } /> }
       </div>
     )
   }
@@ -66,28 +66,28 @@ class AppContainer extends Component {
     return (
       <div>
         { updateAvailableBarStatus === 'ON'
-              ? <Alert bsStyle='warning' onDismiss={ this.dismissUpdateAlert.bind(this) }>
-                  { `New version ${newVersionInfo.version} is available!  ` }
-                  <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
-                  { newVersionInfo.url
-                        ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#release</a>
-                        : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#download</a> }
-                  { newVersionInfo.url
-                        ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>#download</a>
-                        : null }
-                </Alert>
+          ? <Alert bsStyle='warning' onDismiss={ this.dismissUpdateAlert.bind(this) }>
+            { `New version ${newVersionInfo.version} is available!  ` }
+            <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
+            { newVersionInfo.url
+              ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#release</a>
+              : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#download</a> }
+            { newVersionInfo.url
+              ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>#download</a>
               : null }
+          </Alert>
+          : null }
       </div>
     )
   }
 
   renderActiveNormalSection () {
     const {
-        updateLocalStorage,
-        updateActiveGistAfterClicked,
-        reSyncUserGists,
-        localPref,
-        searchIndex } = this.props
+      updateLocalStorage,
+      updateActiveGistAfterClicked,
+      reSyncUserGists,
+      localPref,
+      searchIndex } = this.props
 
     return (
       <div>
@@ -95,16 +95,16 @@ class AppContainer extends Component {
         { this.renderSearchPage() }
         { this.renderUpdateAlert() }
         <NavigationPanel
-            localPref = { localPref }
-            searchIndex = { searchIndex }
-            updateLocalStorage = { updateLocalStorage }
-            updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
-            reSyncUserGists = { reSyncUserGists } />
+          localPref = { localPref }
+          searchIndex = { searchIndex }
+          updateLocalStorage = { updateLocalStorage }
+          updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
+          reSyncUserGists = { reSyncUserGists } />
         <SplitPane split='vertical' minSize={180} maxSize={300} defaultSize={230}>
           <NavigationPanelDetails />
           <SnippetPanel
-              searchIndex = { searchIndex }
-              reSyncUserGists = { reSyncUserGists } />
+            searchIndex = { searchIndex }
+            reSyncUserGists = { reSyncUserGists } />
         </SplitPane>
       </div>
     )
@@ -124,8 +124,8 @@ class AppContainer extends Component {
     return (
       <div>
         { immersiveMode === 'ON'
-              ? this.renderActiveImmersiveSection()
-              : this.renderActiveNormalSection() }
+          ? this.renderActiveImmersiveSection()
+          : this.renderActiveNormalSection() }
       </div>
     )
   }
@@ -144,8 +144,8 @@ class AppContainer extends Component {
     return (
       <div className='app-container'>
         { userSession.activeStatus === 'ACTIVE'
-              ? this.renderActiveSection()
-              : this.renderInactiveSection() }
+          ? this.renderActiveSection()
+          : this.renderInactiveSection() }
       </div>
     )
   }

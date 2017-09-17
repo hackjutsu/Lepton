@@ -67,24 +67,24 @@ class Snippet extends Component {
     getGitHubApi(DELETE_SINGLE_GIST)(
       accessToken,
       activeGist)
-    .catch(err => {
-      logger.error('Failed to delete the gist ' + activeGist)
-      logger.error(JSON.stringify(err))
-      Notifier('Deletion failed', 'Please check your network condition.')
-    })
-    .then(data => {
-      logger.info('The gist ' + activeGist + ' has been deleted.')
-      Notifier('The gist has been deleted')
+      .catch(err => {
+        logger.error('Failed to delete the gist ' + activeGist)
+        logger.error(JSON.stringify(err))
+        Notifier('Deletion failed', 'Please check your network condition.')
+      })
+      .then(data => {
+        logger.info('The gist ' + activeGist + ' has been deleted.')
+        Notifier('The gist has been deleted')
 
-      // For performance purpose, we should perform an internal update, like what
-      // we're doing for creating/edit gists. However, since delete is an infrequent
-      // operation, we decide to just call the resync method and keep the logic
-      // simple.
-      this.props.reSyncUserGists()
-    })
-    .finally(() => {
-      this.closeDeleteModal()
-    })
+        // For performance purpose, we should perform an internal update, like what
+        // we're doing for creating/edit gists. However, since delete is an infrequent
+        // operation, we decide to just call the resync method and keep the logic
+        // simple.
+        this.props.reSyncUserGists()
+      })
+      .finally(() => {
+        this.closeDeleteModal()
+      })
   }
 
   renderDeleteModal () {
@@ -143,10 +143,10 @@ class Snippet extends Component {
     this.closeGistEditorModal()
 
     return getGitHubApi(EDIT_SINGLE_GIST)(
-        accessToken,
-        activeGist,
-        description,
-        processedFiles)
+      accessToken,
+      activeGist,
+      description,
+      processedFiles)
       .catch((err) => {
         Notifier('Gist update failed')
         logger.error(JSON.stringify(err))
@@ -343,10 +343,10 @@ class Snippet extends Component {
         </Modal.Header>
         <Modal.Body>
           <textarea
-              ref='rawModalText'
-              className='code-area-raw'
-              defaultValue={ gistRawModal.content }
-              onDoubleClick={ this.selectText.bind(this) } />
+            ref='rawModalText'
+            className='code-area-raw'
+            defaultValue={ gistRawModal.content }
+            onDoubleClick={ this.selectText.bind(this) } />
         </Modal.Body>
       </Modal>
     )
@@ -389,7 +389,7 @@ class Snippet extends Component {
     const commentPattern = /<span class="hljs-comment">(.|\n)*?<\/span>/g
     const adaptedHighlightedContent = highlightedContent.replace(commentPattern, data => {
       return data.replace(/\r?\n/g, () => {
-         // Chromium is smart enough to add the closing </span>
+        // Chromium is smart enough to add the closing </span>
         return "\n<span class='hljs-comment'>"
       })
     })
@@ -407,8 +407,8 @@ class Snippet extends Component {
   createMarkup (content, lang) {
     const language = this.adaptedLanguage(lang)
     const htmlContent = language === 'Markdown'
-        ? this.createMarkdownCodeBlock(content)
-        : this.createHighlightedCodeBlock(content, language)
+      ? this.createMarkdownCodeBlock(content)
+      : this.createHighlightedCodeBlock(content, language)
 
     return { __html: htmlContent }
   }
@@ -454,8 +454,8 @@ class Snippet extends Component {
                   title='Delete'
                   href='#'
                   onClick={ this.showDeleteModal.bind(this) }>
-                    <div dangerouslySetInnerHTML={{__html: trashIcon}} />
-                  </a>
+                  <div dangerouslySetInnerHTML={{__html: trashIcon}} />
+                </a>
                 : null
             }
           </div>
@@ -472,23 +472,23 @@ class Snippet extends Component {
       htmlForDescriptionSection.push(<div className='title-section' key='title'>{ title }</div>)
     }
     htmlForDescriptionSection.push(
-        <div className='description-section' key='description'
-            dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { stripPrefix: false, newWindow: false })} }/>
+      <div className='description-section' key='description'
+        dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { stripPrefix: false, newWindow: false })} }/>
     )
     htmlForDescriptionSection.push(
-        <div className='custom-tags-section' key='customTags'>
-          { customTags.length > 0
-              ? <span className='custom-tags'>
-                  <div
-                    className='custom-tags-icon'
-                    dangerouslySetInnerHTML={{ __html: tagsIcon }} />
-                  <span>{ customTags.substring('#tags:'.length) }</span>
-                </span>
-              : null }
-          <span className='update-date'>
-              { 'Last active ' + Moment(gist.brief.updated_at).fromNow() }
+      <div className='custom-tags-section' key='customTags'>
+        { customTags.length > 0
+          ? <span className='custom-tags'>
+            <div
+              className='custom-tags-icon'
+              dangerouslySetInnerHTML={{ __html: tagsIcon }} />
+            <span>{ customTags.substring('#tags:'.length) }</span>
           </span>
-        </div>)
+          : null }
+        <span className='update-date'>
+          { 'Last active ' + Moment(gist.brief.updated_at).fromNow() }
+        </span>
+      </div>)
 
     return (
       <div>
@@ -581,8 +581,8 @@ class Snippet extends Component {
           header={ this.renderPanelHeader(activeSnippet) }>
           <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet) }</div>
           { activeSnippet.details
-              ? null
-              : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }
+            ? null
+            : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }
           { this.renderGistEditorModal(activeSnippet.brief.description, fileArray, !activeSnippet.brief.public) }
           { this.renderRawModal() }
           { this.renderDeleteModal() }

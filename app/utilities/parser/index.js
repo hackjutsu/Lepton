@@ -24,8 +24,8 @@ export function descriptionParser (payload) {
   }
 
   const descriptionLength = tagStyle === 'legacy'
-      ? rawDescription.length - customTags.length
-      : rawDescription.length
+    ? rawDescription.length - customTags.length
+    : rawDescription.length
   const description = rawDescription.substring(rawTitle.length, descriptionLength)
 
   return { title, description, customTags }

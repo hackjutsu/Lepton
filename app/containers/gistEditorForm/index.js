@@ -55,8 +55,8 @@ class GistEditorFormImpl extends Component {
           <Button
             className='gist-editor-control-button'
             onClick={ handleCancel }
-              bsStyle='default'
-              disabled={ submitting }>
+            bsStyle='default'
+            disabled={ submitting }>
               Cancel
           </Button>
         </div>
@@ -82,16 +82,16 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
       { ...input }
       type={ type }
       placeholder={ descriptionTips }/>
-      { touched && ((error && <span className='error-msg'>{ error }</span>) ||
+    { touched && ((error && <span className='error-msg'>{ error }</span>) ||
         (warning && <span className='error-msg'>{ warning }</span>)) }
-      <OverlayTrigger placement="top" overlay={ tooltip }>
-        <a className='tips' href='#'>
-          <div
-            className='tips-icon'
-            dangerouslySetInnerHTML={{ __html: tipsIcon }} />
-          <span>tips</span>
-         </a>
-      </OverlayTrigger>
+    <OverlayTrigger placement="top" overlay={ tooltip }>
+      <a className='tips' href='#'>
+        <div
+          className='tips-icon'
+          dangerouslySetInnerHTML={{ __html: tipsIcon }} />
+        <span>tips</span>
+      </a>
+    </OverlayTrigger>
   </div>
 )
 

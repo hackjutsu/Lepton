@@ -8,11 +8,11 @@ import UserPanel from '../userPanel'
 import { parseLangName as Resolved } from '../../utilities/parser'
 import { Modal, Button } from 'react-bootstrap'
 import {
-    selectGist,
-    selectGistTag,
-    fetchSingleGist,
-    updatePinnedTags,
-    updatePinnedTagsModalStatus
+  selectGist,
+  selectGistTag,
+  fetchSingleGist,
+  updatePinnedTags,
+  updatePinnedTagsModalStatus
 } from '../../actions'
 
 import plusIcon from './plus.svg'
@@ -61,20 +61,20 @@ class NavigationPanel extends Component {
     const langTagList = []
 
     Object.keys(gistTags)
-    .filter(tag => {
-      return tag.startsWith('lang@')
-    })
-    .sort()
-    .forEach(prefixedLang => {
-      langTagList.push(
-        <div key={ prefixedLang }>
-          <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
-            onClick={ this.handleClicked.bind(this, prefixedLang) }>
-            { '#' + Resolved(prefixedLang) }
-          </a>
-        </div>
-      )
-    })
+      .filter(tag => {
+        return tag.startsWith('lang@')
+      })
+      .sort()
+      .forEach(prefixedLang => {
+        langTagList.push(
+          <div key={ prefixedLang }>
+            <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
+              onClick={ this.handleClicked.bind(this, prefixedLang) }>
+              { '#' + Resolved(prefixedLang) }
+            </a>
+          </div>
+        )
+      })
 
     return langTagList
   } // renderLangTags()
@@ -84,20 +84,20 @@ class NavigationPanel extends Component {
     const customTagList = []
 
     Object.keys(gistTags)
-    .filter(tag => {
-      return !tag.startsWith('lang@')
-    })
-    .sort()
-    .forEach(prefixedLang => {
-      customTagList.push(
-        <div key={ prefixedLang }>
-          <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
-            onClick={ this.handleClicked.bind(this, prefixedLang) }>
-            { '#' + Resolved(prefixedLang) }
-          </a>
-        </div>
-      )
-    })
+      .filter(tag => {
+        return !tag.startsWith('lang@')
+      })
+      .sort()
+      .forEach(prefixedLang => {
+        customTagList.push(
+          <div key={ prefixedLang }>
+            <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
+              onClick={ this.handleClicked.bind(this, prefixedLang) }>
+              { '#' + Resolved(prefixedLang) }
+            </a>
+          </div>
+        )
+      })
 
     return customTagList
   }
@@ -134,8 +134,8 @@ class NavigationPanel extends Component {
           <div
             className={
               activeSection === 0 ? 'tag-section tag-section-active'
-            : activeSection === -1 ? 'tag-section'
-            : 'tag-section tag-section-hidden'}>
+                : activeSection === -1 ? 'tag-section'
+                  : 'tag-section tag-section-hidden'}>
             <a href='#'
               className='tag-section-title'
               onClick={this.handleSectionClick.bind(this, 0)}>
@@ -146,9 +146,9 @@ class NavigationPanel extends Component {
           </div>
           <div
             className={
-                activeSection === 1 ? 'tag-section tag-section-active'
-              : activeSection === -1 ? 'tag-section'
-              : 'tag-section tag-section-hidden'}>
+              activeSection === 1 ? 'tag-section tag-section-active'
+                : activeSection === -1 ? 'tag-section'
+                  : 'tag-section tag-section-hidden'}>
             <div className='pinned-tag-header'>
               <a href='#'
                 onClick={this.handleSectionClick.bind(this, 1)}
@@ -164,9 +164,9 @@ class NavigationPanel extends Component {
             </div>
           </div>
           <div className={
-              activeSection === 2 ? 'tag-section tag-section-active'
-            : activeSection === -1 ? 'tag-section'
-            : 'tag-section tag-section-hidden'}>
+            activeSection === 2 ? 'tag-section tag-section-active'
+              : activeSection === -1 ? 'tag-section'
+                : 'tag-section tag-section-hidden'}>
             <a href='#'
               onClick={this.handleSectionClick.bind(this, 2)}
               className='tag-section-title'>Tags</a>
@@ -182,8 +182,8 @@ class NavigationPanel extends Component {
   handleTagInPinnedTagsModalClicked (tag) {
     const { tmpPinnedTags } = this.state
     tmpPinnedTags.has(tag)
-        ? tmpPinnedTags.delete(tag)
-        : tmpPinnedTags.add(tag)
+      ? tmpPinnedTags.delete(tag)
+      : tmpPinnedTags.add(tag)
     this.setState({
       tmpPinnedTags: tmpPinnedTags
     })
@@ -215,13 +215,13 @@ class NavigationPanel extends Component {
     let row = []
     orderedGistTags.forEach(tag => {
       row.push(
-          <td key={ tag }>
-            <a
-              onClick={ this.handleTagInPinnedTagsModalClicked.bind(this, tag) }
-              className={ tmpPinnedTags.has(tag) ? 'gist-tag-pinned' : 'gist-tag-not-pinned' }>
+        <td key={ tag }>
+          <a
+            onClick={ this.handleTagInPinnedTagsModalClicked.bind(this, tag) }
+            className={ tmpPinnedTags.has(tag) ? 'gist-tag-pinned' : 'gist-tag-not-pinned' }>
               #{ tag.startsWith('lang@') ? Resolved(tag) : tag }
-            </a>
-          </td>)
+          </a>
+        </td>)
       if (i++ % 5 === 0) {
         tagsForPinRows.push(<tr key={ i }>{ row }</tr>)
         row = []
@@ -233,7 +233,7 @@ class NavigationPanel extends Component {
     return (
       <table className='pin-tag-table'>
         <tbody>
-        { tagsForPinRows }
+          { tagsForPinRows }
         </tbody>
       </table>
     )
@@ -258,20 +258,20 @@ class NavigationPanel extends Component {
 
     return (
       <Modal
-          className='pinned-tags-modal'
-          show={ pinnedTagsModalStatus === 'ON' }
-          onHide={ this.closePinnedTagsModal.bind(this) }>
-          <Modal.Header closeButton>
-            <Modal.Title>Shortcuts</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            { this.renderAllTagsForPin() }
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={ this.closePinnedTagsModal.bind(this) }>Cancel</Button>
-            <Button bsStyle="success" onClick={ this.handlePinnedTagSaved.bind(this) }>Save</Button>
-          </Modal.Footer>
-        </Modal>
+        className='pinned-tags-modal'
+        show={ pinnedTagsModalStatus === 'ON' }
+        onHide={ this.closePinnedTagsModal.bind(this) }>
+        <Modal.Header closeButton>
+          <Modal.Title>Shortcuts</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          { this.renderAllTagsForPin() }
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={ this.closePinnedTagsModal.bind(this) }>Cancel</Button>
+          <Button bsStyle="success" onClick={ this.handlePinnedTagSaved.bind(this) }>Save</Button>
+        </Modal.Footer>
+      </Modal>
     )
   }
 

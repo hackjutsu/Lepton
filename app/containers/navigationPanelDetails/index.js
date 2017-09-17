@@ -80,10 +80,10 @@ class NavigationPanelDetails extends Component {
         snippetThumbnails.push(
           <li className='snippet-thumnail-list-item' key={ gistId } ref={ gistId }>
             <div className={ this.decideSnippetListItemClass(gistId) }
-                onClick={ this.handleClicked.bind(this, gistId) }>
-                <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
+              onClick={ this.handleClicked.bind(this, gistId) }>
+              <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
             </div>
-         </li>
+          </li>
         )
       }
     })
