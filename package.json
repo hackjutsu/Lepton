@@ -34,18 +34,18 @@
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.28.4",
     "electron": "^1.7.6",
-    "electron-builder": "18.3.5",
-    "eslint": "^3.12.2",
+    "electron-builder": "^19.2.7",
+    "eslint": "^4.7.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^4.2.3",
+    "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-react": "^7.2.1",
     "eslint-plugin-standard": "^3.0.1",
     "file-loader": "^0.11.1",
-    "html-loader": "^0.4.4",
+    "html-loader": "^0.5.0",
     "json-loader": "^0.5.7",
-    "license-checker": "^13.0.3",
+    "license-checker": "^14.0.0",
     "node-sass": "^4.5.3",
     "raw-loader": "^0.5.1",
     "redux-devtools": "^3.3.1",
@@ -62,12 +62,12 @@
     "codemirror": "^5.28.0",
     "electron-context-menu": "^0.9.0",
     "electron-is-dev": "^0.3.0",
-    "electron-localshortcut": "^1.1.0",
-    "electron-updater": "^1.4.2",
+    "electron-localshortcut": "^3.0.0",
+    "electron-updater": "^2.9.3",
     "electron-window-state": "^4.1.1",
     "fuse.js": "^3.0.0",
     "highlight.js": "^9.9.0",
-    "human-readable-time": "^0.2.4",
+    "human-readable-time": "^0.3.0",
     "image-downloader": "^3.2.1",
     "markdown-it": "^8.3.2",
     "markdown-it-task-lists": "^2.0.1",
@@ -81,7 +81,7 @@
     "react-redux": "^5.0.6",
     "react-split-pane": "^0.1.66",
     "redux": "^3.7.2",
-    "redux-form": "^6.7.0",
+    "redux-form": "^7.0.0",
     "redux-thunk": "^2.1.0",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
@@ -98,8 +98,20 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "7z"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "7z",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ],
       "publish": [
         "github"
@@ -110,6 +122,7 @@
       "allowToChangeInstallationDirectory": true
     },
     "linux": {
+      "category": "Development",
       "target": "AppImage",
       "publish": [
         "github"

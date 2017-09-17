@@ -125,7 +125,9 @@ app.on('window-all-closed', function() {
 })
 
 app.on('before-quit', function() {
-  electronLocalshortcut.unregisterAll(mainWindow)
+  if (mainWindow) {
+    electronLocalshortcut.unregisterAll(mainWindow)
+  }
 })
 
 // 'activate' is a macOS specific signal mapped to 
