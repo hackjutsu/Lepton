@@ -9,6 +9,7 @@ import ProxyAgent from 'proxy-agent'
 import { remote } from 'electron'
 
 const logger = remote.getGlobal('logger')
+const userAgent = 'hackjutsu-lepton-app' 
 
 const configFilePath = remote.app.getPath('home') + '/.leptonrc'
 let proxyAgent = null
@@ -45,7 +46,7 @@ function getUserProfile (accessToken) {
     uri: USER_PROFILE_URI,
     agent: proxyAgent,
     headers: {
-      'User-Agent': 'Request-Promise',
+      'User-Agent': userAgent,
     },
     method: 'GET',
     qs: {
@@ -61,7 +62,7 @@ function getSingleGist (accessToken, gistId) {
     uri: SINGLE_GIST_URI + gistId,
     agent: proxyAgent,
     headers: {
-      'User-Agent': 'Request-Promise'
+      'User-Agent': userAgent 
     },
     method: 'GET',
     qs: {
@@ -125,7 +126,7 @@ function makeOptionForGetAllGists (accessToken, userLoginId, pageNumber) {
     uri: 'https://api.github.com/users/' + userLoginId + '/gists',
     agent: proxyAgent,
     headers: {
-      'User-Agent': 'request',
+      'User-Agent': userAgent,
     },
     method: 'GET',
     qs: {
@@ -146,7 +147,7 @@ function makeRangeArr (start, end) {
 function createSingleGist (accessToken, description, files, isPublic) {
   return ReqPromise({
     headers: {
-      'User-Agent': 'request',
+      'User-Agent': userAgent,
     },
     method: 'POST',
     uri: 'https://api.github.com/gists',
@@ -166,7 +167,7 @@ function createSingleGist (accessToken, description, files, isPublic) {
 function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) {
   return ReqPromise({
     headers: {
-      'User-Agent': 'request',
+      'User-Agent': userAgent,
     },
     method: 'PATCH',
     uri: 'https://api.github.com/gists/' + gistId,
@@ -185,7 +186,7 @@ function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) 
 function deleteSingleGist (accessToken, gistId) {
   return ReqPromise({
     headers: {
-      'User-Agent': 'request',
+      'User-Agent': userAgent,
     },
     method: 'DELETE',
     uri: 'https://api.github.com/gists/' + gistId,
