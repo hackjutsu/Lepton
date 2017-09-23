@@ -1,5 +1,5 @@
 {
-  "Lepton@1.4.2": {
+  "Lepton@1.4.3-alpha": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -134,7 +134,7 @@
     "licenses": "BSD-3-Clause",
     "licenseFile": "node_modules/bcrypt-pbkdf/README.md"
   },
-  "bluebird-lst@1.0.2": {
+  "bluebird-lst@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
     "publisher": "Vladimir Krivosheev"
@@ -159,6 +159,12 @@
     "email": "dustin@dustindiaz.com",
     "url": "http://dustindiaz.com",
     "licenseFile": "node_modules/bowser/LICENSE"
+  },
+  "builder-util-runtime@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/electron-userland/electron-builder",
+    "publisher": "Vladimir Krivosheev",
+    "licenseFile": "node_modules/builder-util-runtime/readme.md"
   },
   "bytes@2.5.0": {
     "licenses": "MIT",
@@ -291,6 +297,13 @@
     "email": "tj@vision-media.ca",
     "licenseFile": "node_modules/debug/LICENSE"
   },
+  "debug@3.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/debug",
+    "publisher": "TJ Holowaychuk",
+    "email": "tj@vision-media.ca",
+    "licenseFile": "node_modules/builder-util-runtime/node_modules/debug/LICENSE"
+  },
   "decamelize@1.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/decamelize",
@@ -353,12 +366,6 @@
     "url": "http://jeremie.com/",
     "licenseFile": "node_modules/ecc-jsbn/LICENSE"
   },
-  "electron-builder-http@17.9.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/electron-userland/electron-builder",
-    "publisher": "Vladimir Krivosheev",
-    "licenseFile": "node_modules/electron-builder-http/readme.md"
-  },
   "electron-context-menu@0.9.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/electron-context-menu",
@@ -397,13 +404,13 @@
     "url": "sindresorhus.com",
     "licenseFile": "node_modules/electron-is-dev/license"
   },
-  "electron-localshortcut@1.1.1": {
+  "electron-localshortcut@3.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/parro-it/electron-localshortcut",
     "publisher": "andrea@parro.it",
     "licenseFile": "node_modules/electron-localshortcut/license"
   },
-  "electron-updater@1.16.0": {
+  "electron-updater@2.9.3": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
@@ -466,6 +473,13 @@
     "publisher": "Ariya Hidayat",
     "email": "ariya.hidayat@gmail.com",
     "licenseFile": "node_modules/esprima/LICENSE.BSD"
+  },
+  "esprima@4.0.0": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/jquery/esprima",
+    "publisher": "Ariya Hidayat",
+    "email": "ariya.hidayat@gmail.com",
+    "licenseFile": "node_modules/electron-updater/node_modules/esprima/LICENSE.BSD"
   },
   "estraverse@1.9.3": {
     "licenses": "BSD",
@@ -533,17 +547,17 @@
     "url": "http://debuggable.com/",
     "licenseFile": "node_modules/form-data/License"
   },
-  "fs-extra-p@4.3.0": {
+  "fs-extra-p@4.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
-    "licenseFile": "node_modules/fs-extra-p/LICENSE"
+    "licenseFile": "node_modules/builder-util-runtime/node_modules/fs-extra-p/LICENSE"
   },
-  "fs-extra@3.0.1": {
+  "fs-extra@4.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "licenseFile": "node_modules/fs-extra/LICENSE"
+    "licenseFile": "node_modules/builder-util-runtime/node_modules/fs-extra/LICENSE"
   },
   "ftp@0.3.10": {
     "licenses": "MIT",
@@ -616,19 +630,19 @@
     "repository": "https://github.com/hapijs/hoek",
     "licenseFile": "node_modules/hoek/LICENSE"
   },
-  "hoist-non-react-statics@1.2.0": {
-    "licenses": "BSD",
-    "repository": "https://github.com/mridgway/hoist-non-react-statics",
-    "publisher": "Michael Ridgway",
-    "email": "mridgway@yahoo-inc.com",
-    "licenseFile": "node_modules/hoist-non-react-statics/LICENSE.md"
-  },
   "hoist-non-react-statics@2.2.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/mridgway/hoist-non-react-statics",
     "publisher": "Michael Ridgway",
     "email": "mcridgway@gmail.com",
     "licenseFile": "node_modules/react-redux/node_modules/hoist-non-react-statics/LICENSE.md"
+  },
+  "hoist-non-react-statics@2.3.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/mridgway/hoist-non-react-statics",
+    "publisher": "Michael Ridgway",
+    "email": "mcridgway@gmail.com",
+    "licenseFile": "node_modules/redux-form/node_modules/hoist-non-react-statics/LICENSE.md"
   },
   "http-errors@1.6.1": {
     "licenses": "MIT",
@@ -660,7 +674,7 @@
     "url": "http://n8.io/",
     "licenseFile": "node_modules/https-proxy-agent/README.md"
   },
-  "human-readable-time@0.2.4": {
+  "human-readable-time@0.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/g07cha/human-readable-time",
     "publisher": "G07cha",
@@ -793,12 +807,12 @@
     "publisher": "Simon Lydell",
     "licenseFile": "node_modules/js-tokens/LICENSE"
   },
-  "js-yaml@3.8.4": {
+  "js-yaml@3.10.0": {
     "licenses": "MIT",
     "repository": "https://github.com/nodeca/js-yaml",
     "publisher": "Vladimir Zapparov",
     "email": "dervus.grim@gmail.com",
-    "licenseFile": "node_modules/js-yaml/LICENSE"
+    "licenseFile": "node_modules/electron-updater/node_modules/js-yaml/LICENSE"
   },
   "jsbn@0.1.1": {
     "licenses": "MIT",
@@ -838,12 +852,12 @@
     "email": "jprichardson@gmail.com",
     "licenseFile": "node_modules/electron-window-state/node_modules/jsonfile/LICENSE"
   },
-  "jsonfile@3.0.1": {
+  "jsonfile@4.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-jsonfile",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "licenseFile": "node_modules/jsonfile/LICENSE"
+    "licenseFile": "node_modules/builder-util-runtime/node_modules/jsonfile/LICENSE"
   },
   "jsonify@0.0.0": {
     "licenses": "Public Domain",
@@ -857,12 +871,32 @@
     "repository": "https://github.com/joyent/node-jsprim",
     "licenseFile": "node_modules/jsprim/LICENSE"
   },
+  "keyboardevent-from-electron-accelerator@0.7.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/parro-it/keyboardevent-from-electron-accelerator",
+    "publisher": "Andrea",
+    "email": "andrea@parro.it",
+    "licenseFile": "node_modules/keyboardevent-from-electron-accelerator/license"
+  },
+  "keyboardevents-areequal@0.2.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/parro-it/keyboardevents-areequal",
+    "publisher": "Andrea",
+    "email": "andrea@parro.it",
+    "licenseFile": "node_modules/keyboardevents-areequal/license"
+  },
   "keycode@2.1.9": {
     "licenses": "MIT",
     "repository": "https://github.com/timoxley/keycode",
     "publisher": "Tim Oxley",
     "email": "secoif@gmail.com",
     "licenseFile": "node_modules/keycode/LICENSE"
+  },
+  "lazy-val@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/develar/read-config-file",
+    "publisher": "Vladimir Krivosheev",
+    "licenseFile": "node_modules/lazy-val/readme.md"
   },
   "lcid@1.0.0": {
     "licenses": "MIT",
@@ -1045,7 +1079,11 @@
     "licenseFile": "node_modules/optionator/LICENSE"
   },
   "os-locale@1.4.0": {
-    "licenses": "MIT*",
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/os-locale",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
     "licenseFile": "node_modules/nconf/node_modules/os-locale/license"
   },
   "pac-proxy-agent@2.0.0": {
@@ -1217,7 +1255,7 @@
     "repository": "https://github.com/nodejs/readable-stream",
     "licenseFile": "node_modules/get-uri/node_modules/readable-stream/LICENSE"
   },
-  "redux-form@6.8.0": {
+  "redux-form@7.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/erikras/redux-form",
     "publisher": "Erik Rasmussen",
@@ -1292,10 +1330,10 @@
     "repository": "https://github.com/npm/node-semver",
     "licenseFile": "node_modules/agent-base/node_modules/semver/LICENSE"
   },
-  "semver@5.3.0": {
+  "semver@5.4.1": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
-    "licenseFile": "node_modules/semver/LICENSE"
+    "licenseFile": "node_modules/electron-updater/node_modules/semver/LICENSE"
   },
   "setimmediate@1.0.5": {
     "licenses": "MIT",
@@ -1345,10 +1383,10 @@
     "publisher": "Josh Glazebrook",
     "licenseFile": "node_modules/socks/LICENSE"
   },
-  "source-map-support@0.4.15": {
+  "source-map-support@0.4.18": {
     "licenses": "MIT",
     "repository": "https://github.com/evanw/node-source-map-support",
-    "licenseFile": "node_modules/source-map-support/LICENSE.md"
+    "licenseFile": "node_modules/electron-updater/node_modules/source-map-support/LICENSE.md"
   },
   "source-map@0.2.0": {
     "licenses": "BSD",

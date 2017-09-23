@@ -348,13 +348,13 @@ function updateUserGists (userLoginId, accessToken) {
       clearSyncSnapshot()
 
       Notifier('Sync succeeds', humanReadableSyncTime)
+      reduxStore.dispatch(updateGistSyncStatus('DONE'))
     })
     .catch(err => {
       Notifier('Sync failed', 'Please check your network condition.')
       logger.error('The request has failed: ' + err)
-    })
-    .finally(() => {
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
+      throw err
     })
 }
 /** End: User gists management **/
@@ -363,19 +363,22 @@ function updateUserGists (userLoginId, accessToken) {
 function initUserSession (accessToken) {
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(accessToken)
+  let newProfile = null
   getGitHubApi(GET_USER_PROFILE)(accessToken)
     .then((profile) => {
-      updateUserGists(profile.login, accessToken).then(() => {
-        logger.info('[Dispatch] updateUserSession ACTIVE')
-        reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: profile }))
-        updateLocalStorage({
-          token: accessToken,
-          profile: profile.login,
-          image: profile.avatar_url
-        })
-
-        syncLocalPref(profile.login)
+      newProfile = profile
+      return updateUserGists(profile.login, accessToken)
+    })
+    .then(() => {
+      updateLocalStorage({
+        token: accessToken,
+        profile: newProfile.login,
+        image: newProfile.avatar_url
       })
+      syncLocalPref(newProfile.login)
+
+      logger.info('[Dispatch] updateUserSession ACTIVE')
+      reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
     })
     .catch((err) => {
       logger.error('The request has failed: \n' + JSON.stringify(err))

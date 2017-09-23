@@ -54,7 +54,8 @@ class LoginPage extends Component {
       )
     }
 
-    if (userSessionStatus === 'EXPIRED' || loggedInUserName === null || loggedInUserName === 'null') {
+    if (userSessionStatus === 'EXPIRED' || userSessionStatus === 'INACTIVE' ||
+      loggedInUserName === null || loggedInUserName === 'null') {
       return (
         <div className='button-group-modal'>
           { userSessionStatus === 'EXPIRED'
