@@ -47,6 +47,8 @@ import {
 
 import Notifier from './utilities/notifier'
 
+const logger = remote.getGlobal('logger')
+
 let Account = null
 try {
   Account = require('../configs/account')
@@ -62,7 +64,7 @@ const localPref = new Store({
   defaults: {}
 })
 
-const logger = remote.getGlobal('logger')
+const loggedInUserInfo = getLoggedInUserInfo() 
 
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
@@ -76,6 +78,7 @@ let preSyncSnapshot = {
 }
 
 function launchAuthWindow (accessToken) {
+  logger.debug(`[TMP] Inside launchAuthWindow with accessToken ${accessToken}`);
   if (accessToken) {
     initUserSession(accessToken)
     return
@@ -114,17 +117,18 @@ function launchAuthWindow (accessToken) {
     if (code) {
       logger.info('[Dispatch] updateUserSession IN_PROGRESS')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
-      let accessTokenPromise = getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
+
+      getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
         CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
-      accessTokenPromise.then((response) => {
-        let accessToken = response.access_token
-        initUserSession(accessToken)
-      }).catch((err) => {
-        logger.error('Failed: ' + JSON.stringify(err.error))
-        Notifier('Sync failed', 'Please check your network condition.')
-      })
+        .then((payload) => {
+          return initUserSession(payload.access_token)
+        })
+        .catch((err) => {
+          logger.error('Failed: ' + JSON.stringify(err.error))
+          Notifier('Sync failed', 'Please check your network condition.')
+        })
     } else if (error) {
-      alert('Oops! Something went wrong and we couldn\'t' +
+      logger.error('Oops! Something went wrong and we couldn\'t' +
         'log you in using Github. Please try again.')
     }
   }
@@ -361,15 +365,18 @@ function updateUserGists (userLoginId, accessToken) {
 
 /** Start: User session management **/
 function initUserSession (accessToken) {
+  logger.debug(`[TMP] Inside initUserSession with access token ${accessToken}`);
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(accessToken)
   let newProfile = null
   getGitHubApi(GET_USER_PROFILE)(accessToken)
     .then((profile) => {
+      logger.debug('[TMP] from GET_USER_PROFILE with profile ' + JSON.stringify(profile));
       newProfile = profile
       return updateUserGists(profile.login, accessToken)
     })
     .then(() => {
+      logger.debug('[TMP] from updateUserGists');
       updateLocalStorage({
         token: accessToken,
         profile: newProfile.login,
@@ -381,6 +388,7 @@ function initUserSession (accessToken) {
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
     })
     .catch((err) => {
+      logger.debug('[TMP] Failure with ' + JSON.stringify(err));
       logger.error('The request has failed: \n' + JSON.stringify(err))
 
       if (err.statusCode === 401) {
@@ -397,8 +405,12 @@ function initUserSession (accessToken) {
 
 /** Start: Local storage management **/
 function updateLocalStorage (localData) {
+  logger.debug(`[TMP] Caching token ${localData.token}`);
   localStorage.setItem('token', localData.token)
+
+  logger.debug(`[TMP] Caching profile ${localData.profile}`);
   localStorage.setItem('profile', localData.profile)
+
   downloadImage(localData.image, localData.profile)
 }
 
@@ -422,8 +434,10 @@ function downloadImage (imageUrl, filename) {
 }
 
 function getLoggedInUserInfo () {
+  logger.debug('[TMP] Inside getLoggedInUserInfo');
   const loggedInUserProfile = localStorage.getItem('profile')
   const loggedInUserToken = localStorage.getItem('token')
+  logger.debug(`[TMP] loggedInUserToken is ${loggedInUserToken}`);
 
   if (loggedInUserProfile && loggedInUserToken) {
     return {
@@ -622,7 +636,7 @@ ReactDom.render(
       searchIndex = { SearchIndex }
       localPref = { localPref }
       updateLocalStorage = { updateLocalStorage }
-      getLoggedInUserInfo = { getLoggedInUserInfo }
+      loggedInUserInfo = { loggedInUserInfo }
       launchAuthWindow = { launchAuthWindow }
       reSyncUserGists = { reSyncUserGists }
       updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />

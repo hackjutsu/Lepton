@@ -2,24 +2,26 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ipcRenderer } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import defaultImage from './github.jpg'
 
 import './index.scss'
+ 
+const logger = remote.getGlobal('logger')
 
 class LoginPage extends Component {
   componentWillMount () {
-    const loggedInUserInfo = this.props.getLoggedInUserInfo()
+    const { loggedInUserInfo } = this.props
+    logger.debug('[TMP] Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
 
     this.setState({
-      loggedInUserToken: loggedInUserInfo ? loggedInUserInfo.token : null,
-      loggedInUserName: loggedInUserInfo ? loggedInUserInfo.profile : null,
-      loggedInUserImage: loggedInUserInfo ? loggedInUserInfo.image : null,
+      cachedImage: loggedInUserInfo ? loggedInUserInfo.image : null,
     })
 
     ipcRenderer.on('auto-login', () => {
-      this.state.loggedInUserToken && this.handleContinueButtonClicked()
+      logger.debug('[TMP] Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
+      loggedInUserInfo && this.handleContinueButtonClicked()
     })
   }
 
@@ -30,21 +32,24 @@ class LoginPage extends Component {
   handleLoginClicked () {
     if (this.props.authWindowStatus === 'OFF') {
       this.setState({
-        loggedInUserImage: defaultImage
+        cachedImage: defaultImage
       })
       this.props.launchAuthWindow()
     }
   }
 
   handleContinueButtonClicked () {
+    const { loggedInUserInfo } = this.props
+    logger.debug('[TMP] Inside LoginPage handleContinueButtonClicked with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
+    const token = loggedInUserInfo ? loggedInUserInfo.token : null
     if (this.props.authWindowStatus === 'OFF') {
-      this.props.launchAuthWindow(this.state.loggedInUserToken)
+      this.props.launchAuthWindow(token)
     }
   }
 
   renderControlSection () {
-    const { loggedInUserName } = this.state
-    const { authWindowStatus, userSessionStatus } = this.props
+    const { authWindowStatus, loggedInUserInfo, userSessionStatus } = this.props
+    const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
@@ -97,9 +102,11 @@ class LoginPage extends Component {
   }
 
   renderLoginModalBody () {
-    const { loggedInUserName, loggedInUserImage } = this.state
+    const { cachedImage } = this.state
+    const { loggedInUserInfo } = this.props
+    const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
 
-    let profileImage = loggedInUserImage || defaultImage
+    let profileImage = cachedImage || defaultImage
     if (loggedInUserName === null || loggedInUserName === 'null') {
       profileImage = defaultImage
     }
