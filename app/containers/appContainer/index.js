@@ -131,10 +131,10 @@ class AppContainer extends Component {
   }
 
   renderInactiveSection () {
-    const { getLoggedInUserInfo, launchAuthWindow } = this.props
+    const { loggedInUserInfo, launchAuthWindow } = this.props
     return (
       <LoginPage
-        getLoggedInUserInfo = { getLoggedInUserInfo }
+        loggedInUserInfo = { loggedInUserInfo }
         launchAuthWindow = { launchAuthWindow } />
     )
   }
