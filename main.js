@@ -1,6 +1,7 @@
 'use strict'
 
 const electron = require('electron')
+const nconf = require('nconf')
 const windowStateKeeper = require('electron-window-state')
 const electronLocalshortcut = require('electron-localshortcut')
 const Menu = electron.Menu
@@ -18,6 +19,7 @@ const autoUpdater = require("electron-updater").autoUpdater
 autoUpdater.logger = logger
 autoUpdater.autoDownload = false
 
+initGlobalConfigs()
 initGlobalLogger()
 
 let mainWindow = null
@@ -187,8 +189,31 @@ function setUpApplicationMenu () {
   Menu.setApplicationMenu(menu)
 }
 
+function initGlobalConfigs () {
+  const configFilePath = app.getPath('home') + '/.leptonrc'
+  let conf = null
+  try {
+    conf = nconf.argv()
+      .env()
+      .file({ file: configFilePath })
+  } catch (error) {
+    logger.error('[.leptonrc] Please correct the mistakes in your configuration file: [%s].\n' + error, configFilePath)
+  }
+  global.conf = conf
+}
+
 function initGlobalLogger () {
-  logger.level = 'debug'
+  logger.level = 'info'
+  if (global.conf && global.conf.get('logger:level')) {
+    const level = global.conf.get('logger:level')
+    if (level === 'debug' || level === 'info' || level === 'warn' || level === 'error') {
+      logger.info('[.leptonrc] Overwriting logger level to ' + level)
+      logger.level = level 
+    } else {
+      logger.warn('[.leptonrc] Failed to overwrite the default logger level(info).' +  
+        ' The logger:level should be [debug|info|warn|error].')
+    }
+  }
   let appFolder = app.getPath('userData')
   if (!fs.existsSync(appFolder)) {
     fs.mkdirSync(appFolder)

@@ -4,27 +4,19 @@ import { Promise } from 'bluebird'
 import Request from 'request'
 import ReqPromise from 'request-promise'
 import Notifier from '../notifier'
-import nconf from 'nconf'
 import ProxyAgent from 'proxy-agent'
 import { remote } from 'electron'
 
 const TAG = '[REST] '
 const logger = remote.getGlobal('logger')
+const conf = remote.getGlobal('conf')
 const userAgent = 'hackjutsu-lepton-app' 
 
-const configFilePath = remote.app.getPath('home') + '/.leptonrc'
 let proxyAgent = null
-try {
-  nconf.argv()
-    .env()
-    .file({ file: configFilePath })
-  if (nconf.get('proxy:enable')) {
-    const proxyUri = nconf.get('proxy:address')
-    proxyAgent = new ProxyAgent(proxyUri)
-    logger.info('use proxy', proxyUri)
-  }
-} catch (error) {
-  logger.error('Please correct the mistakes in your configuration file: [%s].\n' + error, configFilePath)
+if (conf && conf.get('proxy:enable')) {
+  const proxyUri = conf.get('proxy:address')
+  proxyAgent = new ProxyAgent(proxyUri)
+  logger.info('[.leptonrc] Use proxy', proxyUri)
 }
 
 function exchangeAccessToken (clientId, clientSecret, authCode) {
