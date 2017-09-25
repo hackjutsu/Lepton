@@ -10,7 +10,7 @@ import { remote } from 'electron'
 const TAG = '[REST] '
 const logger = remote.getGlobal('logger')
 const conf = remote.getGlobal('conf')
-const userAgent = 'hackjutsu-lepton-app' 
+const userAgent = 'hackjutsu-lepton-app'
 
 let proxyAgent = null
 if (conf && conf.get('proxy:enable')) {
@@ -58,7 +58,7 @@ function getSingleGist (token, gistId) {
     uri: SINGLE_GIST_URI + gistId,
     agent: proxyAgent,
     headers: {
-      'User-Agent': userAgent 
+      'User-Agent': userAgent
     },
     method: 'GET',
     qs: {
@@ -74,12 +74,11 @@ function getAllgistsV2 (token, userId) {
   return requestGists(token, userId, 1, gistList)
     .then((res) => {
       const matches = res.headers['link'].match(/page=[0-9]*/g)
-      const maxPage = matches[matches.length-1].substring('page='.length)
+      const maxPage = matches[matches.length - 1].substring('page='.length)
       logger.debug(TAG + `[V2] The max page number for gist is ${maxPage}`)
 
       const requests = []
-      for(let i=2; i<=maxPage; ++i)
-        requests.push(requestGists(token, userId, i, gistList))
+      for (let i = 2; i <= maxPage; ++i) { requests.push(requestGists(token, userId, i, gistList)) }
 
       return Promise.all(requests)
     })
@@ -89,7 +88,7 @@ function getAllgistsV2 (token, userId) {
     })
 }
 
-function requestGists(token, userId, page, gistList) {
+function requestGists (token, userId, page, gistList) {
   logger.debug(TAG + '[V2] Requesting gists with page ' + page)
   return ReqPromise(makeOptionForGetAllGists(token, userId, page))
     .catch(err => {
@@ -101,9 +100,8 @@ function requestGists(token, userId, page, gistList) {
     })
 }
 
-function parseBody(res, gistList) {
-  for(let key in res)
-    if (res.hasOwnProperty(key)) gistList.push(res[key])
+function parseBody (res, gistList) {
+  for (let key in res) { if (res.hasOwnProperty(key)) gistList.push(res[key]) }
 }
 
 const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
@@ -161,7 +159,7 @@ function makeRangeArr (start, end) {
   return result
 }
 
-const GISTS_PER_PAGE = 100;
+const GISTS_PER_PAGE = 100
 function makeOptionForGetAllGists (token, userId, page) {
   return {
     uri: 'https://api.github.com/users/' + userId + '/gists',
@@ -239,6 +237,7 @@ function deleteSingleGist (token, gistId) {
 
 export const EXCHANGE_ACCESS_TOKEN = 'EXCHANGE_ACCESS_TOKEN'
 export const GET_ALL_GISTS = 'GET_ALL_GISTS'
+export const GET_ALL_GISTS_V1 = 'GET_ALL_GISTS_V1'
 export const GET_SINGLE_GIST = 'GET_SINGLE_GIST'
 export const GET_USER_PROFILE = 'GET_USER_PROFILE'
 export const CREATE_SINGLE_GIST = 'CREATE_SINGLE_GIST'
@@ -251,6 +250,8 @@ export function getGitHubApi (selection) {
       return exchangeAccessToken
     case GET_ALL_GISTS:
       return getAllgistsV2
+    case GET_ALL_GISTS_V1:
+      return getAllgistsV1
     case GET_SINGLE_GIST:
       return getSingleGist
     case GET_USER_PROFILE:

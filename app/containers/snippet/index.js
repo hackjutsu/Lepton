@@ -41,7 +41,10 @@ import eyeIcon from './ei-eye.svg'
 import trashIcon from './ei-trash.svg'
 import tagsIcon from './tags.svg'
 
+const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
+
+const kIsExpanded = conf.get('snippet:expanded')
 
 class Snippet extends Component {
   componentWillMount () {
@@ -503,9 +506,10 @@ class Snippet extends Component {
     const key = activeGist + '-' + filename
     if (fileExpandStatus[key] === undefined) {
       // If the file is clicked for the first time, it has no records in the
-      // fileExpandStatus list. Therefore, its value would be undefined, but we still
-      // treat it as true because the file is expanded by default.
-      fileExpandStatus[key] = false
+      // fileExpandStatus list. Therefore, its value is undefined. We consider 
+      // it in the default status(either expanded or collapsed, depending on 
+      // settings in .leptonrc).
+      fileExpandStatus[key] = !kIsExpanded
     } else {
       fileExpandStatus[key] = !fileExpandStatus[key]
     }
@@ -529,10 +533,12 @@ class Snippet extends Component {
         }))
 
         const expandStatusKey = activeGist + '-' + key
-        // undefined should be treated as true as explained above
-        let isExpanded = true
+        // undefined should be treated as the default value as explained above
+        let isExpanded = kIsExpanded
         if (fileExpandStatus[expandStatusKey] === false) {
           isExpanded = false
+        } else if (fileExpandStatus[expandStatusKey] === true) {
+          isExpanded = true
         }
 
         fileHtmlArray.push(

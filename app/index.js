@@ -65,7 +65,7 @@ const localPref = new Store({
   defaults: {}
 })
 
-const loggedInUserInfo = getLoggedInUserInfo() 
+const loggedInUserInfo = getLoggedInUserInfo()
 
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
@@ -79,7 +79,7 @@ let preSyncSnapshot = {
 }
 
 function launchAuthWindow (accessToken) {
-  logger.debug(`[TMP] Inside launchAuthWindow with accessToken ${accessToken}`);
+  logger.debug(`[TMP] Inside launchAuthWindow with accessToken ${accessToken}`)
   if (accessToken) {
     initUserSession(accessToken)
     return
@@ -366,18 +366,18 @@ function updateUserGists (userLoginId, accessToken) {
 
 /** Start: User session management **/
 function initUserSession (accessToken) {
-  logger.debug(`[TMP] Inside initUserSession with access token ${accessToken}`);
+  logger.debug(`[TMP] Inside initUserSession with access token ${accessToken}`)
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(accessToken)
   let newProfile = null
   getGitHubApi(GET_USER_PROFILE)(accessToken)
     .then((profile) => {
-      logger.debug('[TMP] from GET_USER_PROFILE with profile ' + JSON.stringify(profile));
+      logger.debug('[TMP] from GET_USER_PROFILE with profile ' + JSON.stringify(profile))
       newProfile = profile
       return updateUserGists(profile.login, accessToken)
     })
     .then(() => {
-      logger.debug('[TMP] from updateUserGists');
+      logger.debug('[TMP] from updateUserGists')
       updateLocalStorage({
         token: accessToken,
         profile: newProfile.login,
@@ -389,7 +389,7 @@ function initUserSession (accessToken) {
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
     })
     .catch((err) => {
-      logger.debug('[TMP] Failure with ' + JSON.stringify(err));
+      logger.debug('[TMP] Failure with ' + JSON.stringify(err))
       logger.error('The request has failed: \n' + JSON.stringify(err))
 
       if (err.statusCode === 401) {
@@ -406,10 +406,10 @@ function initUserSession (accessToken) {
 
 /** Start: Local storage management **/
 function updateLocalStorage (localData) {
-  logger.debug(`[TMP] Caching token ${localData.token}`);
+  logger.debug(`[TMP] Caching token ${localData.token}`)
   electronLocalStorage.set('token', localData.token)
 
-  logger.debug(`[TMP] Caching profile ${localData.profile}`);
+  logger.debug(`[TMP] Caching profile ${localData.profile}`)
   electronLocalStorage.set('profile', localData.profile)
 
   downloadImage(localData.image, localData.profile)
@@ -435,10 +435,11 @@ function downloadImage (imageUrl, filename) {
 }
 
 function getLoggedInUserInfo () {
-  logger.debug('[TMP] Inside getLoggedInUserInfo');
+  logger.debug('[TMP] Inside getLoggedInUserInfo')
   const loggedInUserProfile = electronLocalStorage.get('profile').data
-  logger.debug(`[TMP] loggedInUserToken is ${loggedInUserToken}`)
+  logger.debug(`[TMP] loggedInUserProfile is ${loggedInUserProfile}`)
   const loggedInUserToken = electronLocalStorage.get('token').data
+  logger.debug(`[TMP] loggedInUserToken is ${loggedInUserToken}`)
 
   if (loggedInUserProfile && loggedInUserToken) {
     return {

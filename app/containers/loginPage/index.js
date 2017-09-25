@@ -7,7 +7,7 @@ import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import defaultImage from './github.jpg'
 
 import './index.scss'
- 
+
 const logger = remote.getGlobal('logger')
 
 class LoginPage extends Component {
