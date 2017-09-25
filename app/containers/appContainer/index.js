@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Alert } from 'react-bootstrap'
 import SplitPane from 'react-split-pane'
+import electronLocalStorage from 'electron-json-storage-sync'
 import NavigationPanelDetails from '../navigationPanelDetails'
 import NavigationPanel from '../navigationPanel'
 import LoginPage from '../loginPage'
@@ -57,7 +58,7 @@ class AppContainer extends Component {
 
   handleSkipClicked () {
     const { newVersionInfo } = this.props
-    localStorage.setItem('skipped-version', newVersionInfo.version)
+    electronLocalStorage.set('skipped-version', newVersionInfo.version)
     this.dismissUpdateAlert()
   }
 

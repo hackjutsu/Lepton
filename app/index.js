@@ -7,6 +7,7 @@ import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
+import electronLocalStorage from 'electron-json-storage-sync'
 
 import './utilities/vendor/bootstrap/css/bootstrap.css'
 import AppContainer from './containers/appContainer'
@@ -406,10 +407,10 @@ function initUserSession (accessToken) {
 /** Start: Local storage management **/
 function updateLocalStorage (localData) {
   logger.debug(`[TMP] Caching token ${localData.token}`);
-  localStorage.setItem('token', localData.token)
+  electronLocalStorage.set('token', localData.token)
 
   logger.debug(`[TMP] Caching profile ${localData.profile}`);
-  localStorage.setItem('profile', localData.profile)
+  electronLocalStorage.set('profile', localData.profile)
 
   downloadImage(localData.image, localData.profile)
 }
@@ -428,22 +429,22 @@ function downloadImage (imageUrl, filename) {
     done: function (err, filename, image) {
       if (err) logger.error(err)
 
-      localStorage.setItem('image', imagePath)
+      electronLocalStorage.set('image', imagePath)
     },
   })
 }
 
 function getLoggedInUserInfo () {
   logger.debug('[TMP] Inside getLoggedInUserInfo');
-  const loggedInUserProfile = localStorage.getItem('profile')
-  const loggedInUserToken = localStorage.getItem('token')
-  logger.debug(`[TMP] loggedInUserToken is ${loggedInUserToken}`);
+  const loggedInUserProfile = electronLocalStorage.get('profile').data
+  logger.debug(`[TMP] loggedInUserToken is ${loggedInUserToken}`)
+  const loggedInUserToken = electronLocalStorage.get('token').data
 
   if (loggedInUserProfile && loggedInUserToken) {
     return {
       token: loggedInUserToken,
       profile: loggedInUserProfile,
-      image: localStorage.getItem('image')
+      image: electronLocalStorage.get('image').data
     }
   }
 
@@ -617,7 +618,7 @@ ipcRenderer.on('back-to-normal-mode', data => {
 
 ipcRenderer.on('update-available', payload => {
   const newVersionInfo = remote.getGlobal('newVersionInfo')
-  if (localStorage.getItem('skipped-version') === newVersionInfo.version) return
+  if (electronLocalStorage.get('skipped-version').data === newVersionInfo.version) return
 
   reduxStore.dispatch(updateNewVersionInfo(newVersionInfo))
   reduxStore.dispatch(updateUpdateAvailableBarStatus('ON'))
