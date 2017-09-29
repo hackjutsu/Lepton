@@ -8,6 +8,7 @@ import nconf from 'nconf'
 import ProxyAgent from 'proxy-agent'
 import { remote } from 'electron'
 
+const TAG = '[REST] '
 const logger = remote.getGlobal('logger')
 const userAgent = 'hackjutsu-lepton-app' 
 
@@ -27,6 +28,7 @@ try {
 }
 
 function exchangeAccessToken (clientId, clientSecret, authCode) {
+  logger.debug(TAG + 'Exchanging authCode with access token')
   return ReqPromise({
     method: 'POST',
     uri: 'https://github.com/login/oauth/access_token',
@@ -40,7 +42,8 @@ function exchangeAccessToken (clientId, clientSecret, authCode) {
   })
 }
 
-function getUserProfile (accessToken) {
+function getUserProfile (token) {
+  logger.debug(TAG + 'Getting user profile with token ' + token)
   const USER_PROFILE_URI = 'https://api.github.com/user'
   return ReqPromise({
     uri: USER_PROFILE_URI,
@@ -50,13 +53,14 @@ function getUserProfile (accessToken) {
     },
     method: 'GET',
     qs: {
-      access_token: accessToken
+      access_token: token
     },
     json: true // Automatically parses the JSON string in the response
   })
 }
 
-function getSingleGist (accessToken, gistId) {
+function getSingleGist (token, gistId) {
+  logger.debug(TAG + `Getting single gist ${gistId} with token ${token}`)
   const SINGLE_GIST_URI = 'https://api.github.com/gists/'
   return ReqPromise({
     uri: SINGLE_GIST_URI + gistId,
@@ -66,20 +70,59 @@ function getSingleGist (accessToken, gistId) {
     },
     method: 'GET',
     qs: {
-      access_token: accessToken
+      access_token: token
     },
     json: true // Automatically parses the JSON string in the response
   })
 }
 
+function getAllgistsV2 (token, userId) {
+  logger.debug(TAG + `[V2] Getting all gists of ${userId} with token ${token}`)
+  const gistList = []
+  return requestGists(token, userId, 1, gistList)
+    .then((res) => {
+      const matches = res.headers['link'].match(/page=[0-9]*/g)
+      const maxPage = matches[matches.length-1].substring('page='.length)
+      logger.debug(TAG + `[V2] The max page number for gist is ${maxPage}`)
+
+      const requests = []
+      for(let i=2; i<=maxPage; ++i)
+        requests.push(requestGists(token, userId, i, gistList))
+
+      return Promise.all(requests)
+    })
+    .then(() => {
+      gistList.sort((g1, g2) => g2.last_updated_at - g1.last_updated_at)
+      return gistList
+    })
+}
+
+function requestGists(token, userId, page, gistList) {
+  logger.debug(TAG + '[V2] Requesting gists with page ' + page)
+  return ReqPromise(makeOptionForGetAllGists(token, userId, page))
+    .catch(err => {
+      logger.err(err)
+    })
+    .then((res) => {
+      parseBody(res.body, gistList)
+      return res
+    })
+}
+
+function parseBody(res, gistList) {
+  for(let key in res)
+    if (res.hasOwnProperty(key)) gistList.push(res[key])
+}
+
 const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
-function getAllgists (accessToken, userLoginId) {
+function getAllgistsV1 (token, userId) {
+  logger.debug(TAG + `[V1] Getting all gists of ${userId} with token ${token}`)
   let gistList = []
   return new Promise(function (resolve, reject) {
     const maxPageNumber = 100
     let funcs = Promise.resolve(
       makeRangeArr(1, maxPageNumber).map(
-        (n) => makeRequestForGetAllGists(makeOptionForGetAllGists(accessToken, userLoginId, n))))
+        (n) => makeRequestForGetAllGists(makeOptionForGetAllGists(token, userId, n))))
 
     funcs.mapSeries(iterator)
       .catch(err => {
@@ -120,31 +163,33 @@ function getAllgists (accessToken, userLoginId) {
   }
 }
 
-const GISTS_PER_PAGE = 200
-function makeOptionForGetAllGists (accessToken, userLoginId, pageNumber) {
-  return {
-    uri: 'https://api.github.com/users/' + userLoginId + '/gists',
-    agent: proxyAgent,
-    headers: {
-      'User-Agent': userAgent,
-    },
-    method: 'GET',
-    qs: {
-      access_token: accessToken,
-      per_page: GISTS_PER_PAGE,
-      page: pageNumber
-    },
-    json: true
-  }
-}
-
 function makeRangeArr (start, end) {
   let result = []
   for (let i = start; i <= end; i++) result.push(i)
   return result
 }
 
-function createSingleGist (accessToken, description, files, isPublic) {
+const GISTS_PER_PAGE = 100;
+function makeOptionForGetAllGists (token, userId, page) {
+  return {
+    uri: 'https://api.github.com/users/' + userId + '/gists',
+    agent: proxyAgent,
+    headers: {
+      'User-Agent': userAgent,
+    },
+    method: 'GET',
+    qs: {
+      access_token: token,
+      per_page: GISTS_PER_PAGE,
+      page: page
+    },
+    json: true,
+    resolveWithFullResponse: true
+  }
+}
+
+function createSingleGist (token, description, files, isPublic) {
+  logger.debug(TAG + 'Creating single gist')
   return ReqPromise({
     headers: {
       'User-Agent': userAgent,
@@ -153,7 +198,7 @@ function createSingleGist (accessToken, description, files, isPublic) {
     uri: 'https://api.github.com/gists',
     agent: proxyAgent,
     qs: {
-      access_token: accessToken
+      access_token: token
     },
     body: {
       description: description,
@@ -164,7 +209,8 @@ function createSingleGist (accessToken, description, files, isPublic) {
   })
 }
 
-function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) {
+function editSingleGist (token, gistId, updatedDescription, updatedFiles) {
+  logger.debug(TAG + 'Editing single gist ' + gistId)
   return ReqPromise({
     headers: {
       'User-Agent': userAgent,
@@ -173,7 +219,7 @@ function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) 
     uri: 'https://api.github.com/gists/' + gistId,
     agent: proxyAgent,
     qs: {
-      access_token: accessToken
+      access_token: token
     },
     body: {
       description: updatedDescription,
@@ -183,7 +229,8 @@ function editSingleGist (accessToken, gistId, updatedDescription, updatedFiles) 
   })
 }
 
-function deleteSingleGist (accessToken, gistId) {
+function deleteSingleGist (token, gistId) {
+  logger.debug(TAG + 'Deleting single gist ' + gistId)
   return ReqPromise({
     headers: {
       'User-Agent': userAgent,
@@ -192,7 +239,7 @@ function deleteSingleGist (accessToken, gistId) {
     uri: 'https://api.github.com/gists/' + gistId,
     agent: proxyAgent,
     qs: {
-      access_token: accessToken
+      access_token: token
     },
     json: true
   })
@@ -211,7 +258,7 @@ export function getGitHubApi (selection) {
     case EXCHANGE_ACCESS_TOKEN:
       return exchangeAccessToken
     case GET_ALL_GISTS:
-      return getAllgists
+      return getAllgistsV2
     case GET_SINGLE_GIST:
       return getSingleGist
     case GET_USER_PROFILE:
@@ -223,6 +270,6 @@ export function getGitHubApi (selection) {
     case DELETE_SINGLE_GIST:
       return deleteSingleGist
     default:
-      logger.debug('Not implemented yet.')
+      logger.debug(TAG + 'Not implemented yet.')
   }
 }
