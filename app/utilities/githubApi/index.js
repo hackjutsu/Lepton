@@ -72,12 +72,20 @@ function getSingleGist (token, gistId) {
   })
 }
 
-function getAllgistsV2 (token, userId) {
+function getAllGistsV2 (token, userId) {
   logger.debug(TAG + `[V2] Getting all gists of ${userId} with token ${token}`)
   const gistList = []
   return requestGists(token, userId, 1, gistList)
     .then((res) => {
-      if (!res.headers['link']) return Promise.resolve(gistList);
+      if (!res.headers['link']) {
+        logger.debug(TAG + '[V2] The header missing link property')
+        logger.debug(TAG + JSON.stringify(res.headers))
+        logger.debug(TAG + `The length of gistLis is ${gistList.length}`)
+
+        // Falling back to getAllGistsV1 to deal with two-factor Authenticated clients
+        logger.debug(TAG + `[V2] Falling back to [V1]...`)
+        return getAllGistsV1(token, userId)
+      }
 
       const matches = res.headers['link'].match(/page=[0-9]*/g)
       const maxPage = matches[matches.length - 1].substring('page='.length)
@@ -111,7 +119,7 @@ function parseBody (res, gistList) {
 }
 
 const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
-function getAllgistsV1 (token, userId) {
+function getAllGistsV1 (token, userId) {
   logger.debug(TAG + `[V1] Getting all gists of ${userId} with token ${token}`)
   let gistList = []
   return new Promise(function (resolve, reject) {
@@ -259,9 +267,9 @@ export function getGitHubApi (selection) {
     case EXCHANGE_ACCESS_TOKEN:
       return exchangeAccessToken
     case GET_ALL_GISTS:
-      return getAllgistsV2
+      return getAllGistsV2
     case GET_ALL_GISTS_V1:
-      return getAllgistsV1
+      return getAllGistsV1
     case GET_SINGLE_GIST:
       return getSingleGist
     case GET_USER_PROFILE:
