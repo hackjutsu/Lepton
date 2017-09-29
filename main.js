@@ -14,6 +14,7 @@ const logger = require('winston')
 const path = require('path')
 const fs = require('fs')
 const isDev = require('electron-is-dev')
+const defaultConfig = require('./configs/defaultConfig')
 
 const autoUpdater = require('electron-updater').autoUpdater
 autoUpdater.logger = logger
@@ -198,18 +199,7 @@ function initGlobalConfigs () {
     logger.error('[.leptonrc] Please correct the mistakes in your configuration file: [%s].\n' + error, configFilePath)
   }
 
-  nconf.defaults({
-    'logger': {
-      'level': 'info'
-    },
-    'proxy': {
-      'enable': false,
-      'address': 'socks://localhost:1080'
-    },
-    'snippet': {
-      'expanded': true 
-    }
-  })
+  nconf.defaults(defaultConfig)
 
   global.conf = nconf
 }
