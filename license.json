@@ -1,5 +1,5 @@
 {
-  "Lepton@1.4.3-alpha": {
+  "Lepton@1.4.3-alpha-5": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -130,6 +130,14 @@
     "email": "sebmck@gmail.com",
     "licenseFile": "node_modules/babel-runtime/README.md"
   },
+  "balanced-match@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/balanced-match",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "licenseFile": "node_modules/balanced-match/LICENSE.md"
+  },
   "bcrypt-pbkdf@1.0.1": {
     "licenses": "BSD-3-Clause",
     "licenseFile": "node_modules/bcrypt-pbkdf/README.md"
@@ -159,6 +167,14 @@
     "email": "dustin@dustindiaz.com",
     "url": "http://dustindiaz.com",
     "licenseFile": "node_modules/bowser/LICENSE"
+  },
+  "brace-expansion@1.1.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "publisher": "Julian Gruber",
+    "email": "mail@juliangruber.com",
+    "url": "http://juliangruber.com",
+    "licenseFile": "node_modules/brace-expansion/README.md"
   },
   "builder-util-runtime@1.0.1": {
     "licenses": "MIT",
@@ -233,6 +249,14 @@
     "email": "felix@debuggable.com",
     "url": "http://debuggable.com/",
     "licenseFile": "node_modules/combined-stream/License"
+  },
+  "concat-map@0.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/node-concat-map",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "licenseFile": "node_modules/concat-map/LICENSE"
   },
   "core-js@1.2.7": {
     "licenses": "MIT",
@@ -404,6 +428,12 @@
     "url": "sindresorhus.com",
     "licenseFile": "node_modules/electron-is-dev/license"
   },
+  "electron-json-storage-sync@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/RichardLilja/electron-json-storage-sync",
+    "publisher": "Richard Lilja",
+    "licenseFile": "node_modules/electron-json-storage-sync/LICENSE"
+  },
   "electron-localshortcut@3.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/parro-it/electron-localshortcut",
@@ -559,6 +589,14 @@
     "email": "jprichardson@gmail.com",
     "licenseFile": "node_modules/builder-util-runtime/node_modules/fs-extra/LICENSE"
   },
+  "fs.realpath@1.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/fs.realpath",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "licenseFile": "node_modules/fs.realpath/LICENSE"
+  },
   "ftp@0.3.10": {
     "licenses": "MIT",
     "repository": "https://github.com/mscdex/node-ftp",
@@ -588,6 +626,14 @@
     "publisher": "Alex Wilson",
     "email": "alex.wilson@joyent.com",
     "licenseFile": "node_modules/getpass/LICENSE"
+  },
+  "glob@7.1.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/node-glob",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "licenseFile": "node_modules/glob/LICENSE"
   },
   "graceful-fs@4.1.11": {
     "licenses": "ISC",
@@ -699,6 +745,14 @@
     "repository": "https://github.com/demsking/image-downloader",
     "publisher": "Sébastien Demanou",
     "licenseFile": "node_modules/image-downloader/LICENSE"
+  },
+  "inflight@1.0.6": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/inflight",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "licenseFile": "node_modules/inflight/LICENSE"
   },
   "inherits@2.0.3": {
     "licenses": "ISC",
@@ -990,6 +1044,14 @@
     "repository": "https://github.com/jshttp/mime-types",
     "licenseFile": "node_modules/mime-types/LICENSE"
   },
+  "minimatch@3.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/minimatch",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me",
+    "licenseFile": "node_modules/minimatch/LICENSE"
+  },
   "minimist@0.0.8": {
     "licenses": "MIT",
     "repository": "https://github.com/substack/minimist",
@@ -1071,6 +1133,14 @@
     "url": "sindresorhus.com",
     "licenseFile": "node_modules/object-assign/license"
   },
+  "once@1.4.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/once",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "licenseFile": "node_modules/once/LICENSE"
+  },
   "optionator@0.8.2": {
     "licenses": "MIT",
     "repository": "https://github.com/gkz/optionator",
@@ -1109,6 +1179,14 @@
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
     "licenseFile": "node_modules/path-exists/license"
+  },
+  "path-is-absolute@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/path-is-absolute",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "licenseFile": "node_modules/path-is-absolute/license"
   },
   "performance-now@0.2.0": {
     "licenses": "MIT",
@@ -1302,6 +1380,14 @@
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
     "licenseFile": "node_modules/request/LICENSE"
+  },
+  "rimraf@2.6.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/rimraf",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "licenseFile": "node_modules/rimraf/LICENSE"
   },
   "safe-buffer@5.1.1": {
     "licenses": "MIT",
@@ -1618,6 +1704,14 @@
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
     "licenseFile": "node_modules/wrap-ansi/license"
+  },
+  "wrappy@1.0.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/wrappy",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "licenseFile": "node_modules/wrappy/LICENSE"
   },
   "xelement@1.0.16": {
     "licenses": "MIT",
