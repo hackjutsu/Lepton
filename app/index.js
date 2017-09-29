@@ -65,7 +65,7 @@ const localPref = new Store({
   defaults: {}
 })
 
-const loggedInUserInfo = getLoggedInUserInfo()
+const cachedUserInfo = getCachedUserInfo()
 
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
@@ -78,10 +78,11 @@ let preSyncSnapshot = {
   activeGist: null
 }
 
-function launchAuthWindow (accessToken) {
-  logger.debug(`[TMP] Inside launchAuthWindow with accessToken ${accessToken}`)
-  if (accessToken) {
-    initUserSession(accessToken)
+function launchAuthWindow (token) {
+  logger.debug(`-----> Inside launchAuthWindow with token ${token}`)
+  if (token) {
+    logger.debug('-----> calling initUserSession with cached token ' + token)
+    initUserSession(token)
     return
   }
 
@@ -122,6 +123,7 @@ function launchAuthWindow (accessToken) {
       getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
         CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
         .then((payload) => {
+          logger.debug('-----> calling initUserSession with new token ' + payload.access_token)
           return initUserSession(payload.access_token)
         })
         .catch((err) => {
@@ -259,9 +261,9 @@ function reSyncUserGists () {
   updateUserGists(userSession.profile.login, accessToken)
 }
 
-function updateUserGists (userLoginId, accessToken) {
+function updateUserGists (userLoginId, token) {
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
-  return getGitHubApi(GET_ALL_GISTS)(accessToken, userLoginId)
+  return getGitHubApi(GET_ALL_GISTS)(token, userLoginId)
     .then((gistList) => {
       let preGists = reduxStore.getState().gists
       let gists = {}
@@ -365,21 +367,21 @@ function updateUserGists (userLoginId, accessToken) {
 /** End: User gists management **/
 
 /** Start: User session management **/
-function initUserSession (accessToken) {
-  logger.debug(`[TMP] Inside initUserSession with access token ${accessToken}`)
+function initUserSession (token) {
+  logger.debug(`-----> Inside initUserSession with access token ${token}`)
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
-  initAccessToken(accessToken)
+  initAccessToken(token)
   let newProfile = null
-  getGitHubApi(GET_USER_PROFILE)(accessToken)
+  getGitHubApi(GET_USER_PROFILE)(token)
     .then((profile) => {
-      logger.debug('[TMP] from GET_USER_PROFILE with profile ' + JSON.stringify(profile))
+      logger.debug('-----> from GET_USER_PROFILE with profile ' + JSON.stringify(profile))
       newProfile = profile
-      return updateUserGists(profile.login, accessToken)
+      return updateUserGists(profile.login, token)
     })
     .then(() => {
-      logger.debug('[TMP] from updateUserGists')
+      logger.debug('-----> from updateUserGists')
       updateLocalStorage({
-        token: accessToken,
+        token: token,
         profile: newProfile.login,
         image: newProfile.avatar_url
       })
@@ -389,7 +391,7 @@ function initUserSession (accessToken) {
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
     })
     .catch((err) => {
-      logger.debug('[TMP] Failure with ' + JSON.stringify(err))
+      logger.debug('-----> Failure with ' + JSON.stringify(err))
       logger.error('The request has failed: \n' + JSON.stringify(err))
 
       if (err.statusCode === 401) {
@@ -405,14 +407,16 @@ function initUserSession (accessToken) {
 /** End: User session management **/
 
 /** Start: Local storage management **/
-function updateLocalStorage (localData) {
-  logger.debug(`[TMP] Caching token ${localData.token}`)
-  electronLocalStorage.set('token', localData.token)
+function updateLocalStorage (data) {
+  logger.debug(`-----> Caching token ${data.token}`)
+  let rst = electronLocalStorage.set('token', data.token)
+  logger.debug(`-----> [${rst.status}] Cached token ${data.token}`)
 
-  logger.debug(`[TMP] Caching profile ${localData.profile}`)
-  electronLocalStorage.set('profile', localData.profile)
+  logger.debug(`-----> Caching profile ${data.profile}`)
+  rst = electronLocalStorage.set('profile', data.profile)
+  logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
 
-  downloadImage(localData.image, localData.profile)
+  downloadImage(data.image, data.profile)
 }
 
 function downloadImage (imageUrl, filename) {
@@ -434,17 +438,17 @@ function downloadImage (imageUrl, filename) {
   })
 }
 
-function getLoggedInUserInfo () {
-  logger.debug('[TMP] Inside getLoggedInUserInfo')
-  const loggedInUserProfile = electronLocalStorage.get('profile').data
-  logger.debug(`[TMP] loggedInUserProfile is ${loggedInUserProfile}`)
-  const loggedInUserToken = electronLocalStorage.get('token').data
-  logger.debug(`[TMP] loggedInUserToken is ${loggedInUserToken}`)
+function getCachedUserInfo () {
+  logger.debug('-----> Inside getCachedUserInfo')
+  const cachedProfile = electronLocalStorage.get('profile')
+  logger.debug(`-----> [${cachedProfile.status}] cachedProfile is ${cachedProfile.data}`)
+  const cachedToken = electronLocalStorage.get('token')
+  logger.debug(`-----> [${cachedToken.status}] cachedToken is ${cachedToken.data}`)
 
-  if (loggedInUserProfile && loggedInUserToken) {
+  if (cachedProfile.status && cachedToken.status) {
     return {
-      token: loggedInUserToken,
-      profile: loggedInUserProfile,
+      token: cachedToken.data,
+      profile: cachedProfile.data,
       image: electronLocalStorage.get('image').data
     }
   }
@@ -638,7 +642,7 @@ ReactDom.render(
       searchIndex = { SearchIndex }
       localPref = { localPref }
       updateLocalStorage = { updateLocalStorage }
-      loggedInUserInfo = { loggedInUserInfo }
+      loggedInUserInfo = { cachedUserInfo }
       launchAuthWindow = { launchAuthWindow }
       reSyncUserGists = { reSyncUserGists }
       updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />

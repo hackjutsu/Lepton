@@ -15,6 +15,7 @@ const path = require('path')
 const fs = require('fs')
 const isDev = require('electron-is-dev')
 const defaultConfig = require('./configs/defaultConfig')
+const appInfo = require('./package.json')
 
 const autoUpdater = require('electron-updater').autoUpdater
 autoUpdater.logger = logger
@@ -22,6 +23,8 @@ autoUpdater.autoDownload = false
 
 initGlobalConfigs()
 initGlobalLogger()
+
+logger.debug(`\n\n----- ${appInfo.version} -----\n`)
 
 let mainWindow = null
 

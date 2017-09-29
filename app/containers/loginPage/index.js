@@ -13,14 +13,14 @@ const logger = remote.getGlobal('logger')
 class LoginPage extends Component {
   componentWillMount () {
     const { loggedInUserInfo } = this.props
-    logger.debug('[TMP] Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
+    logger.debug('-----> Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
 
     this.setState({
       cachedImage: loggedInUserInfo ? loggedInUserInfo.image : null,
     })
 
     ipcRenderer.on('auto-login', () => {
-      logger.debug('[TMP] Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
+      logger.debug('-----> Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
       loggedInUserInfo && this.handleContinueButtonClicked()
     })
   }
@@ -40,7 +40,7 @@ class LoginPage extends Component {
 
   handleContinueButtonClicked () {
     const { loggedInUserInfo } = this.props
-    logger.debug('[TMP] Inside LoginPage handleContinueButtonClicked with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
+    logger.debug('-----> Inside LoginPage handleContinueButtonClicked with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
     const token = loggedInUserInfo ? loggedInUserInfo.token : null
     if (this.props.authWindowStatus === 'OFF') {
       this.props.launchAuthWindow(token)
