@@ -77,6 +77,8 @@ function getAllgistsV2 (token, userId) {
   const gistList = []
   return requestGists(token, userId, 1, gistList)
     .then((res) => {
+      if (!res.headers['link']) return Promise.resolve(gistList);
+
       const matches = res.headers['link'].match(/page=[0-9]*/g)
       const maxPage = matches[matches.length - 1].substring('page='.length)
       logger.debug(TAG + `[V2] The max page number for gist is ${maxPage}`)
