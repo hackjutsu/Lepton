@@ -24,7 +24,7 @@ autoUpdater.autoDownload = false
 initGlobalConfigs()
 initGlobalLogger()
 
-logger.debug(`\n\n----- ${appInfo.version} -----\n`)
+logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} -----\n`)
 
 let mainWindow = null
 
