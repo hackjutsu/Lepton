@@ -8,6 +8,7 @@ import ProxyAgent from 'proxy-agent'
 import { remote } from 'electron'
 
 const TAG = '[REST] '
+const kTimeoutUnit = 5 * 1000 // ms
 const logger = remote.getGlobal('logger')
 const conf = remote.getGlobal('conf')
 const userAgent = 'hackjutsu-lepton-app'
@@ -30,7 +31,8 @@ function exchangeAccessToken (clientId, clientSecret, authCode) {
       'client_secret': clientSecret,
       'code': authCode,
     },
-    json: true
+    json: true,
+    timeout: 2 * kTimeoutUnit
   })
 }
 
@@ -47,7 +49,8 @@ function getUserProfile (token) {
     qs: {
       access_token: token
     },
-    json: true // Automatically parses the JSON string in the response
+    json: true, // Automatically parses the JSON string in the response
+    timeout: 2 * kTimeoutUnit
   })
 }
 
@@ -64,7 +67,8 @@ function getSingleGist (token, gistId) {
     qs: {
       access_token: token
     },
-    json: true // Automatically parses the JSON string in the response
+    json: true, // Automatically parses the JSON string in the response
+    timeout: 2 * kTimeoutUnit
   })
 }
 
@@ -174,6 +178,7 @@ function makeOptionForGetAllGists (token, userId, page) {
       page: page
     },
     json: true,
+    timeout: 2 * kTimeoutUnit,
     resolveWithFullResponse: true
   }
 }
@@ -195,7 +200,8 @@ function createSingleGist (token, description, files, isPublic) {
       public: isPublic,
       files: files
     },
-    json: true
+    json: true,
+    timeout: 2 * kTimeoutUnit
   })
 }
 
@@ -215,7 +221,8 @@ function editSingleGist (token, gistId, updatedDescription, updatedFiles) {
       description: updatedDescription,
       files: updatedFiles
     },
-    json: true
+    json: true,
+    timeout: 2 * kTimeoutUnit
   })
 }
 
@@ -231,7 +238,8 @@ function deleteSingleGist (token, gistId) {
     qs: {
       access_token: token
     },
-    json: true
+    json: true,
+    timeout: 2 * kTimeoutUnit
   })
 }
 
