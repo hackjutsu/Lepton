@@ -102,7 +102,7 @@ function createWindow () {
     })
 
     // Only run auto update checker in production.
-    if (!isDev) {
+    if (!isDev && !appInfo.version.includes('alpha')) {
         autoUpdater.checkForUpdates()
     }
   })
