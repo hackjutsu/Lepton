@@ -14,4 +14,5 @@ The more we know about your system and use case, the more easily and likely we c
 - Mac: `~/Library/Application Support/Lepton/logs`
 - Windows: `C:\Users\<username>\AppData\Roaming\Lepton\logs`
 - Linux: `~/.cached/Lepton/logs`
->Or send it to cosmo.lepton@gmail.com
+>The [debug mode](https://github.com/hackjutsu/Lepton/wiki) is recommended when producing the logs. 
+>You can send your log file to cosmo.lepton@gmail.com if don't want to post it here.
