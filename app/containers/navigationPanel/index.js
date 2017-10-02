@@ -24,9 +24,21 @@ const logger = remote.getGlobal('logger')
 class NavigationPanel extends Component {
   constructor (props) {
     super(props)
+    const { localPref, userSession } = this.props
+
+    const userName = userSession.profile.login
+    let activeSection = -1
+    if (localPref && localPref.get(userName)) {
+      const cachedActiveSession = localPref.get(userName).activeSection
+      if (cachedActiveSession !== undefined) {
+        activeSection = cachedActiveSession
+      }
+    }
+    logger.debug(`-----> The tag activeSection is ${activeSection}`)
+
     this.state = {
       tmpPinnedTags: new Set(),
-      activeSection: -1
+      activeSection,
     }
   }
 
@@ -113,10 +125,18 @@ class NavigationPanel extends Component {
 
   handleSectionClick (index) {
     const { activeSection } = this.state
+    const { localPref, userSession } = this.props
 
+    const nextActiveSection = activeSection === index ? -1 : index
     this.setState({
-      activeSection: activeSection === index ? -1 : index
+      activeSection: nextActiveSection
     })
+
+    // Saving the activeSection to local preference
+    const userName = userSession.profile.login
+    logger.debug(`-----> Saving new tag activeSection ${nextActiveSection}`)
+    localPref.set(userName, 
+      Object.assign({}, localPref.get(userName), { activeSection: nextActiveSection }))
   }
 
   renderTagSection () {
