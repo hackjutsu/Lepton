@@ -6,6 +6,7 @@ const windowStateKeeper = require('electron-window-state')
 const electronLocalshortcut = require('electron-localshortcut')
 const Menu = electron.Menu
 const app = electron.app
+const ipcMain = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
 
 // http://electron.rocks/sharing-between-main-and-renderer-process/
@@ -38,13 +39,10 @@ const keyDown = 'Shift+Down'
 const keyEnter = 'Shift+Enter'
 
 function createWindowAndAutoLogin () {
-  createWindow()
-  mainWindow.on('show', () => {
-    mainWindow.webContents.send('auto-login')
-  })
+  createWindow(true)
 }
 
-function createWindow () {
+function createWindow (autoLogin) {
   console.time('init')
     // Load the previous state with fallback to defaults
   let mainWindowState = windowStateKeeper({
@@ -63,6 +61,14 @@ function createWindow () {
     backgroundColor: '#808080',
     show: false
   })
+
+  if (autoLogin) {
+    logger.debug('-----> registering login-page-ready listener')
+    ipcMain.on('login-page-ready', () => {
+      logger.info('[signal] sending auto-login signal')
+      mainWindow.webContents.send('auto-login')
+    })
+  }
 
   // Let us register listeners on the window, so we can update the state
   // automatically (the listeners will be removed when the window is closed)

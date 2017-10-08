@@ -19,13 +19,18 @@ class LoginPage extends Component {
       cachedImage: loggedInUserInfo ? loggedInUserInfo.image : null,
     })
 
+    logger.debug('-----> Registering listener for auto-login signal')
     ipcRenderer.on('auto-login', () => {
       logger.debug('-----> Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
       loggedInUserInfo && this.handleContinueButtonClicked()
     })
+
+    logger.debug('-----> sending login-page-ready signal')
+    ipcRenderer.send('login-page-ready')
   }
 
   componentWillUnmount () {
+    logger.debug('-----> Removing listener for auto-login signal')
     ipcRenderer.removeAllListeners('auto-login')
   }
 
