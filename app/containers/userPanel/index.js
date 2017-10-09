@@ -33,7 +33,10 @@ import newIcon from './new.svg'
 import syncIcon from './sync.svg'
 
 import { remote, ipcRenderer } from 'electron'
+const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
+
+const kIsPrivate = conf.get('snippet:newSnippetPrivate')
 
 class UserPanel extends Component {
   componentWillMount () {
@@ -148,6 +151,7 @@ class UserPanel extends Component {
   renderGistEditorModalBody () {
     const initialData = {
       description: '',
+      private: kIsPrivate,
       gists: [
         {filename: '', content: ''}
       ]}

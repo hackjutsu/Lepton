@@ -7,6 +7,7 @@ module.exports = {
         'address': 'socks://localhost:1080'
     },
     'snippet': {
-        'expanded': true 
+        'expanded': true,
+        'newSnippetPrivate': false
     }
 }
