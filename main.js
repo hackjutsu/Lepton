@@ -137,7 +137,9 @@ app.on('window-all-closed', function() {
 })
 
 app.on('before-quit', function() {
-  if (mainWindow) {
+  // If we launch the app and close it quickly, we might run into a 
+  // situation where electronLocalshortcut is not initialized.
+  if (mainWindow && electronLocalshortcut) {
     electronLocalshortcut.unregisterAll(mainWindow)
   }
 })
