@@ -116,7 +116,7 @@ function renderGistFileHeader (member, fields, index) {
         placeholder='file name... (e.g. snippet.js)'
         validate={ required }/>
       <a href='#'
-        className={ index === 0 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
+        className={ fields.length === 1 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
         onClick={ () => fields.remove(index) }>#remove</a>
     </div>
   )
