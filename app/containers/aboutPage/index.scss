@@ -1,4 +1,4 @@
-.preference-modal {
+.about-modal {
 
   .font-style-base {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
@@ -16,6 +16,8 @@
 
   .about-section {
     @extend .section-base;
+    display: flex;
+    flex-direction: column;
   }
 
   .logo-section {
@@ -31,7 +33,7 @@
 
   .contributor-section {
     overflow: auto;
-    height: 15%;
+    min-height: 100px;
     border-radius: 5px;
     padding: 0 20px;
     border: solid 1px rgb(200,200,200);
@@ -39,7 +41,7 @@
 
   .license-section {
     overflow: auto;
-    height: 28vh;
+    flex: auto;
     margin-bottom: 20px;
     border-radius: 5px;
     padding: 0 20px;
@@ -64,7 +66,9 @@
     @extend .font-style-base;
     font-size: 14px;
     font-weight: bold;
-    margin: 10px;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-bottom: 5px;
   }
 
   .modal-sm {
@@ -84,7 +88,7 @@
     margin-bottom: 5px;
   }
 
-  /* Settings only affecting the preference dialog */
+  /* Settings only affecting the about modal */
   .modal {
     -webkit-app-region: drag;
     background: rgba(0, 0, 0, 0.5);

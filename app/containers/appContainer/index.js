@@ -12,20 +12,16 @@ import NavigationPanel from '../navigationPanel'
 import LoginPage from '../loginPage'
 import SnippetPanel from '../snippetPanel'
 import SearchPage from '../searchPage'
-import SettingPage from '../settingPage'
+import AboutPage from '../aboutPage'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
 
 import './index.scss'
 
 class AppContainer extends Component {
-  renderSettingPage () {
-    const { preferenceModalStatus } = this.props
+  renderAboutPage () {
+    const { aboutModalStatus, updateAboutModalStatus } = this.props
     return (
-      <div>
-        { preferenceModalStatus === 'OFF'
-          ? null
-          : <SettingPage/> }
-      </div>
+      <AboutPage updateAboutModalStatus = { updateAboutModalStatus }/>
     )
   }
 
@@ -92,7 +88,7 @@ class AppContainer extends Component {
 
     return (
       <div>
-        { this.renderSettingPage() }
+        { this.renderAboutPage() }
         { this.renderSearchPage() }
         { this.renderUpdateAlert() }
         <NavigationPanel
@@ -156,7 +152,7 @@ function mapStateToProps (state) {
   return {
     userSession: state.userSession,
     searchWindowStatus: state.searchWindowStatus,
-    preferenceModalStatus: state.preferenceModalStatus,
+    aboutModalStatus: state.aboutModalStatus,
     newVersionInfo: state.newVersionInfo,
     updateAvailableBarStatus: state.updateAvailableBarStatus,
     immersiveMode: state.immersiveMode

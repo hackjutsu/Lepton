@@ -22,7 +22,7 @@ import gistRawModal from './reducer_gist_raw_modal'
 import gistEditModalStatus from './reducer_gist_edit_modal'
 import gistNewModalStatus from './reducer_gist_new_modal'
 import gistDeleteModalStatus from './reducer_gist_delete_modal'
-import preferenceModalStatus from './reducer_preference_modal'
+import aboutModalStatus from './reducer_about_modal'
 import pinnedTagsModalStatus from './reducer_pinned_tags_selections_modal'
 import fileExpandStatus from './reducer_file_expand_status'
 
@@ -48,7 +48,7 @@ const rootReducer = combineReducers({
   gistEditModalStatus,
   gistNewModalStatus,
   gistDeleteModalStatus,
-  preferenceModalStatus,
+  aboutModalStatus,
   pinnedTagsModalStatus,
   fileExpandStatus
 })

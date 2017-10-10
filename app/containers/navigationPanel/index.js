@@ -135,7 +135,7 @@ class NavigationPanel extends Component {
     // Saving the activeSection to local preference
     const userName = userSession.profile.login
     logger.debug(`-----> Saving new tag activeSection ${nextActiveSection}`)
-    localPref.set(userName, 
+    localPref.set(userName,
       Object.assign({}, localPref.get(userName), { activeSection: nextActiveSection }))
   }
 

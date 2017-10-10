@@ -33,7 +33,7 @@ const keyShortcutForSearch = 'Shift+Space'
 const keyNewGist = 'CommandOrControl+N'
 const keyEditGist = 'CommandOrControl+E'
 const keyImmersiveMode = 'CommandOrControl+I'
-const keyPreference = 'CommandOrControl+,'
+const keyAboutPage = 'CommandOrControl+,'
 const keyUp = 'Shift+Up'
 const keyDown = 'Shift+Down'
 const keyEnter = 'Shift+Enter'
@@ -189,9 +189,9 @@ function setUpApplicationMenu () {
       },
       {
         label: 'About',
-        accelerator: keyPreference,
+        accelerator: keyAboutPage,
         click: (item, mainWindow) => {
-          mainWindow && mainWindow.send('local-preference')
+          mainWindow && mainWindow.send('about-page')
         }
       }
     ]

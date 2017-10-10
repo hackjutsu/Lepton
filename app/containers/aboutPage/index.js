@@ -1,14 +1,17 @@
 'use strict'
 
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
 import LicenseInfo from '../../../license.json'
 import logoImage from './logo.png'
 import appInfo from '../../../package.json'
+import { updateAboutModalStatus } from '../../actions'
+
 import './index.scss'
 
-class SettingPage extends Component {
+class AboutPage extends Component {
   renderAboutSection () {
     const licenseList = []
     /* Add Evil icons license as an exception */
@@ -41,7 +44,6 @@ class SettingPage extends Component {
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/issues'>Feedback</a>
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE'>License</a>
         </div>
-        <hr/>
         <div className='setting-title'>Contributors</div>
         <div className='contributor-section'>
           <div className='contributor'><a href='https://github.com/hackjutsu'>hackjutsu</a></div>
@@ -57,12 +59,9 @@ class SettingPage extends Component {
           <div className='contributor'><a href='https://github.com/Gisonrg'>Gisonrg</a></div>
           <div className='contributor'><a href='https://github.com/ArLEquiN64'>ArLEquiN64</a></div>
         </div>
-        <hr/>
-        <div>
-          <div className='setting-title'>Acknowledgement</div>
-          <div className='license-section'>
-            { licenseList }
-          </div>
+        <div className='setting-title'>Acknowledgement</div>
+        <div className='license-section'>
+          { licenseList }
         </div>
       </div>
     )
@@ -76,26 +75,39 @@ class SettingPage extends Component {
     )
   }
 
+  handleCloseButtonClicked () {
+    const { updateAboutModalStatus } = this.props
+    updateAboutModalStatus('OFF')
+  }
+
   render () {
     return (
-      <div className='preference-modal'>
-        <Modal.Dialog bsSize='small'>
-          <Modal.Header>
-            <Modal.Title>About</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            { this.renderSettingModalBody() }
-          </Modal.Body>
-        </Modal.Dialog>
-      </div>
+      <Modal
+        className='about-modal'
+        bsSize='small'
+        show={ this.props.aboutModalStatus === 'ON' }
+        onHide={ this.handleCloseButtonClicked.bind(this) }>
+        <Modal.Header closeButton>
+          <Modal.Title>About</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          { this.renderSettingModalBody() }
+        </Modal.Body>
+      </Modal>
     )
   }
 }
 
 function mapStateToProps (state) {
   return {
-    preferenceModalStatus: state.preferenceModalStatus
+    aboutModalStatus: state.aboutModalStatus
   }
 }
 
-export default connect(mapStateToProps)(SettingPage)
+function mapDispatchToProps (dispatch) {
+  return bindActionCreators({
+    updateAboutModalStatus: updateAboutModalStatus
+  }, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AboutPage)

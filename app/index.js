@@ -42,7 +42,7 @@ import {
   updateUpdateAvailableBarStatus,
   updateNewVersionInfo,
   updateImmersiveModeStatus,
-  updatePreferenceModalStatus,
+  updateAboutModalStatus,
   updatePinnedTags
 } from './actions/index'
 
@@ -482,7 +482,7 @@ ipcRenderer.on('search-gist', data => {
     searchWindowStatus,
     gistEditModalStatus,
     gistNewModalStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistDeleteModalStatus,
     logoutModalStatus } = state
 
@@ -492,7 +492,7 @@ ipcRenderer.on('search-gist', data => {
     gistRawModal.status,
     gistEditModalStatus,
     gistNewModalStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistDeleteModalStatus,
     logoutModalStatus ]
   if (allDialogsClosed(dialogs)) {
@@ -502,13 +502,13 @@ ipcRenderer.on('search-gist', data => {
   }
 })
 
-ipcRenderer.on('local-preference', data => {
+ipcRenderer.on('about-page', data => {
   const state = reduxStore.getState()
   const {
     immersiveMode,
     gistRawModal,
     searchWindowStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistEditModalStatus,
     gistNewModalStatus,
     gistDeleteModalStatus,
@@ -522,12 +522,11 @@ ipcRenderer.on('local-preference', data => {
     searchWindowStatus,
     gistNewModalStatus,
     gistDeleteModalStatus,
-    preferenceModalStatus,
     logoutModalStatus ]
   if (allDialogsClosed(dialogs)) {
-    const preStatus = preferenceModalStatus
+    const preStatus = aboutModalStatus
     const newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
-    reduxStore.dispatch(updatePreferenceModalStatus(newStatus))
+    reduxStore.dispatch(updateAboutModalStatus(newStatus))
   }
 })
 
@@ -537,7 +536,7 @@ ipcRenderer.on('new-gist', data => {
     immersiveMode,
     gistRawModal,
     searchWindowStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistNewModalStatus,
     gistEditModalStatus,
     gistDeleteModalStatus,
@@ -548,7 +547,7 @@ ipcRenderer.on('new-gist', data => {
     immersiveMode,
     gistRawModal.status,
     searchWindowStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistNewModalStatus,
     gistEditModalStatus,
     gistDeleteModalStatus,
@@ -563,7 +562,7 @@ ipcRenderer.on('edit-gist', data => {
   const {
     gistRawModal,
     searchWindowStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistNewModalStatus,
     gistEditModalStatus,
     gistDeleteModalStatus,
@@ -575,7 +574,7 @@ ipcRenderer.on('edit-gist', data => {
     gistNewModalStatus,
     gistEditModalStatus,
     searchWindowStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistDeleteModalStatus,
     logoutModalStatus ]
   if (allDialogsClosed(dialogs)) {
@@ -587,7 +586,7 @@ ipcRenderer.on('immersive-mode', data => {
   const state = reduxStore.getState()
   const {
     searchWindowStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     immersiveMode,
     gistRawModal,
     gistEditModalStatus,
@@ -597,7 +596,7 @@ ipcRenderer.on('immersive-mode', data => {
 
   const dialogs = [
     searchWindowStatus,
-    preferenceModalStatus,
+    aboutModalStatus,
     gistRawModal.status,
     gistEditModalStatus,
     gistNewModalStatus,
@@ -618,7 +617,7 @@ ipcRenderer.on('back-to-normal-mode', data => {
   if (allDialogsClosed(dialogs)) {
     reduxStore.dispatch(updateImmersiveModeStatus('OFF'))
   }
-  reduxStore.dispatch(updatePreferenceModalStatus('OFF'))
+  reduxStore.dispatch(updateAboutModalStatus('OFF'))
 })
 
 ipcRenderer.on('update-available', payload => {
@@ -645,6 +644,7 @@ ReactDom.render(
       loggedInUserInfo = { cachedUserInfo }
       launchAuthWindow = { launchAuthWindow }
       reSyncUserGists = { reSyncUserGists }
+      updateAboutModalStatus = { updateAboutModalStatus }
       updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />
   </Provider>,
   document.getElementById('container')
