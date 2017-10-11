@@ -65,8 +65,6 @@ const localPref = new Store({
   defaults: {}
 })
 
-const cachedUserInfo = getCachedUserInfo()
-
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
   client_secret: Account.client_secret,
@@ -98,6 +96,7 @@ function launchAuthWindow (token) {
     webPreferences })
   let githubUrl = 'https://github.com/login/oauth/authorize?'
   let authUrl = githubUrl + 'client_id=' + CONFIG_OPTIONS.client_id + '&scope=' + CONFIG_OPTIONS.scopes
+  logger.debug('loading authUrl' + authUrl)
   authWindow.loadURL(authUrl)
   authWindow.show()
 
@@ -416,7 +415,13 @@ function updateLocalStorage (data) {
   rst = electronLocalStorage.set('profile', data.profile)
   logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
 
-  downloadImage(data.image, data.profile)
+  logger.debug(`-----> Caching image ${data.image}`)
+  if (!data.image) {
+    rst = electronLocalStorage.set('image', data.image)
+    logger.debug(`-----> [${rst.status}] Cached image ${data.image}`)    
+  } else {
+    downloadImage(data.image, data.profile)    
+  }
 }
 
 function downloadImage (imageUrl, filename) {
@@ -641,7 +646,7 @@ ReactDom.render(
       searchIndex = { SearchIndex }
       localPref = { localPref }
       updateLocalStorage = { updateLocalStorage }
-      loggedInUserInfo = { cachedUserInfo }
+      loggedInUserInfo = { getCachedUserInfo() }
       launchAuthWindow = { launchAuthWindow }
       reSyncUserGists = { reSyncUserGists }
       updateAboutModalStatus = { updateAboutModalStatus }

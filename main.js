@@ -43,6 +43,7 @@ function createWindowAndAutoLogin () {
 }
 
 function createWindow (autoLogin) {
+  let newLaunch = true;
   console.time('init')
     // Load the previous state with fallback to defaults
   let mainWindowState = windowStateKeeper({
@@ -65,8 +66,11 @@ function createWindow (autoLogin) {
   if (autoLogin) {
     logger.debug('-----> registering login-page-ready listener')
     ipcMain.on('login-page-ready', () => {
-      logger.info('[signal] sending auto-login signal')
-      mainWindow.webContents.send('auto-login')
+      if (newLaunch) {
+        logger.info('[signal] sending auto-login signal')        
+        mainWindow.webContents.send('auto-login')
+        newLaunch = false
+      }
     })
   }
 
