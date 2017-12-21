@@ -1,8 +1,9 @@
 {
-  "Lepton@1.5.0": {
+  "Lepton@1.5.1-alpha-3": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton",
     "licenseFile": "LICENSE"
   },
   "agent-base@2.1.1": {
@@ -11,6 +12,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/agent-base",
     "licenseFile": "node_modules/agent-base/README.md"
   },
   "agent-base@4.1.1": {
@@ -19,12 +21,14 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/pac-proxy-agent/node_modules/socks-proxy-agent/node_modules/agent-base",
     "licenseFile": "node_modules/pac-proxy-agent/node_modules/socks-proxy-agent/node_modules/agent-base/README.md"
   },
   "ajv@4.11.8": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/ajv",
     "publisher": "Evgeny Poberezkin",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ajv",
     "licenseFile": "node_modules/ajv/LICENSE"
   },
   "amdefine@1.0.1": {
@@ -33,6 +37,7 @@
     "publisher": "James Burke",
     "email": "jrburke@gmail.com",
     "url": "http://github.com/jrburke",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/amdefine",
     "licenseFile": "node_modules/amdefine/LICENSE"
   },
   "ansi-regex@2.1.1": {
@@ -41,16 +46,19 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ansi-regex",
     "licenseFile": "node_modules/ansi-regex/license"
   },
   "argparse@1.0.9": {
     "licenses": "MIT",
     "repository": "https://github.com/nodeca/argparse",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/argparse",
     "licenseFile": "node_modules/argparse/LICENSE"
   },
   "asap@2.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/kriskowal/asap",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/asap",
     "licenseFile": "node_modules/asap/LICENSE.md"
   },
   "asn1@0.2.3": {
@@ -58,6 +66,7 @@
     "repository": "https://github.com/mcavage/node-asn1",
     "publisher": "Mark Cavage",
     "email": "mcavage@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/asn1",
     "licenseFile": "node_modules/asn1/LICENSE"
   },
   "assert-plus@0.2.0": {
@@ -65,6 +74,7 @@
     "repository": "https://github.com/mcavage/node-assert-plus",
     "publisher": "Mark Cavage",
     "email": "mcavage@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/assert-plus",
     "licenseFile": "node_modules/assert-plus/README.md"
   },
   "assert-plus@1.0.0": {
@@ -72,6 +82,7 @@
     "repository": "https://github.com/mcavage/node-assert-plus",
     "publisher": "Mark Cavage",
     "email": "mcavage@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/jsprim/node_modules/assert-plus",
     "licenseFile": "node_modules/jsprim/node_modules/assert-plus/README.md"
   },
   "ast-types@0.9.6": {
@@ -79,18 +90,21 @@
     "repository": "https://github.com/benjamn/ast-types",
     "publisher": "Ben Newman",
     "email": "bn@cs.stanford.edu",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ast-types",
     "licenseFile": "node_modules/ast-types/LICENSE"
   },
   "async@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/caolan/async",
     "publisher": "Caolan McMahon",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/async",
     "licenseFile": "node_modules/async/LICENSE"
   },
   "async@1.5.2": {
     "licenses": "MIT",
     "repository": "https://github.com/caolan/async",
     "publisher": "Caolan McMahon",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/nconf/node_modules/async",
     "licenseFile": "node_modules/nconf/node_modules/async/LICENSE"
   },
   "asynckit@0.4.0": {
@@ -98,6 +112,7 @@
     "repository": "https://github.com/alexindigo/asynckit",
     "publisher": "Alex Indigo",
     "email": "iam@alexindigo.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/asynckit",
     "licenseFile": "node_modules/asynckit/LICENSE"
   },
   "autolinker@1.4.3": {
@@ -105,6 +120,7 @@
     "repository": "https://github.com/gregjacobs/Autolinker.js",
     "publisher": "Gregory Jacobs",
     "email": "greg@greg-jacobs.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/autolinker",
     "licenseFile": "node_modules/autolinker/LICENSE"
   },
   "aws-sign2@0.6.0": {
@@ -113,6 +129,7 @@
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
     "url": "http://www.futurealoof.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/aws-sign2",
     "licenseFile": "node_modules/aws-sign2/LICENSE"
   },
   "aws4@1.6.0": {
@@ -121,6 +138,7 @@
     "publisher": "Michael Hart",
     "email": "michael.hart.au@gmail.com",
     "url": "http://github.com/mhart",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/aws4",
     "licenseFile": "node_modules/aws4/LICENSE"
   },
   "babel-runtime@6.23.0": {
@@ -128,6 +146,7 @@
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-runtime",
     "publisher": "Sebastian McKenzie",
     "email": "sebmck@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/babel-runtime",
     "licenseFile": "node_modules/babel-runtime/README.md"
   },
   "balanced-match@1.0.0": {
@@ -136,16 +155,19 @@
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/balanced-match",
     "licenseFile": "node_modules/balanced-match/LICENSE.md"
   },
   "bcrypt-pbkdf@1.0.1": {
     "licenses": "BSD-3-Clause",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/bcrypt-pbkdf",
     "licenseFile": "node_modules/bcrypt-pbkdf/README.md"
   },
-  "bluebird-lst@1.0.3": {
+  "bluebird-lst@1.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
-    "publisher": "Vladimir Krivosheev"
+    "publisher": "Vladimir Krivosheev",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/bluebird-lst"
   },
   "bluebird@3.5.0": {
     "licenses": "MIT",
@@ -153,11 +175,22 @@
     "publisher": "Petka Antonov",
     "email": "petka_antonov@hotmail.com",
     "url": "http://github.com/petkaantonov/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/bluebird",
     "licenseFile": "node_modules/bluebird/LICENSE"
+  },
+  "bluebird@3.5.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/petkaantonov/bluebird",
+    "publisher": "Petka Antonov",
+    "email": "petka_antonov@hotmail.com",
+    "url": "http://github.com/petkaantonov/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/bluebird",
+    "licenseFile": "node_modules/electron-updater/node_modules/bluebird/LICENSE"
   },
   "boom@2.10.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hapijs/boom",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/boom",
     "licenseFile": "node_modules/boom/LICENSE"
   },
   "bowser@1.7.1": {
@@ -166,6 +199,7 @@
     "publisher": "Dustin Diaz",
     "email": "dustin@dustindiaz.com",
     "url": "http://dustindiaz.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/bowser",
     "licenseFile": "node_modules/bowser/LICENSE"
   },
   "brace-expansion@1.1.8": {
@@ -174,13 +208,15 @@
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/brace-expansion",
     "licenseFile": "node_modules/brace-expansion/README.md"
   },
-  "builder-util-runtime@1.0.1": {
+  "builder-util-runtime@3.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
-    "licenseFile": "node_modules/builder-util-runtime/readme.md"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/builder-util-runtime",
+    "licenseFile": "node_modules/electron-updater/node_modules/builder-util-runtime/readme.md"
   },
   "bytes@2.5.0": {
     "licenses": "MIT",
@@ -188,6 +224,7 @@
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
     "url": "http://tjholowaychuk.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/bytes",
     "licenseFile": "node_modules/bytes/LICENSE"
   },
   "camelcase@2.1.1": {
@@ -196,6 +233,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "http://sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/camelcase",
     "licenseFile": "node_modules/camelcase/license"
   },
   "caseless@0.12.0": {
@@ -203,12 +241,14 @@
     "repository": "https://github.com/mikeal/caseless",
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/caseless",
     "licenseFile": "node_modules/caseless/LICENSE"
   },
   "classnames@2.2.5": {
     "licenses": "MIT",
     "repository": "https://github.com/JedWatson/classnames",
     "publisher": "Jed Watson",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/classnames",
     "licenseFile": "node_modules/classnames/LICENSE"
   },
   "cliui@3.2.0": {
@@ -216,11 +256,13 @@
     "repository": "https://github.com/yargs/cliui",
     "publisher": "Ben Coe",
     "email": "ben@npmjs.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/cliui",
     "licenseFile": "node_modules/cliui/LICENSE.txt"
   },
   "co@4.6.0": {
     "licenses": "MIT",
     "repository": "https://github.com/tj/co",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/co",
     "licenseFile": "node_modules/co/LICENSE"
   },
   "code-point-at@1.1.0": {
@@ -229,17 +271,20 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/code-point-at",
     "licenseFile": "node_modules/code-point-at/license"
   },
   "codemirror@5.28.0": {
     "licenses": "MIT",
     "repository": "https://github.com/codemirror/CodeMirror",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/codemirror",
     "licenseFile": "node_modules/codemirror/LICENSE"
   },
   "colors@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/Marak/colors.js",
     "publisher": "Marak Squires",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/colors",
     "licenseFile": "node_modules/colors/ReadMe.md"
   },
   "combined-stream@1.0.5": {
@@ -248,6 +293,7 @@
     "publisher": "Felix Geisendörfer",
     "email": "felix@debuggable.com",
     "url": "http://debuggable.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/combined-stream",
     "licenseFile": "node_modules/combined-stream/License"
   },
   "concat-map@0.0.1": {
@@ -256,16 +302,19 @@
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/concat-map",
     "licenseFile": "node_modules/concat-map/LICENSE"
   },
   "core-js@1.2.7": {
     "licenses": "MIT",
     "repository": "https://github.com/zloirock/core-js",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/core-js",
     "licenseFile": "node_modules/core-js/LICENSE"
   },
   "core-js@2.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/zloirock/core-js",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/babel-runtime/node_modules/core-js",
     "licenseFile": "node_modules/babel-runtime/node_modules/core-js/LICENSE"
   },
   "core-util-is@1.0.2": {
@@ -274,16 +323,19 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/core-util-is",
     "licenseFile": "node_modules/core-util-is/LICENSE"
   },
   "create-react-class@15.6.0": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/facebook/react",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/create-react-class",
     "licenseFile": "node_modules/create-react-class/LICENSE.txt"
   },
   "cryptiles@2.0.5": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hapijs/cryptiles",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/cryptiles",
     "licenseFile": "node_modules/cryptiles/LICENSE"
   },
   "css-in-js-utils@1.0.3": {
@@ -291,11 +343,13 @@
     "repository": "https://github.com/rofrischmann/css-in-js-utils",
     "publisher": "Robin Frischmann",
     "email": "robin@rofrischmann.de",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/css-in-js-utils",
     "licenseFile": "node_modules/css-in-js-utils/LICENSE"
   },
   "cycle@1.0.3": {
     "licenses": "Custom: https://github.com/douglascrockford/JSON-js",
     "repository": "https://github.com/dscape/cycle",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/cycle",
     "licenseFile": "node_modules/cycle/README.md"
   },
   "dashdash@1.14.1": {
@@ -304,6 +358,7 @@
     "publisher": "Trent Mick",
     "email": "trentm@gmail.com",
     "url": "http://trentm.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/dashdash",
     "licenseFile": "node_modules/dashdash/LICENSE.txt"
   },
   "data-uri-to-buffer@1.2.0": {
@@ -312,6 +367,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/data-uri-to-buffer",
     "licenseFile": "node_modules/data-uri-to-buffer/README.md"
   },
   "debug@2.6.8": {
@@ -319,14 +375,16 @@
     "repository": "https://github.com/visionmedia/debug",
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/debug",
     "licenseFile": "node_modules/debug/LICENSE"
   },
-  "debug@3.0.1": {
+  "debug@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/visionmedia/debug",
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
-    "licenseFile": "node_modules/builder-util-runtime/node_modules/debug/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/debug",
+    "licenseFile": "node_modules/electron-updater/node_modules/debug/LICENSE"
   },
   "decamelize@1.2.0": {
     "licenses": "MIT",
@@ -334,6 +392,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/decamelize",
     "licenseFile": "node_modules/decamelize/license"
   },
   "deep-equal@1.0.1": {
@@ -342,6 +401,7 @@
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/deep-equal",
     "licenseFile": "node_modules/deep-equal/LICENSE"
   },
   "deep-is@0.1.3": {
@@ -350,6 +410,7 @@
     "publisher": "Thorsten Lorenz",
     "email": "thlorenz@gmx.de",
     "url": "http://thlorenz.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/deep-is",
     "licenseFile": "node_modules/deep-is/LICENSE"
   },
   "degenerator@1.0.4": {
@@ -358,6 +419,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/degenerator",
     "licenseFile": "node_modules/degenerator/README.md"
   },
   "delayed-stream@1.0.0": {
@@ -366,6 +428,7 @@
     "publisher": "Felix Geisendörfer",
     "email": "felix@debuggable.com",
     "url": "http://debuggable.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/delayed-stream",
     "licenseFile": "node_modules/delayed-stream/License"
   },
   "depd@1.1.0": {
@@ -373,6 +436,7 @@
     "repository": "https://github.com/dougwilson/nodejs-depd",
     "publisher": "Douglas Christopher Wilson",
     "email": "doug@somethingdoug.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/depd",
     "licenseFile": "node_modules/depd/LICENSE"
   },
   "dom-helpers@3.2.1": {
@@ -380,6 +444,7 @@
     "repository": "https://github.com/jquense/dom-helpers",
     "publisher": "Jason Quense",
     "email": "monastic.panic@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/dom-helpers",
     "licenseFile": "node_modules/dom-helpers/README.md"
   },
   "ecc-jsbn@0.1.1": {
@@ -388,6 +453,7 @@
     "publisher": "Jeremie Miller",
     "email": "jeremie@jabber.org",
     "url": "http://jeremie.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ecc-jsbn",
     "licenseFile": "node_modules/ecc-jsbn/LICENSE"
   },
   "electron-context-menu@0.9.1": {
@@ -396,6 +462,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-context-menu",
     "licenseFile": "node_modules/electron-context-menu/license"
   },
   "electron-dl@1.9.0": {
@@ -404,12 +471,14 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-dl",
     "licenseFile": "node_modules/electron-dl/license"
   },
   "electron-is-accelerator@0.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/brrd/electron-is-accelerator",
     "publisher": "brrd",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-is-accelerator",
     "licenseFile": "node_modules/electron-is-accelerator/LICENSE"
   },
   "electron-is-dev@0.1.2": {
@@ -418,6 +487,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-context-menu/node_modules/electron-is-dev",
     "licenseFile": "node_modules/electron-context-menu/node_modules/electron-is-dev/license"
   },
   "electron-is-dev@0.3.0": {
@@ -426,36 +496,42 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-is-dev",
     "licenseFile": "node_modules/electron-is-dev/license"
   },
   "electron-json-storage-sync@1.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/RichardLilja/electron-json-storage-sync",
     "publisher": "Richard Lilja",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-json-storage-sync",
     "licenseFile": "node_modules/electron-json-storage-sync/LICENSE"
   },
   "electron-localshortcut@3.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/parro-it/electron-localshortcut",
     "publisher": "andrea@parro.it",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-localshortcut",
     "licenseFile": "node_modules/electron-localshortcut/license"
   },
-  "electron-updater@2.9.3": {
+  "electron-updater@2.17.6": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater",
     "licenseFile": "node_modules/electron-updater/README.md"
   },
   "electron-window-state@4.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mawie81/electron-window-state",
     "publisher": "Marcel Wiehle",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-window-state",
     "licenseFile": "node_modules/electron-window-state/license"
   },
   "encoding@0.1.12": {
     "licenses": "MIT",
     "repository": "https://github.com/andris9/encoding",
     "publisher": "Andris Reinman",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/encoding",
     "licenseFile": "node_modules/encoding/LICENSE"
   },
   "entities@1.1.1": {
@@ -463,12 +539,14 @@
     "repository": "https://github.com/fb55/node-entities",
     "publisher": "Felix Boehm",
     "email": "me@feedic.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/entities",
     "licenseFile": "node_modules/entities/LICENSE"
   },
   "es6-error@4.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/bjyoungblood/es6-error",
     "publisher": "Ben Youngblood",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/es6-error",
     "licenseFile": "node_modules/es6-error/LICENSE.md"
   },
   "es6-promise@4.1.1": {
@@ -476,6 +554,7 @@
     "repository": "https://github.com/stefanpenner/es6-promise",
     "publisher": "Yehuda Katz, Tom Dale, Stefan Penner and contributors",
     "url": "Conversion to ES6 API by Jake Archibald",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/es6-promise",
     "licenseFile": "node_modules/es6-promise/LICENSE"
   },
   "es6-promisify@5.0.0": {
@@ -483,11 +562,13 @@
     "repository": "https://github.com/digitaldesignlabs/es6-promisify",
     "publisher": "Mike Hall",
     "email": "mikehall314@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/es6-promisify",
     "licenseFile": "node_modules/es6-promisify/README.md"
   },
   "escodegen@1.8.1": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/estools/escodegen",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/escodegen",
     "licenseFile": "node_modules/escodegen/LICENSE.BSD"
   },
   "esprima@2.7.3": {
@@ -495,6 +576,7 @@
     "repository": "https://github.com/jquery/esprima",
     "publisher": "Ariya Hidayat",
     "email": "ariya.hidayat@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/escodegen/node_modules/esprima",
     "licenseFile": "node_modules/escodegen/node_modules/esprima/LICENSE.BSD"
   },
   "esprima@3.1.3": {
@@ -502,6 +584,7 @@
     "repository": "https://github.com/jquery/esprima",
     "publisher": "Ariya Hidayat",
     "email": "ariya.hidayat@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/esprima",
     "licenseFile": "node_modules/esprima/LICENSE.BSD"
   },
   "esprima@4.0.0": {
@@ -509,16 +592,19 @@
     "repository": "https://github.com/jquery/esprima",
     "publisher": "Ariya Hidayat",
     "email": "ariya.hidayat@gmail.com",
-    "licenseFile": "node_modules/electron-updater/node_modules/esprima/LICENSE.BSD"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/js-yaml/node_modules/esprima",
+    "licenseFile": "node_modules/js-yaml/node_modules/esprima/LICENSE.BSD"
   },
   "estraverse@1.9.3": {
     "licenses": "BSD",
     "repository": "https://github.com/estools/estraverse",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/escodegen/node_modules/estraverse",
     "licenseFile": "node_modules/escodegen/node_modules/estraverse/LICENSE.BSD"
   },
   "esutils@2.0.2": {
     "licenses": "BSD",
     "repository": "https://github.com/estools/esutils",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/esutils",
     "licenseFile": "node_modules/esutils/LICENSE.BSD"
   },
   "extend@3.0.1": {
@@ -527,17 +613,20 @@
     "publisher": "Stefan Thomas",
     "email": "justmoon@members.fsf.org",
     "url": "http://www.justmoon.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/extend",
     "licenseFile": "node_modules/extend/LICENSE"
   },
   "extsprintf@1.0.2": {
     "licenses": "MIT*",
     "repository": "https://github.com/davepacheco/node-extsprintf",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/extsprintf",
     "licenseFile": "node_modules/extsprintf/LICENSE"
   },
   "eyes@0.1.8": {
     "licenses": "MIT",
     "publisher": "Alexis Sellier",
     "email": "self@cloudhead.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/eyes",
     "licenseFile": "node_modules/eyes/LICENSE"
   },
   "fast-levenshtein@2.0.6": {
@@ -546,11 +635,13 @@
     "publisher": "Ramesh Nair",
     "email": "ram@hiddentao.com",
     "url": "http://www.hiddentao.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fast-levenshtein",
     "licenseFile": "node_modules/fast-levenshtein/LICENSE.md"
   },
   "fbjs@0.8.12": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/facebook/fbjs",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fbjs",
     "licenseFile": "node_modules/fbjs/LICENSE"
   },
   "file-uri-to-path@1.0.0": {
@@ -559,6 +650,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/file-uri-to-path",
     "licenseFile": "node_modules/file-uri-to-path/LICENSE"
   },
   "forever-agent@0.6.1": {
@@ -567,6 +659,7 @@
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
     "url": "http://www.futurealoof.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/forever-agent",
     "licenseFile": "node_modules/forever-agent/LICENSE"
   },
   "form-data@2.1.4": {
@@ -575,19 +668,22 @@
     "publisher": "Felix Geisendörfer",
     "email": "felix@debuggable.com",
     "url": "http://debuggable.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/form-data",
     "licenseFile": "node_modules/form-data/License"
   },
-  "fs-extra-p@4.4.0": {
+  "fs-extra-p@4.5.0": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
-    "licenseFile": "node_modules/builder-util-runtime/node_modules/fs-extra-p/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fs-extra-p",
+    "licenseFile": "node_modules/fs-extra-p/LICENSE"
   },
-  "fs-extra@4.0.2": {
+  "fs-extra@5.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "licenseFile": "node_modules/builder-util-runtime/node_modules/fs-extra/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fs-extra",
+    "licenseFile": "node_modules/fs-extra/LICENSE"
   },
   "fs.realpath@1.0.0": {
     "licenses": "ISC",
@@ -595,6 +691,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fs.realpath",
     "licenseFile": "node_modules/fs.realpath/LICENSE"
   },
   "ftp@0.3.10": {
@@ -602,6 +699,7 @@
     "repository": "https://github.com/mscdex/node-ftp",
     "publisher": "Brian White",
     "email": "mscdex@mscdex.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ftp",
     "licenseFile": "node_modules/ftp/LICENSE"
   },
   "fuse.js@3.0.5": {
@@ -610,6 +708,7 @@
     "publisher": "Kirollos Risk",
     "email": "kirollos@gmail.com",
     "url": "http://kiro.me",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fuse.js",
     "licenseFile": "node_modules/fuse.js/LICENSE"
   },
   "get-uri@2.0.1": {
@@ -618,6 +717,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/get-uri",
     "licenseFile": "node_modules/get-uri/README.md"
   },
   "getpass@0.1.7": {
@@ -625,6 +725,7 @@
     "repository": "https://github.com/arekinath/node-getpass",
     "publisher": "Alex Wilson",
     "email": "alex.wilson@joyent.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/getpass",
     "licenseFile": "node_modules/getpass/LICENSE"
   },
   "glob@7.1.2": {
@@ -633,11 +734,13 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/glob",
     "licenseFile": "node_modules/glob/LICENSE"
   },
   "graceful-fs@4.1.11": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-graceful-fs",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/graceful-fs",
     "licenseFile": "node_modules/graceful-fs/LICENSE"
   },
   "har-schema@1.0.5": {
@@ -646,6 +749,7 @@
     "publisher": "Ahmad Nassri",
     "email": "ahmad@ahmadnassri.com",
     "url": "https://www.ahmadnassri.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/har-schema",
     "licenseFile": "node_modules/har-schema/LICENSE"
   },
   "har-validator@4.2.1": {
@@ -654,6 +758,7 @@
     "publisher": "Ahmad Nassri",
     "email": "ahmad@ahmadnassri.com",
     "url": "https://www.ahmadnassri.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/har-validator",
     "licenseFile": "node_modules/har-validator/LICENSE"
   },
   "hawk@3.1.3": {
@@ -662,6 +767,7 @@
     "publisher": "Eran Hammer",
     "email": "eran@hammer.io",
     "url": "http://hueniverse.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/hawk",
     "licenseFile": "node_modules/hawk/LICENSE"
   },
   "highlight.js@9.12.0": {
@@ -669,11 +775,13 @@
     "repository": "https://github.com/isagalaev/highlight.js",
     "publisher": "Ivan Sagalaev",
     "email": "maniac@softwaremaniacs.org",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/highlight.js",
     "licenseFile": "node_modules/highlight.js/LICENSE"
   },
   "hoek@2.16.3": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hapijs/hoek",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/hoek",
     "licenseFile": "node_modules/hoek/LICENSE"
   },
   "hoist-non-react-statics@2.2.2": {
@@ -681,6 +789,7 @@
     "repository": "https://github.com/mridgway/hoist-non-react-statics",
     "publisher": "Michael Ridgway",
     "email": "mcridgway@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-redux/node_modules/hoist-non-react-statics",
     "licenseFile": "node_modules/react-redux/node_modules/hoist-non-react-statics/LICENSE.md"
   },
   "hoist-non-react-statics@2.3.1": {
@@ -688,6 +797,7 @@
     "repository": "https://github.com/mridgway/hoist-non-react-statics",
     "publisher": "Michael Ridgway",
     "email": "mcridgway@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/redux-form/node_modules/hoist-non-react-statics",
     "licenseFile": "node_modules/redux-form/node_modules/hoist-non-react-statics/LICENSE.md"
   },
   "http-errors@1.6.1": {
@@ -696,6 +806,7 @@
     "publisher": "Jonathan Ong",
     "email": "me@jongleberry.com",
     "url": "http://jongleberry.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/http-errors",
     "licenseFile": "node_modules/http-errors/LICENSE"
   },
   "http-proxy-agent@1.0.0": {
@@ -704,12 +815,14 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/http-proxy-agent",
     "licenseFile": "node_modules/http-proxy-agent/README.md"
   },
   "http-signature@1.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/joyent/node-http-signature",
     "publisher": "Joyent, Inc",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/http-signature",
     "licenseFile": "node_modules/http-signature/LICENSE"
   },
   "https-proxy-agent@1.0.0": {
@@ -718,12 +831,14 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/https-proxy-agent",
     "licenseFile": "node_modules/https-proxy-agent/README.md"
   },
   "human-readable-time@0.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/g07cha/human-readable-time",
     "publisher": "G07cha",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/human-readable-time",
     "licenseFile": "node_modules/human-readable-time/license"
   },
   "hyphenate-style-name@1.0.2": {
@@ -731,6 +846,7 @@
     "repository": "https://github.com/rexxars/hyphenate-style-name",
     "publisher": "Espen Hovlandsdal",
     "email": "espen@hovlandsdal.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/hyphenate-style-name",
     "licenseFile": "node_modules/hyphenate-style-name/LICENSE"
   },
   "iconv-lite@0.4.18": {
@@ -738,12 +854,14 @@
     "repository": "https://github.com/ashtuchkin/iconv-lite",
     "publisher": "Alexander Shtuchkin",
     "email": "ashtuchkin@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/iconv-lite",
     "licenseFile": "node_modules/iconv-lite/LICENSE"
   },
   "image-downloader@3.2.2": {
     "licenses": "MIT",
     "repository": "https://github.com/demsking/image-downloader",
     "publisher": "Sébastien Demanou",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/image-downloader",
     "licenseFile": "node_modules/image-downloader/LICENSE"
   },
   "inflight@1.0.6": {
@@ -752,11 +870,13 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/inflight",
     "licenseFile": "node_modules/inflight/LICENSE"
   },
   "inherits@2.0.3": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/inherits",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/inherits",
     "licenseFile": "node_modules/inherits/LICENSE"
   },
   "ini@1.3.4": {
@@ -765,12 +885,14 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ini",
     "licenseFile": "node_modules/ini/LICENSE"
   },
   "inline-style-prefixer@3.0.7": {
     "licenses": "MIT",
     "repository": "https://github.com/rofrischmann/inline-style-prefixer",
     "publisher": "Robin Frischmann",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/inline-style-prefixer",
     "licenseFile": "node_modules/inline-style-prefixer/LICENSE"
   },
   "invariant@2.2.2": {
@@ -778,6 +900,7 @@
     "repository": "https://github.com/zertosh/invariant",
     "publisher": "Andres Suarez",
     "email": "zertosh@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/invariant",
     "licenseFile": "node_modules/invariant/LICENSE"
   },
   "invert-kv@1.0.0": {
@@ -786,6 +909,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "http://sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/invert-kv",
     "licenseFile": "node_modules/invert-kv/readme.md"
   },
   "ip@1.1.5": {
@@ -793,6 +917,7 @@
     "repository": "https://github.com/indutny/node-ip",
     "publisher": "Fedor Indutny",
     "email": "fedor@indutny.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ip",
     "licenseFile": "node_modules/ip/README.md"
   },
   "is-fullwidth-code-point@1.0.0": {
@@ -801,12 +926,14 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-fullwidth-code-point",
     "licenseFile": "node_modules/is-fullwidth-code-point/license"
   },
   "is-promise@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/then/is-promise",
     "publisher": "ForbesLindesay",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-promise",
     "licenseFile": "node_modules/is-promise/LICENSE"
   },
   "is-stream@1.1.0": {
@@ -815,6 +942,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-stream",
     "licenseFile": "node_modules/is-stream/license"
   },
   "is-typedarray@1.0.0": {
@@ -823,6 +951,7 @@
     "publisher": "Hugh Kennedy",
     "email": "hughskennedy@gmail.com",
     "url": "http://hughsk.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-typedarray",
     "licenseFile": "node_modules/is-typedarray/LICENSE.md"
   },
   "isarray@0.0.1": {
@@ -831,6 +960,7 @@
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/isarray",
     "licenseFile": "node_modules/isarray/README.md"
   },
   "isarray@1.0.0": {
@@ -839,6 +969,7 @@
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/get-uri/node_modules/isarray",
     "licenseFile": "node_modules/get-uri/node_modules/isarray/README.md"
   },
   "isomorphic-fetch@2.2.1": {
@@ -846,6 +977,7 @@
     "repository": "https://github.com/matthew-andrews/isomorphic-fetch",
     "publisher": "Matt Andrews",
     "email": "matt@mattandre.ws",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/isomorphic-fetch",
     "licenseFile": "node_modules/isomorphic-fetch/LICENSE"
   },
   "isstream@0.1.2": {
@@ -853,12 +985,14 @@
     "repository": "https://github.com/rvagg/isstream",
     "publisher": "Rod Vagg",
     "email": "rod@vagg.org",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/isstream",
     "licenseFile": "node_modules/isstream/LICENSE.md"
   },
   "js-tokens@3.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/lydell/js-tokens",
     "publisher": "Simon Lydell",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/js-tokens",
     "licenseFile": "node_modules/js-tokens/LICENSE"
   },
   "js-yaml@3.10.0": {
@@ -866,12 +1000,14 @@
     "repository": "https://github.com/nodeca/js-yaml",
     "publisher": "Vladimir Zapparov",
     "email": "dervus.grim@gmail.com",
-    "licenseFile": "node_modules/electron-updater/node_modules/js-yaml/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/js-yaml",
+    "licenseFile": "node_modules/js-yaml/LICENSE"
   },
   "jsbn@0.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/andyperlitch/jsbn",
     "publisher": "Tom Wu",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/jsbn",
     "licenseFile": "node_modules/jsbn/LICENSE"
   },
   "json-schema@0.2.3": {
@@ -881,6 +1017,7 @@
     ],
     "repository": "https://github.com/kriszyp/json-schema",
     "publisher": "Kris Zyp",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/json-schema",
     "licenseFile": "node_modules/json-schema/README.md"
   },
   "json-stable-stringify@1.0.1": {
@@ -889,6 +1026,7 @@
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/json-stable-stringify",
     "licenseFile": "node_modules/json-stable-stringify/LICENSE"
   },
   "json-stringify-safe@5.0.1": {
@@ -897,6 +1035,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/json-stringify-safe",
     "licenseFile": "node_modules/json-stringify-safe/LICENSE"
   },
   "jsonfile@2.4.0": {
@@ -904,6 +1043,7 @@
     "repository": "https://github.com/jprichardson/node-jsonfile",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-window-state/node_modules/jsonfile",
     "licenseFile": "node_modules/electron-window-state/node_modules/jsonfile/LICENSE"
   },
   "jsonfile@4.0.0": {
@@ -911,18 +1051,21 @@
     "repository": "https://github.com/jprichardson/node-jsonfile",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "licenseFile": "node_modules/builder-util-runtime/node_modules/jsonfile/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/jsonfile",
+    "licenseFile": "node_modules/jsonfile/LICENSE"
   },
   "jsonify@0.0.0": {
     "licenses": "Public Domain",
     "repository": "https://github.com/substack/jsonify",
     "publisher": "Douglas Crockford",
     "url": "http://crockford.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/jsonify",
     "licenseFile": "node_modules/jsonify/README.markdown"
   },
   "jsprim@1.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/joyent/node-jsprim",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/jsprim",
     "licenseFile": "node_modules/jsprim/LICENSE"
   },
   "keyboardevent-from-electron-accelerator@0.7.1": {
@@ -930,6 +1073,7 @@
     "repository": "https://github.com/parro-it/keyboardevent-from-electron-accelerator",
     "publisher": "Andrea",
     "email": "andrea@parro.it",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/keyboardevent-from-electron-accelerator",
     "licenseFile": "node_modules/keyboardevent-from-electron-accelerator/license"
   },
   "keyboardevents-areequal@0.2.2": {
@@ -937,6 +1081,7 @@
     "repository": "https://github.com/parro-it/keyboardevents-areequal",
     "publisher": "Andrea",
     "email": "andrea@parro.it",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/keyboardevents-areequal",
     "licenseFile": "node_modules/keyboardevents-areequal/license"
   },
   "keycode@2.1.9": {
@@ -944,13 +1089,15 @@
     "repository": "https://github.com/timoxley/keycode",
     "publisher": "Tim Oxley",
     "email": "secoif@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/keycode",
     "licenseFile": "node_modules/keycode/LICENSE"
   },
-  "lazy-val@1.0.2": {
+  "lazy-val@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/read-config-file",
     "publisher": "Vladimir Krivosheev",
-    "licenseFile": "node_modules/lazy-val/readme.md"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/lazy-val",
+    "licenseFile": "node_modules/electron-updater/node_modules/lazy-val/readme.md"
   },
   "lcid@1.0.0": {
     "licenses": "MIT",
@@ -958,6 +1105,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/lcid",
     "licenseFile": "node_modules/lcid/license"
   },
   "levn@0.3.0": {
@@ -965,11 +1113,13 @@
     "repository": "https://github.com/gkz/levn",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/levn",
     "licenseFile": "node_modules/levn/LICENSE"
   },
   "linkify-it@2.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/markdown-it/linkify-it",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/linkify-it",
     "licenseFile": "node_modules/linkify-it/LICENSE"
   },
   "lodash-es@4.17.4": {
@@ -978,6 +1128,7 @@
     "publisher": "John-David Dalton",
     "email": "john.david.dalton@gmail.com",
     "url": "http://allyoucanleet.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/lodash-es",
     "licenseFile": "node_modules/lodash-es/LICENSE"
   },
   "lodash.debounce@4.0.8": {
@@ -986,6 +1137,7 @@
     "publisher": "John-David Dalton",
     "email": "john.david.dalton@gmail.com",
     "url": "http://allyoucanleet.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/lodash.debounce",
     "licenseFile": "node_modules/lodash.debounce/LICENSE"
   },
   "lodash.isequal@4.5.0": {
@@ -994,6 +1146,7 @@
     "publisher": "John-David Dalton",
     "email": "john.david.dalton@gmail.com",
     "url": "http://allyoucanleet.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/lodash.isequal",
     "licenseFile": "node_modules/lodash.isequal/LICENSE"
   },
   "lodash@4.17.4": {
@@ -1002,6 +1155,7 @@
     "publisher": "John-David Dalton",
     "email": "john.david.dalton@gmail.com",
     "url": "http://allyoucanleet.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/lodash",
     "licenseFile": "node_modules/lodash/LICENSE"
   },
   "loose-envify@1.3.1": {
@@ -1009,6 +1163,7 @@
     "repository": "https://github.com/zertosh/loose-envify",
     "publisher": "Andres Suarez",
     "email": "zertosh@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/loose-envify",
     "licenseFile": "node_modules/loose-envify/LICENSE"
   },
   "lru-cache@2.6.5": {
@@ -1016,32 +1171,38 @@
     "repository": "https://github.com/isaacs/node-lru-cache",
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/proxy-agent/node_modules/lru-cache",
     "licenseFile": "node_modules/proxy-agent/node_modules/lru-cache/LICENSE"
   },
   "markdown-it-task-lists@2.0.1": {
     "licenses": "ISC",
     "repository": "https://github.com/revin/markdown-it-task-lists",
     "publisher": "Revin Guillen",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/markdown-it-task-lists",
     "licenseFile": "node_modules/markdown-it-task-lists/LICENSE"
   },
   "markdown-it@8.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/markdown-it/markdown-it",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/markdown-it",
     "licenseFile": "node_modules/markdown-it/LICENSE"
   },
   "mdurl@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/markdown-it/mdurl",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mdurl",
     "licenseFile": "node_modules/mdurl/LICENSE"
   },
   "mime-db@1.27.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-db",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mime-db",
     "licenseFile": "node_modules/mime-db/LICENSE"
   },
   "mime-types@2.1.15": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-types",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mime-types",
     "licenseFile": "node_modules/mime-types/LICENSE"
   },
   "minimatch@3.0.4": {
@@ -1050,6 +1211,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/minimatch",
     "licenseFile": "node_modules/minimatch/LICENSE"
   },
   "minimist@0.0.8": {
@@ -1058,6 +1220,7 @@
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/minimist",
     "licenseFile": "node_modules/minimist/LICENSE"
   },
   "mkdirp@0.5.1": {
@@ -1066,6 +1229,7 @@
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mkdirp",
     "licenseFile": "node_modules/mkdirp/LICENSE"
   },
   "modify-filename@1.1.0": {
@@ -1074,26 +1238,30 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/modify-filename",
     "licenseFile": "node_modules/modify-filename/license"
   },
-  "moment@2.18.1": {
+  "moment@2.20.1": {
     "licenses": "MIT",
     "repository": "https://github.com/moment/moment",
     "publisher": "Iskren Ivov Chernev",
     "email": "iskren.chernev@gmail.com",
     "url": "https://github.com/ichernev",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/moment",
     "licenseFile": "node_modules/moment/LICENSE"
   },
   "ms@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/zeit/ms",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ms",
     "licenseFile": "node_modules/ms/license.md"
   },
-  "nconf@0.8.4": {
+  "nconf@0.10.0": {
     "licenses": "MIT",
     "repository": "https://github.com/flatiron/nconf",
     "publisher": "Charlie Robbins",
     "email": "charlie.robbins@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/nconf",
     "licenseFile": "node_modules/nconf/LICENSE"
   },
   "netmask@1.0.6": {
@@ -1101,12 +1269,14 @@
     "repository": "https://github.com/rs/node-netmask",
     "publisher": "Olivier Poitrey",
     "email": "rs@dailymotion.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/netmask",
     "licenseFile": "node_modules/netmask/README.md"
   },
   "node-fetch@1.7.1": {
     "licenses": "MIT",
     "repository": "https://github.com/bitinn/node-fetch",
     "publisher": "David Frank",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/node-fetch",
     "licenseFile": "node_modules/node-fetch/LICENSE.md"
   },
   "number-is-nan@1.0.1": {
@@ -1115,6 +1285,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/number-is-nan",
     "licenseFile": "node_modules/number-is-nan/license"
   },
   "oauth-sign@0.8.2": {
@@ -1123,6 +1294,7 @@
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
     "url": "http://www.futurealoof.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/oauth-sign",
     "licenseFile": "node_modules/oauth-sign/LICENSE"
   },
   "object-assign@4.1.1": {
@@ -1131,6 +1303,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/object-assign",
     "licenseFile": "node_modules/object-assign/license"
   },
   "once@1.4.0": {
@@ -1139,6 +1312,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/once",
     "licenseFile": "node_modules/once/LICENSE"
   },
   "optionator@0.8.2": {
@@ -1146,6 +1320,7 @@
     "repository": "https://github.com/gkz/optionator",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/optionator",
     "licenseFile": "node_modules/optionator/LICENSE"
   },
   "os-locale@1.4.0": {
@@ -1154,6 +1329,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/nconf/node_modules/os-locale",
     "licenseFile": "node_modules/nconf/node_modules/os-locale/license"
   },
   "pac-proxy-agent@2.0.0": {
@@ -1162,6 +1338,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/pac-proxy-agent",
     "licenseFile": "node_modules/pac-proxy-agent/README.md"
   },
   "pac-resolver@3.0.0": {
@@ -1170,6 +1347,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/pac-resolver",
     "licenseFile": "node_modules/pac-resolver/README.md"
   },
   "path-exists@3.0.0": {
@@ -1178,6 +1356,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/path-exists",
     "licenseFile": "node_modules/path-exists/license"
   },
   "path-is-absolute@1.0.1": {
@@ -1186,6 +1365,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/path-is-absolute",
     "licenseFile": "node_modules/path-is-absolute/license"
   },
   "performance-now@0.2.0": {
@@ -1193,6 +1373,7 @@
     "repository": "https://github.com/meryn/performance-now",
     "publisher": "Meryn Stol",
     "email": "merynstol@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/performance-now",
     "licenseFile": "node_modules/performance-now/license.txt"
   },
   "prelude-ls@1.1.2": {
@@ -1200,17 +1381,20 @@
     "repository": "https://github.com/gkz/prelude-ls",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/prelude-ls",
     "licenseFile": "node_modules/prelude-ls/LICENSE"
   },
   "process-nextick-args@1.0.7": {
     "licenses": "MIT",
     "repository": "https://github.com/calvinmetcalf/process-nextick-args",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/process-nextick-args",
     "licenseFile": "node_modules/process-nextick-args/license.md"
   },
   "promise@7.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/then/promise",
     "publisher": "ForbesLindesay",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/promise",
     "licenseFile": "node_modules/promise/LICENSE"
   },
   "prop-types-extra@1.0.1": {
@@ -1218,11 +1402,13 @@
     "repository": "https://github.com/react-bootstrap/react-prop-types",
     "publisher": "Matthew L Smith",
     "email": "mtscout6@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/prop-types-extra",
     "licenseFile": "node_modules/prop-types-extra/LICENSE"
   },
   "prop-types@15.5.10": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/reactjs/prop-types",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/prop-types",
     "licenseFile": "node_modules/prop-types/LICENSE"
   },
   "proxy-agent@2.1.0": {
@@ -1231,6 +1417,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/proxy-agent",
     "licenseFile": "node_modules/proxy-agent/README.md"
   },
   "punycode@1.4.1": {
@@ -1238,7 +1425,16 @@
     "repository": "https://github.com/bestiejs/punycode.js",
     "publisher": "Mathias Bynens",
     "url": "https://mathiasbynens.be/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/punycode",
     "licenseFile": "node_modules/punycode/README.md"
+  },
+  "punycode@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/bestiejs/punycode.js",
+    "publisher": "Mathias Bynens",
+    "url": "https://mathiasbynens.be/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/twitter-text/node_modules/punycode",
+    "licenseFile": "node_modules/twitter-text/node_modules/punycode/README.md"
   },
   "pupa@1.0.0": {
     "licenses": "MIT",
@@ -1246,11 +1442,13 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/pupa",
     "licenseFile": "node_modules/pupa/license"
   },
   "qs@6.4.0": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/ljharb/qs",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/qs",
     "licenseFile": "node_modules/qs/LICENSE"
   },
   "raw-body@2.3.0": {
@@ -1259,6 +1457,7 @@
     "publisher": "Jonathan Ong",
     "email": "me@jongleberry.com",
     "url": "http://jongleberry.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/raw-body",
     "licenseFile": "node_modules/raw-body/LICENSE"
   },
   "react-bootstrap@0.31.2": {
@@ -1266,17 +1465,20 @@
     "repository": "https://github.com/react-bootstrap/react-bootstrap",
     "publisher": "Stephen J. Collings",
     "email": "stevoland@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-bootstrap",
     "licenseFile": "node_modules/react-bootstrap/LICENSE"
   },
   "react-codemirror@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/JedWatson/react-codemirror",
     "publisher": "Jed Watson",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-codemirror",
     "licenseFile": "node_modules/react-codemirror/LICENSE"
   },
   "react-dom@15.6.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/facebook/react",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-dom",
     "licenseFile": "node_modules/react-dom/LICENSE"
   },
   "react-overlays@0.7.0": {
@@ -1284,6 +1486,7 @@
     "repository": "https://github.com/react-bootstrap/react-overlays",
     "publisher": "Jason Quense",
     "email": "monastic.panic@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-overlays",
     "licenseFile": "node_modules/react-overlays/LICENSE"
   },
   "react-prop-types@0.4.0": {
@@ -1291,6 +1494,7 @@
     "repository": "https://github.com/react-bootstrap/react-prop-types",
     "publisher": "Matthew L Smith",
     "email": "mtscout6@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-prop-types",
     "licenseFile": "node_modules/react-prop-types/LICENSE"
   },
   "react-redux@5.0.6": {
@@ -1299,6 +1503,7 @@
     "publisher": "Dan Abramov",
     "email": "dan.abramov@me.com",
     "url": "http://github.com/gaearon",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-redux",
     "licenseFile": "node_modules/react-redux/LICENSE.md"
   },
   "react-split-pane@0.1.66": {
@@ -1306,6 +1511,7 @@
     "repository": "https://github.com/tomkp/react-split-pane",
     "publisher": "tomkp",
     "email": "tom@tomkp.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-split-pane",
     "licenseFile": "node_modules/react-split-pane/LICENSE"
   },
   "react-style-proptype@3.0.0": {
@@ -1313,11 +1519,13 @@
     "repository": "https://github.com/brigand/react-style-proptype",
     "publisher": "Frankie Bagnardi",
     "email": "f.bagnardi@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-style-proptype",
     "licenseFile": "node_modules/react-style-proptype/README.md"
   },
   "react@15.6.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/facebook/react",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react",
     "licenseFile": "node_modules/react/LICENSE"
   },
   "readable-stream@1.1.14": {
@@ -1326,11 +1534,13 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/readable-stream",
     "licenseFile": "node_modules/readable-stream/LICENSE"
   },
   "readable-stream@2.3.3": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/readable-stream",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/get-uri/node_modules/readable-stream",
     "licenseFile": "node_modules/get-uri/node_modules/readable-stream/LICENSE"
   },
   "redux-form@7.0.4": {
@@ -1339,6 +1549,7 @@
     "publisher": "Erik Rasmussen",
     "email": "rasmussenerik@gmail.com",
     "url": "http://github.com/erikras",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/redux-form",
     "licenseFile": "node_modules/redux-form/LICENSE"
   },
   "redux-thunk@2.2.0": {
@@ -1346,11 +1557,13 @@
     "repository": "https://github.com/gaearon/redux-thunk",
     "publisher": "Dan Abramov",
     "email": "dan.abramov@me.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/redux-thunk",
     "licenseFile": "node_modules/redux-thunk/LICENSE.md"
   },
   "redux@3.7.2": {
     "licenses": "MIT",
     "repository": "https://github.com/reactjs/redux",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/redux",
     "licenseFile": "node_modules/redux/LICENSE.md"
   },
   "regenerator-runtime@0.10.5": {
@@ -1358,6 +1571,7 @@
     "repository": "https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime",
     "publisher": "Ben Newman",
     "email": "bn@cs.stanford.edu",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/regenerator-runtime",
     "licenseFile": "node_modules/regenerator-runtime/README.md"
   },
   "request-promise-core@1.1.1": {
@@ -1365,6 +1579,7 @@
     "repository": "https://github.com/request/promise-core",
     "publisher": "Nicolai Kamenzky",
     "url": "https://github.com/analog-nico",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/request-promise-core",
     "licenseFile": "node_modules/request-promise-core/LICENSE"
   },
   "request-promise@4.2.1": {
@@ -1372,6 +1587,7 @@
     "repository": "https://github.com/request/request-promise",
     "publisher": "Nicolai Kamenzky",
     "url": "https://github.com/analog-nico",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/request-promise",
     "licenseFile": "node_modules/request-promise/LICENSE"
   },
   "request@2.81.0": {
@@ -1379,6 +1595,7 @@
     "repository": "https://github.com/request/request",
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/request",
     "licenseFile": "node_modules/request/LICENSE"
   },
   "rimraf@2.6.1": {
@@ -1387,6 +1604,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/rimraf",
     "licenseFile": "node_modules/rimraf/LICENSE"
   },
   "safe-buffer@5.1.1": {
@@ -1395,6 +1613,7 @@
     "publisher": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
     "url": "http://feross.org",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/safe-buffer",
     "licenseFile": "node_modules/safe-buffer/LICENSE"
   },
   "sax@1.2.4": {
@@ -1403,40 +1622,47 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/sax",
     "licenseFile": "node_modules/sax/LICENSE"
   },
   "secure-keys@1.0.0": {
     "licenses": "MIT",
     "publisher": "Jarrett Cruger",
     "email": "jcrugzz@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/secure-keys",
     "licenseFile": "node_modules/secure-keys/README.md"
   },
   "semver@5.0.3": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/agent-base/node_modules/semver",
     "licenseFile": "node_modules/agent-base/node_modules/semver/LICENSE"
   },
   "semver@5.4.1": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/semver",
     "licenseFile": "node_modules/electron-updater/node_modules/semver/LICENSE"
   },
   "setimmediate@1.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/YuzuJS/setImmediate",
     "publisher": "YuzuJS",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/setimmediate",
     "licenseFile": "node_modules/setimmediate/LICENSE.txt"
   },
   "setprototypeof@1.0.3": {
     "licenses": "ISC",
     "repository": "https://github.com/wesleytodd/setprototypeof",
     "publisher": "Wes Todd",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/setprototypeof",
     "licenseFile": "node_modules/setprototypeof/LICENSE"
   },
   "smart-buffer@1.1.15": {
     "licenses": "MIT",
     "repository": "https://github.com/JoshGlazebrook/smart-buffer",
     "publisher": "Josh Glazebrook",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/smart-buffer",
     "licenseFile": "node_modules/smart-buffer/LICENSE"
   },
   "sntp@1.0.9": {
@@ -1445,6 +1671,7 @@
     "publisher": "Eran Hammer",
     "email": "eran@hammer.io",
     "url": "http://hueniverse.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/sntp",
     "licenseFile": "node_modules/sntp/LICENSE"
   },
   "socks-proxy-agent@2.1.1": {
@@ -1453,6 +1680,7 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/socks-proxy-agent",
     "licenseFile": "node_modules/socks-proxy-agent/README.md"
   },
   "socks-proxy-agent@3.0.0": {
@@ -1461,17 +1689,20 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/pac-proxy-agent/node_modules/socks-proxy-agent",
     "licenseFile": "node_modules/pac-proxy-agent/node_modules/socks-proxy-agent/README.md"
   },
   "socks@1.1.10": {
     "licenses": "MIT",
     "repository": "https://github.com/JoshGlazebrook/socks",
     "publisher": "Josh Glazebrook",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/socks",
     "licenseFile": "node_modules/socks/LICENSE"
   },
-  "source-map-support@0.4.18": {
+  "source-map-support@0.5.0": {
     "licenses": "MIT",
     "repository": "https://github.com/evanw/node-source-map-support",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/source-map-support",
     "licenseFile": "node_modules/electron-updater/node_modules/source-map-support/LICENSE.md"
   },
   "source-map@0.2.0": {
@@ -1479,14 +1710,16 @@
     "repository": "https://github.com/mozilla/source-map",
     "publisher": "Nick Fitzgerald",
     "email": "nfitzgerald@mozilla.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/escodegen/node_modules/source-map",
     "licenseFile": "node_modules/escodegen/node_modules/source-map/LICENSE"
   },
-  "source-map@0.5.6": {
+  "source-map@0.6.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/mozilla/source-map",
     "publisher": "Nick Fitzgerald",
     "email": "nfitzgerald@mozilla.com",
-    "licenseFile": "node_modules/source-map/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/source-map",
+    "licenseFile": "node_modules/electron-updater/node_modules/source-map/LICENSE"
   },
   "sprintf-js@1.0.3": {
     "licenses": "BSD-3-Clause",
@@ -1494,12 +1727,14 @@
     "publisher": "Alexandru Marasteanu",
     "email": "hello@alexei.ro",
     "url": "http://alexei.ro/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/sprintf-js",
     "licenseFile": "node_modules/sprintf-js/LICENSE"
   },
   "sshpk@1.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/arekinath/node-sshpk",
     "publisher": "Joyent, Inc",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/sshpk",
     "licenseFile": "node_modules/sshpk/LICENSE"
   },
   "stack-trace@0.0.10": {
@@ -1508,11 +1743,13 @@
     "publisher": "Felix Geisendörfer",
     "email": "felix@debuggable.com",
     "url": "http://debuggable.com/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/stack-trace",
     "licenseFile": "node_modules/stack-trace/License"
   },
   "statuses@1.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/statuses",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/statuses",
     "licenseFile": "node_modules/statuses/LICENSE"
   },
   "stealthy-require@1.1.1": {
@@ -1520,6 +1757,7 @@
     "repository": "https://github.com/analog-nico/stealthy-require",
     "publisher": "Nicolai Kamenzky",
     "url": "https://github.com/analog-nico",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/stealthy-require",
     "licenseFile": "node_modules/stealthy-require/LICENSE"
   },
   "string-width@1.0.2": {
@@ -1528,16 +1766,19 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/string-width",
     "licenseFile": "node_modules/string-width/license"
   },
   "string_decoder@0.10.31": {
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/string_decoder",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/string_decoder",
     "licenseFile": "node_modules/string_decoder/LICENSE"
   },
   "string_decoder@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/string_decoder",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/get-uri/node_modules/string_decoder",
     "licenseFile": "node_modules/get-uri/node_modules/string_decoder/LICENSE"
   },
   "stringstream@0.0.5": {
@@ -1546,6 +1787,7 @@
     "publisher": "Michael Hart",
     "email": "michael.hart.au@gmail.com",
     "url": "http://github.com/mhart",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/stringstream",
     "licenseFile": "node_modules/stringstream/LICENSE.txt"
   },
   "strip-ansi@3.0.1": {
@@ -1554,6 +1796,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/strip-ansi",
     "licenseFile": "node_modules/strip-ansi/license"
   },
   "symbol-observable@1.0.4": {
@@ -1561,11 +1804,13 @@
     "repository": "https://github.com/blesh/symbol-observable",
     "publisher": "Ben Lesh",
     "email": "ben@benlesh.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/symbol-observable",
     "licenseFile": "node_modules/symbol-observable/license"
   },
   "thunkify@2.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/visionmedia/node-thunkify",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/thunkify",
     "licenseFile": "node_modules/thunkify/Readme.md"
   },
   "tough-cookie@2.3.2": {
@@ -1573,6 +1818,7 @@
     "repository": "https://github.com/salesforce/tough-cookie",
     "publisher": "Jeremy Stashewsky",
     "email": "jstashewsky@salesforce.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/tough-cookie",
     "licenseFile": "node_modules/tough-cookie/LICENSE"
   },
   "tunnel-agent@0.6.0": {
@@ -1581,18 +1827,21 @@
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
     "url": "http://www.futurealoof.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/tunnel-agent",
     "licenseFile": "node_modules/tunnel-agent/LICENSE"
   },
   "tweetnacl@0.14.5": {
     "licenses": "Unlicense",
     "repository": "https://github.com/dchest/tweetnacl-js",
     "publisher": "TweetNaCl-js contributors",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/tweetnacl",
     "licenseFile": "node_modules/tweetnacl/LICENSE"
   },
-  "twitter-text@1.14.7": {
+  "twitter-text@2.0.2": {
     "licenses": "Apache*",
     "repository": "https://github.com/twitter/twitter-text-js",
     "publisher": "Twitter Inc.",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/twitter-text",
     "licenseFile": "node_modules/twitter-text/LICENSE"
   },
   "type-check@0.3.2": {
@@ -1600,6 +1849,7 @@
     "repository": "https://github.com/gkz/type-check",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/type-check",
     "licenseFile": "node_modules/type-check/LICENSE"
   },
   "ua-parser-js@0.7.13": {
@@ -1608,11 +1858,13 @@
     "publisher": "Faisal Salman",
     "email": "fyzlman@gmail.com",
     "url": "http://faisalman.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ua-parser-js",
     "licenseFile": "node_modules/ua-parser-js/readme.md"
   },
   "uc.micro@1.0.3": {
     "licenses": "WTFPL",
     "repository": "https://github.com/markdown-it/uc.micro",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uc.micro",
     "licenseFile": "node_modules/uc.micro/README.md"
   },
   "uncontrollable@4.1.0": {
@@ -1620,6 +1872,7 @@
     "repository": "https://github.com/jquense/uncontrollable",
     "publisher": "Jason Quense",
     "email": "monastic.panic@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uncontrollable",
     "licenseFile": "node_modules/uncontrollable/README.md"
   },
   "universalify@0.1.0": {
@@ -1627,6 +1880,7 @@
     "repository": "https://github.com/RyanZim/universalify",
     "publisher": "Ryan Zimmerman",
     "email": "opensrc@ryanzim.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/universalify",
     "licenseFile": "node_modules/universalify/LICENSE"
   },
   "unpipe@1.0.0": {
@@ -1634,6 +1888,7 @@
     "repository": "https://github.com/stream-utils/unpipe",
     "publisher": "Douglas Christopher Wilson",
     "email": "doug@somethingdoug.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/unpipe",
     "licenseFile": "node_modules/unpipe/LICENSE"
   },
   "unused-filename@0.1.0": {
@@ -1642,6 +1897,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/unused-filename",
     "licenseFile": "node_modules/unused-filename/license"
   },
   "util-deprecate@1.0.2": {
@@ -1650,16 +1906,19 @@
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/util-deprecate",
     "licenseFile": "node_modules/util-deprecate/LICENSE"
   },
   "uuid@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/kelektiv/node-uuid",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uuid",
     "licenseFile": "node_modules/uuid/LICENSE.md"
   },
   "verror@1.3.6": {
     "licenses": "MIT*",
     "repository": "https://github.com/davepacheco/node-verror",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/verror",
     "licenseFile": "node_modules/verror/LICENSE"
   },
   "warning@3.0.0": {
@@ -1668,11 +1927,13 @@
     "publisher": "Berkeley Martinez",
     "email": "berkeley@r3dm.com",
     "url": "http://www.freecodecamp.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/warning",
     "licenseFile": "node_modules/warning/LICENSE.md"
   },
   "whatwg-fetch@2.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/github/fetch",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/whatwg-fetch",
     "licenseFile": "node_modules/whatwg-fetch/LICENSE"
   },
   "window-size@0.1.4": {
@@ -1680,6 +1941,7 @@
     "repository": "https://github.com/jonschlinkert/window-size",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/nconf/node_modules/window-size",
     "licenseFile": "node_modules/nconf/node_modules/window-size/LICENSE"
   },
   "winston@2.3.1": {
@@ -1687,6 +1949,7 @@
     "repository": "https://github.com/winstonjs/winston",
     "publisher": "Charlie Robbins",
     "email": "charlie.robbins@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/winston",
     "licenseFile": "node_modules/winston/LICENSE"
   },
   "wordwrap@1.0.0": {
@@ -1695,6 +1958,7 @@
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/wordwrap",
     "licenseFile": "node_modules/wordwrap/LICENSE"
   },
   "wrap-ansi@2.1.0": {
@@ -1703,6 +1967,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/wrap-ansi",
     "licenseFile": "node_modules/wrap-ansi/license"
   },
   "wrappy@1.0.2": {
@@ -1711,21 +1976,15 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/wrappy",
     "licenseFile": "node_modules/wrappy/LICENSE"
-  },
-  "xelement@1.0.16": {
-    "licenses": "MIT",
-    "repository": "https://github.com/dongariteja/xelement",
-    "publisher": "Rakesh Dhandra Dharmateja Dongari",
-    "email": "dongariteja@gmail.com",
-    "url": "https://in.linkedin.com/in/rakeshdongari",
-    "licenseFile": "node_modules/xelement/LICENSE"
   },
   "xregexp@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/slevithan/XRegExp",
     "publisher": "Steven Levithan",
     "email": "steves_list@hotmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/xregexp",
     "licenseFile": "node_modules/xregexp/README.md"
   },
   "y18n@3.2.1": {
@@ -1733,6 +1992,7 @@
     "repository": "https://github.com/yargs/y18n",
     "publisher": "Ben Coe",
     "email": "ben@npmjs.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/y18n",
     "licenseFile": "node_modules/y18n/LICENSE"
   },
   "yargs@3.32.0": {
@@ -1741,6 +2001,7 @@
     "publisher": "Alex Ford",
     "email": "Alex.Ford@CodeTunnel.com",
     "url": "http://CodeTunnel.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/nconf/node_modules/yargs",
     "licenseFile": "node_modules/nconf/node_modules/yargs/LICENSE"
   }
 }
