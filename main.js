@@ -27,6 +27,12 @@ initGlobalLogger()
 
 logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} -----\n`)
 
+logger.info(`[conf] Looking for .leptonrc at ${ app.getPath('home') + '/.leptonrc' }`)
+logger.info('[conf] The resolved configuration is ...')
+for (const key of Object.getOwnPropertyNames(defaultConfig)) {
+  logger.info(`"${key}": ${JSON.stringify(nconf.get(key))}`)    
+}
+
 let mainWindow = null
 
 const keyShortcutForSearch = 'Shift+Space'
@@ -139,10 +145,14 @@ app.on('window-all-closed', function() {
 })
 
 app.on('before-quit', function() {
-  // If we launch the app and close it quickly, we might run into a 
-  // situation where electronLocalshortcut is not initialized.
-  if (mainWindow && electronLocalshortcut) {
-    electronLocalshortcut.unregisterAll(mainWindow)
+  try {
+    // If we launch the app and close it quickly, we might run into a 
+    // situation where electronLocalshortcut is not initialized.
+    if (mainWindow && electronLocalshortcut) {
+      electronLocalshortcut.unregisterAll(mainWindow)
+    }
+  } catch (e) {
+    logger.error(e)
   }
 })
 
@@ -213,12 +223,7 @@ function initGlobalConfigs () {
     logger.error('[.leptonrc] Please correct the mistakes in your configuration file: [%s].\n' + error, configFilePath)
   }
 
-  nconf.defaults(defaultConfig)
-  logger.info('[conf] The resolved configuration is ...')
-  for (const key of Object.getOwnPropertyNames(defaultConfig)) {
-    logger.info(`"${key}": ${JSON.stringify(nconf.get(key))}`)    
-  }
-    
+  nconf.defaults(defaultConfig)  
   global.conf = nconf
 }
 

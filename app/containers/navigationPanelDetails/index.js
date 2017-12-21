@@ -10,6 +10,7 @@ import './index.scss'
 
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
+const conf = remote.getGlobal('conf')
 
 class NavigationPanelDetails extends Component {
   componentDidUpdate () {
@@ -58,6 +59,7 @@ class NavigationPanelDetails extends Component {
       )
     }
 
+    const rawGists = []
     gistTags[activeGistTag].forEach((gistId) => {
       // During the synchronization, gists will be updated before the gistTags,
       // which introduces an interval where a gist exists in gistTags but not in
@@ -70,22 +72,34 @@ class NavigationPanelDetails extends Component {
         // it shows to the original description. It provides users the flexibility
         // to decide what to be shown in the thumbnail.
         const gist = gists[gistId]
-        const firstFilename = Object.keys(gist.brief.files)[0]
-        // '' will be converted to false, so this statement can handle situations
-        // for null, '' and undefined
-        const rawDescription = gist.brief.description || firstFilename
-
-        const { title, description } = descriptionParser(rawDescription)
-        const thumbnailTitle = title.length > 0 ? title : description
-        snippetThumbnails.push(
-          <li className='snippet-thumnail-list-item' key={ gistId } ref={ gistId }>
-            <div className={ this.decideSnippetListItemClass(gistId) }
-              onClick={ this.handleClicked.bind(this, gistId) }>
-              <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
-            </div>
-          </li>
-        )
+        rawGists.push(gist)
       }
+    })
+
+    const sortingKey = conf.get('snippet:sorting')
+    const sortingReverse = conf.get('snippet:sortingReverse')
+    if (sortingReverse) 
+      rawGists.sort((g1, g2) => g2.brief[sortingKey].localeCompare(g1.brief[sortingKey]))
+    else 
+      rawGists.sort((g1, g2) => g1.brief[sortingKey].localeCompare(g2.brief[sortingKey]))
+
+    rawGists.forEach((gist) => {
+      const firstFilename = Object.keys(gist.brief.files)[0]
+      // '' will be converted to false, so this statement can handle situations
+      // for null, '' and undefined
+      const rawDescription = gist.brief.description || firstFilename
+
+      const { title, description } = descriptionParser(rawDescription)
+      const thumbnailTitle = title.length > 0 ? title : description
+      const gistId = gist.brief.id
+      snippetThumbnails.push(
+        <li className='snippet-thumnail-list-item' key={ gistId } ref={ gistId }>
+          <div className={ this.decideSnippetListItemClass(gistId) }
+            onClick={ this.handleClicked.bind(this, gistId) }>
+            <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
+          </div>
+        </li>
+      )
     })
 
     return snippetThumbnails

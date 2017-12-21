@@ -97,7 +97,7 @@ function getAllGistsV2 (token, userId) {
       return Promise.all(requests)
     })
     .then(() => {
-      gistList.sort((g1, g2) => g2.last_updated_at - g1.last_updated_at)
+      gistList.sort((g1, g2) => g2.updated_at.localeCompare(g1.updated_at))
       return gistList
     })
 }
