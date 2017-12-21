@@ -19,7 +19,7 @@ import './index.scss'
 
 class AppContainer extends Component {
   renderAboutPage () {
-    const { aboutModalStatus, updateAboutModalStatus } = this.props
+    const { updateAboutModalStatus } = this.props
     return (
       <AboutPage updateAboutModalStatus = { updateAboutModalStatus }/>
     )

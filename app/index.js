@@ -416,16 +416,15 @@ function updateLocalStorage (data) {
   logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
 
   logger.debug(`-----> Caching image ${data.image}`)
-  if (!data.image) {
-    rst = electronLocalStorage.set('image', data.image)
-    logger.debug(`-----> [${rst.status}] Cached image ${data.image}`)    
-  } else {
-    downloadImage(data.image, data.profile)    
-  }
+  downloadImage(data.image, data.profile)
 }
 
 function downloadImage (imageUrl, filename) {
-  if (!imageUrl) return
+  if (!imageUrl) {
+    logger.debug(`-----> imageUrl is null`)
+    return
+  }
+
   const userProfilePath = (remote.app).getPath('userData') + '/profile/'
   if (!fs.existsSync(userProfilePath)) {
     fs.mkdirSync(userProfilePath)
@@ -436,9 +435,13 @@ function downloadImage (imageUrl, filename) {
     url: imageUrl,
     dest: imagePath,
     done: function (err, filename, image) {
-      if (err) logger.error(err)
+      if (err) {
+        logger.error(err)
+        return
+      }
 
-      electronLocalStorage.set('image', imagePath)
+      const rst = electronLocalStorage.set('image', imagePath)
+      logger.debug(`-----> [${rst.status}] Cached image ${imagePath}`)
     },
   })
 }
