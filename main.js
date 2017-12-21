@@ -207,6 +207,7 @@ function setUpApplicationMenu () {
 
 function initGlobalConfigs () {
   const configFilePath = app.getPath('home') + '/.leptonrc'
+  logger.info(`[conf] Looking for .leptonrc at ${configFilePath}`)
   nconf.argv().env()
   try {
     nconf.file({ file: configFilePath })
@@ -215,7 +216,11 @@ function initGlobalConfigs () {
   }
 
   nconf.defaults(defaultConfig)
-
+  logger.info('[conf] The resolved configuration is ...')
+  for (const key of Object.getOwnPropertyNames(defaultConfig)) {
+    logger.info(`"${key}": ${JSON.stringify(nconf.get(key))}`)    
+  }
+    
   global.conf = nconf
 }
 
