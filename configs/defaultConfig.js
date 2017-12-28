@@ -1,6 +1,6 @@
 module.exports = {
     'logger': {
-        'level': 'debug'
+        'level': 'info'
     },
     'proxy': {
         'enable': false,

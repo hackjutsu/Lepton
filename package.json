@@ -1,7 +1,7 @@
 {
   "name": "Lepton",
-  "version": "1.5.1-alpha-4",
-  "description": "AWESOME Gist client for everyone, everywhere!",
+  "version": "1.5.1",
+  "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
   "scripts": {
