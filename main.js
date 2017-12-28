@@ -1,5 +1,6 @@
 'use strict'
 
+const os = require('os')
 const electron = require('electron')
 const nconf = require('nconf')
 const windowStateKeeper = require('electron-window-state')
@@ -8,6 +9,7 @@ const Menu = electron.Menu
 const app = electron.app
 const ipcMain = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
+let willQuitApp = false
 
 // http://electron.rocks/sharing-between-main-and-renderer-process/
 // Set up the logger
@@ -25,7 +27,7 @@ autoUpdater.autoDownload = false
 initGlobalConfigs()
 initGlobalLogger()
 
-logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} -----\n`)
+logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} ${os.platform()}-----\n`)
 
 logger.info(`[conf] Looking for .leptonrc at ${ app.getPath('home') + '/.leptonrc' }`)
 logger.info('[conf] The resolved configuration is ...')
@@ -83,7 +85,7 @@ function createWindow (autoLogin) {
   // and restore the maximized or full screen state
   mainWindowState.manage(mainWindow);
 
-  mainWindow.webContents.on('will-navigate', function(e, url) {
+  mainWindow.webContents.on('will-navigate', (e, url) => {
     e.preventDefault()
     electron.shell.openExternal(url)
   })
@@ -121,6 +123,16 @@ function createWindow (autoLogin) {
     }
   })
 
+  mainWindow.on('close', (e) => {
+    if (os.platform() === 'darwin' && !willQuitApp) {
+      // Hide the window when users close the window on macOS
+      e.preventDefault()
+      mainWindow.hide()
+    } else {
+      mainWindow = null
+    }
+  });
+
   const ContextMenu = require('electron-context-menu')
   ContextMenu({
     prepend: (params, mainWindow) => []
@@ -133,18 +145,22 @@ function createWindow (autoLogin) {
   global.mainWindow = mainWindow
 }
 
-app.on('ready', function() {
+app.on('ready', () => {
     // createWindow()
     createWindowAndAutoLogin()
 })
 
-app.on('window-all-closed', function() {
+app.on('window-all-closed', () => {
   logger.info('The app window is closed')
   if (process.platform !== 'darwin') app.quit()
   mainWindow = null
 })
 
-app.on('before-quit', function() {
+
+/* 'before-quit' is emitted when Electron receives 
+ * the signal to exit and wants to start closing windows */
+app.on('before-quit', () => {
+  willQuitApp = true
   try {
     // If we launch the app and close it quickly, we might run into a 
     // situation where electronLocalshortcut is not initialized.
@@ -156,15 +172,9 @@ app.on('before-quit', function() {
   }
 })
 
-// 'activate' is a macOS specific signal mapped to 
-// 'applicationShouldHandleReopen' event
-app.on('activate', (event, hasVisibleWindows) => {
-  // On macOS, if an app is not fully closed, it is expected to open again
-  // when the icon is clicked.
-  if (mainWindow === null && !hasVisibleWindows && app.isReady()) {
-    createWindowAndAutoLogin()
-  }
-})
+// 'activate' is emitted when the user clicks the Dock icon (OS X).
+// It is a macOS specific signal mapped to 'applicationShouldHandleReopen' event
+app.on('activate', () => mainWindow.show())
 
 function setUpApplicationMenu () {
   // Create the Application's main menu

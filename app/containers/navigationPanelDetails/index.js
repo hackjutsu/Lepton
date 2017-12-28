@@ -78,10 +78,11 @@ class NavigationPanelDetails extends Component {
 
     const sortingKey = conf.get('snippet:sorting')
     const sortingReverse = conf.get('snippet:sortingReverse')
-    if (sortingReverse) 
+    if (sortingReverse) {
       rawGists.sort((g1, g2) => g2.brief[sortingKey].localeCompare(g1.brief[sortingKey]))
-    else 
+    } else {
       rawGists.sort((g1, g2) => g1.brief[sortingKey].localeCompare(g2.brief[sortingKey]))
+    }
 
     rawGists.forEach((gist) => {
       const firstFilename = Object.keys(gist.brief.files)[0]

@@ -136,16 +136,16 @@ function launchAuthWindow (token) {
   }
 
   // Handle the response from GitHub - See Update from 4/12/2015
-  authWindow.webContents.on('will-navigate', function (event, url) {
+  authWindow.webContents.on('will-navigate', (event, url) => {
     handleCallback(url)
   })
 
-  authWindow.webContents.on('did-get-redirect-request', function (event, oldUrl, newUrl) {
+  authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
     handleCallback(newUrl)
   })
 
   // Reset the authWindow on close
-  authWindow.on('close', function () {
+  authWindow.on('close', () => {
     updateAuthWindowStatusOff()
     authWindow = null
   }, false)
@@ -434,7 +434,7 @@ function downloadImage (imageUrl, filename) {
   ImageDownloader({
     url: imageUrl,
     dest: imagePath,
-    done: function (err, filename, image) {
+    done: (err, filename, image) => {
       if (err) {
         logger.error(err)
         return

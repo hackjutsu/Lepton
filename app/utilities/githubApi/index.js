@@ -122,7 +122,7 @@ const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
 function getAllGistsV1 (token, userId) {
   logger.debug(TAG + `[V1] Getting all gists of ${userId} with token ${token}`)
   let gistList = []
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     const maxPageNumber = 100
     let funcs = Promise.resolve(
       makeRangeArr(1, maxPageNumber).map(
@@ -145,9 +145,9 @@ function getAllGistsV1 (token, userId) {
   }
 
   function makeRequestForGetAllGists (option) {
-    return function () {
-      return new Promise(function (resolve, reject) {
-        Request(option, function (error, response, body) {
+    return () => {
+      return new Promise((resolve, reject) => {
+        Request(option, (error, response, body) => {
           logger.debug('The gist number on this page is ' + body.length)
           if (error) {
             reject(error)

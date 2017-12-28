@@ -6,7 +6,7 @@ import MdTaskList from 'markdown-it-task-lists'
 
 // Configure markdown-it
 const Md = MarkdownIt({
-  highlight: function (str, lang) {
+  highlight: (str, lang) => {
     return HighlightJS.highlightAuto(str).value
   }
 })
