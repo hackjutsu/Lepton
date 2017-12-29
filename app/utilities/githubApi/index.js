@@ -8,7 +8,7 @@ import ProxyAgent from 'proxy-agent'
 import { remote } from 'electron'
 
 const TAG = '[REST] '
-const kTimeoutUnit = 5 * 1000 // ms
+const kTimeoutUnit = 10 * 1000 // ms
 const logger = remote.getGlobal('logger')
 const conf = remote.getGlobal('conf')
 const userAgent = 'hackjutsu-lepton-app'
@@ -132,7 +132,7 @@ function getAllGistsV1 (token, userId) {
       .catch(err => {
         if (err !== EMPTY_PAGE_ERROR_MESSAGE) {
           logger.error(err)
-          Notifier('Sync failed', 'Please check your network condition.')
+          Notifier('Sync failed', 'Please check your network condition. 05')
         }
       })
       .finally(() => {

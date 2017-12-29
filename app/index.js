@@ -127,7 +127,7 @@ function launchAuthWindow (token) {
         })
         .catch((err) => {
           logger.error('Failed: ' + JSON.stringify(err.error))
-          Notifier('Sync failed', 'Please check your network condition.')
+          Notifier('Sync failed', 'Please check your network condition. 03')
         })
     } else if (error) {
       logger.error('Oops! Something went wrong and we couldn\'t' +
@@ -357,7 +357,7 @@ function updateUserGists (userLoginId, token) {
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
     })
     .catch(err => {
-      Notifier('Sync failed', 'Please check your network condition.')
+      Notifier('Sync failed', 'Please check your network condition. 04')
       logger.error('The request has failed: ' + err)
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
       throw err
@@ -378,13 +378,17 @@ function initUserSession (token) {
       return updateUserGists(profile.login, token)
     })
     .then(() => {
-      logger.debug('-----> from updateUserGists')
+      logger.debug('-----> before updateLocalStorage')
       updateLocalStorage({
         token: token,
         profile: newProfile.login,
         image: newProfile.avatar_url
       })
+      logger.debug('-----> after updateLocalStorage')      
+
+      logger.debug('-----> before syncLocalPref')      
       syncLocalPref(newProfile.login)
+      logger.debug('-----> after syncLocalPref')      
 
       logger.info('[Dispatch] updateUserSession ACTIVE')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
@@ -400,23 +404,29 @@ function initUserSession (token) {
         logger.info('[Dispatch] updateUserSession INACTIVE')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
       }
-      Notifier('Sync failed', 'Please check your network condition.')
+      Notifier('Sync failed', 'Please check your network condition. 00')
     })
 }
 /** End: User session management **/
 
 /** Start: Local storage management **/
 function updateLocalStorage (data) {
-  logger.debug(`-----> Caching token ${data.token}`)
-  let rst = electronLocalStorage.set('token', data.token)
-  logger.debug(`-----> [${rst.status}] Cached token ${data.token}`)
+  try {
+    logger.debug(`-----> Caching token ${data.token}`)
+    let rst = electronLocalStorage.set('token', data.token)
+    logger.debug(`-----> [${rst.status}] Cached token ${data.token}`)
 
-  logger.debug(`-----> Caching profile ${data.profile}`)
-  rst = electronLocalStorage.set('profile', data.profile)
-  logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
+    logger.debug(`-----> Caching profile ${data.profile}`)
+    rst = electronLocalStorage.set('profile', data.profile)
+    logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
 
-  logger.debug(`-----> Caching image ${data.image}`)
-  downloadImage(data.image, data.profile)
+    logger.debug(`-----> Caching image ${data.image}`)
+    downloadImage(data.image, data.profile)
+
+    logger.debug(`-----> User info is cached.`)
+  } catch (e) {
+    logger.err(`-----> Failed to cache user info. ${JSON.stringify(e)}`)
+  }
 }
 
 function downloadImage (imageUrl, filename) {
@@ -465,9 +475,13 @@ function getCachedUserInfo () {
 }
 
 function syncLocalPref (userName) {
-  const pinnedTags = localPref && localPref.get(userName)
-    ? localPref.get(userName).pinnedTags
-    : []
+  logger.debug(`-----> Inside syncLocalPref with userName ${userName}`)
+  let pinnedTags = []
+  if (localPref && localPref.get(userName)) {
+    pinnedTags = localPref.get(userName).pinnedTags
+  }
+
+  logger.debug(`-----> pinnedTags are ${JSON.stringify(pinnedTags)}`)
   logger.info('[Dispatch] updatePinnedTags')
   reduxStore.dispatch(updatePinnedTags(pinnedTags))
 }

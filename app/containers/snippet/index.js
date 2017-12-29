@@ -73,7 +73,7 @@ class Snippet extends Component {
       .catch(err => {
         logger.error('Failed to delete the gist ' + activeGist)
         logger.error(JSON.stringify(err))
-        Notifier('Deletion failed', 'Please check your network condition.')
+        Notifier('Deletion failed', 'Please check your network condition. 02')
       })
       .then(data => {
         logger.info('The gist ' + activeGist + ' has been deleted.')
