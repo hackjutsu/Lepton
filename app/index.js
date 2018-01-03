@@ -477,7 +477,7 @@ function getCachedUserInfo () {
 function syncLocalPref (userName) {
   logger.debug(`-----> Inside syncLocalPref with userName ${userName}`)
   let pinnedTags = []
-  if (localPref && localPref.get(userName)) {
+  if (localPref && localPref.get(userName) && localPref.get(userName).pinnedTags) {
     pinnedTags = localPref.get(userName).pinnedTags
   }
 
