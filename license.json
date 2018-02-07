@@ -1,5 +1,5 @@
 {
-  "Lepton@1.5.2-alpha-2": {
+  "Lepton@1.5.2-alpha-3": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -167,7 +167,7 @@
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
     "publisher": "Vladimir Krivosheev",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/bluebird-lst"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/bluebird-lst"
   },
   "bluebird@3.5.0": {
     "licenses": "MIT",
@@ -184,8 +184,8 @@
     "publisher": "Petka Antonov",
     "email": "petka_antonov@hotmail.com",
     "url": "http://github.com/petkaantonov/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/bluebird",
-    "licenseFile": "node_modules/electron-updater/node_modules/bluebird/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/bluebird-lst/node_modules/bluebird",
+    "licenseFile": "node_modules/bluebird-lst/node_modules/bluebird/LICENSE"
   },
   "boom@2.10.1": {
     "licenses": "BSD-3-Clause",
@@ -211,12 +211,12 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/brace-expansion",
     "licenseFile": "node_modules/brace-expansion/README.md"
   },
-  "builder-util-runtime@3.4.1": {
+  "builder-util-runtime@4.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/builder-util-runtime",
-    "licenseFile": "node_modules/electron-updater/node_modules/builder-util-runtime/readme.md"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/builder-util-runtime",
+    "licenseFile": "node_modules/builder-util-runtime/readme.md"
   },
   "bytes@2.5.0": {
     "licenses": "MIT",
@@ -383,8 +383,8 @@
     "repository": "https://github.com/visionmedia/debug",
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/debug",
-    "licenseFile": "node_modules/electron-updater/node_modules/debug/LICENSE"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/builder-util-runtime/node_modules/debug",
+    "licenseFile": "node_modules/builder-util-runtime/node_modules/debug/LICENSE"
   },
   "decamelize@1.2.0": {
     "licenses": "MIT",
@@ -513,7 +513,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-localshortcut",
     "licenseFile": "node_modules/electron-localshortcut/license"
   },
-  "electron-updater@2.17.6": {
+  "electron-updater@2.20.1": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
@@ -1096,8 +1096,8 @@
     "licenses": "MIT",
     "repository": "https://github.com/develar/read-config-file",
     "publisher": "Vladimir Krivosheev",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/lazy-val",
-    "licenseFile": "node_modules/electron-updater/node_modules/lazy-val/readme.md"
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/lazy-val",
+    "licenseFile": "node_modules/lazy-val/readme.md"
   },
   "lcid@1.0.0": {
     "licenses": "MIT",
@@ -1638,7 +1638,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/agent-base/node_modules/semver",
     "licenseFile": "node_modules/agent-base/node_modules/semver/LICENSE"
   },
-  "semver@5.4.1": {
+  "semver@5.5.0": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/semver",
@@ -1699,7 +1699,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/socks",
     "licenseFile": "node_modules/socks/LICENSE"
   },
-  "source-map-support@0.5.0": {
+  "source-map-support@0.5.3": {
     "licenses": "MIT",
     "repository": "https://github.com/evanw/node-source-map-support",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/source-map-support",
@@ -1875,7 +1875,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uncontrollable",
     "licenseFile": "node_modules/uncontrollable/README.md"
   },
-  "universalify@0.1.0": {
+  "universalify@0.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/RyanZim/universalify",
     "publisher": "Ryan Zimmerman",

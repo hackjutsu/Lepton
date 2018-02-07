@@ -125,6 +125,8 @@ Copy and paste the following snippet to `~/.leptonrc`. Create the file if it doe
   }
 }
 ```
+> Checkout the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) for more configuration options.
+
 
 #### Feedback
 - Submit an [issue](https://github.com/hackjutsu/Lepton/issues).

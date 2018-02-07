@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "1.5.2-alpha-2",
+  "version": "1.5.2-alpha-3",
   "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
@@ -33,8 +33,8 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.28.4",
-    "electron": "^1.7.10",
-    "electron-builder": "^19.50.0",
+    "electron": "1.7.12",
+    "electron-builder": "^19.50.4",
     "eslint": "^4.7.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
