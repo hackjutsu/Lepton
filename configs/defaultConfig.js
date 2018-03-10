@@ -11,5 +11,11 @@ module.exports = {
         'sortingReverse': true,
         'expanded': true,
         'newSnippetPrivate': false
+    },
+    'enterprise': {
+        'enable': false,
+        'host': '',
+        'token': '',
+        'avatarUrl': ''
     }
 }

@@ -4,11 +4,17 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { remote, ipcRenderer } from 'electron'
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
-import defaultImage from './github.jpg'
+import octocatImage from '../../utilities/octodex/dojocat.jpg'
 
 import './index.scss'
 
+const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
+
+let defaultImage = octocatImage
+if (conf.get('enterprise:enable') && conf.get('enterprise:avatarUrl')) {
+  defaultImage = conf.get('enterprise:avatarUrl')
+}
 
 class LoginPage extends Component {
   componentWillMount () {
@@ -46,7 +52,14 @@ class LoginPage extends Component {
   handleContinueButtonClicked () {
     const { loggedInUserInfo } = this.props
     logger.debug('-----> Inside LoginPage handleContinueButtonClicked with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
-    const token = loggedInUserInfo ? loggedInUserInfo.token : null
+    
+    let token = null
+    if (conf.get('enterprise:enable')) {
+      token = conf.get('enterprise:token')
+    } else if (loggedInUserInfo) {
+      token = loggedInUserInfo.token
+    }
+
     if (this.props.authWindowStatus === 'OFF') {
       this.props.launchAuthWindow(token)
     }
@@ -60,6 +73,20 @@ class LoginPage extends Component {
       return (
         <div className='button-group-modal'>
           <ProgressBar active now={ 100 }/>
+        </div>
+      )
+    }
+
+    if (conf.get('enterprise:enable')) {
+      return (
+        <div className='button-group-modal'>
+          <Button
+            autoFocus
+            className='modal-button'
+            bsStyle="success"
+            onClick={ this.handleContinueButtonClicked.bind(this) }>
+            Continue as { loggedInUserName }
+          </Button>
         </div>
       )
     }
@@ -112,7 +139,7 @@ class LoginPage extends Component {
     const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
 
     let profileImage = cachedImage || defaultImage
-    if (loggedInUserName === null || loggedInUserName === 'null') {
+    if (loggedInUserName === null || loggedInUserName === 'null' || conf.get('enterprise:enable')) {
       profileImage = defaultImage
     }
 

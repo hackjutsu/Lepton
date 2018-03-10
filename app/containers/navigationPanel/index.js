@@ -19,6 +19,7 @@ import plusIcon from './plus.svg'
 
 import './index.scss'
 
+const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
 class NavigationPanel extends Component {
@@ -143,11 +144,16 @@ class NavigationPanel extends Component {
     const { userSession } = this.props
     const { activeSection } = this.state
 
+    let gitHubHost = 'github.com'
+    if (conf.get('enterprise:enable')) {
+      gitHubHost = conf.get('enterprise:host')
+    }
+
     return (
       <div className='gist-tag-section'>
         <div className='starred-tag-section'>
           <div className='tag-section-content'>
-            <a className='gist-tag' href={ 'https://gist.github.com/' + userSession.profile.login + '/starred' }>#starred</a>
+            <a className='gist-tag' href={ `https://gist.${gitHubHost}/${userSession.profile.login}/starred` }>#starred</a>
           </div>
         </div>
         <div className='tag-section-list'>

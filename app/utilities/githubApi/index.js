@@ -12,12 +12,19 @@ const kTimeoutUnit = 10 * 1000 // ms
 const logger = remote.getGlobal('logger')
 const conf = remote.getGlobal('conf')
 const userAgent = 'hackjutsu-lepton-app'
+let gitHubHostApi = 'api.github.com'
 
 let proxyAgent = null
-if (conf && conf.get('proxy:enable')) {
-  const proxyUri = conf.get('proxy:address')
-  proxyAgent = new ProxyAgent(proxyUri)
-  logger.info('[.leptonrc] Use proxy', proxyUri)
+if (conf) {
+  if (conf.get('proxy:enable')) {
+    const proxyUri = conf.get('proxy:address')
+    proxyAgent = new ProxyAgent(proxyUri)
+    logger.info('[.leptonrc] Use proxy', proxyUri)
+  }
+  if (conf.get('enterprise:enable')) {
+    const gitHubHost = conf.get('enterprise:host')
+    gitHubHostApi = `${gitHubHost}/api/v3`
+  }
 }
 
 function exchangeAccessToken (clientId, clientSecret, authCode) {
@@ -38,7 +45,7 @@ function exchangeAccessToken (clientId, clientSecret, authCode) {
 
 function getUserProfile (token) {
   logger.debug(TAG + 'Getting user profile with token ' + token)
-  const USER_PROFILE_URI = 'https://api.github.com/user'
+  const USER_PROFILE_URI = `https://${gitHubHostApi}/user`
   return ReqPromise({
     uri: USER_PROFILE_URI,
     agent: proxyAgent,
@@ -56,7 +63,7 @@ function getUserProfile (token) {
 
 function getSingleGist (token, gistId) {
   logger.debug(TAG + `Getting single gist ${gistId} with token ${token}`)
-  const SINGLE_GIST_URI = 'https://api.github.com/gists/'
+  const SINGLE_GIST_URI = `https://${gitHubHostApi}/gists/`
   return ReqPromise({
     uri: SINGLE_GIST_URI + gistId,
     agent: proxyAgent,
@@ -176,7 +183,7 @@ function makeRangeArr (start, end) {
 const GISTS_PER_PAGE = 100
 function makeOptionForGetAllGists (token, userId, page) {
   return {
-    uri: 'https://api.github.com/users/' + userId + '/gists',
+    uri: `https://${gitHubHostApi}/users/${userId}/gists`,
     agent: proxyAgent,
     headers: {
       'User-Agent': userAgent,
@@ -200,7 +207,7 @@ function createSingleGist (token, description, files, isPublic) {
       'User-Agent': userAgent,
     },
     method: 'POST',
-    uri: 'https://api.github.com/gists',
+    uri: `https://${gitHubHostApi}/gists`,
     agent: proxyAgent,
     qs: {
       access_token: token
@@ -222,7 +229,7 @@ function editSingleGist (token, gistId, updatedDescription, updatedFiles) {
       'User-Agent': userAgent,
     },
     method: 'PATCH',
-    uri: 'https://api.github.com/gists/' + gistId,
+    uri: `https://${gitHubHostApi}/gists/${gistId}`,
     agent: proxyAgent,
     qs: {
       access_token: token
@@ -243,7 +250,7 @@ function deleteSingleGist (token, gistId) {
       'User-Agent': userAgent,
     },
     method: 'DELETE',
-    uri: 'https://api.github.com/gists/' + gistId,
+    uri: `https://${gitHubHostApi}/gists/${gistId}`,
     agent: proxyAgent,
     qs: {
       access_token: token

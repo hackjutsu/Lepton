@@ -28,6 +28,7 @@ import {
   CREATE_SINGLE_GIST
 } from '../../utilities/githubApi'
 
+import octocatImage from '../../utilities/octodex/dojocat.jpg'
 import logoutIcon from './logout.svg'
 import newIcon from './new.svg'
 import syncIcon from './sync.svg'
@@ -35,6 +36,11 @@ import syncIcon from './sync.svg'
 import { remote, ipcRenderer } from 'electron'
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
+
+let defaultImage = octocatImage
+if (conf.get('enterprise:enable') && conf.get('enterprise:avatarUrl')) {
+  defaultImage = conf.get('enterprise:avatarUrl')
+}
 
 const kIsPrivate = conf.get('snippet:newSnippetPrivate')
 
@@ -256,12 +262,17 @@ class UserPanel extends Component {
       return
     }
 
+    let avatarUrl = profile.avatar_url
+    if (conf.get('enterprise:enable')) {
+      avatarUrl = defaultImage
+    }
+
     return (
       <div>
         <figure className="sticker-img">
           <Image
             className='profile-image-section'
-            src={ profile.avatar_url }/>
+            src={ avatarUrl }/>
           <div>
             <div className='profile-username-section'>
               <h5><span>{ this.props.userSession.profile.login }</span></h5>
