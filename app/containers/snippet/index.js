@@ -296,6 +296,7 @@ class Snippet extends Component {
         dialogClassName='edit-modal'
         animation={ false }
         backdrop='static'
+        keyboard={ false }
         show={ this.props.gistEditModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>

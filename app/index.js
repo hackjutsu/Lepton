@@ -384,11 +384,11 @@ function initUserSession (token) {
         profile: newProfile.login,
         image: newProfile.avatar_url
       })
-      logger.debug('-----> after updateLocalStorage')      
+      logger.debug('-----> after updateLocalStorage')
 
-      logger.debug('-----> before syncLocalPref')      
+      logger.debug('-----> before syncLocalPref')
       syncLocalPref(newProfile.login)
-      logger.debug('-----> after syncLocalPref')      
+      logger.debug('-----> after syncLocalPref')
 
       logger.info('[Dispatch] updateUserSession ACTIVE')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))

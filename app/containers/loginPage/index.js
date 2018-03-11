@@ -52,7 +52,7 @@ class LoginPage extends Component {
   handleContinueButtonClicked () {
     const { loggedInUserInfo } = this.props
     logger.debug('-----> Inside LoginPage handleContinueButtonClicked with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
-    
+
     let token = null
     if (conf.get('enterprise:enable')) {
       token = conf.get('enterprise:token')
