@@ -15,6 +15,7 @@
 - Cross-platform support
 - Immersive mode(Zen mode)
 - Proxy
+- GitHub Enterprise support
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
@@ -83,7 +84,9 @@ Build app for Windows.
 ```bash
 $ npm run dist -- -w
 ```
-Build app for Linux.
+Build app for Linux. 
+
+>Need a running [Docker](https://www.docker.com/) daemon to build a `snap` package.
 ```bash
 $ npm run dist -- -l
 ```
@@ -95,6 +98,16 @@ Build app for the current OS with the current arch.
 ```bash
 $ npm run dist
 ```
+
+## Configuration
+Lepton can be configured by `<home_dir>/.leptonrc` in the following fields. (Create the file if it does not exist.)
+
+- Snippet
+- Logger
+- Proxy
+- Enterprise
+
+Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore these options.
 
 ## FAQ
 #### My gist's language is classified as "Other"
@@ -115,23 +128,6 @@ Limited by GitHub API, Lepton supports searching for following fields.
 [title] description #tag1 #tag2
 ```
 
-#### Proxy (Optional)
-Copy and paste the following snippet to `~/.leptonrc`. Create the file if it does not exist, and don't forgot to change the address to your own.
-```
-{
-  "proxy": {
-    "enable": true,
-    "address": "socks://localhost:1080"
-  }
-}
-```
-> Checkout the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) for more configuration options.
-
-
-#### Feedback
-- Submit an [issue](https://github.com/hackjutsu/Lepton/issues).
-- Send a [pull request](https://github.com/hackjutsu/Lepton/pulls).
-
 #### Donation
 *We DON'T accept donation personally.* If you like, feel free to donate to [Wikimedia Foundation](https://wikimediafoundation.org/wiki/Ways_to_Give), which helps sustain free knowledge through Wikipedia and its sister projects for people around the world. You are welcome to create an issue to share how much you have contributed.
 
@@ -144,14 +140,15 @@ Copy and paste the following snippet to `~/.leptonrc`. Create the file if it doe
       <td><img src=https://avatars2.githubusercontent.com/u/13786673?v=3><a href="https://github.com/meilinz">meilinz</a></td>
       <td><img src=https://avatars3.githubusercontent.com/u/5697293?v=3><a href="https://github.com/lcgforever">lcgforever</a></td>
       <td><img src=https://avatars1.githubusercontent.com/u/180032?v=3><a href="https://github.com/Calinou">Calinou</a></td>
+      <td><img src=https://avatars0.githubusercontent.com/u/7173984?v=3><a href="https://github.com/rogersachan">rogersachan</a></td>
    </tr>
    <tr>
-      <td><img src=https://avatars0.githubusercontent.com/u/7173984?v=3><a href="https://github.com/rogersachan">rogersachan</a></td>
       <td><img src=https://avatars3.githubusercontent.com/u/2075566?v=3><a href="https://github.com/passerbyid">passerbyid</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/12994810?v=3><a href="https://github.com/YYSU">YYSU</a></td>
       <td><img src=https://avatars3.githubusercontent.com/u/26782336?v=3><a href="https://github.com/cixuuz">cixuuz</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/4332224?v=3><a href="https://github.com/Gisonrg">Gisonrg</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/7821318?v=3><a href="https://github.com/ArLEquiN64">ArLEquiN64</a></td>
+      <td><img src=https://avatars1.githubusercontent.com/u/1841272?v=3><a href="https://github.com/popey">popey</a></td>
    </tr>
 </table>
 
