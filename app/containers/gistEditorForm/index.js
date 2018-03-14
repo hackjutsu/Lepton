@@ -134,7 +134,7 @@ const renderGistFiles = ({ fields, formStyle, filenameList }) => (
               filename={ filenameList && filenameList[index] }
               component={ renderContentField }
               validate={ required }/>
-            </Panel.Body>
+          </Panel.Body>
         </Panel>
       </ListGroupItem>
     ) }

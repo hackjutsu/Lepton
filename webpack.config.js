@@ -8,7 +8,7 @@ module.exports = {
   entry: [
     './app/index.js'
   ],
-  target: 'electron',
+  target: 'electron-renderer',
   output: {
     path: path.resolve(__dirname, 'bundle'),
     publicPath: '/bundle/',
@@ -30,10 +30,6 @@ module.exports = {
       test: /\.(scss|css)$/,
       loaders: ['style-loader', 'css-loader', 'sass-loader']
     }, {
-      test: /\.json/,
-	  // exclude: /node_modules/,
-	  loader: 'json-loader'
-	}, {
       test: /\.(png|jpg)$/,
       loader: 'url-loader'
     }, {
