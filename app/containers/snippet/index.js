@@ -36,7 +36,7 @@ import './index.scss'
 import '../../utilities/vendor/highlightJS/styles/github-gist.css'
 
 import editIcon from './ei-edit.svg'
-import shareIcon from './ei-share.svg'
+import openInWebIcon from './ei-share.svg'
 import eyeIcon from './ei-eye.svg'
 import trashIcon from './ei-trash.svg'
 import tagsIcon from './tags.svg'
@@ -318,6 +318,12 @@ class Snippet extends Component {
     })
   }
 
+  handleCopyGistLinkClicked (snippet, file) {
+    const link = snippet.details.html_url + '#file-' + file.filename.replace(/\./g, '-').toLowerCase()
+    clipboard.writeText(link)
+    Notifier('Copied', 'The link has been copied to the clipboard.')
+  }
+
   handleCopyGistFileClicked (gist) {
     clipboard.writeText(gist.content)
     Notifier('Copied', 'The content has been copied to the clipboard.')
@@ -342,7 +348,7 @@ class Snippet extends Component {
         <Modal.Header closeButton>
           <Modal.Title>
             { gistRawModal.file }
-            <a className='copy-raw-link' href='#' onClick={ this.handleCopyRawLinkClicked.bind(this, gistRawModal.link) }>#link</a>
+            <a className='copy-raw-link' href='#' onClick={ this.handleCopyRawLinkClicked.bind(this, gistRawModal.link) }>#share</a>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -417,11 +423,6 @@ class Snippet extends Component {
     return { __html: htmlContent }
   }
 
-  handleShareClicked (url) {
-    clipboard.writeText(url)
-    Notifier('Copied', 'The share link has been copied to the clipboard.')
-  }
-
   handleCopyRawLinkClicked (url) {
     clipboard.writeText(url)
     Notifier('Copied', 'The raw file link has been copied to the clipboard.')
@@ -442,10 +443,9 @@ class Snippet extends Component {
               <div dangerouslySetInnerHTML={{__html: editIcon}} />
             </a>
             <a className='snippet-control'
-              title='Share'
-              href='#'
-              onClick={ this.handleShareClicked.bind(this, activeSnippet.brief.html_url) }>
-              <div dangerouslySetInnerHTML={{__html: shareIcon}} />
+              title='Open in Web'
+              href={ activeSnippet.brief.html_url }>
+              <div dangerouslySetInnerHTML={{__html: openInWebIcon}} />
             </a>
             <a className='snippet-control'
               title='Revisions'
@@ -507,8 +507,8 @@ class Snippet extends Component {
     const key = activeGist + '-' + filename
     if (fileExpandStatus[key] === undefined) {
       // If the file is clicked for the first time, it has no records in the
-      // fileExpandStatus list. Therefore, its value is undefined. We consider 
-      // it in the default status(either expanded or collapsed, depending on 
+      // fileExpandStatus list. Therefore, its value is undefined. We consider
+      // it in the default status(either expanded or collapsed, depending on
       // settings in .leptonrc).
       fileExpandStatus[key] = !kIsExpanded
     } else {
@@ -553,9 +553,10 @@ class Snippet extends Component {
               </a>
               <div className='file-header-controls'>
                 <a
-                  href={ activeSnippet.details.html_url + '#file-' + gistFile.filename.replace(/\./g, '-') }
-                  className='file-header-control'>
-                  #link
+                  href='#'
+                  className='file-header-control'
+                  onClick={ this.handleCopyGistLinkClicked.bind(this, activeSnippet, gistFile) }>
+                  #share
                 </a>
                 <a
                   href='#'
