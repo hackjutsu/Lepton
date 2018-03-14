@@ -28,7 +28,8 @@ import {
   CREATE_SINGLE_GIST
 } from '../../utilities/githubApi'
 
-import octocatImage from '../../utilities/octodex/dojocat.jpg'
+import dojocatImage from '../../utilities/octodex/dojocat.jpg'
+import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
 import logoutIcon from './logout.svg'
 import newIcon from './new.svg'
 import syncIcon from './sync.svg'
@@ -37,9 +38,12 @@ import { remote, ipcRenderer } from 'electron'
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
-let defaultImage = octocatImage
-if (conf.get('enterprise:enable') && conf.get('enterprise:avatarUrl')) {
-  defaultImage = conf.get('enterprise:avatarUrl')
+let defaultImage = dojocatImage
+if (conf.get('enterprise:enable')) {
+  defaultImage = privateinvestocatImage
+  if( conf.get('enterprise:avatarUrl')) {
+    defaultImage = conf.get('enterprise:avatarUrl')
+  }
 }
 
 const kIsPrivate = conf.get('snippet:newSnippetPrivate')

@@ -4,16 +4,20 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { remote, ipcRenderer } from 'electron'
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
-import octocatImage from '../../utilities/octodex/dojocat.jpg'
+import dojocatImage from '../../utilities/octodex/dojocat.jpg'
+import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
 
 import './index.scss'
 
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
-let defaultImage = octocatImage
-if (conf.get('enterprise:enable') && conf.get('enterprise:avatarUrl')) {
-  defaultImage = conf.get('enterprise:avatarUrl')
+let defaultImage = dojocatImage
+if (conf.get('enterprise:enable')) {
+  defaultImage = privateinvestocatImage
+  if( conf.get('enterprise:avatarUrl')) {
+    defaultImage = conf.get('enterprise:avatarUrl')
+  }
 }
 
 class LoginPage extends Component {
