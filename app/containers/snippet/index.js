@@ -584,16 +584,18 @@ class Snippet extends Component {
     return (
       <div className='snippet-box'>
         <Panel className='snippet-code'
-          bsStyle={ activeSnippet.brief.public ? 'default' : 'danger' }
-          header={ this.renderPanelHeader(activeSnippet) }>
-          <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet) }</div>
-          { activeSnippet.details
-            ? null
-            : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }
-          { this.renderGistEditorModal(activeSnippet.brief.description, fileArray, !activeSnippet.brief.public) }
-          { this.renderRawModal() }
-          { this.renderDeleteModal() }
-          { fileHtmlArray }
+          bsStyle={ activeSnippet.brief.public ? 'default' : 'danger' }>
+          <Panel.Heading>{ this.renderPanelHeader(activeSnippet) }</Panel.Heading>
+          <Panel.Body>
+            <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet) }</div>
+            { activeSnippet.details
+              ? null
+              : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }
+            { this.renderGistEditorModal(activeSnippet.brief.description, fileArray, !activeSnippet.brief.public) }
+            { this.renderRawModal() }
+            { this.renderDeleteModal() }
+            { fileHtmlArray }
+          </Panel.Body>
         </Panel>
       </div>
     )

@@ -126,12 +126,15 @@ const renderGistFiles = ({ fields, formStyle, filenameList }) => (
   <ListGroup className='gist-editor-section'>
     { fields.map((member, index) =>
       <ListGroupItem className='gist-editor-gist-file' key={index}>
-        <Panel header={ renderGistFileHeader(member, fields, index) }>
-          <Field name={ `${member}.content` }
-            type='text'
-            filename={ filenameList && filenameList[index] }
-            component={ renderContentField }
-            validate={ required }/>
+        <Panel>
+          <Panel.Heading>{ renderGistFileHeader(member, fields, index) }</Panel.Heading>
+          <Panel.Body>
+            <Field name={ `${member}.content` }
+              type='text'
+              filename={ filenameList && filenameList[index] }
+              component={ renderContentField }
+              validate={ required }/>
+            </Panel.Body>
         </Panel>
       </ListGroupItem>
     ) }

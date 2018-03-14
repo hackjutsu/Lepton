@@ -1,5 +1,5 @@
 {
-  "Lepton@1.5.2-alpha-4": {
+  "Lepton@1.5.2-alpha-5": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -244,6 +244,12 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/caseless",
     "licenseFile": "node_modules/caseless/LICENSE"
   },
+  "chain-function@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jquense/chain-function",
+    "publisher": "jquense",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/chain-function"
+  },
   "classnames@2.2.5": {
     "licenses": "MIT",
     "repository": "https://github.com/JedWatson/classnames",
@@ -326,8 +332,8 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/core-util-is",
     "licenseFile": "node_modules/core-util-is/LICENSE"
   },
-  "create-react-class@15.6.0": {
-    "licenses": "BSD-3-Clause",
+  "create-react-class@15.6.3": {
+    "licenses": "MIT",
     "repository": "https://github.com/facebook/react",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/create-react-class",
     "licenseFile": "node_modules/create-react-class/LICENSE.txt"
@@ -439,7 +445,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/depd",
     "licenseFile": "node_modules/depd/LICENSE"
   },
-  "dom-helpers@3.2.1": {
+  "dom-helpers@3.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jquense/dom-helpers",
     "publisher": "Jason Quense",
@@ -643,6 +649,12 @@
     "repository": "https://github.com/facebook/fbjs",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fbjs",
     "licenseFile": "node_modules/fbjs/LICENSE"
+  },
+  "fbjs@0.8.16": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/fbjs",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react/node_modules/fbjs",
+    "licenseFile": "node_modules/react/node_modules/fbjs/LICENSE"
   },
   "file-uri-to-path@1.0.0": {
     "licenses": "MIT",
@@ -1411,6 +1423,12 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/prop-types",
     "licenseFile": "node_modules/prop-types/LICENSE"
   },
+  "prop-types@15.6.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/prop-types",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react/node_modules/prop-types",
+    "licenseFile": "node_modules/react/node_modules/prop-types/LICENSE"
+  },
   "proxy-agent@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-proxy-agent",
@@ -1460,7 +1478,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/raw-body",
     "licenseFile": "node_modules/raw-body/LICENSE"
   },
-  "react-bootstrap@0.31.2": {
+  "react-bootstrap@0.32.1": {
     "licenses": "MIT",
     "repository": "https://github.com/react-bootstrap/react-bootstrap",
     "publisher": "Stephen J. Collings",
@@ -1475,13 +1493,13 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-codemirror",
     "licenseFile": "node_modules/react-codemirror/LICENSE"
   },
-  "react-dom@15.6.1": {
-    "licenses": "BSD-3-Clause",
+  "react-dom@16.2.0": {
+    "licenses": "MIT",
     "repository": "https://github.com/facebook/react",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-dom",
     "licenseFile": "node_modules/react-dom/LICENSE"
   },
-  "react-overlays@0.7.0": {
+  "react-overlays@0.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/react-bootstrap/react-overlays",
     "publisher": "Jason Quense",
@@ -1522,8 +1540,14 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-style-proptype",
     "licenseFile": "node_modules/react-style-proptype/README.md"
   },
-  "react@15.6.1": {
+  "react-transition-group@2.2.1": {
     "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/reactjs/react-transition-group",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-transition-group",
+    "licenseFile": "node_modules/react-transition-group/LICENSE"
+  },
+  "react@16.2.0": {
+    "licenses": "MIT",
     "repository": "https://github.com/facebook/react",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react",
     "licenseFile": "node_modules/react/LICENSE"
