@@ -15,7 +15,7 @@ const logger = remote.getGlobal('logger')
 let defaultImage = dojocatImage
 if (conf.get('enterprise:enable')) {
   defaultImage = privateinvestocatImage
-  if( conf.get('enterprise:avatarUrl')) {
+  if (conf.get('enterprise:avatarUrl')) {
     defaultImage = conf.get('enterprise:avatarUrl')
   }
 }
@@ -89,7 +89,7 @@ class LoginPage extends Component {
             className='modal-button'
             bsStyle="success"
             onClick={ this.handleContinueButtonClicked.bind(this) }>
-            Continue as { loggedInUserName }
+            { loggedInUserName ? `Continue as ${loggedInUserName}` : 'HAPPY CODING' }
           </Button>
         </div>
       )

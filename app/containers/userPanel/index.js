@@ -41,7 +41,7 @@ const logger = remote.getGlobal('logger')
 let defaultImage = dojocatImage
 if (conf.get('enterprise:enable')) {
   defaultImage = privateinvestocatImage
-  if( conf.get('enterprise:avatarUrl')) {
+  if (conf.get('enterprise:avatarUrl')) {
     defaultImage = conf.get('enterprise:avatarUrl')
   }
 }
