@@ -101,7 +101,8 @@ class UserPanel extends Component {
 
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
-      filenameRecords = ',' + filename
+      // leave a space in between to help tokenization
+      filenameRecords += ', ' + filename
       const language = files[filename].language || 'Other'
       langs.add(language)
       const prefixedLang = Prefixed(language)

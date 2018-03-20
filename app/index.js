@@ -277,7 +277,8 @@ function updateUserGists (userLoginId, token) {
         let filenameRecords = ''
 
         Object.keys(gist.files).forEach(filename => {
-          filenameRecords += ',' + filename
+          // leave a space in between to help tokenization
+          filenameRecords += ', ' + filename
           let file = gist.files[filename]
           let language = file.language || 'Other'
           langs.add(language)

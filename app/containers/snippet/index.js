@@ -178,7 +178,8 @@ class Snippet extends Component {
     let filenameRecords = ''
 
     Object.keys(files).forEach(filename => {
-      filenameRecords = ',' + filename
+      // leave a space in between to help tokenization
+      filenameRecords += ', ' + filename
       const file = files[filename]
       const language = file.language || 'Other'
       newLangs.add(language)
@@ -267,7 +268,8 @@ class Snippet extends Component {
     searchIndex.updateFuseIndex({
       id: gistId,
       description: gistDetails.description,
-      language: langSearchRecords
+      language: langSearchRecords,
+      filename: filenameRecords
     })
 
     Notifier('Gist updated', HumanReadableTime(new Date()))
