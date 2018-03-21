@@ -174,7 +174,7 @@ app.on('before-quit', () => {
 
 // 'activate' is emitted when the user clicks the Dock icon (OS X).
 // It is a macOS specific signal mapped to 'applicationShouldHandleReopen' event
-app.on('activate', () => mainWindow.show())
+app.on('activate', () => mainWindow && mainWindow.show())
 
 function setUpApplicationMenu () {
   // Create the Application's main menu
