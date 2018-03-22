@@ -2,16 +2,12 @@
 
   .font-style-base {
     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
-    font-size: 13px;
+    font-size: 14px;
     color: rgb(100,100,100);
   }
 
   .section-base {
-    height: 75vh;
-  }
-
-  .general-section {
-    @extend .section-base;
+    height: 60vh;
   }
 
   .dashboard-section {
@@ -20,72 +16,19 @@
     flex-direction: column;
   }
 
-  .logo-section {
+  .greeting {
     @extend .font-style-base;
-    font-size: 12px;
     text-align: center;
+    margin: 10px;
   }
 
-  .logo {
-    width: 100px;
+  .octocat {
+    width: 300px;
     margin: 5px;
-  }
-
-  .contributor-section {
-    overflow: auto;
-    min-height: 100px;
-    border-radius: 5px;
-    padding: 0 20px;
-    border: solid 1px rgb(200,200,200);
-  }
-
-  .license-section {
-    overflow: auto;
-    flex: auto;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    padding: 0 20px;
-    border: solid 1px rgb(200,200,200);
-  }
-
-  .license-item {
-    margin: 10px 0px;
-  }
-
-  .license-project {
-    @extend .font-style-base;
-    font-weight: bold;
-  }
-
-  .license-type {
-    @extend .font-style-base;
-    font-size: 11px;
-  }
-
-  .setting-title {
-    @extend .font-style-base;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 10px;
-    margin-left: 5px;
-    margin-bottom: 5px;
   }
 
   .modal-sm {
     width: 375px;
-  }
-
-  .logo-sub {
-    margin: 0 5px;
-  }
-
-  .contributor {
-    @extend .font-style-base;
-    margin: 5px;
-  }
-
-  hr {
-    margin-bottom: 5px;
   }
 
   /* Settings only affecting the about modal */
