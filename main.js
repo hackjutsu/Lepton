@@ -42,9 +42,7 @@ const keyNewGist = 'CommandOrControl+N'
 const keyEditGist = 'CommandOrControl+E'
 const keyImmersiveMode = 'CommandOrControl+I'
 const keyAboutPage = 'CommandOrControl+,'
-const keyUp = 'Shift+Up'
-const keyDown = 'Shift+Down'
-const keyEnter = 'Shift+Enter'
+const keyDashboard = 'CommandOrControl+D'
 
 function createWindowAndAutoLogin () {
   createWindow(true)
@@ -93,18 +91,6 @@ function createWindow (autoLogin) {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
     console.timeEnd('init')
-    electronLocalshortcut.register(mainWindow, keyUp, () => {
-    //   console.log('You pressed ' + keyUp)
-      mainWindow && mainWindow.webContents.send('key-up')
-    })
-    electronLocalshortcut.register(mainWindow, keyDown, () => {
-    //   console.log('You pressed ' + keyDown)
-      mainWindow && mainWindow.webContents.send('key-down')
-    })
-    electronLocalshortcut.register(mainWindow, keyEnter, () => {
-    //   console.log('You pressed ' + keyEnter)
-      mainWindow && mainWindow.webContents.send('key-enter')
-    })
     autoUpdater.on('error', data => {
       logger.debug('[autoUpdater] error ' + JSON.stringify(data))
     })
@@ -207,6 +193,13 @@ function setUpApplicationMenu () {
         accelerator: 'Escape',
         click: (item, mainWindow) => {
           mainWindow && mainWindow.send('back-to-normal-mode')
+        }
+      },
+      {
+        label: 'Dashboard',
+        accelerator: keyDashboard,
+        click: (item, mainWindow) => {
+          mainWindow && mainWindow.send('dashboard')
         }
       },
       {

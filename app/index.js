@@ -43,6 +43,7 @@ import {
   updateNewVersionInfo,
   updateImmersiveModeStatus,
   updateAboutModalStatus,
+  updateDashboardModalStatus,
   updatePinnedTags
 } from './actions/index'
 
@@ -522,6 +523,36 @@ ipcRenderer.on('search-gist', data => {
     const preStatus = searchWindowStatus
     const newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
     reduxStore.dispatch(updateSearchWindowStatus(newStatus))
+  }
+})
+
+ipcRenderer.on('dashboard', data => {
+  const state = reduxStore.getState()
+  const {
+    immersiveMode,
+    gistRawModal,
+    searchWindowStatus,
+    aboutModalStatus,
+    dashboardModalStatus,
+    gistEditModalStatus,
+    gistNewModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus } = state
+
+  // FIXME: This should be able to extracted to the allDialogsClosed method.
+  const dialogs = [
+    aboutModalStatus,
+    immersiveMode,
+    gistRawModal.status,
+    gistEditModalStatus,
+    searchWindowStatus,
+    gistNewModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus ]
+  if (allDialogsClosed(dialogs)) {
+    const preStatus = dashboardModalStatus
+    const newStatus = preStatus === 'ON' ? 'OFF' : 'ON'
+    reduxStore.dispatch(updateDashboardModalStatus(newStatus))
   }
 })
 
