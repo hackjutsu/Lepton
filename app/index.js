@@ -699,6 +699,7 @@ ReactDom.render(
       launchAuthWindow = { launchAuthWindow }
       reSyncUserGists = { reSyncUserGists }
       updateAboutModalStatus = { updateAboutModalStatus }
+      updateDashboardModalStatus = { updateDashboardModalStatus }
       updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />
   </Provider>,
   document.getElementById('container')
