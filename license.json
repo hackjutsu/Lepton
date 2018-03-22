@@ -8,7 +8,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@sindresorhus/is",
     "licenseFile": "node_modules/@sindresorhus/is/license"
   },
-  "Lepton@1.6.1-alpha-1": {
+  "Lepton@1.6.1-alpha-2": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -1258,6 +1258,12 @@
     "email": "deadrunk@gmail.com",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/chardet",
     "licenseFile": "node_modules/chardet/LICENSE"
+  },
+  "chart.js@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nnnick/Chart.js",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/chart.js",
+    "licenseFile": "node_modules/chart.js/LICENSE.md"
   },
   "chokidar@2.0.2": {
     "licenses": "MIT",
@@ -5155,6 +5161,13 @@
     "email": "stevoland@gmail.com",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-bootstrap",
     "licenseFile": "node_modules/react-bootstrap/LICENSE"
+  },
+  "react-chartjs@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jhudson8/react-chartjs",
+    "publisher": "Joe Hudson",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react-chartjs",
+    "licenseFile": "node_modules/react-chartjs/LICENSE"
   },
   "react-codemirror@1.0.0": {
     "licenses": "MIT",

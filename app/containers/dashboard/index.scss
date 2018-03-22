@@ -1,0 +1,39 @@
+.dashboard-modal {
+
+  .font-style-base {
+    font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+    font-size: 14px;
+    color: rgb(100,100,100);
+  }
+
+  .section-base {
+    height: 400px;
+  }
+
+  .dashboard-section {
+    @extend .section-base;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .greeting {
+    @extend .font-style-base;
+    text-align: center;
+    margin: 10px;
+  }
+
+  .octocat {
+    width: 300px;
+    margin: 5px;
+  }
+
+  .modal-sm {
+    width: 375px;
+  }
+
+  /* Settings only affecting the about modal */
+  .modal {
+    -webkit-app-region: drag;
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
