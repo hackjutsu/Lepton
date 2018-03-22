@@ -59,6 +59,7 @@
   "dependencies": {
     "autolinker": "^1.4.0",
     "bluebird": "^3.4.7",
+    "chart.js": "^1.1.1",
     "codemirror": "^5.28.0",
     "electron-context-menu": "^0.9.0",
     "electron-is-dev": "^0.3.0",
@@ -77,6 +78,7 @@
     "proxy-agent": "^2.0.0",
     "react": "^16.2.0",
     "react-bootstrap": "^0.32.1",
+    "react-chartjs": "^1.2.0",
     "react-codemirror": "^1.0.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",

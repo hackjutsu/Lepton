@@ -4,66 +4,33 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
-import LicenseInfo from '../../../license.json'
-import logoImage from './logo.png'
-import appInfo from '../../../package.json'
+import { Radar } from 'react-chartjs'
 import { updateDashboardModalStatus } from '../../actions'
 
 import './index.scss'
 
 class Dashboard extends Component {
   renderDashboardSection () {
-    const licenseList = []
-    /* Add Evil icons license as an exception */
-    licenseList.push(
-      <div key='Evil icons@1.9.0' className='license-item'>
-        <div className='license-project'>Evil icons@1.9.0</div>
-        <div className='license-type'>License: MIT</div>
-      </div>
-    )
-    Object.keys(LicenseInfo).forEach(item => {
-      if (item.startsWith(appInfo.name)) {
-        return
-      }
-      licenseList.push(
-        <div key={ item } className='license-item'>
-          <div className='license-project'>
-            { item }
-          </div>
-          <div className='license-type'>License: { LicenseInfo[item].licenses }</div>
-        </div>
-      )
-    })
+    const chartData = {
+      labels: ["C++", "Java", "JavaScript", "Ruby", "Python", "Shell", "Others"],
+      datasets: [
+        {
+          label: "My Language Radar",
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(151,187,205,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205,1)",
+          data: [65, 59, 90, 81, 56, 55, 40]
+        }
+      ]
+    }
+    const chartOptions = {}
 
     return (
       <div className='dashboard-section'>
-        <div className='logo-section'>
-          <Image className='logo' src={ logoImage } rounded/>
-          <div>{ appInfo.name + ' v' + appInfo.version }</div>
-          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton'>GitHub</a>
-          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/issues'>Feedback</a>
-          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE'>License</a>
-        </div>
-        <div className='setting-title'>Contributors</div>
-        <div className='contributor-section'>
-          <div className='contributor'><a href='https://github.com/hackjutsu'>hackjutsu</a></div>
-          <div className='contributor'><a href='https://github.com/wujysh'>wujysh</a></div>
-          <div className='contributor'><a href='https://github.com/DNLHC'>DNLHC</a></div>
-          <div className='contributor'><a href='https://github.com/meilinz'>meilinz</a></div>
-          <div className='contributor'><a href='https://github.com/lcgforever'>lcgforever</a></div>
-          <div className='contributor'><a href='https://github.com/Calinou'>Calinou</a></div>
-          <div className='contributor'><a href='https://github.com/rogersachan'>rogersachan</a></div>
-          <div className='contributor'><a href='https://github.com/passerbyid'>passerbyid</a></div>
-          <div className='contributor'><a href='https://github.com/YYSU'>YYSU</a></div>
-          <div className='contributor'><a href='https://github.com/cixuuz'>cixuuz</a></div>
-          <div className='contributor'><a href='https://github.com/Gisonrg'>Gisonrg</a></div>
-          <div className='contributor'><a href='https://github.com/ArLEquiN64'>ArLEquiN64</a></div>
-          <div className='contributor'><a href='https://github.com/popey'>popey</a></div>
-        </div>
-        <div className='setting-title'>Acknowledgement</div>
-        <div className='license-section'>
-          { licenseList }
-        </div>
+        <Radar data={ chartData } options={ chartOptions } width="350" height="250"/>
       </div>
     )
   }
