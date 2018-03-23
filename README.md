@@ -15,6 +15,7 @@
 - Cross-platform support
 - Immersive mode(Zen mode)
 - Proxy
+- Mini Dashboard
 - GitHub Enterprise support
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
@@ -23,16 +24,16 @@
 | :-------------:| :-----:| :-----: |
 | ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/immersive.png)
 
-|      Search (*⇧ + Space*)         |   Custom Tags    | GitHub Login |
+|      Search (*⇧ + Space*)         |   Custom Tags    | Dashboard *(⌘/Ctrl + d)* |
 | :-------------:| :-----:| :-----: |
-| ![Screenshot](./docs/img/portfolio/search_bar.png) | ![Screenshot](./docs/img/portfolio/edit.png) | ![Screenshot](./docs/img/portfolio/oauth.png)
+| ![Screenshot](./docs/img/portfolio/search_bar.png) | ![Screenshot](./docs/img/portfolio/edit.png) | ![Screenshot](./docs/img/portfolio/dashboard.png)
 
 ## Based on
 ![Based on](./docs/img/erb-logo.png)
 
 1. Framework: [Electron](http://electron.atom.io/)
 2. Bundler: [Webpack](http://webpack.github.io/docs/), [Babel](https://babeljs.io), [electron-builder](https://github.com/electron-userland/electron-builder)
-3. Language: [ES2015](https://babeljs.io/docs/learn-es2015/), [Sass](http://sass-lang.com/)
+3. Language: [ES6](https://babeljs.io/docs/learn-es2015/), [Sass](http://sass-lang.com/)
 4. Library: [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [Redux Thunk](https://github.com/gaearon/redux-thunk), [Redux Form](http://redux-form.com/)
 5. Lint: [ESLint](http://eslint.org/)
 
@@ -47,7 +48,6 @@ brew cask install lepton
 
 
 ### Install
->Tested with Node.js 6/7/8 
 
 Clone the repository.
 ```Bash
