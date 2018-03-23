@@ -22,7 +22,7 @@ const appInfo = require('./package.json')
 
 const autoUpdater = require('electron-updater').autoUpdater
 autoUpdater.logger = logger
-autoUpdater.autoDownload = false
+autoUpdater.autoDownload = true
 
 initGlobalConfigs()
 initGlobalLogger()
@@ -91,22 +91,22 @@ function createWindow (autoLogin) {
   mainWindow.once('ready-to-show', () => {
     mainWindow.show()
     console.timeEnd('init')
-    autoUpdater.on('error', data => {
-      logger.debug('[autoUpdater] error ' + JSON.stringify(data))
-    })
-    autoUpdater.on('update-not-available', () => {
-      logger.debug('[autoUpdater] update-not-available')
-    })
-    autoUpdater.on('update-available', (info) => {
-      logger.debug('[autoUpdater] update-available. ' + mainWindow)
-      global.newVersionInfo = info
-      mainWindow && mainWindow.webContents.send('update-available')
-    })
+    // autoUpdater.on('error', data => {
+    //   logger.debug('[autoUpdater] error ' + JSON.stringify(data))
+    // })
+    // autoUpdater.on('update-not-available', () => {
+    //   logger.debug('[autoUpdater] update-not-available')
+    // })
+    // autoUpdater.on('update-available', (info) => {
+    //   logger.debug('[autoUpdater] update-available. ' + mainWindow)
+    //   global.newVersionInfo = info
+    //   mainWindow && mainWindow.webContents.send('update-available')
+    // })
 
     // Only run auto update checker in production.
-    if (!isDev && !appInfo.version.includes('alpha')) {
-        autoUpdater.checkForUpdates()
-    }
+    // if (!isDev && !appInfo.version.includes('alpha')) {
+    //     autoUpdater.checkForUpdates()
+    // }
   })
 
   mainWindow.on('close', (e) => {
@@ -133,6 +133,7 @@ function createWindow (autoLogin) {
 
 app.on('ready', () => {
     // createWindow()
+    autoUpdater.checkForUpdatesAndNotify()
     createWindowAndAutoLogin()
 })
 
