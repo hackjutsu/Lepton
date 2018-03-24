@@ -47,7 +47,7 @@ const logger = remote.getGlobal('logger')
 const kIsExpanded = conf.get('snippet:expanded')
 
 class Snippet extends Component {
-  componentWillMount () {
+  componentDidMount () {
     ipcRenderer.on('edit-gist-renderer', () => {
       this.showGistEditorModal()
     })

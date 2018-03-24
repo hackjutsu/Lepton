@@ -49,7 +49,7 @@ if (conf.get('enterprise:enable')) {
 const kIsPrivate = conf.get('snippet:newSnippetPrivate')
 
 class UserPanel extends Component {
-  componentWillMount () {
+  componentDidMount () {
     ipcRenderer.on('new-gist-renderer', () => {
       this.handleNewGistClicked()
     })
