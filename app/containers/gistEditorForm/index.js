@@ -38,7 +38,7 @@ class GistEditorFormImpl extends Component {
           name='description'
           type='text'
           component={ renderDescriptionField }
-          validate={ required }/>
+          validate={ valideNotEmptyContent }/>
         <FieldArray
           name='gistFiles'
           formStyle={ formStyle }
@@ -66,7 +66,9 @@ class GistEditorFormImpl extends Component {
   }
 }
 
-const required = value => {
+const valideNotEmptyContent = value => value ? null : 'required'
+
+const validateFilename = value => {
   if (!value) return 'required'
   else if (!validFilename(value)) return 'invalid filename'
 }
@@ -118,7 +120,7 @@ function renderGistFileHeader (member, fields, index) {
         type='text'
         component={ renderTitleInputField }
         placeholder='file name... (e.g. snippet.js)'
-        validate={ required }/>
+        validate={ validateFilename }/>
       <a href='#'
         className={ fields.length === 1 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
         onClick={ () => fields.remove(index) }>#remove</a>
@@ -137,7 +139,7 @@ const renderGistFiles = ({ fields, formStyle, filenameList }) => (
               type='text'
               filename={ filenameList && filenameList[index] }
               component={ renderContentField }
-              validate={ required }/>
+              validate={ valideNotEmptyContent }/>
           </Panel.Body>
         </Panel>
       </ListGroupItem>
