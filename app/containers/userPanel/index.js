@@ -189,7 +189,7 @@ class UserPanel extends Component {
         show={ this.props.gistNewModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
-          <Modal.Title>New Gist</Modal.Title>
+          <Modal.Title>New</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           { this.renderGistEditorModalBody.bind(this)() }
@@ -299,7 +299,7 @@ class UserPanel extends Component {
       <div className='static-modal'>
         <Modal show={ this.props.logoutModalStatus === 'ON' } bsSize='small'>
           <Modal.Header>
-            <Modal.Title>Confirm logout?</Modal.Title>
+            <Modal.Title>CONFIRM LOGOUT?</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
             <Button onClick={ this.handleLogoutModalCancelClicked.bind(this) }>cancel</Button>

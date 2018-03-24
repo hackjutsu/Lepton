@@ -181,9 +181,9 @@ function setUpApplicationMenu () {
         click: (item, mainWindow) => mainWindow && mainWindow.send('edit-gist')
       },
       {
-        label: 'Search Gist',
-        accelerator: keyShortcutForSearch,
-        click: (item, mainWindow) => mainWindow && mainWindow.send('search-gist')
+        label: 'Exit Editor',
+        accelerator: keyExitEditor,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('exit-editor')
       },
       {
         label: 'Immersive Mode',
@@ -193,30 +193,22 @@ function setUpApplicationMenu () {
       {
         label: 'Back to Normal Mode',
         accelerator: 'Escape',
-        click: (item, mainWindow) => {
-          mainWindow && mainWindow.send('back-to-normal-mode')
-        }
-      },
-      {
-        label: 'Exit Editor',
-        accelerator: keyExitEditor,
-        click: (item, mainWindow) => {
-          mainWindow && mainWindow.send('exit-editor')
-        }
+        click: (item, mainWindow) => mainWindow && mainWindow.send('back-to-normal-mode')
       },
       {
         label: 'Dashboard',
         accelerator: keyDashboard,
-        click: (item, mainWindow) => {
-          mainWindow && mainWindow.send('dashboard')
-        }
+        click: (item, mainWindow) => mainWindow && mainWindow.send('dashboard')
       },
       {
         label: 'About',
         accelerator: keyAboutPage,
-        click: (item, mainWindow) => {
-          mainWindow && mainWindow.send('about-page')
-        }
+        click: (item, mainWindow) => mainWindow && mainWindow.send('about-page')
+      },
+      {    
+        label: 'Search',
+        accelerator: keyShortcutForSearch,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('search-gist')
       }
     ]
   }

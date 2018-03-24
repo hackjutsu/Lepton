@@ -306,7 +306,7 @@ class Snippet extends Component {
         show={ this.props.gistEditModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Gist</Modal.Title>
+          <Modal.Title>Edit</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           { this.renderGistEditorModalBody(description, fileArray, isPrivate) }
