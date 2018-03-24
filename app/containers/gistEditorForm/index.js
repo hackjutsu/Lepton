@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
+import validFilename from 'valid-filename'
 
 import tipsIcon from './ei-question.svg'
 
@@ -65,7 +66,10 @@ class GistEditorFormImpl extends Component {
   }
 }
 
-const required = value => value ? undefined : 'required'
+const required = value => {
+  if (!value) return 'required'
+  else if (!validFilename(value)) return 'invalid filename'
+}
 
 const renderTitleInputField = ({ input, placeholder, type, meta: { touched, error, warning } }) => (
   <div className='title-input-field'>

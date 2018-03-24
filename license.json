@@ -8,7 +8,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@sindresorhus/is",
     "licenseFile": "node_modules/@sindresorhus/is/license"
   },
-  "Lepton@1.6.1": {
+  "Lepton@1.6.2-beta.1": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -2424,6 +2424,15 @@
     "url": "https://github.com/jonschlinkert",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/filename-regex",
     "licenseFile": "node_modules/filename-regex/LICENSE"
+  },
+  "filename-reserved-regex@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/filename-reserved-regex",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/filename-reserved-regex",
+    "licenseFile": "node_modules/filename-reserved-regex/license"
   },
   "fill-range@2.2.3": {
     "licenses": "MIT",
@@ -6727,6 +6736,15 @@
     "email": "zertosh@gmail.com",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/v8-compile-cache",
     "licenseFile": "node_modules/v8-compile-cache/README.md"
+  },
+  "valid-filename@2.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/valid-filename",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/valid-filename",
+    "licenseFile": "node_modules/valid-filename/license"
   },
   "validate-npm-package-license@3.0.1": {
     "licenses": "Apache-2.0",

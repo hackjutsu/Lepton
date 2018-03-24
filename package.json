@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "1.6.1",
+  "version": "1.6.2-beta.1",
   "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
@@ -89,6 +89,7 @@
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "twitter-text": "^2.0.2",
+    "valid-filename": "^2.0.1",
     "webpack-cli": "^2.0.12",
     "winston": "^2.3.0"
   },
