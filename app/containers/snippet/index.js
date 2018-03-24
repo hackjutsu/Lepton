@@ -51,10 +51,14 @@ class Snippet extends Component {
     ipcRenderer.on('edit-gist-renderer', () => {
       this.showGistEditorModal()
     })
+    ipcRenderer.on('exit-editor', () => {
+      this.closeGistEditorModal()
+    })
   }
 
   componentWillUnmount () {
     ipcRenderer.removeAllListeners('edit-gist-renderer')
+    ipcRenderer.removeAllListeners('exit-editor')
   }
 
   showDeleteModal () {

@@ -43,6 +43,7 @@ const keyEditGist = 'CommandOrControl+E'
 const keyImmersiveMode = 'CommandOrControl+I'
 const keyAboutPage = 'CommandOrControl+,'
 const keyDashboard = 'CommandOrControl+D'
+const keyExitEditor = 'CommandOrControl+Escape'
 
 function createWindowAndAutoLogin () {
   createWindow(true)
@@ -194,6 +195,13 @@ function setUpApplicationMenu () {
         accelerator: 'Escape',
         click: (item, mainWindow) => {
           mainWindow && mainWindow.send('back-to-normal-mode')
+        }
+      },
+      {
+        label: 'Exit Editor',
+        accelerator: keyExitEditor,
+        click: (item, mainWindow) => {
+          mainWindow && mainWindow.send('exit-editor')
         }
       },
       {
