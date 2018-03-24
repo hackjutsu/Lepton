@@ -7,28 +7,28 @@
 
 
 **Lepton** is a lean snippet manager based on *GitHub Gist*. [Check out its latest release.](https://github.com/hackjutsu/Lepton/releases)
-- Group gists by languages
-- Create/Edit/Delete gists
-- Instant search
+- Group snippets by languages
+- Create/Edit/Delete snippets
+- Search
 - Custom tags
 - Markdown rendering
-- Cross-platform support
-- Immersive mode(Zen mode)
+- Immersive mode
 - Proxy
-- Mini Dashboard
+- Dashboard
 - GitHub Enterprise support
+- Cross-platform support (macOS/Win/Linux)
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
-|      Organize         |  Markdown Rendering  | Immersive Mode *(⌘/Ctrl + i)* |
+|      Organize         |  Markdown | Immersive Mode *(⌘/Ctrl + i)* |
 | :-------------:| :-----:| :-----: |
 | ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/immersive.png)
 
-|      Search (*⇧ + Space*)         |   Custom Tags    | Dashboard *(⌘/Ctrl + d)* |
+|      Search (*⇧ + Space*)         |    Tags    | Dashboard *(⌘/Ctrl + d)* |
 | :-------------:| :-----:| :-----: |
 | ![Screenshot](./docs/img/portfolio/search_bar.png) | ![Screenshot](./docs/img/portfolio/edit.png) | ![Screenshot](./docs/img/portfolio/dashboard.png)
 
-## Based on
+## Tech Stack
 ![Based on](./docs/img/erb-logo.png)
 
 1. Framework: [Electron](http://electron.atom.io/)
@@ -47,14 +47,10 @@ brew cask install lepton
 ## Development
 
 
-### Install
+### Install dependencies
 
-Clone the repository.
-```Bash
-$ git clone git@github.com:hackjutsu/Lepton.git
-```
-Install the dependencies.
 ```bash
+$ git clone git@github.com:hackjutsu/Lepton.git
 $ cd Lepton && npm i
 ```
 
@@ -69,49 +65,48 @@ module.exports = {
 
 ### Run
 ```bash
-$ npm run build
-$ npm run start
+$ npm run build && npm run start
 ```
 
 ## Build Installer App
 >Read [electron-builder docs](https://github.com/electron-userland/electron-builder#readme) and check out the [code signing wiki](https://github.com/electron-userland/electron-builder#code-signing) before building the installer app.
 
-Build app for macOS.
+Build apps for macOS.
 ```bash
 $ npm run dist -- -m
 ```
-Build app for Windows.
+Build apps for Windows.
 ```bash
 $ npm run dist -- -w
 ```
-Build app for Linux. 
+Build apps for Linux. 
 
 >Need a running [Docker](https://www.docker.com/) daemon to build a `snap` package.
 ```bash
 $ npm run dist -- -l
 ```
-Build app for macOS, Windows and Linux.
+Build apps for macOS, Windows and Linux.
 ```bash
 $ npm run dist -- -wml
 ```
-Build app for the current OS with the current arch.
+Build apps for the current OS with the current arch.
 ```bash
 $ npm run dist
 ```
 
 ## Configuration
-Lepton can be configured by `<home_dir>/.leptonrc` in the following fields. (Create the file if it does not exist.)
+Lepton can be configured by `<home_dir>/.leptonrc` in the these fields. (Create the file if it does not exist.)
 
 - Snippet
 - Logger
 - Proxy
 - Enterprise
 
-Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore these options.
+Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore their options.
 
 ## FAQ
-#### My gist's language is classified as "Other"
-Lepton depends on GitHub API to detect the language. If it fails, the gist's language is marked as "Other". However, we can put `// vim: syntax=<your_language>` at the top to explicitly specify the language.
+#### My snippet's language is classified as "Other"
+Lepton depends on GitHub API to detect the language. If it fails, the snippet's language is marked as "Other". However, we can put `// vim: syntax=<your_language>` at the top to explicitly specify the language.
 ```
 // vim: syntax=javascript
 let test = 'This is a javascript file'
@@ -122,6 +117,7 @@ Limited by GitHub API, Lepton supports searching for following fields.
 - file name
 - description
 - tag
+- gist id
 
 #### Title and Tags
 ```
