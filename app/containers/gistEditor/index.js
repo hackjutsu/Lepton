@@ -148,6 +148,20 @@ import 'codemirror/addon/display/placeholder'
 
 import './index.scss'
 
+import { remote } from 'electron'
+const conf = remote.getGlobal('conf')
+
+const defaultOptions = Object.assign({}, {
+  theme: 'github',
+  lineNumbers: true,
+  matchBrackets: true,
+  matchTags: true,
+  lineWrapping: true,
+  viewportMargin: Infinity,
+  foldGutter: true,
+  gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+}, conf.get('editor'))
+
 class GistEditor extends Component {
   componentDidMount () {
     const { filename } = this.props
@@ -173,18 +187,7 @@ class GistEditor extends Component {
 
   render () {
     const { value, placeholder } = this.props
-
-    const options = {
-      theme: 'github',
-      lineNumbers: true,
-      matchBrackets: true,
-      matchTags: true,
-      lineWrapping: true,
-      viewportMargin: Infinity,
-      placeholder: placeholder,
-      foldGutter: true,
-      gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
-    }
+    const options = Object.assign({}, defaultOptions, { placeholder })
 
     return (
       <CodeMirror

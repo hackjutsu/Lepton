@@ -98,6 +98,7 @@ $ npm run dist
 Lepton can be configured by `<home_dir>/.leptonrc` in the these fields. (Create the file if it does not exist.)
 
 - Snippet
+- Editor
 - Logger
 - Proxy
 - Enterprise

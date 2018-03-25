@@ -1,21 +1,24 @@
 module.exports = {
-    'logger': {
-        'level': 'debug'
+    "logger": {
+        "level": "debug"
     },
-    'proxy': {
-        'enable': false,
-        'address': 'socks://localhost:1080'
+    "proxy": {
+        "enable": false,
+        "address": "socks://localhost:1080"
     },
-    'snippet': {
-        'sorting': 'updated_at',
-        'sortingReverse': true,
-        'expanded': true,
-        'newSnippetPrivate': false
+    "snippet": {
+        "sorting": "updated_at",
+        "sortingReverse": true,
+        "expanded": true,
+        "newSnippetPrivate": false
     },
-    'enterprise': {
-        'enable': false,
-        'host': '',
-        'token': '',
-        'avatarUrl': ''
+    "editor" : {
+        "tabSize": 4
+    },
+    "enterprise": {
+        "enable": false,
+        "host": "",
+        "token": "",
+        "avatarUrl": ""
     }
 }
