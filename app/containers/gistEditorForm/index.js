@@ -6,6 +6,7 @@ import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 import validFilename from 'valid-filename'
+import { ipcRenderer } from 'electron'
 
 import tipsIcon from './ei-question.svg'
 
@@ -27,6 +28,22 @@ class GistEditorFormImpl extends Component {
     initialData.private && change('private', initialData.private)
     initialData.description && change('description', initialData.description)
     initialData.gists && change('gistFiles', initialData.gists)
+  }
+
+  componentDidMount () {
+    ipcRenderer.on('submit-gist', () => {
+      this.shortcutSubmit()
+    })
+  }
+
+  componentWillUnmount () {
+    ipcRenderer.removeAllListeners('submit-gist')
+  }
+
+  shortcutSubmit () {
+    // https://github.com/erikras/redux-form/issues/1304
+    const submitter = this.props.handleSubmit(this.props.onSubmit)
+    submitter() // submits
   }
 
   render () {

@@ -40,10 +40,11 @@ let mainWindow = null
 const keyShortcutForSearch = 'Shift+Space'
 const keyNewGist = 'CommandOrControl+N'
 const keyEditGist = 'CommandOrControl+E'
+const keySubmitGist = 'CommandOrControl+S'
 const keyImmersiveMode = 'CommandOrControl+I'
 const keyAboutPage = 'CommandOrControl+,'
 const keyDashboard = 'CommandOrControl+D'
-const keyExitEditor = 'CommandOrControl+Escape'
+const keyEditorExit = 'CommandOrControl+Escape'
 
 function createWindowAndAutoLogin () {
   createWindow(true)
@@ -181,8 +182,13 @@ function setUpApplicationMenu () {
         click: (item, mainWindow) => mainWindow && mainWindow.send('edit-gist')
       },
       {
+        label: 'Submit Gist',
+        accelerator: keySubmitGist,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('submit-gist')
+      },
+      {
         label: 'Exit Editor',
-        accelerator: keyExitEditor,
+        accelerator: keyEditorExit,
         click: (item, mainWindow) => mainWindow && mainWindow.send('exit-editor')
       },
       {
