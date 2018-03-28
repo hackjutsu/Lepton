@@ -158,6 +158,7 @@ Limited by GitHub API, Lepton supports searching for following fields.
       <td><img src=https://avatars2.githubusercontent.com/u/4332224?v=3><a href="https://github.com/Gisonrg">Gisonrg</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/7821318?v=3><a href="https://github.com/ArLEquiN64">ArLEquiN64</a></td>
       <td><img src=https://avatars1.githubusercontent.com/u/1841272?v=3><a href="https://github.com/popey">popey</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/6280136?v=3><a href="https://github.com/yihan-us">yihan-us</a></td>
    </tr>
 </table>
 
