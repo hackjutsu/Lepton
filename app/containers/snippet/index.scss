@@ -31,6 +31,19 @@
     text-transform: uppercase;
   }
 
+  .secret-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+    position: relative;
+    height: 17px;
+
+    svg {
+      width: 12px;
+      height: 14px;
+    }
+  }
+
   .header-controls {
     display: flex;
     align-items: center;
