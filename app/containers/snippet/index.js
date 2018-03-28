@@ -39,6 +39,7 @@ import editIcon from './ei-edit.svg'
 import openInWebIcon from './ei-share.svg'
 import eyeIcon from './ei-eye.svg'
 import trashIcon from './ei-trash.svg'
+import secretIcon from './lock.svg'
 import tagsIcon from './tags.svg'
 
 const conf = remote.getGlobal('conf')
@@ -439,7 +440,13 @@ class Snippet extends Component {
       <div className='header-table'>
         <div className='line'>
           <div className='header-title'>
-            { activeSnippet.brief.public ? 'public gist' : 'secret gist' }
+            { activeSnippet.brief.public 
+              ? 'public gist' 
+              : [
+                  <div className='secret-icon' dangerouslySetInnerHTML={{ __html: secretIcon }} />, 
+                  <span>secret gist</span>
+                ]
+            }
           </div>
           <div className='header-controls'>
             <a className='snippet-control'
