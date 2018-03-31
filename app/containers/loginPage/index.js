@@ -44,7 +44,7 @@ class LoginPage extends Component {
     ipcRenderer.removeAllListeners('auto-login')
   }
 
-  resolveCachedImage(info) {
+  resolveCachedImage (info) {
     if (info && info.image && info.image !== 'null') return info.image
     return null
   }

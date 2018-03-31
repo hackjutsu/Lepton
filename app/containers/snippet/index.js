@@ -46,6 +46,7 @@ const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
 const kIsExpanded = conf.get('snippet:expanded')
+const kTabLength = ' '.repeat(conf.get('editor:tabSize'))
 
 class Snippet extends Component {
   componentDidMount () {
@@ -388,13 +389,17 @@ class Snippet extends Component {
     return language
   }
 
+  adjustTabLength (content) {
+    return content.replace(/[\t]/g, kTabLength)
+  }
+
   createMarkdownCodeBlock (content) {
     return `<div class='markdown-section'>${Markdown.render(content)}</div>`
   }
 
   createHighlightedCodeBlock (content, language) {
     let lineNumber = 0
-    const highlightedContent = HighlightJS.highlightAuto(content, [language]).value
+    const highlightedContent = HighlightJS.highlightAuto(this.adjustTabLength(content), [language]).value
 
     /*
       Highlight.js wraps comment blocks inside <span class='hljs-comment'></span>.
@@ -440,12 +445,12 @@ class Snippet extends Component {
       <div className='header-table'>
         <div className='line'>
           <div className='header-title'>
-            { activeSnippet.brief.public 
-              ? 'public gist' 
+            { activeSnippet.brief.public
+              ? 'public gist'
               : [
-                  <div className='secret-icon' dangerouslySetInnerHTML={{ __html: secretIcon }} />, 
-                  <span>secret gist</span>
-                ]
+                <div className='secret-icon' dangerouslySetInnerHTML={{ __html: secretIcon }} />,
+                <span>secret gist</span>
+              ]
             }
           </div>
           <div className='header-controls'>

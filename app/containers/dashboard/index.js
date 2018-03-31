@@ -53,7 +53,7 @@ class Dashboard extends Component {
       ]
     }
     const chartOptions = {
-      pointLabelFontSize : 12,
+      pointLabelFontSize: 12,
     }
 
     return (
