@@ -299,7 +299,7 @@ class UserPanel extends Component {
       <div className='static-modal'>
         <Modal show={ this.props.logoutModalStatus === 'ON' } bsSize='small'>
           <Modal.Header>
-            <Modal.Title>CONFIRM LOGOUT?</Modal.Title>
+            <Modal.Title>Confirm logout?</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
             <Button onClick={ this.handleLogoutModalCancelClicked.bind(this) }>cancel</Button>

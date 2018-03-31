@@ -26,7 +26,7 @@ class LoginPage extends Component {
     logger.debug('-----> Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
 
     this.setState({
-      cachedImage: loggedInUserInfo ? loggedInUserInfo.image : null,
+      cachedImage: this.resolveCachedImage(loggedInUserInfo),
     })
 
     logger.debug('-----> Registering listener for auto-login signal')
@@ -42,6 +42,11 @@ class LoginPage extends Component {
   componentWillUnmount () {
     logger.debug('-----> Removing listener for auto-login signal')
     ipcRenderer.removeAllListeners('auto-login')
+  }
+
+  resolveCachedImage(info) {
+    if (info && info.image && info.image !== 'null') return info.image
+    return null
   }
 
   handleLoginClicked () {
