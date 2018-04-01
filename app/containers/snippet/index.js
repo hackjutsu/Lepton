@@ -356,7 +356,7 @@ class Snippet extends Component {
         <Modal.Header closeButton>
           <Modal.Title>
             { gistRawModal.file }
-            <a className='copy-raw-link' href='#' onClick={ this.handleCopyRawLinkClicked.bind(this, gistRawModal.link) }>#share</a>
+            <a className='copy-raw-link' href='#' onClick={ this.handleCopyRawLinkClicked.bind(this, gistRawModal.link) }>LINK</a>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -578,19 +578,19 @@ class Snippet extends Component {
                   href='#'
                   className='file-header-control'
                   onClick={ this.handleCopyGistLinkClicked.bind(this, activeSnippet, gistFile) }>
-                  #share
+                  SHARE
                 </a>
                 <a
                   href='#'
                   className='file-header-control'
                   onClick={ this.showRawModalModal.bind(this, gistFile) }>
-                  #raw
+                  RAW
                 </a>
                 <a
                   href='#'
                   className='file-header-control'
                   onClick={ this.handleCopyGistFileClicked.bind(this, gistFile) }>
-                  #copy
+                  COPY
                 </a>
               </div>
             </div>
