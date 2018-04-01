@@ -448,8 +448,8 @@ class Snippet extends Component {
             { activeSnippet.brief.public
               ? 'public gist'
               : [
-                <div className='secret-icon' dangerouslySetInnerHTML={{ __html: secretIcon }} />,
-                <span>secret gist</span>
+                <div key='icon'className='secret-icon' dangerouslySetInnerHTML={{ __html: secretIcon }} />,
+                <span key='description' >secret gist</span>
               ]
             }
           </div>
@@ -495,7 +495,11 @@ class Snippet extends Component {
     }
     htmlForDescriptionSection.push(
       <div className='description-section' key='description'
-        dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { stripPrefix: false, newWindow: false })} }/>
+        dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { stripPrefix: {
+          scheme: true,
+          www: true
+        },
+        newWindow: false })} }/>
     )
     htmlForDescriptionSection.push(
       <div className='custom-tags-section' key='customTags'>
