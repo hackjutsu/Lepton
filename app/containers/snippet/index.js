@@ -550,6 +550,9 @@ class Snippet extends Component {
       const fileList = activeSnippet.details.files
       for (const key in fileList) {
         const gistFile = fileList[key]
+
+        if (gistFile.filename === '.leptonrc') gistFile.language = 'json'
+
         fileArray.push(Object.assign({
           filename: gistFile.filename,
           content: gistFile.content
