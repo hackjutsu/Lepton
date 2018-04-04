@@ -59,12 +59,19 @@ class Dashboard extends Component {
     return (
       <div className='dashboard-section'>
         <Radar data={ chartData } options={ chartOptions } width="350" height="300"/>
-        <div className='greeting'>
-          { labels[0] === 'Other'
-            ? 'Hmm... Looks like you are learning a mysterious language(Other)...'
-            : `Well done! You are on the road to ${labels[0]} Master!`
-          }
+        <div className='compliment'>
+          { this.renderCompliments(labels[0]) }
         </div>
+      </div>
+    )
+  }
+
+  renderCompliments (lang) {
+    if (lang === 'Other') return 'Hmm... Looks like you are learning a mysterious language.'
+    return (
+      <div>
+        <div className='compliment-word'> Well done! You are on the road to </div>
+        <div className='compliment-word'><b> { `${lang}  Master!` } </b></div>
       </div>
     )
   }

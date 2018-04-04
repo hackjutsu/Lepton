@@ -16,10 +16,14 @@
     flex-direction: column;
   }
 
-  .greeting {
+  .compliment {
     @extend .font-style-base;
     text-align: center;
     margin-top: 20px;
+  }
+
+  .compliment-word {
+    margin: 2px;
   }
 
   .octocat {
