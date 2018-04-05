@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "1.6.2-beta.5",
+  "version": "1.6.2-beta.6",
   "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
@@ -72,6 +72,7 @@
     "human-readable-time": "^0.3.0",
     "image-downloader": "^3.2.1",
     "markdown-it": "^8.3.2",
+    "markdown-it-katex": "^2.0.3",
     "markdown-it-task-lists": "^2.0.1",
     "moment": "^2.20.1",
     "nconf": "^0.10.0",

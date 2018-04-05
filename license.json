@@ -8,7 +8,7 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@sindresorhus/is",
     "licenseFile": "node_modules/@sindresorhus/is/license"
   },
-  "Lepton@1.6.2-beta.5": {
+  "Lepton@1.6.2-beta.6": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -3765,6 +3765,12 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/jsprim",
     "licenseFile": "node_modules/jsprim/LICENSE"
   },
+  "katex@0.6.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Khan/KaTeX",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/katex",
+    "licenseFile": "node_modules/katex/LICENSE.txt"
+  },
   "keyboardevent-from-electron-accelerator@0.7.1": {
     "licenses": "MIT",
     "repository": "https://github.com/parro-it/keyboardevent-from-electron-accelerator",
@@ -4067,6 +4073,13 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/map-visit",
     "licenseFile": "node_modules/map-visit/LICENSE"
   },
+  "markdown-it-katex@2.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/waylonflinn/markdown-it-katex",
+    "publisher": "waylonflinn@gmail.com",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/markdown-it-katex",
+    "licenseFile": "node_modules/markdown-it-katex/LICENSE"
+  },
   "markdown-it-task-lists@2.0.1": {
     "licenses": "ISC",
     "repository": "https://github.com/revin/markdown-it-task-lists",
@@ -4079,6 +4092,12 @@
     "repository": "https://github.com/markdown-it/markdown-it",
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/markdown-it",
     "licenseFile": "node_modules/markdown-it/LICENSE"
+  },
+  "match-at@0.1.1": {
+    "licenses": "MIT*",
+    "repository": "https://github.com/sophiebits/match-at",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/match-at",
+    "licenseFile": "node_modules/match-at/LICENSE"
   },
   "md5.js@1.3.4": {
     "licenses": "MIT",
