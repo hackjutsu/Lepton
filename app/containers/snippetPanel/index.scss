@@ -7,7 +7,10 @@
   width: 100%;
   overflow: overlay;
   height: 100vh;
-  visibility: hidden;
+}
+
+.snippet-panel:not(:hover)::-webkit-scrollbar {
+  display: none;
 }
 
 .snippet-panel-immersive {
@@ -25,12 +28,6 @@
     text-align: center;
     height: 100vh;
   }
-}
-
-.snippet-panel-content,
-.snippet-panel:hover,
-.snippet-panel-immersive:hover {
-  visibility: visible;
 }
 
 .snippet-panel {
