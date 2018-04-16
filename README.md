@@ -121,27 +121,7 @@ Lepton can be configured by `<home_dir>/.leptonrc` in the these fields. (Create 
 Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore their options.
 
 ## FAQ
-#### My snippet's language is classified as "Other"
-Lepton depends on GitHub API to detect the language. If it fails, the snippet's language is marked as "Other". However, we can put `// vim: syntax=<your_language>` at the top to explicitly specify the language.
-```
-// vim: syntax=javascript
-let test = 'This is a javascript file'
-```
-
-#### Search
-Limited by GitHub API, Lepton supports searching for following fields.
-- file name
-- description
-- tag
-- gist id
-
-#### Title and Tags
-```
-[title] description #tag1 #tag2
-```
-
-#### Donation
-*We DON'T accept donation personally.* If you like, feel free to donate to [Wikimedia Foundation](https://wikimediafoundation.org/wiki/Ways_to_Give), which helps sustain free knowledge through Wikipedia and its sister projects for people around the world. You are welcome to create an issue to share how much you have contributed.
+[--> Link to Wiki FAQ](https://github.com/hackjutsu/Lepton/wiki/FAQ)
 
 ## Contributors
 <table id="contributors">
