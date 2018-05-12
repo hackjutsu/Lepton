@@ -121,7 +121,7 @@ Lepton can be configured by `<home_dir>/.leptonrc` in the these fields. (Create 
 Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore their options.
 
 ## FAQ
-[--> Link to Wiki FAQ](https://github.com/hackjutsu/Lepton/wiki/FAQ)
+[--> Wiki FAQ](https://github.com/hackjutsu/Lepton/wiki/FAQ)
 
 ## Contributors
 <table id="contributors">
@@ -132,16 +132,19 @@ Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9d
       <td><img src=https://avatars2.githubusercontent.com/u/13786673?v=3><a href="https://github.com/meilinz">meilinz</a></td>
       <td><img src=https://avatars3.githubusercontent.com/u/5697293?v=3><a href="https://github.com/lcgforever">lcgforever</a></td>
       <td><img src=https://avatars1.githubusercontent.com/u/180032?v=3><a href="https://github.com/Calinou">Calinou</a></td>
-      <td><img src=https://avatars0.githubusercontent.com/u/7173984?v=3><a href="https://github.com/rogersachan">rogersachan</a></td>
    </tr>
    <tr>
+      <td><img src=https://avatars0.githubusercontent.com/u/7173984?v=3><a href="https://github.com/rogersachan">rogersachan</a></td>
       <td><img src=https://avatars3.githubusercontent.com/u/2075566?v=3><a href="https://github.com/passerbyid">passerbyid</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/12994810?v=3><a href="https://github.com/YYSU">YYSU</a></td>
       <td><img src=https://avatars3.githubusercontent.com/u/26782336?v=3><a href="https://github.com/cixuuz">cixuuz</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/4332224?v=3><a href="https://github.com/Gisonrg">Gisonrg</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/7821318?v=3><a href="https://github.com/ArLEquiN64">ArLEquiN64</a></td>
+   </tr>
+   <tr>
       <td><img src=https://avatars1.githubusercontent.com/u/1841272?v=3><a href="https://github.com/popey">popey</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/6280136?v=3><a href="https://github.com/yihan-us">yihan-us</a></td>
+      <td><img src=https://avatars3.githubusercontent.com/u/13814048?v=3><a href="https://github.com/rawrmonstar">rawrmonstar</a></td>
    </tr>
 </table>
 
