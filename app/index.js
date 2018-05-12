@@ -427,7 +427,7 @@ function updateLocalStorage (data) {
 
     logger.debug(`-----> User info is cached.`)
   } catch (e) {
-    logger.err(`-----> Failed to cache user info. ${JSON.stringify(e)}`)
+    logger.error(`-----> Failed to cache user info. ${JSON.stringify(e)}`)
   }
 }
 

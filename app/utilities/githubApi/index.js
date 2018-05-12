@@ -113,7 +113,7 @@ function requestGists (token, userId, page, gistList) {
   logger.debug(TAG + '[V2] Requesting gists with page ' + page)
   return ReqPromise(makeOptionForGetAllGists(token, userId, page))
     .catch(err => {
-      logger.err(err)
+      logger.error(err)
     })
     .then((res) => {
       parseBody(res.body, gistList)
