@@ -83,11 +83,11 @@ function getAllGistsV2 (token, userId) {
   logger.debug(TAG + `[V2] Getting all gists of ${userId} with token ${token}`)
   const gistList = []
   return requestGists(token, userId, 1, gistList)
-    .then((res) => {
+    .then(res => {
       if (!res.headers['link']) {
         logger.debug(TAG + '[V2] The header missing link property')
         logger.debug(TAG + JSON.stringify(res.headers))
-        logger.debug(TAG + `The length of gistLis is ${gistList.length}`)
+        logger.debug(TAG + `The length of gistList is ${gistList.length}`)
 
         // Falling back to getAllGistsV1 to deal with two-factor Authenticated clients
         logger.debug(TAG + `[V2] Falling back to [V1]...`)
@@ -100,12 +100,14 @@ function getAllGistsV2 (token, userId) {
 
       const requests = []
       for (let i = 2; i <= maxPage; ++i) { requests.push(requestGists(token, userId, i, gistList)) }
-
       return Promise.all(requests)
+        .then(() => {
+          return gistList.sort((g1, g2) => g2.updated_at.localeCompare(g1.updated_at))
+        })
     })
-    .then(() => {
-      gistList.sort((g1, g2) => g2.updated_at.localeCompare(g1.updated_at))
-      return gistList
+    .catch(err => {
+      logger.debug(TAG + `[V2] Something wrong happens. Falling back to [V1]...`)
+      return getAllGistsV1(token, userId)
     })
 }
 
@@ -115,7 +117,7 @@ function requestGists (token, userId, page, gistList) {
     .catch(err => {
       logger.error(err)
     })
-    .then((res) => {
+    .then(res => {
       parseBody(res.body, gistList)
       return res
     })
