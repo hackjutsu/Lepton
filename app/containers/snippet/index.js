@@ -7,6 +7,7 @@ import { Panel, Modal, Button, ProgressBar, Collapse } from 'react-bootstrap'
 import { default as GistEditorForm, UPDATE_GIST } from '../gistEditorForm'
 import HighlightJS from 'highlight.js'
 import Markdown from '../../utilities/markdown'
+import JupyterNotebook from '../../utilities/notebook'
 import { remote, clipboard, ipcRenderer } from 'electron'
 import Notifier from '../../utilities/notifier'
 import HumanReadableTime from 'human-readable-time'
@@ -397,6 +398,10 @@ class Snippet extends Component {
     return `<div class='markdown-section'>${Markdown.render(content)}</div>`
   }
 
+  createJupyterNotebookCodeBlock (content) {
+    return `<div class='jupyter-notebook-section'>${JupyterNotebook.render(content)}</div>`
+  }
+
   createHighlightedCodeBlock (content, language) {
     let lineNumber = 0
     const highlightedContent = HighlightJS.highlightAuto(this.adjustTabLength(content), [language]).value
@@ -428,11 +433,24 @@ class Snippet extends Component {
 
   createMarkup (content, lang) {
     const language = this.adaptedLanguage(lang)
-    const htmlContent = language === 'Markdown'
-      ? this.createMarkdownCodeBlock(content)
-      : this.createHighlightedCodeBlock(content, language)
+    switch (language) {
+      case 'Jupyter Notebook':
+        return { __html: this.createJupyterNotebookCodeBlock(content) }
+      case 'Markdown':
+        return { __html: this.createMarkdownCodeBlock(content) }
+      default:
+        return { __html: this.createHighlightedCodeBlock(content, language) }
+    }
+  }
 
-    return { __html: htmlContent }
+  renderCodeBlock (content, lang) {
+    switch (lang) {
+      // case 'Jupyter Notebook alt':
+      //   const notebookJSON = JSON.parse(content)
+      //   return <Jupyter content={notebookJSON} showCode={true} showOutput={true} />
+      default:
+        return <div className='code-area' dangerouslySetInnerHTML={ this.createMarkup(content, lang) } />
+    }
   }
 
   handleCopyRawLinkClicked (url) {
@@ -598,9 +616,7 @@ class Snippet extends Component {
               </div>
             </div>
             <Collapse in={ isExpanded }>
-              <div
-                className='code-area'
-                dangerouslySetInnerHTML={ this.createMarkup(gistFile.content, gistFile.language) }/>
+              {this.renderCodeBlock(gistFile.content, gistFile.language)}
             </Collapse>
           </div>
         )
