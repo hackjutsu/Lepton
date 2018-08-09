@@ -106,7 +106,7 @@ function getAllGistsV2 (token, userId) {
         })
     })
     .catch(err => {
-      logger.debug(TAG + `[V2] Something wrong happens. Falling back to [V1]...`)
+      logger.debug(TAG + `[V2] Something wrong happens ${err}. Falling back to [V1]...`)
       return getAllGistsV1(token, userId)
     })
 }
