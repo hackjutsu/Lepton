@@ -33,6 +33,7 @@ import {
 } from '../../utilities/githubApi'
 
 import './index.scss'
+import './prism.scss'
 import '../../utilities/vendor/highlightJS/styles/github-gist.css'
 
 import editIcon from './ei-edit.svg'
@@ -47,6 +48,28 @@ const logger = remote.getGlobal('logger')
 
 const kIsExpanded = conf.get('snippet:expanded')
 const kTabLength = ' '.repeat(conf.get('editor:tabSize'))
+
+const nb = require('notebookjs')
+const Prism = require('prismjs')
+const highlighter = (code, lang) => {
+  if (typeof lang === 'undefined') lang = 'markup'
+  if (!Prism.languages.hasOwnProperty(lang)) {
+      try {
+          require('prismjs/components/prism-' + lang + '.js')
+      } catch (e) {
+          Prism.languages[lang] = false
+      }
+  }
+  return Prism.languages[lang] ? Prism.highlight(code, Prism.languages[lang]) : code
+}
+nb.highlighter = (text, pre, code, lang) => {
+  const language = lang || 'text'
+  pre.className = 'language-' + language
+  if (typeof code != 'undefined') {
+      code.className = 'language-' + language
+  }
+  return highlighter(text, language)
+}
 
 class Snippet extends Component {
   componentDidMount () {
@@ -397,6 +420,12 @@ class Snippet extends Component {
     return `<div class='markdown-section'>${Markdown.render(content)}</div>`
   }
 
+  createJupyterNotebookCodeBlock (content) {
+    const notebook = nb.parse(JSON.parse(content))
+    const notebookHtml = notebook.render().outerHTML
+    return notebookHtml
+  }
+
   createHighlightedCodeBlock (content, language) {
     let lineNumber = 0
     const highlightedContent = HighlightJS.highlightAuto(this.adjustTabLength(content), [language]).value
@@ -408,7 +437,7 @@ class Snippet extends Component {
       highlighted. The following code fixes it by appending <span> to each line
       of the comment block.
     */
-    const commentPattern = /<span class="hljs-comment">(.|\n)*?<\/span>/g
+    const commentPattern = /<span class='hljs-comment'>(.|\n)*?<\/span>/g
     const adaptedHighlightedContent = highlightedContent.replace(commentPattern, data => {
       return data.replace(/\r?\n/g, () => {
         // Chromium is smart enough to add the closing </span>
@@ -426,13 +455,23 @@ class Snippet extends Component {
     return `<pre><code><table class='code-table'>${contentTable}</table></code></pre>`
   }
 
-  createMarkup (content, lang) {
+  renderCodeArea (content, lang) {
     const language = this.adaptedLanguage(lang)
-    const htmlContent = language === 'Markdown'
-      ? this.createMarkdownCodeBlock(content)
-      : this.createHighlightedCodeBlock(content, language)
-
-    return { __html: htmlContent }
+    let htmlContent = ''
+    switch(language) {
+      case 'Jupyter Notebook':
+        htmlContent = this.createJupyterNotebookCodeBlock(content)
+        break
+      case 'Markdown':
+        htmlContent = this.createMarkdownCodeBlock(content)
+        break
+      default:
+        htmlContent = this.createHighlightedCodeBlock(content, language)
+    }
+    return (
+      <div className='code-area'
+        dangerouslySetInnerHTML={ { __html: htmlContent } }/>
+    )
   }
 
   handleCopyRawLinkClicked (url) {
@@ -598,9 +637,7 @@ class Snippet extends Component {
               </div>
             </div>
             <Collapse in={ isExpanded }>
-              <div
-                className='code-area'
-                dangerouslySetInnerHTML={ this.createMarkup(gistFile.content, gistFile.language) }/>
+                { this.renderCodeArea(gistFile.content, gistFile.language) }
             </Collapse>
           </div>
         )
