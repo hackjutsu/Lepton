@@ -56,6 +56,9 @@ class UserPanel extends Component {
     ipcRenderer.on('exit-editor', () => {
       this.closeGistEditorModal()
     })
+    ipcRenderer.on('sync-gists', () => {
+      this.handleSyncClicked()
+    })
   }
 
   componentWillUnmount () {
