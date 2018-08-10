@@ -535,7 +535,9 @@ class Snippet extends Component {
               </div>
             </div>
             <Collapse in={ isExpanded }>
-              <CodeArea content={gistFile.content} language={gistFile.language} kTabLength={kTabLength}/>
+              <div className='collapsable-code-area'>
+                <CodeArea content={gistFile.content} language={gistFile.language} kTabLength={kTabLength}/>
+              </div>
             </Collapse>
           </div>
         )
