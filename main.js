@@ -68,7 +68,8 @@ function createWindow (autoLogin) {
     minHeight: 700,
     // titleBarStyle: 'hidden',
     backgroundColor: '#808080',
-    show: false
+    show: false,
+    icon: path.join(__dirname, '/icon/icon.png')
   })
 
   if (autoLogin) {
