@@ -8,26 +8,21 @@ import nb from '../../utilities/jupyterNotebook'
 
 import '../../utilities/vendor/prism/prism.scss'
 import '../../utilities/vendor/highlightJS/styles/github-gist.css'
+import './jupyterNotebook.scss'
+import './markdown.scss'
 
 const logger = remote.getGlobal('logger')
 
 export default class CodeArea extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { hasError: false }
-  }
-
-  componentDidCatch (error, info) {
-    // Display fallback UI
-    this.setState({ hasError: true })
-    logger.debug(`-----> Failed to render CodeArea is ${error} ${info}`)
-  }
-
   createJupyterNotebookCodeBlock (content, language, kTabLength) {
-    if (this.state.hasError) return this.createHighlightedCodeBlock(content, language, kTabLength)
-    const notebook = nb.parse(JSON.parse(content))
-    const notebookHtml = notebook.render().outerHTML
-    return `<div class='jupyterNotebook-section'>${notebookHtml}</div>`
+    try {
+      const notebook = nb.parse(JSON.parse(content))
+      const notebookHtml = notebook.render().outerHTML
+      return `<div class='jupyterNotebook-section'>${notebookHtml}</div>`
+    } catch (err) {
+      logger.error(`Failed to render Jupyter Notebook content with err ${err}`)
+      return this.createHighlightedCodeBlock(content, language, kTabLength)
+    }
   }
 
   createMarkdownCodeBlock (content) {

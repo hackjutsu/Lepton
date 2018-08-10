@@ -23,7 +23,7 @@ import {
   updateGistDeleteModeStatus,
   selectGistTag,
   updateFileExpandStatus,
-  updateGistTags } from '../../actions/index'
+  updateGistTags } from '../../actions'
 
 import {
   getGitHubApi,
@@ -32,7 +32,6 @@ import {
 } from '../../utilities/githubApi'
 
 import './index.scss'
-import '../../utilities/vendor/highlightJS/styles/github-gist.css'
 
 import editIcon from './ei-edit.svg'
 import openInWebIcon from './ei-share.svg'
