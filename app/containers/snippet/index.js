@@ -488,7 +488,11 @@ class Snippet extends Component {
       for (const key in fileList) {
         const gistFile = fileList[key]
 
-        if (gistFile.filename === '.leptonrc') gistFile.language = 'json'
+        const filename = gistFile.filename
+        if (filename === '.leptonrc') gistFile.language = 'json'
+        else if (filename.endsWith('.sol') || filename.endsWith('.solidity')) {
+          gistFile.language = 'solidity'
+        }
 
         fileArray.push(Object.assign({
           filename: gistFile.filename,

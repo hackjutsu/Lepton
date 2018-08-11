@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import { remote } from 'electron'
 import HighlightJS from 'highlight.js'
+import hljsDefineSolidity from 'highlightjs-solidity'
 import Markdown from '../../utilities/markdown'
 import nb from '../../utilities/jupyterNotebook'
 
@@ -12,6 +13,7 @@ import './jupyterNotebook.scss'
 import './markdown.scss'
 
 const logger = remote.getGlobal('logger')
+hljsDefineSolidity(HighlightJS) // register solidity to hightlight.js
 
 export default class CodeArea extends Component {
   createJupyterNotebookCodeBlock (content, language, kTabLength) {

@@ -69,6 +69,7 @@
     "electron-window-state": "^4.1.1",
     "fuse.js": "^3.0.0",
     "highlight.js": "^9.9.0",
+    "highlightjs-solidity": "^1.0.6",
     "human-readable-time": "^0.3.0",
     "image-downloader": "^3.2.1",
     "markdown-it": "^8.3.2",

@@ -3129,6 +3129,13 @@
     "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/highlight.js",
     "licenseFile": "node_modules/highlight.js/LICENSE"
   },
+  "highlightjs-solidity@1.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/pospi/highlightjs-solidity",
+    "publisher": "pospi",
+    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/highlightjs-solidity",
+    "licenseFile": "node_modules/highlightjs-solidity/README.md"
+  },
   "hmac-drbg@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/indutny/hmac-drbg",
