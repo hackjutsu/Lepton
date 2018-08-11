@@ -4,6 +4,22 @@
 }
 
 .jupyterNotebook-section {
+
+    h1 {
+      @extend .font-style-base;
+      font-size: 30px !important;
+      font-weight: 600;
+      margin-top: 20px !important;
+      margin-bottom: 10px !important;
+    }
+
+    h2 {
+      @extend .font-style-base;
+      font-size: 25px !important;
+      margin-top: 20px !important;
+      margin-bottom: 10px !important;
+    }
+
     .nb-notebook {
       @extend .font-style-base;
       line-height: 1.5; 
