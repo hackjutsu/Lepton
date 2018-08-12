@@ -1,4 +1,7 @@
 module.exports = {
+    "userPanel": {
+        "showProfilePhoto": true
+    },
     "logger": {
         "level": "debug"
     },
