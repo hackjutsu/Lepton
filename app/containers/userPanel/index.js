@@ -47,6 +47,7 @@ if (conf.get('enterprise:enable')) {
 }
 
 const kIsPrivate = conf.get('snippet:newSnippetPrivate')
+const showProfilePhoto = conf.get('userPanel:showProfilePhoto')
 
 class UserPanel extends Component {
   componentDidMount () {
@@ -267,7 +268,7 @@ class UserPanel extends Component {
 
   renderProfile () {
     const { profile, activeStatus } = this.props.userSession
-    if (!profile || activeStatus === 'INACTIVE') {
+    if (!showProfilePhoto || !profile || activeStatus === 'INACTIVE') {
       return
     }
 
