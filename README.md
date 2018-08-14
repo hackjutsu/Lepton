@@ -146,6 +146,7 @@ Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9d
       <td><img src=https://avatars1.githubusercontent.com/u/1841272?v=3><a href="https://github.com/popey">popey</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/6280136?v=3><a href="https://github.com/tonyxu-io">tonyxu-io</a></td>
       <td><img src=https://avatars3.githubusercontent.com/u/13814048?v=3><a href="https://github.com/rawrmonstar">rawrmonstar</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/965804?v=3><a href="https://github.com/baybatu">baybatu</a></td>
    </tr>
 </table>
 
