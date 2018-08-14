@@ -74,6 +74,7 @@ export default class CodeArea extends Component {
       case 'C#': return 'cs'
       case 'Objective-C': return 'objectivec'
       case 'Objective-C++': return 'objectivec'
+      case 'Visual Basic': return 'vbscript'
       default:
     }
     return language
