@@ -267,6 +267,7 @@ class UserPanel extends Component {
       image: null
     })
     removeAccessToken()
+    remote.getCurrentWindow().setTitle('Lepton') // update the app title
   }
 
   renderProfile () {
