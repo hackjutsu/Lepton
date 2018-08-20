@@ -289,13 +289,7 @@
 
   .markdown-section {
     @extend .font-style-md;
-    // border: 1px solid rgb(204, 204, 204);
     padding: 15px 20px;
-    // border-radius: 0 0 5px 5px;
-
-    pre {
-      font-size: 13px !important;
-    }
   }
 
   hr {
