@@ -77,11 +77,15 @@ class LoginPage extends Component {
   renderControlSection () {
     const { authWindowStatus, loggedInUserInfo, userSessionStatus } = this.props
     const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
+    const welcomeMessage = 'Lepton is FREE. Like us in GitHub!'
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
         <div className='button-group-modal'>
           <ProgressBar active now={ 100 }/>
+          <div className="login-page-footer">
+            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
+          </div>
         </div>
       )
     }
@@ -96,6 +100,9 @@ class LoginPage extends Component {
             onClick={ this.handleContinueButtonClicked.bind(this) }>
             { loggedInUserName ? `Continue as ${loggedInUserName}` : 'HAPPY CODING' }
           </Button>
+          <div className="login-page-footer">
+            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
+          </div>
         </div>
       )
     }
@@ -115,6 +122,9 @@ class LoginPage extends Component {
             onClick={ this.handleLoginClicked.bind(this) }>
             GitHub Login
           </Button>
+          <div className="login-page-footer">
+            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
+          </div>
         </div>
       )
     }
