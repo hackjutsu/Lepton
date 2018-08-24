@@ -24,7 +24,7 @@
   }
 
   .button-group-modal {
-    margin: 20px 0;
+    margin: 20px 20px 0px 20px;
   }
 
   .modal-button {
@@ -42,5 +42,13 @@
 
   .modal-button-disabled:hover {
     cursor: not-allowed;
+  }
+
+  .login-page-footer {
+    font-size: 10px;
+    font-style: italic;
+    color: gray;
+    margin-top: 10px;
+    text-decoration: underline;
   }
 }
