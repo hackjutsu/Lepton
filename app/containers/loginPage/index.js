@@ -9,9 +9,9 @@ import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jp
 
 const darkTheme = true
 if (darkTheme) {
-  import ('./index.scss')
+  import('./index.scss')
 } else {
-  import ('./index.dark.scss')
+  import('./index.dark.scss')
 }
 
 const conf = remote.getGlobal('conf')
