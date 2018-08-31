@@ -1,0 +1,54 @@
+.login-modal {
+
+  .modal-button-base {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  .modal {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+    background: #808080;
+  }
+
+  .modal-content {
+    margin-top: 100px;
+    min-height: 400px;
+  }
+
+  .profile-image-modal {
+    width: 200px;
+    height: 200px;
+    margin: 5px;
+  }
+
+  .button-group-modal {
+    margin: 20px 20px 0px 20px;
+  }
+
+  .modal-button {
+    @extend .modal-button-base;
+  }
+
+  .modal-button:focus {
+    outline: none;
+  }
+
+  .modal-button-disabled {
+    @extend .modal-button-base;
+    cursor: not-allowed;
+  }
+
+  .modal-button-disabled:hover {
+    cursor: not-allowed;
+  }
+
+  .login-page-footer {
+    font-size: 10px;
+    font-style: italic;
+    color: gray;
+    margin-top: 10px;
+    text-decoration: underline;
+  }
+}
