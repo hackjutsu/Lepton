@@ -24,7 +24,8 @@ module.exports = {
         presets: [
           ['es2015',  { "modules": false }],
           'react'
-        ]
+        ],
+        plugins: ['syntax-dynamic-import']
       }
     }, {
       test: /\.(scss|css)$/,
