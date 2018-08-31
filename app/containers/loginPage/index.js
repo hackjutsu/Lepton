@@ -7,7 +7,12 @@ import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
 
-import './index.scss'
+const darkTheme = true
+if (darkTheme) {
+  import './index.scss'
+} else {
+  import './index.dark.scss'
+}
 
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
