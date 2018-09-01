@@ -13,6 +13,15 @@
     cursor: pointer;
   }
 
+  .theme-toggle {
+    color: var(--text-invert);
+    background-color: var(--accent-regular);
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 5px 15px;
+  }
+
   /* wrap words if username cannot fit into one line */
   .profile-username-section {
     word-wrap: break-word;
@@ -42,10 +51,11 @@
     font-size: 15px;
     margin-top: 8px;
     color: inherit;
-    transition: color .1s;
+    opacity: .95;
+    transition: opacity .15s;
 
     &:hover {
-      color:#313133;
+      opacity: .7;
     }
   }
 
@@ -53,7 +63,7 @@
     @extend .font-style-base;
     margin: 3px;
     font-size: 11px;
-    color: #787282;
+    color: var(--text-secondary);
   }
 }
 

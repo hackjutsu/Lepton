@@ -5,9 +5,9 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #dadee3;
-  color: #413D45;
-  background-color: #f6f5f6;
+  border-right: 1px solid var(--border-color);
+  color: var(--text-primary);
+  background-color: var(--bg-secondary);
 }
 
 .menu-panel {
@@ -16,7 +16,7 @@
     margin-top: 15px;
     margin-bottom: 15px;
     width: 100%;
-    border-top: 1px solid #dadee3;
+    border-top: 1px solid var(--border-color);
   }
 
   .font-style-base {
@@ -26,8 +26,13 @@
 
   .gist-tag {
     @extend .font-style-base;
-    color: #5F5B66;
+    color: var(--text-secondary-darken);
     cursor: pointer;
+    transition: color .15s;
+
+    &:hover {
+      color: var(--text-primary)
+    }
   }
 
   .configure-tag {
@@ -36,7 +41,7 @@
     height: 14px;
     box-sizing: content-box;
     cursor: pointer;
-    fill: #787282;
+    fill: var(--text-secondary);
     transition: fill .15s;
 
     svg {
@@ -82,6 +87,11 @@
     color: inherit;
     margin-bottom: 6px;
     position: relative;
+    transition: opacity .15s;
+
+    &:hover {
+      opacity: .65;
+    }
   }
 
   .tag-section {
@@ -90,7 +100,7 @@
     display: flex;
     flex-direction: column;
     padding: 15px 0;
-    border-top: 1px solid #dadee3;
+    border-top: 1px solid var(--border-color);
   }
 
   .tag-section-active {
@@ -119,7 +129,7 @@
 
   .active-gist-tag {
     @extend .font-style-base;
-    color: #353138;
+    color: var(--text-primary);
     font-weight: bold;
     cursor: pointer;
   }
