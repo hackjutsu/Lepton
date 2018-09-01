@@ -35,20 +35,20 @@
   ul:last-child {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
-    // border-bottom: solid 1px #dadee3;
+    // border-bottom: solid 1px var(--border-color);
   }
 
   .snippet-thumnail-list-item {
     padding: 0 !important;
     border-right-width: 0 !important;
     border-left-width: 0 !important;
-    border-bottom: solid 1px #dadee3;
-    background: white;
+    border-bottom: solid 1px var(--border-color);
+    background: var(--bg-primary);
     cursor: pointer;
   }
 
   .snippet-thumnail-list-item:hover {
-    background-color: #F9F9F9;
+    background-color: var(--bg-secondary);
   }
 
   .snippet-thumnail {
@@ -62,7 +62,7 @@
     @extend .font-style-base;
     padding: 6px;
     font-weight: 500;
-    background: rgb(237, 237, 237);
+    background: var(--bg-secondary);
   }
 
   .active-snippet-thumnail-public {

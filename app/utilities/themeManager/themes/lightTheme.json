@@ -1,0 +1,13 @@
+{
+    "bg-primary": "#FFFFFF",
+    "bg-secondary": "#f5f4f5",
+    "border-color": "#E5E8EB",
+    "text-primary": "#313133",
+    "text-secondary": "#787282",
+    "text-secondary-darken": "#6B6A6F",
+    "text-invert": "#f5f5f5",
+    "accent-success": "#000",
+    "accent-warning": "#000",
+    "accent-regular": "#2b2b2c",
+    "shadow-color": "rgba(55, 55, 55, 0.3)"
+}

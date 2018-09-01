@@ -36,8 +36,8 @@
   .gist-editor-section .panel-heading {
     padding: 2px 5px !important;
     color: inherit;
-    border-color: #dadee3;
-    background-color: #f6f5f6;
+    border-color: var(--border-color);
+    background-color: var(--bg-secondary);
   }
 
   .gist-editor-input-area {
@@ -45,7 +45,7 @@
     flex: 1 1 95%;
     padding: 5px 10px;
     border: solid 1px;
-    border-color: #dadee3;
+    border-color: var(--border-color);
     border-radius: 3px;
     margin-right: 10px;
   }
@@ -56,12 +56,12 @@
     margin: 5px 20px 5px 0px;
     padding: 5px 10px;
     border: solid  1px;
-    border-color: #dadee3;
+    border-color: var(--border-color);
     border-radius: 3px;
   }
 
   .panel {
-    border-color: #dadee3;
+    border-color: var(--border-color);
     border-radius: 0;
   }
 
@@ -116,12 +116,17 @@
     font-style: italic;
     flex: 0 0 auto;
     position: relative;
+
+    & > span {
+      vertical-align: middle;
+    }
   }
 
   .tips-icon {
-    height: 25px;
-    width: 25px;
+    height: 24px;
+    width: 24px;
     display: inline-block;
     vertical-align: middle;
+    fill: currentColor;
   }
 }

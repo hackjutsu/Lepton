@@ -23,6 +23,8 @@ import {
   updateGistNewModeStatus,
   updateLogoutModalStatus } from '../../actions/index'
 
+import ThemeManager from '../../utilities/themeManager'
+
 import {
   getGitHubApi,
   CREATE_SINGLE_GIST
@@ -48,6 +50,9 @@ if (conf.get('enterprise:enable')) {
 
 const kIsPrivate = conf.get('snippet:newSnippetPrivate')
 const hideProfilePhoto = conf.get('userPanel:hideProfilePhoto')
+
+const themeManager = new ThemeManager()
+themeManager.setTheme('dark')
 
 class UserPanel extends Component {
   componentDidMount () {
@@ -88,6 +93,10 @@ class UserPanel extends Component {
       .finally(() => {
         this.closeGistEditorModal()
       })
+  }
+
+  toggleTheme () {
+    themeManager.toggleTheme()
   }
 
   updateGistsStoreWithNewGist (gistDetails) {
@@ -232,6 +241,11 @@ class UserPanel extends Component {
             dangerouslySetInnerHTML={{ __html: syncIcon }} />
           <span>Sync</span>
         </a>
+        <button
+          className='theme-toggle'
+          onClick={ this.toggleTheme.bind(this) }>
+          toggle theme
+        </button>
         <div className='customized-tag-small'>{ this.props.syncTime }</div>
       </div>
     )

@@ -9,8 +9,8 @@
 }
 
 .CodeMirror-gutters {
-  border-right: 1px solid #dadee3;
-  background-color: #f6f5f6;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
 }
 
 .CodeMirror-scroll {
