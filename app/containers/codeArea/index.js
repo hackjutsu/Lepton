@@ -31,13 +31,9 @@ export default class CodeArea extends Component {
     return `<div class='markdown-section'>${Markdown.render(content)}</div>`
   }
 
-  adjustTabLength (content, kTabLength) {
-    return content.replace(/[\t]/g, kTabLength)
-  }
-
   createHighlightedCodeBlock (content, language, kTabLength) {
     let lineNumber = 0
-    const highlightedContent = HighlightJS.highlightAuto(this.adjustTabLength(content, kTabLength), [language]).value
+    const highlightedContent = HighlightJS.highlightAuto(content, [language]).value
 
     /*
       Highlight.js wraps comment blocks inside <span class='hljs-comment'></span>.
@@ -61,7 +57,7 @@ export default class CodeArea extends Component {
               </tr>`
     }).join('')
 
-    return `<pre><code><table class='code-table'>${contentTable}</table></code></pre>`
+    return `<pre><code><table class='code-table' style='tab-size: ${kTabLength};'>${contentTable}</table></code></pre>`
   }
 
   //  Adapt the language name for Highlight.js. For example, 'C#' should be

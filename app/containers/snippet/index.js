@@ -44,7 +44,7 @@ const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
 const kIsExpanded = conf.get('snippet:expanded')
-const kTabLength = ' '.repeat(conf.get('editor:tabSize'))
+const kTabLength = conf.get('editor:tabSize')
 
 class Snippet extends Component {
   componentDidMount () {
