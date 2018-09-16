@@ -37,12 +37,12 @@ export default class CodeArea extends Component {
 
     /*
       Highlight.js wraps comment blocks inside <span class='hljs-comment'></span>.
-      However, when the multi-line comment block is broken down into diffirent
+      However, when the multi-line comment block is broken down into different
       table rows, only the first row, which is appended by the <span> tag, is
       highlighted. The following code fixes it by appending <span> to each line
       of the comment block.
     */
-    const commentPattern = /<span class="hljs-comment">(.|\n)*?<\/span>/g
+    const commentPattern = /<span class="hljs-comment">(.|\n)*?\*\/\s*<\/span>/g
     const adaptedHighlightedContent = highlightedContent.replace(commentPattern, data => {
       return data.replace(/\r?\n/g, () => {
         // Chromium is smart enough to add the closing </span>
