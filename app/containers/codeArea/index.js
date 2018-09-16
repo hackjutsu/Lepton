@@ -42,7 +42,7 @@ export default class CodeArea extends Component {
       highlighted. The following code fixes it by appending <span> to each line
       of the comment block.
     */
-    const commentPattern = /<span class='hljs-comment'>(.|\n)*?<\/span>/g
+    const commentPattern = /<span class="hljs-comment">(.|\n)*?<\/span>/g
     const adaptedHighlightedContent = highlightedContent.replace(commentPattern, data => {
       return data.replace(/\r?\n/g, () => {
         // Chromium is smart enough to add the closing </span>
