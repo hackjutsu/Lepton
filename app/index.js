@@ -384,7 +384,7 @@ function initUserSession (token) {
       return updateUserGists(profile.login, token)
     })
     .then(() => {
-      logger.debug('-----> before updateLocalStorage1')
+      logger.debug('-----> before updateLocalStorage')
       updateLocalStorage({
         token: token,
         profile: newProfile.login,
@@ -714,7 +714,7 @@ const reduxStore = createStore(
 
 ReactDom.render(
   <Async
-    promise={getCachedUserInfo()}
+    promise={ getCachedUserInfo() }
     then = {cachedUserInfo =>
       <Provider store={ reduxStore }>
         <AppContainer
