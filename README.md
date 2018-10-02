@@ -73,6 +73,22 @@ $ git clone git@github.com:hackjutsu/Lepton.git
 $ cd Lepton && npm i
 ```
 
+#### On Linux
+
+Currently this library uses `libsecret` so you may need to install it before running `npm install`.
+
+Depending on your distribution, you will need to run the following command:
+
+* Debian/Ubuntu: `sudo apt-get install libsecret-1-dev`
+* Red Hat-based: `sudo yum install libsecret-devel`
+* Arch Linux: `sudo pacman -S libsecret`
+
+Rebuild `node-keytar` (native node module)
+
+```bash
+$ npm run electron-rebuild
+```
+
 ### Client ID/Secret
 [Register your application](https://github.com/settings/applications/new), and put your client id and client secret in `./configs/account.js`.
 ```js

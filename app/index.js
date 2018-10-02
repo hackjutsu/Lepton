@@ -8,6 +8,9 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import electronLocalStorage from 'electron-json-storage-sync'
+import { Promise } from 'bluebird'
+import keytar from 'keytar'
+import Async from 'react-promise'
 
 import './utilities/vendor/bootstrap/css/bootstrap.css'
 import AppContainer from './containers/appContainer'
@@ -69,7 +72,8 @@ const localPref = new Store({
 const CONFIG_OPTIONS = {
   client_id: Account.client_id,
   client_secret: Account.client_secret,
-  scopes: ['gist']
+  scopes: ['gist'],
+  keyChainService: 'Lepton Github Token'
 }
 
 let preSyncSnapshot = {
@@ -380,22 +384,23 @@ function initUserSession (token) {
       return updateUserGists(profile.login, token)
     })
     .then(() => {
-      logger.debug('-----> before updateLocalStorage')
+      logger.debug('-----> before updateLocalStorage1')
       updateLocalStorage({
         token: token,
         profile: newProfile.login,
         image: newProfile.avatar_url
+      }).then(() => {
+        logger.debug('-----> after updateLocalStorage')
+
+        logger.debug('-----> before syncLocalPref')
+        syncLocalPref(newProfile.login)
+        logger.debug('-----> after syncLocalPref')
+
+        remote.getCurrentWindow().setTitle(`${ newProfile.login } | Lepton`) // update the app title
+
+        logger.info('[Dispatch] updateUserSession ACTIVE')
+        reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
       })
-      logger.debug('-----> after updateLocalStorage')
-
-      logger.debug('-----> before syncLocalPref')
-      syncLocalPref(newProfile.login)
-      logger.debug('-----> after syncLocalPref')
-
-      remote.getCurrentWindow().setTitle(`${ newProfile.login } | Lepton`) // update the app title
-
-      logger.info('[Dispatch] updateUserSession ACTIVE')
-      reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
     })
     .catch((err) => {
       logger.debug('-----> Failure with ' + JSON.stringify(err))
@@ -415,22 +420,28 @@ function initUserSession (token) {
 
 /** Start: Local storage management **/
 function updateLocalStorage (data) {
-  try {
-    logger.debug(`-----> Caching token ${data.token}`)
-    let rst = electronLocalStorage.set('token', data.token)
-    logger.debug(`-----> [${rst.status}] Cached token ${data.token}`)
-
-    logger.debug(`-----> Caching profile ${data.profile}`)
-    rst = electronLocalStorage.set('profile', data.profile)
-    logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
-
-    logger.debug(`-----> Caching image ${data.image}`)
-    downloadImage(data.image, data.profile)
-
-    logger.debug(`-----> User info is cached.`)
-  } catch (e) {
-    logger.error(`-----> Failed to cache user info. ${JSON.stringify(e)}`)
-  }
+  return new Promise((resolve, reject) => {
+    try {
+      logger.debug(`-----> Caching token ${data.token} in keychain`)
+      keytar.setPassword(CONFIG_OPTIONS.keyChainService, data.profile, data.token).then(() => {
+        logger.debug(`-----> Cached token in keychain`)
+  
+        logger.debug(`-----> Caching profile ${data.profile}`)
+        let rst = electronLocalStorage.set('profile', data.profile)
+        logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
+  
+        logger.debug(`-----> Caching image ${data.image}`)
+        downloadImage(data.image, data.profile)
+  
+        logger.debug(`-----> User info is cached.`)
+  
+        resolve()
+      })
+    } catch (e) {
+      logger.error(`-----> Failed to cache user info. ${JSON.stringify(e)}`)
+      reject(e)
+    }
+  })
 }
 
 function downloadImage (imageUrl, filename) {
@@ -461,21 +472,31 @@ function downloadImage (imageUrl, filename) {
 }
 
 function getCachedUserInfo () {
-  logger.debug('-----> Inside getCachedUserInfo')
-  const cachedProfile = electronLocalStorage.get('profile')
-  logger.debug(`-----> [${cachedProfile.status}] cachedProfile is ${cachedProfile.data}`)
-  const cachedToken = electronLocalStorage.get('token')
-  logger.debug(`-----> [${cachedToken.status}] cachedToken is ${cachedToken.data}`)
+  return new Promise((resolve, reject) => {
+    logger.debug('-----> Inside getCachedUserInfo')
+    const cachedProfile = electronLocalStorage.get('profile')
+    logger.debug(`-----> [${cachedProfile.status}] cachedProfile is ${cachedProfile.data}`)
+    const cachedImage = electronLocalStorage.get('image')
+    logger.debug(`-----> [${cachedImage.status}] cachedImage is ${cachedImage.data}`)
 
-  if (cachedProfile.status && cachedToken.status) {
-    return {
-      token: cachedToken.data,
-      profile: cachedProfile.data,
-      image: electronLocalStorage.get('image').data
+    if (cachedProfile.status && cachedImage.status) {
+      keytar.getPassword(CONFIG_OPTIONS.keyChainService, cachedProfile.data).then((token, err) => {
+        logger.debug(`-----> [${err}] cachedToken is ${token}`)
+
+        if (err) {
+          return resolve(null)
+        }
+        
+        return resolve({
+          token: token,
+          profile: cachedProfile.data,
+          image: cachedImage.data
+        })
+      })
+    } else {
+      return resolve(null)
     }
-  }
-
-  return null
+  })
 }
 
 function syncLocalPref (userName) {
@@ -692,17 +713,21 @@ const reduxStore = createStore(
 )
 
 ReactDom.render(
-  <Provider store={ reduxStore }>
-    <AppContainer
-      searchIndex = { SearchIndex }
-      localPref = { localPref }
-      updateLocalStorage = { updateLocalStorage }
-      loggedInUserInfo = { getCachedUserInfo() }
-      launchAuthWindow = { launchAuthWindow }
-      reSyncUserGists = { reSyncUserGists }
-      updateAboutModalStatus = { updateAboutModalStatus }
-      updateDashboardModalStatus = { updateDashboardModalStatus }
-      updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />
-  </Provider>,
+  <Async
+    promise={getCachedUserInfo()}
+    then = {cachedUserInfo =>
+      <Provider store={ reduxStore }>
+        <AppContainer
+          searchIndex = { SearchIndex }
+          localPref = { localPref }
+          updateLocalStorage = { updateLocalStorage }
+          loggedInUserInfo = { cachedUserInfo }
+          launchAuthWindow = { launchAuthWindow }
+          reSyncUserGists = { reSyncUserGists }
+          updateAboutModalStatus = { updateAboutModalStatus }
+          updateDashboardModalStatus = { updateDashboardModalStatus }
+          updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />
+      </Provider>
+    } />,
   document.getElementById('container')
 )
