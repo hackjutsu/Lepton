@@ -479,7 +479,7 @@ function getCachedUserInfo () {
     const cachedImage = electronLocalStorage.get('image')
     logger.debug(`-----> [${cachedImage.status}] cachedImage is ${cachedImage.data}`)
 
-    if (cachedProfile.status && cachedImage.status) {
+    if (cachedProfile.status) {
       keytar.getPassword(CONFIG_OPTIONS.keyChainService, cachedProfile.data).then((token, err) => {
         logger.debug(`-----> [${err}] cachedToken is ${token}`)
 
