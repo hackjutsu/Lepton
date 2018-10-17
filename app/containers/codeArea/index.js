@@ -53,7 +53,7 @@ export default class CodeArea extends Component {
     const contentTable = adaptedHighlightedContent.split(/\r?\n/).map(lineContent => {
       return `<tr>
                 <td class='line-number' data-pseudo-content=${++lineNumber}></td>
-                <td>${lineContent}</td>
+                <td>${lineContent === '' ? '\n' : lineContent}</td>
               </tr>`
     }).join('')
 
