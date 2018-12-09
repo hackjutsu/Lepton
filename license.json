@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "@babel/code-frame@7.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-code-frame",
@@ -228,118 +227,6 @@
     "licenseFile": "node_modules/@xtuc/long/LICENSE"
   },
   "Lepton@1.7.3": {
-=======
-  "@webassemblyjs/ast@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/ast",
-    "licenseFile": "node_modules/@webassemblyjs/ast/README.md"
-  },
-  "@webassemblyjs/floating-point-hex-parser@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Mauro Bringolf",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/floating-point-hex-parser",
-    "licenseFile": "node_modules/@webassemblyjs/floating-point-hex-parser/LICENSE"
-  },
-  "@webassemblyjs/helper-api-error@1.5.13": {
-    "licenses": "MIT",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/helper-api-error"
-  },
-  "@webassemblyjs/helper-buffer@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/helper-buffer"
-  },
-  "@webassemblyjs/helper-code-frame@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/helper-code-frame"
-  },
-  "@webassemblyjs/helper-fsm@1.5.13": {
-    "licenses": "ISC",
-    "publisher": "Mauro Bringolf",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/helper-fsm"
-  },
-  "@webassemblyjs/helper-module-context@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/helper-module-context"
-  },
-  "@webassemblyjs/helper-wasm-bytecode@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/helper-wasm-bytecode"
-  },
-  "@webassemblyjs/helper-wasm-section@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/helper-wasm-section"
-  },
-  "@webassemblyjs/ieee754@1.5.13": {
-    "licenses": "MIT",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/ieee754"
-  },
-  "@webassemblyjs/leb128@1.5.13": {
-    "licenses": "MIT",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/leb128",
-    "licenseFile": "node_modules/@webassemblyjs/leb128/LICENSE.txt"
-  },
-  "@webassemblyjs/utf8@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/utf8"
-  },
-  "@webassemblyjs/wasm-edit@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/wasm-edit",
-    "licenseFile": "node_modules/@webassemblyjs/wasm-edit/README.md"
-  },
-  "@webassemblyjs/wasm-gen@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/wasm-gen"
-  },
-  "@webassemblyjs/wasm-opt@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/wasm-opt"
-  },
-  "@webassemblyjs/wasm-parser@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/wasm-parser",
-    "licenseFile": "node_modules/@webassemblyjs/wasm-parser/README.md"
-  },
-  "@webassemblyjs/wast-parser@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/wast-parser",
-    "licenseFile": "node_modules/@webassemblyjs/wast-parser/README.md"
-  },
-  "@webassemblyjs/wast-printer@1.5.13": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/wast-printer",
-    "licenseFile": "node_modules/@webassemblyjs/wast-printer/README.md"
-  },
-  "Lepton@1.7.2-beta.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -395,7 +282,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/acorn",
     "licenseFile": "node_modules/acorn/LICENSE"
   },
-<<<<<<< HEAD
   "acorn@6.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/acornjs/acorn",
@@ -416,22 +302,6 @@
     "repository": "https://github.com/epoberezkin/ajv-errors",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv-errors",
     "licenseFile": "node_modules/ajv-errors/LICENSE"
-=======
-  "acorn@5.7.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/acornjs/acorn",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack/node_modules/acorn",
-    "licenseFile": "node_modules/webpack/node_modules/acorn/LICENSE"
-  },
-  "agent-base@4.2.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/TooTallNate/node-agent-base",
-    "publisher": "Nathan Rajlich",
-    "email": "nathan@tootallnate.net",
-    "url": "http://n8.io/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/agent-base",
-    "licenseFile": "node_modules/agent-base/README.md"
->>>>>>> enhance: add login-page footer
   },
   "ajv-keywords@3.1.0": {
     "licenses": "MIT",
@@ -441,7 +311,6 @@
     "licenseFile": "node_modules/ajv-keywords/LICENSE"
   },
   "ajv@5.5.2": {
-<<<<<<< HEAD
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/ajv",
     "publisher": "Evgeny Poberezkin",
@@ -460,26 +329,6 @@
     "repository": "https://github.com/epoberezkin/ajv",
     "publisher": "Evgeny Poberezkin",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv",
-=======
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/ajv",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/har-validator/node_modules/ajv",
-    "licenseFile": "node_modules/har-validator/node_modules/ajv/LICENSE"
-  },
-  "ajv@6.3.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/ajv",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/schema-utils/node_modules/ajv",
-    "licenseFile": "node_modules/schema-utils/node_modules/ajv/LICENSE"
-  },
-  "ajv@6.5.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/ajv",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ajv",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/ajv/LICENSE"
   },
   "ansi-escapes@3.1.0": {
