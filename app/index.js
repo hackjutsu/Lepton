@@ -95,10 +95,12 @@ function launchAuthWindow (token) {
     height: 600,
     show: false,
     webPreferences })
-  let githubUrl = 'https://github.com/login/oauth/authorize?'
-  let authUrl = githubUrl + 'client_id=' + CONFIG_OPTIONS.client_id + '&scope=' + CONFIG_OPTIONS.scopes
-  logger.debug('loading authUrl' + authUrl)
-  authWindow.loadURL(authUrl)
+  const githubUrl = 'https://github.com/login/oauth/authorize?'
+  const authUrl = githubUrl + 'client_id=' + CONFIG_OPTIONS.client_id + '&scope=' + CONFIG_OPTIONS.scopes
+  const options = { extraHeaders: 'pragma: no-cache\n' }
+
+  logger.debug('loading authUrl ' + authUrl)
+  authWindow.loadURL(authUrl, options)
   authWindow.show()
 
   updateAuthWindowStatusOn()
@@ -392,7 +394,7 @@ function initUserSession (token) {
       syncLocalPref(newProfile.login)
       logger.debug('-----> after syncLocalPref')
 
-      remote.getCurrentWindow().setTitle(`${ newProfile.login } | Lepton`) // update the app title
+      remote.getCurrentWindow().setTitle(`${newProfile.login} | Lepton`) // update the app title
 
       logger.info('[Dispatch] updateUserSession ACTIVE')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
@@ -692,7 +694,7 @@ const reduxStore = createStore(
 )
 
 ReactDom.render(
-  <Provider store={ reduxStore }>
+  <Provider store = { reduxStore }>
     <AppContainer
       searchIndex = { SearchIndex }
       localPref = { localPref }
