@@ -59,6 +59,10 @@ function createWindow (autoLogin) {
     defaultHeight: 800
   })
 
+  const webPreferences = {
+    nodeIntegration: true
+  }
+
   mainWindow = new BrowserWindow({
     width: mainWindowState.width,
     height: mainWindowState.height,
@@ -69,7 +73,8 @@ function createWindow (autoLogin) {
     // titleBarStyle: 'hidden',
     backgroundColor: '#808080',
     show: false,
-    icon: path.join(__dirname, '/icon/icon.png')
+    icon: path.join(__dirname, '/icon/icon.png'),
+    webPreferences
   })
 
   if (autoLogin) {
