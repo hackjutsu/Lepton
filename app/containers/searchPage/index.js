@@ -12,7 +12,7 @@ import {
   selectGist,
   fetchSingleGist,
   updateSearchWindowStatus,
-  updatescrollRequestStatus} from '../../actions'
+  updatescrollRequestStatus } from '../../actions'
 
 import './index.scss'
 

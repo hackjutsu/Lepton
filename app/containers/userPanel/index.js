@@ -171,8 +171,8 @@ class UserPanel extends Component {
       description: '',
       private: kIsPrivate,
       gists: [
-        {filename: '', content: ''}
-      ]}
+        { filename: '', content: '' }
+      ] }
     return (
       <GistEditorForm
         initialData={ initialData }

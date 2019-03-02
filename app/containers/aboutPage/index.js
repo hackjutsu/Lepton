@@ -16,7 +16,7 @@ class AboutPage extends Component {
     const licenseList = []
     /* Add Evil icons license as an exception */
     licenseList.push(
-      <div key='Evil icons@1.9.0' className='license-item'>
+      <div key ='Evil icons@1.9.0' className='license-item'>
         <div className='license-project'>Evil icons@1.9.0</div>
         <div className='license-type'>License: MIT</div>
       </div>

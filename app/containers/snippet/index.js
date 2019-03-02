@@ -165,7 +165,7 @@ class Snippet extends Component {
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
     const { gists, activeGist, gistTags, activeGistTag, updateSingleGist,
-      updateGistTags, selectGistTag, searchIndex} = this.props
+      updateGistTags, selectGistTag, searchIndex } = this.props
 
     const gistId = gistDetails.id
     const files = gistDetails.files
@@ -395,17 +395,17 @@ class Snippet extends Component {
               title='Edit'
               href='#'
               onClick={ this.showGistEditorModal.bind(this) }>
-              <div dangerouslySetInnerHTML={{__html: editIcon}} />
+              <div dangerouslySetInnerHTML={{ __html: editIcon }} />
             </a>
             <a className='snippet-control'
               title='Open in Web'
               href={ activeSnippet.brief.html_url }>
-              <div dangerouslySetInnerHTML={{__html: openInWebIcon}} />
+              <div dangerouslySetInnerHTML={{ __html: openInWebIcon }} />
             </a>
             <a className='snippet-control'
               title='Revisions'
               href={ activeSnippet.brief.html_url + '/revisions' }>
-              <div dangerouslySetInnerHTML={{__html: eyeIcon}} />
+              <div dangerouslySetInnerHTML={{ __html: eyeIcon }} />
             </a>
             {
               this.props.immersiveMode === 'OFF'
@@ -413,7 +413,7 @@ class Snippet extends Component {
                   title='Delete'
                   href='#'
                   onClick={ this.showDeleteModal.bind(this) }>
-                  <div dangerouslySetInnerHTML={{__html: trashIcon}} />
+                  <div dangerouslySetInnerHTML={{ __html: trashIcon }} />
                 </a>
                 : null
             }
@@ -432,11 +432,11 @@ class Snippet extends Component {
     }
     htmlForDescriptionSection.push(
       <div className='description-section' key='description'
-        dangerouslySetInnerHTML={ {__html: Autolinker.link(description, { stripPrefix: {
+        dangerouslySetInnerHTML={ { __html: Autolinker.link(description, { stripPrefix: {
           scheme: true,
           www: true
         },
-        newWindow: false })} }/>
+        newWindow: false }) } }/>
     )
     htmlForDescriptionSection.push(
       <div className='custom-tags-section' key='customTags'>

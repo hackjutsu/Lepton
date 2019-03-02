@@ -18,8 +18,10 @@ module.exports = {
       "new-cap": 0,
       "eol-last": 0,
       "jsx-quotes": 0,
-      "consistent-return": 0
+      "consistent-return": 0,
+      "import/no-named-default": 0,
     },
+    "parser": "babel-eslint",
     "plugins": [
         "standard",
         "react"

@@ -179,7 +179,7 @@ const selector = formValueSelector('gistEditorForm')
 const GistEditorForm = connect(
   state => {
     const gistFiles = selector(state, 'gistFiles')
-    const filenameList = gistFiles && gistFiles.map(({filename}) =>
+    const filenameList = gistFiles && gistFiles.map(({ filename }) =>
       filename)
     return {
       filenameList
