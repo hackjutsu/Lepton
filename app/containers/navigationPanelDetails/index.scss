@@ -6,14 +6,8 @@
 .panel-thumbnails-scroll {
   float: left;
   width: 100%;
-  overflow-y: overlay;
+  overflow-y: scroll;
   height: 100%;
-  visibility: hidden;
-}
-
-.panel-thumbnails-content,
-.panel-thumbnails-scroll:hover {
-  visibility: visible;
 }
 
 .panel-thumbnails-scroll {
