@@ -109,7 +109,7 @@ class NavigationPanelDetails extends Component {
   render () {
     return (
       <div className='panel-thumbnails-background'>
-        <div className='panel-thumbnails-scroll'>
+        <div className='panel-thumbnails-scroll scrolled-border'>
           <div className='panel-thumbnails-content'>
             <ul>
               { this.renderSnippetThumbnails() }

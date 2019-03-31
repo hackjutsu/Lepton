@@ -174,3 +174,14 @@
   border-radius: 5px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
 }
+
+.scrolled-border {
+  &::-webkit-scrollbar {
+    width: 2px;
+    background-color: #dadee3;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #e36209;
+  }
+}

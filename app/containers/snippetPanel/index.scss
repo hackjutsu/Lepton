@@ -9,10 +9,6 @@
   height: 100vh;
 }
 
-.snippet-panel:not(:hover)::-webkit-scrollbar {
-  display: none;
-}
-
 .snippet-panel-immersive {
   @extend .snippet-panel;
   width: 100%;

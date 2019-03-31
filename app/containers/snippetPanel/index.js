@@ -26,8 +26,10 @@ class SnippetPanel extends Component {
 
   render () {
     const { gists, activeGist, immersiveMode } = this.props
+    const snippetClass = immersiveMode === 'ON' ? 'snippet-panel-immersive' : 'snippet-panel';
+
     return (
-      <div className={ immersiveMode === 'ON' ? 'snippet-panel-immersive' : 'snippet-panel' }>
+      <div className={`scrolled-border ${snippetClass}`}>
         <div className='snippet-panel-content'>
           { !gists || !activeGist || !gists[activeGist]
             ? this.renderEmptySnippetSection()
