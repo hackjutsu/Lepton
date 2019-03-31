@@ -8,13 +8,15 @@
   width: 100%;
   overflow-y: overlay;
   height: 100%;
-  visibility: hidden;
-}
-
-.panel-thumbnails-content,
-.panel-thumbnails-scroll:hover {
   visibility: visible;
 }
+
+// With .panel-thumbnails-scroll visible, this block is not needed
+//
+// .panel-thumbnails-content,
+// .panel-thumbnails-scroll:hover {
+//   visibility: visible;
+// }
 
 .panel-thumbnails-scroll {
 
