@@ -8,11 +8,19 @@ import Markdown from '../../utilities/markdown'
 import nb from '../../utilities/jupyterNotebook'
 
 import '../../utilities/vendor/prism/prism.scss'
-import '../../utilities/vendor/highlightJS/styles/github-gist.css'
 import './jupyterNotebook.scss'
 import './markdown.scss'
 
 const logger = remote.getGlobal('logger')
+const conf = remote.getGlobal('conf')
+
+// resolve syntax highlight style based on app theme
+if (conf.get('theme') === 'dark') {
+  require('../../utilities/vendor/highlightJS/styles/atom-one-dark.css')
+} else {
+  require('../../utilities/vendor/highlightJS/styles/github-gist.css')
+}
+
 hljsDefineSolidity(HighlightJS) // register solidity to hightlight.js
 
 export default class CodeArea extends Component {
