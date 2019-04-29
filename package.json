@@ -105,7 +105,8 @@
       "category": "public.app-category.productivity",
       "publish": [
         "github"
-      ]
+      ],
+      "darkModeSupport": true
     },
     "win": {
       "target": [
