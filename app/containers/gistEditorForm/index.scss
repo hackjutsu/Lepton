@@ -48,6 +48,7 @@
     border-color: var(--border-color);
     border-radius: 3px;
     margin-right: 10px;
+    background: var(--bg-primary);
   }
 
   .gist-editor-filename-area {
@@ -58,6 +59,7 @@
     border: solid  1px;
     border-color: var(--border-color);
     border-radius: 3px;
+    background: var(--bg-primary);
   }
 
   .panel {
@@ -77,6 +79,7 @@
   .gist-editor-gist-file {
     border: 0px;
     padding: 10px 0px !important;
+    background: var(--text-bg-primary);
   }
 
   .control-button-group {

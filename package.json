@@ -63,6 +63,7 @@
     "bluebird": "^3.5.3",
     "chart.js": "^1.1.1",
     "codemirror": "^5.42.0",
+    "codemirror-one-dark-theme": "^1.1.1",
     "electron-context-menu": "^0.10.1",
     "electron-is-dev": "^1.0.0",
     "electron-json-storage-sync": "^1.1.1",
