@@ -226,7 +226,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@xtuc/long",
     "licenseFile": "node_modules/@xtuc/long/LICENSE"
   },
-  "Lepton@1.7.3": {
+  "Lepton@1.7.3-beta.1": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -355,7 +355,6 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/ansi-regex",
     "licenseFile": "node_modules/yargs/node_modules/ansi-regex/license"
   },
@@ -367,10 +366,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer/node_modules/strip-ansi/node_modules/ansi-regex",
     "licenseFile": "node_modules/inquirer/node_modules/strip-ansi/node_modules/ansi-regex/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/ansi-regex",
-    "licenseFile": "node_modules/webpack-cli/node_modules/ansi-regex/license"
->>>>>>> enhance: add login-page footer
   },
   "ansi-styles@3.2.1": {
     "licenses": "MIT",
@@ -478,25 +473,10 @@
     "repository": "https://github.com/mcavage/node-asn1",
     "publisher": "Mark Cavage",
     "email": "mcavage@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/asn1",
     "licenseFile": "node_modules/notebookjs/node_modules/asn1/LICENSE"
   },
   "asn1@0.2.4": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/asn1",
-    "licenseFile": "node_modules/notebookjs/node_modules/asn1/LICENSE"
-  },
-  "asn1@0.2.4": {
-    "licenses": "MIT",
-    "repository": "https://github.com/joyent/node-asn1",
-    "publisher": "Joyent",
-    "url": "joyent.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/asn1",
-    "licenseFile": "node_modules/asn1/LICENSE"
-  },
-  "assert-plus@1.0.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/joyent/node-asn1",
     "publisher": "Joyent",
@@ -504,7 +484,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/asn1",
     "licenseFile": "node_modules/asn1/LICENSE"
   },
-<<<<<<< HEAD
   "assert-plus@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/mcavage/node-assert-plus",
@@ -513,8 +492,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/assert-plus",
     "licenseFile": "node_modules/assert-plus/README.md"
   },
-=======
->>>>>>> enhance: add login-page footer
   "assert@1.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/defunctzombie/commonjs-assert",
@@ -572,11 +549,7 @@
     "licenses": "MIT",
     "repository": "https://github.com/caolan/async",
     "publisher": "Caolan McMahon",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/async",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/nconf/node_modules/async",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/nconf/node_modules/async/LICENSE"
   },
   "asynckit@0.4.0": {
@@ -584,57 +557,8 @@
     "repository": "https://github.com/alexindigo/asynckit",
     "publisher": "Alex Indigo",
     "email": "iam@alexindigo.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/asynckit",
     "licenseFile": "node_modules/asynckit/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/asynckit",
-    "licenseFile": "node_modules/asynckit/LICENSE"
-  },
-  "atob@2.1.2": {
-    "licenses": "(MIT OR Apache-2.0)",
-    "repository": "git://git.coolaj86.com/coolaj86/atob.js",
-    "publisher": "AJ ONeal",
-    "email": "coolaj86@gmail.com",
-    "url": "https://coolaj86.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/atob",
-    "licenseFile": "node_modules/atob/LICENSE"
-  },
-  "autolinker@1.4.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/gregjacobs/Autolinker.js",
-    "publisher": "Gregory Jacobs",
-    "email": "greg@greg-jacobs.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/autolinker",
-    "licenseFile": "node_modules/autolinker/LICENSE"
-  },
-  "aws-sign2@0.7.0": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/mikeal/aws-sign",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "url": "http://www.futurealoof.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/aws-sign2",
-    "licenseFile": "node_modules/aws-sign2/LICENSE"
-  },
-  "aws4@1.6.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mhart/aws4",
-    "publisher": "Michael Hart",
-    "email": "michael.hart.au@gmail.com",
-    "url": "http://github.com/mhart",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/aws4",
-    "licenseFile": "node_modules/notebookjs/node_modules/aws4/LICENSE"
-  },
-  "aws4@1.8.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mhart/aws4",
-    "publisher": "Michael Hart",
-    "email": "michael.hart.au@gmail.com",
-    "url": "http://github.com/mhart",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/aws4",
-    "licenseFile": "node_modules/aws4/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "atob@2.1.2": {
     "licenses": "(MIT OR Apache-2.0)",
@@ -645,7 +569,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/atob",
     "licenseFile": "node_modules/atob/LICENSE"
   },
-<<<<<<< HEAD
   "autolinker@1.8.1": {
     "licenses": "MIT",
     "repository": "https://github.com/gregjacobs/Autolinker.js",
@@ -697,8 +620,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/twitter-text/node_modules/babel-runtime",
     "licenseFile": "node_modules/twitter-text/node_modules/babel-runtime/README.md"
   },
-=======
->>>>>>> enhance: add login-page footer
   "balanced-match@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/juliangruber/balanced-match",
@@ -732,11 +653,7 @@
   "bcrypt-pbkdf@1.0.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/joyent/node-bcrypt-pbkdf",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bcrypt-pbkdf",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/bcrypt-pbkdf",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/bcrypt-pbkdf/LICENSE"
   },
   "big.js@3.1.3": {
@@ -756,11 +673,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/binary-extensions",
     "licenseFile": "node_modules/binary-extensions/license"
   },
-<<<<<<< HEAD
   "bluebird-lst@1.0.6": {
-=======
-  "bluebird-lst@1.0.5": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
     "publisher": "Vladimir Krivosheev",
@@ -783,7 +696,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bn.js",
     "licenseFile": "node_modules/bn.js/README.md"
   },
-<<<<<<< HEAD
   "boom@4.3.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hapijs/boom",
@@ -797,9 +709,6 @@
     "licenseFile": "node_modules/notebookjs/node_modules/cryptiles/node_modules/boom/LICENSE"
   },
   "bowser@1.9.4": {
-=======
-  "bowser@1.7.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/ded/bowser",
     "publisher": "Dustin Diaz",
@@ -814,11 +723,7 @@
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/brace-expansion",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/brace-expansion",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fsevents/node_modules/brace-expansion/LICENSE"
   },
   "brace-expansion@1.1.8": {
@@ -864,11 +769,7 @@
     "repository": "https://github.com/crypto-browserify/browserify-cipher",
     "publisher": "Calvin Metcalf",
     "email": "calvin.metcalf@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/browserify-cipher",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/browserify-cipher",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/browserify-cipher/LICENSE"
   },
   "browserify-des@1.0.2": {
@@ -876,11 +777,7 @@
     "repository": "https://github.com/crypto-browserify/browserify-des",
     "publisher": "Calvin Metcalf",
     "email": "calvin.metcalf@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/browserify-des",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/browserify-des",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/browserify-des/license"
   },
   "browserify-rsa@4.0.1": {
@@ -906,11 +803,7 @@
   "buffer-from@1.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/LinusU/buffer-from",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/buffer-from",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/buffer-from",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/buffer-from/LICENSE"
   },
   "buffer-xor@1.0.3": {
@@ -929,11 +822,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/buffer",
     "licenseFile": "node_modules/buffer/LICENSE"
   },
-<<<<<<< HEAD
   "builder-util-runtime@8.0.2": {
-=======
-  "builder-util-runtime@4.4.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
@@ -974,7 +863,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cache-base",
     "licenseFile": "node_modules/cache-base/LICENSE"
   },
-<<<<<<< HEAD
   "caller-path@0.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/caller-path",
@@ -993,8 +881,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/callsites",
     "licenseFile": "node_modules/callsites/readme.md"
   },
-=======
->>>>>>> enhance: add login-page footer
   "camelcase@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/camelcase",
@@ -1021,37 +907,19 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/caseless",
     "licenseFile": "node_modules/caseless/LICENSE"
   },
-<<<<<<< HEAD
-=======
-  "chain-function@1.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jquense/chain-function",
-    "publisher": "jquense",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/chain-function"
-  },
->>>>>>> enhance: add login-page footer
   "chalk@2.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/chalk",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight/node_modules/chalk",
     "licenseFile": "node_modules/@babel/highlight/node_modules/chalk/license"
   },
-<<<<<<< HEAD
   "chardet@0.7.0": {
-=======
-  "chardet@0.5.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/runk/node-chardet",
     "publisher": "Dmitry Shirokov",
     "email": "deadrunk@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/chardet",
     "licenseFile": "node_modules/chardet/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/chardet",
-    "licenseFile": "node_modules/webpack-cli/node_modules/chardet/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "chart.js@1.1.1": {
     "licenses": "MIT",
@@ -1214,13 +1082,8 @@
     "licenses": "MIT",
     "repository": "https://github.com/Marak/colors.js",
     "publisher": "Marak Squires",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/winston/node_modules/colors",
     "licenseFile": "node_modules/winston/node_modules/colors/ReadMe.md"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/colors",
-    "licenseFile": "node_modules/colors/ReadMe.md"
->>>>>>> enhance: add login-page footer
   },
   "combined-stream@1.0.6": {
     "licenses": "MIT",
@@ -1231,7 +1094,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/combined-stream",
     "licenseFile": "node_modules/notebookjs/node_modules/combined-stream/License"
   },
-<<<<<<< HEAD
   "combined-stream@1.0.7": {
     "licenses": "MIT",
     "repository": "https://github.com/felixge/node-combined-stream",
@@ -1242,9 +1104,6 @@
     "licenseFile": "node_modules/combined-stream/License"
   },
   "commander@2.17.1": {
-=======
-  "commander@2.13.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/tj/commander.js",
     "publisher": "TJ Holowaychuk",
@@ -1342,19 +1201,11 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/core-js",
     "licenseFile": "node_modules/core-js/LICENSE"
   },
-<<<<<<< HEAD
   "core-js@2.6.0": {
     "licenses": "MIT",
     "repository": "https://github.com/zloirock/core-js",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/runtime-corejs2/node_modules/core-js",
     "licenseFile": "node_modules/@babel/runtime-corejs2/node_modules/core-js/LICENSE"
-=======
-  "core-js@2.4.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/zloirock/core-js",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/babel-runtime/node_modules/core-js",
-    "licenseFile": "node_modules/babel-runtime/node_modules/core-js/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "core-util-is@1.0.2": {
     "licenses": "MIT",
@@ -1362,42 +1213,26 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/core-util-is",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/core-util-is",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/core-util-is/LICENSE"
   },
   "create-ecdh@4.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/createECDH",
     "publisher": "Calvin Metcalf",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/create-ecdh",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/create-ecdh",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/create-ecdh/LICENSE"
   },
   "create-hash@1.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/createHash",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/create-hash",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/create-hash",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/create-hash/LICENSE"
   },
   "create-hmac@1.1.7": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/createHmac",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/create-hmac",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/create-hmac",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/create-hmac/LICENSE"
   },
   "create-react-class@15.6.3": {
@@ -1414,15 +1249,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-cli/node_modules/cross-spawn",
     "licenseFile": "node_modules/webpack-cli/node_modules/cross-spawn/LICENSE"
   },
-<<<<<<< HEAD
   "cryptiles@3.1.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hapijs/cryptiles",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/cryptiles",
     "licenseFile": "node_modules/notebookjs/node_modules/cryptiles/LICENSE"
   },
-=======
->>>>>>> enhance: add login-page footer
   "crypto-browserify@3.12.0": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/crypto-browserify",
@@ -1494,11 +1326,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/date-now",
     "licenseFile": "node_modules/date-now/LICENCE"
   },
-<<<<<<< HEAD
   "debug@2.6.8": {
-=======
-  "debug@2.6.9": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/visionmedia/debug",
     "publisher": "TJ Holowaychuk",
@@ -1555,15 +1383,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/decamelize",
     "licenseFile": "node_modules/decamelize/license"
   },
-  "decamelize@2.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/decamelize",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/yargs/node_modules/decamelize",
-    "licenseFile": "node_modules/yargs/node_modules/decamelize/license"
-  },
   "decode-uri-component@0.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/SamVerschueren/decode-uri-component",
@@ -1573,28 +1392,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/decode-uri-component",
     "licenseFile": "node_modules/decode-uri-component/license"
   },
-<<<<<<< HEAD
-=======
-  "deep-equal@1.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/substack/node-deep-equal",
-    "publisher": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/deep-equal",
-    "licenseFile": "node_modules/deep-equal/LICENSE"
-  },
->>>>>>> enhance: add login-page footer
   "deep-extend@0.5.1": {
     "licenses": "MIT",
     "repository": "https://github.com/unclechu/node-deep-extend",
     "publisher": "Viacheslav Lotsmanov",
     "email": "lotsmanov89@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/deep-extend",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/deep-extend",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fsevents/node_modules/deep-extend/LICENSE"
   },
   "deep-is@0.1.3": {
@@ -1619,11 +1422,7 @@
     "repository": "https://github.com/jonschlinkert/define-property",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base/node_modules/define-property",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/base/node_modules/define-property",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/base/node_modules/define-property/LICENSE"
   },
   "define-property@2.0.2": {
@@ -1692,7 +1491,6 @@
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/diffie-hellman",
     "publisher": "Calvin Metcalf",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/diffie-hellman",
     "licenseFile": "node_modules/diffie-hellman/LICENSE"
   },
@@ -1701,10 +1499,6 @@
     "repository": "https://github.com/eslint/doctrine",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/doctrine",
     "licenseFile": "node_modules/doctrine/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/diffie-hellman",
-    "licenseFile": "node_modules/diffie-hellman/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "dom-helpers@3.4.0": {
     "licenses": "MIT",
@@ -1732,11 +1526,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/domexception",
     "licenseFile": "node_modules/notebookjs/node_modules/domexception/LICENSE.txt"
   },
-<<<<<<< HEAD
   "duplexify@3.6.1": {
-=======
-  "duplexify@3.6.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/duplexify",
     "publisher": "Mathias Buus",
@@ -1758,11 +1548,7 @@
     "publisher": "Jeremie Miller",
     "email": "jeremie@jabber.org",
     "url": "http://jeremie.com/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ecc-jsbn",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ecc-jsbn",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/ecc-jsbn/LICENSE"
   },
   "electron-context-menu@0.10.1": {
@@ -1813,11 +1599,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-localshortcut",
     "licenseFile": "node_modules/electron-localshortcut/license"
   },
-<<<<<<< HEAD
   "electron-updater@4.0.5": {
-=======
-  "electron-updater@3.1.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
@@ -1881,17 +1663,10 @@
   "errno@0.1.7": {
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/node-errno",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/errno",
     "licenseFile": "node_modules/errno/README.md"
   },
   "es6-error@4.1.1": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/errno",
-    "licenseFile": "node_modules/errno/README.md"
-  },
-  "es6-error@4.0.2": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/bjyoungblood/es6-error",
     "publisher": "Ben Youngblood",
@@ -1935,10 +1710,9 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/escodegen",
     "licenseFile": "node_modules/notebookjs/node_modules/escodegen/LICENSE.BSD"
   },
-  "eslint-scope@4.0.0": {
+  "eslint-scope@3.7.1": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/eslint/eslint-scope",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/babel-eslint/node_modules/eslint-scope",
     "licenseFile": "node_modules/babel-eslint/node_modules/eslint-scope/LICENSE"
   },
@@ -1978,10 +1752,6 @@
     "email": "nicholas+npm@nczconsulting.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/espree",
     "licenseFile": "node_modules/espree/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack/node_modules/eslint-scope",
-    "licenseFile": "node_modules/webpack/node_modules/eslint-scope/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "esprima@3.1.3": {
     "licenses": "BSD-2-Clause",
@@ -1996,11 +1766,7 @@
     "repository": "https://github.com/jquery/esprima",
     "publisher": "Ariya Hidayat",
     "email": "ariya.hidayat@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/esprima",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/esprima",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/electron-updater/node_modules/esprima/LICENSE.BSD"
   },
   "esquery@1.0.1": {
@@ -2052,13 +1818,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/os-locale/node_modules/execa",
     "licenseFile": "node_modules/os-locale/node_modules/execa/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/execa",
-    "licenseFile": "node_modules/execa/license"
->>>>>>> enhance: add login-page footer
   },
   "expand-brackets@2.1.4": {
     "licenses": "MIT",
@@ -2068,7 +1829,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/expand-brackets",
     "licenseFile": "node_modules/expand-brackets/LICENSE"
   },
-<<<<<<< HEAD
   "ext-list@2.2.2": {
     "licenses": "MIT",
     "repository": "https://github.com/kevva/ext-list",
@@ -2087,8 +1847,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ext-name",
     "licenseFile": "node_modules/ext-name/license"
   },
-=======
->>>>>>> enhance: add login-page footer
   "extend-shallow@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/extend-shallow",
@@ -2123,32 +1881,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extend",
     "licenseFile": "node_modules/extend/LICENSE"
   },
-<<<<<<< HEAD
   "external-editor@3.0.3": {
-=======
-  "extend@3.0.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/justmoon/node-extend",
-    "publisher": "Stefan Thomas",
-    "email": "justmoon@members.fsf.org",
-    "url": "http://www.justmoon.net",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/request/node_modules/extend",
-    "licenseFile": "node_modules/request/node_modules/extend/LICENSE"
-  },
-  "external-editor@3.0.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/mrkmg/node-external-editor",
     "publisher": "Kevin Gravier",
     "email": "kevin@mrkmg.com",
     "url": "https://mrkmg.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/external-editor",
     "licenseFile": "node_modules/external-editor/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/external-editor",
-    "licenseFile": "node_modules/webpack-cli/node_modules/external-editor/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "extglob@2.0.4": {
     "licenses": "MIT",
@@ -2161,11 +1901,7 @@
   "extsprintf@1.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/davepacheco/node-extsprintf",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extsprintf",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/extsprintf",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/extsprintf/LICENSE"
   },
   "eyes@0.1.8": {
@@ -2193,11 +1929,7 @@
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/fast-deep-equal",
     "publisher": "Evgeny Poberezkin",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv/node_modules/fast-deep-equal",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ajv/node_modules/fast-deep-equal",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/ajv/node_modules/fast-deep-equal/LICENSE"
   },
   "fast-json-stable-stringify@2.0.0": {
@@ -2206,11 +1938,7 @@
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fast-json-stable-stringify",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fast-json-stable-stringify",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fast-json-stable-stringify/LICENSE"
   },
   "fast-levenshtein@2.0.6": {
@@ -2228,7 +1956,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fbjs",
     "licenseFile": "node_modules/fbjs/LICENSE"
   },
-<<<<<<< HEAD
   "figgy-pudding@3.5.1": {
     "licenses": "ISC",
     "repository": "https://github.com/zkat/figgy-pudding",
@@ -2236,13 +1963,6 @@
     "email": "kzm@sykosomatic.org",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/figgy-pudding",
     "licenseFile": "node_modules/figgy-pudding/LICENSE.md"
-=======
-  "fbjs@0.8.16": {
-    "licenses": "MIT",
-    "repository": "https://github.com/facebook/fbjs",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/react/node_modules/fbjs",
-    "licenseFile": "node_modules/react/node_modules/fbjs/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "figures@2.0.0": {
     "licenses": "MIT",
@@ -2302,7 +2022,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/find-up",
     "licenseFile": "node_modules/import-local/node_modules/find-up/license"
   },
-<<<<<<< HEAD
   "flat-cache@1.3.4": {
     "licenses": "MIT",
     "repository": "https://github.com/royriojas/flat-cache",
@@ -2310,16 +2029,6 @@
     "url": "http://royriojas.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/flat-cache",
     "licenseFile": "node_modules/flat-cache/LICENSE"
-=======
-  "find-up@3.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/find-up",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/yargs/node_modules/find-up",
-    "licenseFile": "node_modules/yargs/node_modules/find-up/license"
->>>>>>> enhance: add login-page footer
   },
   "flush-write-stream@1.0.3": {
     "licenses": "MIT",
@@ -2355,7 +2064,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/form-data",
     "licenseFile": "node_modules/notebookjs/node_modules/form-data/License"
   },
-<<<<<<< HEAD
   "form-data@2.3.3": {
     "licenses": "MIT",
     "repository": "https://github.com/form-data/form-data",
@@ -2365,8 +2073,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/form-data",
     "licenseFile": "node_modules/form-data/License"
   },
-=======
->>>>>>> enhance: add login-page footer
   "fragment-cache@0.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/fragment-cache",
@@ -2384,21 +2090,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/from2",
     "licenseFile": "node_modules/from2/LICENSE.md"
   },
-<<<<<<< HEAD
   "fs-extra-p@7.0.0": {
-=======
-  "fs-extra-p@4.6.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/develar/fs-extra-p",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fs-extra-p",
     "licenseFile": "node_modules/fs-extra-p/LICENSE"
   },
-<<<<<<< HEAD
   "fs-extra@7.0.1": {
-=======
-  "fs-extra@6.0.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
@@ -2412,11 +2110,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/fs-minipass",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/fs-minipass",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fsevents/node_modules/fs-minipass/LICENSE"
   },
   "fs-write-stream-atomic@1.0.10": {
@@ -2535,16 +2229,11 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/glob",
     "licenseFile": "node_modules/glob/LICENSE"
   },
-<<<<<<< HEAD
   "global-modules-path@2.3.1": {
-=======
-  "global-modules-path@2.3.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "Apache-2.0",
     "repository": "https://github.com/rosen-vladimirov/global-modules-path",
     "publisher": "Telerik",
     "email": "support@telerik.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/global-modules-path",
     "licenseFile": "node_modules/global-modules-path/LICENSE"
   },
@@ -2565,10 +2254,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/globals",
     "licenseFile": "node_modules/eslint/node_modules/globals/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/global-modules-path",
-    "licenseFile": "node_modules/global-modules-path/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "good-listener@1.2.2": {
     "licenses": "MIT",
@@ -2583,24 +2268,11 @@
     "licenseFile": "node_modules/graceful-fs/LICENSE"
   },
   "har-schema@2.0.0": {
-<<<<<<< HEAD
-=======
     "licenses": "ISC",
     "repository": "https://github.com/ahmadnassri/har-schema",
     "publisher": "Ahmad Nassri",
     "email": "ahmad@ahmadnassri.com",
     "url": "https://www.ahmadnassri.com/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/har-schema",
-    "licenseFile": "node_modules/har-schema/LICENSE"
-  },
-  "har-validator@5.0.3": {
->>>>>>> enhance: add login-page footer
-    "licenses": "ISC",
-    "repository": "https://github.com/ahmadnassri/har-validator",
-    "publisher": "Ahmad Nassri",
-    "email": "ahmad@ahmadnassri.com",
-    "url": "https://www.ahmadnassri.com/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/har-schema",
     "licenseFile": "node_modules/har-schema/LICENSE"
   },
@@ -2622,33 +2294,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/har-validator",
     "licenseFile": "node_modules/har-validator/LICENSE"
   },
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/har-validator",
-    "licenseFile": "node_modules/notebookjs/node_modules/har-validator/LICENSE"
-  },
-  "har-validator@5.1.0": {
-    "licenses": "ISC",
-    "repository": "https://github.com/ahmadnassri/har-validator",
-    "publisher": "Ahmad Nassri",
-    "email": "ahmad@ahmadnassri.com",
-    "url": "https://www.ahmadnassri.com/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/har-validator",
-    "licenseFile": "node_modules/har-validator/LICENSE"
-  },
->>>>>>> enhance: add login-page footer
   "has-flag@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/has-flag",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/has-flag",
     "licenseFile": "node_modules/has-flag/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/has-flag",
-    "licenseFile": "node_modules/webpack-cli/node_modules/has-flag/license"
->>>>>>> enhance: add login-page footer
   },
   "has-unicode@2.0.1": {
     "licenses": "ISC",
@@ -2696,17 +2349,10 @@
     "publisher": "Kirill Fomichev",
     "email": "fanatid@ya.ru",
     "url": "https://github.com/fanatid",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hash-base",
     "licenseFile": "node_modules/hash-base/LICENSE"
   },
   "hash.js@1.1.7": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/hash-base",
-    "licenseFile": "node_modules/hash-base/LICENSE"
-  },
-  "hash.js@1.1.5": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/indutny/hash.js",
     "publisher": "Fedor Indutny",
@@ -2714,7 +2360,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hash.js",
     "licenseFile": "node_modules/hash.js/README.md"
   },
-<<<<<<< HEAD
   "hawk@6.0.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hueniverse/hawk",
@@ -2725,9 +2370,6 @@
     "licenseFile": "node_modules/notebookjs/node_modules/hawk/LICENSE"
   },
   "highlight.js@9.13.1": {
-=======
-  "highlight.js@9.12.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/highlightjs/highlight.js",
     "publisher": "Ivan Sagalaev",
@@ -2750,7 +2392,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hmac-drbg",
     "licenseFile": "node_modules/hmac-drbg/README.md"
   },
-<<<<<<< HEAD
   "hoek@4.2.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hapijs/hoek",
@@ -2758,9 +2399,6 @@
     "licenseFile": "node_modules/notebookjs/node_modules/hoek/LICENSE"
   },
   "hoist-non-react-statics@2.5.5": {
-=======
-  "hoist-non-react-statics@2.2.2": {
->>>>>>> enhance: add login-page footer
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/mridgway/hoist-non-react-statics",
     "publisher": "Michael Ridgway",
@@ -2773,13 +2411,8 @@
     "repository": "https://github.com/mridgway/hoist-non-react-statics",
     "publisher": "Michael Ridgway",
     "email": "mcridgway@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hoist-non-react-statics",
     "licenseFile": "node_modules/hoist-non-react-statics/LICENSE.md"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/redux-form/node_modules/hoist-non-react-statics",
-    "licenseFile": "node_modules/redux-form/node_modules/hoist-non-react-statics/LICENSE.md"
->>>>>>> enhance: add login-page footer
   },
   "html-encoding-sniffer@1.0.2": {
     "licenses": "MIT",
@@ -2812,11 +2445,7 @@
     "licenses": "MIT",
     "repository": "https://github.com/joyent/node-http-signature",
     "publisher": "Joyent, Inc",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/http-signature",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/http-signature",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/http-signature/LICENSE"
   },
   "https-browserify@1.0.0": {
@@ -2873,11 +2502,7 @@
     "repository": "https://github.com/ashtuchkin/iconv-lite",
     "publisher": "Alexander Shtuchkin",
     "email": "ashtuchkin@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/iconv-lite",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/iconv-lite",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fsevents/node_modules/iconv-lite/LICENSE"
   },
   "iconv-lite@0.4.23": {
@@ -2885,7 +2510,6 @@
     "repository": "https://github.com/ashtuchkin/iconv-lite",
     "publisher": "Alexander Shtuchkin",
     "email": "ashtuchkin@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/raw-body/node_modules/iconv-lite",
     "licenseFile": "node_modules/raw-body/node_modules/iconv-lite/LICENSE"
   },
@@ -2897,11 +2521,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/external-editor/node_modules/iconv-lite",
     "licenseFile": "node_modules/external-editor/node_modules/iconv-lite/LICENSE"
   },
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/raw-body/node_modules/iconv-lite",
-    "licenseFile": "node_modules/raw-body/node_modules/iconv-lite/LICENSE"
-  },
->>>>>>> enhance: add login-page footer
   "ieee754@1.1.12": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/feross/ieee754",
@@ -2924,40 +2543,16 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/ignore-walk",
     "licenseFile": "node_modules/fsevents/node_modules/ignore-walk/LICENSE"
   },
   "ignore@4.0.6": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/ignore-walk",
-    "licenseFile": "node_modules/fsevents/node_modules/ignore-walk/LICENSE"
-  },
-  "image-downloader@3.2.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/demsking/image-downloader",
-    "publisher": "Sébastien Demanou",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/image-downloader",
-    "licenseFile": "node_modules/image-downloader/LICENSE"
-  },
-  "import-local@1.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/import-local",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/import-local",
-    "licenseFile": "node_modules/import-local/license"
-  },
-  "imurmurhash@0.1.4": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/kaelzhang/node-ignore",
     "publisher": "kael",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ignore",
     "licenseFile": "node_modules/ignore/LICENSE-MIT"
   },
-<<<<<<< HEAD
   "image-downloader@3.4.2": {
     "licenses": "MIT",
     "repository": "git+https://gitlab.com/demsking/image-downloader",
@@ -2983,8 +2578,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/imurmurhash",
     "licenseFile": "node_modules/imurmurhash/README.md"
   },
-=======
->>>>>>> enhance: add login-page footer
   "indexof@0.0.1": {
     "licenses": "MIT*",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/indexof",
@@ -3002,11 +2595,7 @@
   "inherits@2.0.1": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/inherits",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/assert/node_modules/inherits",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/assert/node_modules/inherits",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/assert/node_modules/inherits/LICENSE"
   },
   "inherits@2.0.3": {
@@ -3030,38 +2619,23 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/ini",
     "licenseFile": "node_modules/fsevents/node_modules/ini/LICENSE"
   },
   "inline-style-prefixer@3.0.8": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/ini",
-    "licenseFile": "node_modules/fsevents/node_modules/ini/LICENSE"
-  },
-  "inline-style-prefixer@3.0.7": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/rofrischmann/inline-style-prefixer",
     "publisher": "Robin Frischmann",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inline-style-prefixer",
     "licenseFile": "node_modules/inline-style-prefixer/LICENSE"
   },
-<<<<<<< HEAD
   "inquirer@6.2.1": {
-=======
-  "inquirer@6.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/SBoudrias/Inquirer.js",
     "publisher": "Simon Boudrias",
     "email": "admin@simonboudrias.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer",
     "licenseFile": "node_modules/inquirer/README.md"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/inquirer"
->>>>>>> enhance: add login-page footer
   },
   "interpret@1.1.0": {
     "licenses": "MIT",
@@ -3071,13 +2645,8 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/interpret",
     "licenseFile": "node_modules/interpret/LICENSE"
   },
-<<<<<<< HEAD
   "invariant@2.2.4": {
     "licenses": "MIT",
-=======
-  "invariant@2.2.2": {
-    "licenses": "BSD-3-Clause",
->>>>>>> enhance: add login-page footer
     "repository": "https://github.com/zertosh/invariant",
     "publisher": "Andres Suarez",
     "email": "zertosh@gmail.com",
@@ -3115,11 +2684,7 @@
     "repository": "https://github.com/jonschlinkert/is-accessor-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-accessor-descriptor",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-accessor-descriptor",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/is-accessor-descriptor/LICENSE"
   },
   "is-accessor-descriptor@1.0.0": {
@@ -3127,11 +2692,7 @@
     "repository": "https://github.com/jonschlinkert/is-accessor-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base/node_modules/is-accessor-descriptor",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/base/node_modules/is-accessor-descriptor",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/base/node_modules/is-accessor-descriptor/LICENSE"
   },
   "is-binary-path@1.0.1": {
@@ -3157,11 +2718,7 @@
     "repository": "https://github.com/jonschlinkert/is-data-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-data-descriptor",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-data-descriptor",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/is-data-descriptor/LICENSE"
   },
   "is-data-descriptor@1.0.0": {
@@ -3169,11 +2726,7 @@
     "repository": "https://github.com/jonschlinkert/is-data-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base/node_modules/is-data-descriptor",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/base/node_modules/is-data-descriptor",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/base/node_modules/is-data-descriptor/LICENSE"
   },
   "is-descriptor@0.1.6": {
@@ -3181,11 +2734,7 @@
     "repository": "https://github.com/jonschlinkert/is-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-descriptor",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-descriptor",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/is-descriptor/LICENSE"
   },
   "is-descriptor@1.0.2": {
@@ -3193,11 +2742,7 @@
     "repository": "https://github.com/jonschlinkert/is-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base/node_modules/is-descriptor",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/base/node_modules/is-descriptor",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/base/node_modules/is-descriptor/LICENSE"
   },
   "is-extendable@0.1.1": {
@@ -3239,13 +2784,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/is-fullwidth-code-point",
     "licenseFile": "node_modules/yargs/node_modules/is-fullwidth-code-point/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/is-fullwidth-code-point",
-    "licenseFile": "node_modules/webpack-cli/node_modules/is-fullwidth-code-point/license"
->>>>>>> enhance: add login-page footer
   },
   "is-glob@3.1.0": {
     "licenses": "MIT",
@@ -3271,7 +2811,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-number",
     "licenseFile": "node_modules/is-number/LICENSE"
   },
-<<<<<<< HEAD
   "is-plain-obj@1.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/is-plain-obj",
@@ -3280,28 +2819,14 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-plain-obj",
     "licenseFile": "node_modules/is-plain-obj/license"
-=======
-  "is-plain-object@2.0.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jonschlinkert/is-plain-object",
-    "publisher": "Jon Schlinkert",
-    "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-plain-object",
-    "licenseFile": "node_modules/is-plain-object/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "is-plain-object@2.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/is-plain-object",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-plain-object",
     "licenseFile": "node_modules/is-plain-object/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/extend-shallow/node_modules/is-plain-object",
-    "licenseFile": "node_modules/extend-shallow/node_modules/is-plain-object/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "is-promise@2.1.0": {
     "licenses": "MIT",
@@ -3368,11 +2893,7 @@
     "repository": "https://github.com/jonschlinkert/isobject",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/unset-value/node_modules/has-value/node_modules/isobject",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/unset-value/node_modules/has-value/node_modules/isobject",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/unset-value/node_modules/has-value/node_modules/isobject/LICENSE"
   },
   "isobject@3.0.1": {
@@ -3406,7 +2927,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/js-tokens",
     "licenseFile": "node_modules/js-tokens/LICENSE"
   },
-<<<<<<< HEAD
   "js-tokens@4.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/lydell/js-tokens",
@@ -3414,31 +2934,20 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight/node_modules/js-tokens",
     "licenseFile": "node_modules/@babel/highlight/node_modules/js-tokens/LICENSE"
   },
-=======
->>>>>>> enhance: add login-page footer
   "js-yaml@3.12.0": {
     "licenses": "MIT",
     "repository": "https://github.com/nodeca/js-yaml",
     "publisher": "Vladimir Zapparov",
     "email": "dervus.grim@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/js-yaml",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/electron-updater/node_modules/js-yaml",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/electron-updater/node_modules/js-yaml/LICENSE"
   },
   "jsbn@0.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/andyperlitch/jsbn",
     "publisher": "Tom Wu",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsbn",
     "licenseFile": "node_modules/jsbn/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/jsbn",
-    "licenseFile": "node_modules/notebookjs/node_modules/jsbn/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "jsdom@11.6.2": {
     "licenses": "MIT",
@@ -3446,7 +2955,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/jsdom",
     "licenseFile": "node_modules/notebookjs/node_modules/jsdom/LICENSE.txt"
   },
-<<<<<<< HEAD
   "jsesc@2.5.2": {
     "licenses": "MIT",
     "repository": "https://github.com/mathiasbynens/jsesc",
@@ -3455,38 +2963,20 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/generator/node_modules/jsesc",
     "licenseFile": "node_modules/@babel/generator/node_modules/jsesc/LICENSE-MIT.txt"
   },
-=======
->>>>>>> enhance: add login-page footer
   "json-parse-better-errors@1.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/zkat/json-parse-better-errors",
     "publisher": "Kat Marchán",
     "email": "kzm@zkat.tech",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/json-parse-better-errors",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack/node_modules/json-parse-better-errors",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/webpack/node_modules/json-parse-better-errors/LICENSE.md"
   },
   "json-schema-traverse@0.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/json-schema-traverse",
     "publisher": "Evgeny Poberezkin",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/json-schema-traverse",
     "licenseFile": "node_modules/notebookjs/node_modules/json-schema-traverse/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/json-schema-traverse",
-    "licenseFile": "node_modules/json-schema-traverse/LICENSE"
-  },
-  "json-schema-traverse@0.4.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/json-schema-traverse",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ajv/node_modules/json-schema-traverse",
-    "licenseFile": "node_modules/ajv/node_modules/json-schema-traverse/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "json-schema-traverse@0.4.1": {
     "licenses": "MIT",
@@ -3505,7 +2995,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/json-schema",
     "licenseFile": "node_modules/json-schema/README.md"
   },
-<<<<<<< HEAD
   "json-stable-stringify-without-jsonify@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/samn/json-stable-stringify",
@@ -3515,8 +3004,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/json-stable-stringify-without-jsonify",
     "licenseFile": "node_modules/json-stable-stringify-without-jsonify/LICENSE"
   },
-=======
->>>>>>> enhance: add login-page footer
   "json-stringify-safe@5.0.1": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/json-stringify-safe",
@@ -3545,11 +3032,7 @@
   "jsprim@1.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/joyent/node-jsprim",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsprim",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/jsprim",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/jsprim/LICENSE"
   },
   "katex@0.6.0": {
@@ -3595,11 +3078,7 @@
     "repository": "https://github.com/jonschlinkert/kind-of",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/has-values/node_modules/kind-of",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/has-values/node_modules/kind-of",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/has-values/node_modules/kind-of/LICENSE"
   },
   "kind-of@5.1.0": {
@@ -3607,11 +3086,7 @@
     "repository": "https://github.com/jonschlinkert/kind-of",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-descriptor/node_modules/kind-of",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/is-descriptor/node_modules/kind-of",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/is-descriptor/node_modules/kind-of/LICENSE"
   },
   "kind-of@6.0.2": {
@@ -3619,13 +3094,8 @@
     "repository": "https://github.com/jonschlinkert/kind-of",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/kind-of",
     "licenseFile": "node_modules/kind-of/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/base/node_modules/kind-of",
-    "licenseFile": "node_modules/base/node_modules/kind-of/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "lazy-val@1.0.3": {
     "licenses": "MIT",
@@ -3673,11 +3143,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/linkify-it",
     "licenseFile": "node_modules/linkify-it/LICENSE"
   },
-<<<<<<< HEAD
   "loader-runner@2.3.1": {
-=======
-  "loader-runner@2.3.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/webpack/loader-runner",
     "publisher": "Tobias Koppers @sokra",
@@ -3700,20 +3166,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/locate-path",
     "licenseFile": "node_modules/import-local/node_modules/locate-path/license"
   },
-<<<<<<< HEAD
   "lodash-es@4.17.11": {
-=======
-  "locate-path@3.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/locate-path",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/yargs/node_modules/locate-path",
-    "licenseFile": "node_modules/yargs/node_modules/locate-path/license"
-  },
-  "lodash-es@4.17.4": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/lodash/lodash",
     "publisher": "John-David Dalton",
@@ -3749,7 +3202,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/lodash.sortby",
     "licenseFile": "node_modules/notebookjs/node_modules/lodash.sortby/LICENSE"
   },
-<<<<<<< HEAD
   "lodash@4.17.11": {
     "licenses": "MIT",
     "repository": "https://github.com/lodash/lodash",
@@ -3760,9 +3212,6 @@
     "licenseFile": "node_modules/@babel/types/node_modules/lodash/LICENSE"
   },
   "lodash@4.17.4": {
-=======
-  "lodash@4.17.10": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/lodash/lodash",
     "publisher": "John-David Dalton",
@@ -3780,25 +3229,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/lodash",
     "licenseFile": "node_modules/notebookjs/node_modules/lodash/LICENSE"
   },
-<<<<<<< HEAD
-=======
-  "long@3.2.0": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/dcodeIO/long.js",
-    "publisher": "Daniel Wirtz",
-    "email": "dcode@dcode.io",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/long",
-    "licenseFile": "node_modules/long/LICENSE"
-  },
-  "long@4.0.0": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/dcodeIO/long.js",
-    "publisher": "Daniel Wirtz",
-    "email": "dcode@dcode.io",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/@webassemblyjs/leb128/node_modules/long",
-    "licenseFile": "node_modules/@webassemblyjs/leb128/node_modules/long/LICENSE"
-  },
->>>>>>> enhance: add login-page footer
   "loose-envify@1.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/zertosh/loose-envify",
@@ -3807,7 +3237,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/loose-envify",
     "licenseFile": "node_modules/loose-envify/LICENSE"
   },
-<<<<<<< HEAD
   "loose-envify@1.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/zertosh/loose-envify",
@@ -3817,28 +3246,12 @@
     "licenseFile": "node_modules/react-transition-group/node_modules/loose-envify/LICENSE"
   },
   "lru-cache@4.1.5": {
-=======
-  "lru-cache@4.1.1": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-lru-cache",
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/lru-cache",
-    "licenseFile": "node_modules/lru-cache/LICENSE"
-  },
-  "lru-cache@4.1.3": {
->>>>>>> enhance: add login-page footer
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/node-lru-cache",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lru-cache",
     "licenseFile": "node_modules/lru-cache/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/proxy-agent/node_modules/lru-cache",
-    "licenseFile": "node_modules/proxy-agent/node_modules/lru-cache/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "make-dir@1.3.0": {
     "licenses": "MIT",
@@ -3849,7 +3262,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/make-dir",
     "licenseFile": "node_modules/make-dir/license"
   },
-<<<<<<< HEAD
   "map-age-cleaner@0.1.3": {
     "licenses": "MIT",
     "repository": "https://github.com/SamVerschueren/map-age-cleaner",
@@ -3858,12 +3270,6 @@
     "url": "github.com/SamVerschueren",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/map-age-cleaner",
     "licenseFile": "node_modules/map-age-cleaner/license"
-=======
-  "mamacro@0.0.3": {
-    "licenses": "MIT",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mamacro"
->>>>>>> enhance: add login-page footer
   },
   "map-cache@0.2.2": {
     "licenses": "MIT",
@@ -3929,11 +3335,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mdurl",
     "licenseFile": "node_modules/mdurl/LICENSE"
   },
-<<<<<<< HEAD
   "mem@4.0.0": {
-=======
-  "mem@1.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/mem",
     "publisher": "Sindre Sorhus",
@@ -3971,19 +3373,11 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/mime-db",
     "licenseFile": "node_modules/notebookjs/node_modules/mime-db/LICENSE"
   },
-<<<<<<< HEAD
   "mime-db@1.37.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-db",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ext-list/node_modules/mime-db",
     "licenseFile": "node_modules/ext-list/node_modules/mime-db/LICENSE"
-=======
-  "mime-db@1.35.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jshttp/mime-db",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mime-db",
-    "licenseFile": "node_modules/mime-db/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "mime-types@2.1.18": {
     "licenses": "MIT",
@@ -3991,23 +3385,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/mime-types",
     "licenseFile": "node_modules/notebookjs/node_modules/mime-types/LICENSE"
   },
-<<<<<<< HEAD
   "mime-types@2.1.21": {
-=======
-  "mime-types@2.1.19": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jshttp/mime-types",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mime-types",
-    "licenseFile": "node_modules/mime-types/LICENSE"
-  },
-  "mimic-fn@1.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-types",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mime-types",
     "licenseFile": "node_modules/mime-types/LICENSE"
   },
-<<<<<<< HEAD
   "mimic-fn@1.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/mimic-fn",
@@ -4021,12 +3404,6 @@
     "licenses": "ISC",
     "repository": "https://github.com/calvinmetcalf/minimalistic-assert",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/minimalistic-assert",
-=======
-  "minimalistic-assert@1.0.1": {
-    "licenses": "ISC",
-    "repository": "https://github.com/calvinmetcalf/minimalistic-assert",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/minimalistic-assert",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/minimalistic-assert/LICENSE"
   },
   "minimalistic-crypto-utils@1.0.1": {
@@ -4056,7 +3433,6 @@
     "licenseFile": "node_modules/minimist/LICENSE"
   },
   "minimist@1.2.0": {
-<<<<<<< HEAD
     "licenses": "MIT",
     "repository": "https://github.com/substack/minimist",
     "publisher": "James Halliday",
@@ -4064,33 +3440,6 @@
     "url": "http://substack.net",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/rc/node_modules/minimist",
     "licenseFile": "node_modules/fsevents/node_modules/rc/node_modules/minimist/LICENSE"
-=======
-    "licenses": "MIT",
-    "repository": "https://github.com/substack/minimist",
-    "publisher": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/rc/node_modules/minimist",
-    "licenseFile": "node_modules/fsevents/node_modules/rc/node_modules/minimist/LICENSE"
-  },
-  "minipass@2.2.4": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/minipass",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/minipass",
-    "licenseFile": "node_modules/fsevents/node_modules/minipass/README.md"
-  },
-  "minizlib@1.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/isaacs/minizlib",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/minizlib",
-    "licenseFile": "node_modules/fsevents/node_modules/minizlib/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "minipass@2.2.4": {
     "licenses": "ISC",
@@ -4167,15 +3516,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ms",
     "licenseFile": "node_modules/ms/license.md"
   },
-<<<<<<< HEAD
   "ms@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/zeit/ms",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/traverse/node_modules/ms",
     "licenseFile": "node_modules/@babel/traverse/node_modules/ms/license.md"
   },
-=======
->>>>>>> enhance: add login-page footer
   "mute-stream@0.0.7": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/mute-stream",
@@ -4185,11 +3531,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mute-stream",
     "licenseFile": "node_modules/mute-stream/LICENSE"
   },
-<<<<<<< HEAD
   "nan@2.11.1": {
-=======
-  "nan@2.10.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/nan",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nan",
@@ -4224,17 +3566,10 @@
     "repository": "https://github.com/tomas/needle",
     "publisher": "Tomás Pollak",
     "email": "tomas@forkhq.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/needle",
     "licenseFile": "node_modules/fsevents/node_modules/needle/license.txt"
   },
   "neo-async@2.6.0": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/needle",
-    "licenseFile": "node_modules/fsevents/node_modules/needle/license.txt"
-  },
-  "neo-async@2.5.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/suguru03/neo-async",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/neo-async",
@@ -4290,17 +3625,10 @@
     "repository": "https://github.com/jonschlinkert/normalize-path",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/normalize-path",
     "licenseFile": "node_modules/normalize-path/LICENSE"
   },
   "notebookjs@0.3.2": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/normalize-path",
-    "licenseFile": "node_modules/normalize-path/LICENSE"
-  },
-  "notebookjs@0.3.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/jsvine/notebookjs",
     "publisher": "Jeremy Singer-Vine",
@@ -4314,11 +3642,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/npm-bundled",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/npm-bundled",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fsevents/node_modules/npm-bundled/README.md"
   },
   "npm-packlist@1.1.10": {
@@ -4327,11 +3651,7 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/npm-packlist",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/npm-packlist",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fsevents/node_modules/npm-packlist/LICENSE"
   },
   "npm-run-path@2.0.2": {
@@ -4376,11 +3696,7 @@
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
     "url": "http://www.futurealoof.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/oauth-sign",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/oauth-sign",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/notebookjs/node_modules/oauth-sign/LICENSE"
   },
   "oauth-sign@0.9.0": {
@@ -4389,11 +3705,7 @@
     "publisher": "Mikeal Rogers",
     "email": "mikeal.rogers@gmail.com",
     "url": "http://www.futurealoof.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/oauth-sign",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/oauth-sign",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/oauth-sign/LICENSE"
   },
   "object-assign@4.1.1": {
@@ -4469,11 +3781,7 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/os-homedir",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/os-homedir",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/fsevents/node_modules/os-homedir/license"
   },
   "os-locale@1.4.0": {
@@ -4512,7 +3820,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/osenv",
     "licenseFile": "node_modules/fsevents/node_modules/osenv/LICENSE"
   },
-<<<<<<< HEAD
   "p-defer@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/p-defer",
@@ -4522,8 +3829,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/p-defer",
     "licenseFile": "node_modules/p-defer/license"
   },
-=======
->>>>>>> enhance: add login-page footer
   "p-finally@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/p-finally",
@@ -4533,7 +3838,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/p-finally",
     "licenseFile": "node_modules/p-finally/license"
   },
-<<<<<<< HEAD
   "p-is-promise@1.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/p-is-promise",
@@ -4542,16 +3846,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/p-is-promise",
     "licenseFile": "node_modules/p-is-promise/license"
-=======
-  "p-limit@1.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/p-limit",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/p-limit",
-    "licenseFile": "node_modules/p-limit/license"
->>>>>>> enhance: add login-page footer
   },
   "p-limit@2.0.0": {
     "licenses": "MIT",
@@ -4559,13 +3853,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/p-limit",
     "licenseFile": "node_modules/import-local/node_modules/p-limit/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/yargs/node_modules/p-limit",
-    "licenseFile": "node_modules/yargs/node_modules/p-limit/license"
->>>>>>> enhance: add login-page footer
   },
   "p-locate@3.0.0": {
     "licenses": "MIT",
@@ -4573,22 +3862,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/p-locate",
     "licenseFile": "node_modules/import-local/node_modules/p-locate/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/p-locate",
-    "licenseFile": "node_modules/p-locate/license"
-  },
-  "p-locate@3.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/p-locate",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/yargs/node_modules/p-locate",
-    "licenseFile": "node_modules/yargs/node_modules/p-locate/license"
->>>>>>> enhance: add login-page footer
   },
   "p-try@2.0.0": {
     "licenses": "MIT",
@@ -4596,17 +3871,10 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/p-try",
     "licenseFile": "node_modules/import-local/node_modules/p-try/license"
   },
   "pac-proxy-agent@3.0.0": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/p-try",
-    "licenseFile": "node_modules/p-try/license"
-  },
-  "pac-proxy-agent@2.0.2": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-pac-proxy-agent",
     "publisher": "Nathan Rajlich",
@@ -4641,11 +3909,7 @@
   "parse-asn1@5.1.1": {
     "licenses": "ISC",
     "repository": "https://github.com/crypto-browserify/parse-asn1",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/parse-asn1",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/parse-asn1",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/parse-asn1/LICENSE"
   },
   "parse5@4.0.0": {
@@ -4717,11 +3981,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/path-key",
     "licenseFile": "node_modules/path-key/license"
   },
-<<<<<<< HEAD
   "pbkdf2@3.0.17": {
-=======
-  "pbkdf2@3.0.16": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/pbkdf2",
     "publisher": "Daniel Cousens",
@@ -4733,7 +3993,6 @@
     "repository": "https://github.com/braveg1rl/performance-now",
     "publisher": "Braveg1rl",
     "email": "braveg1rl@outlook.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/performance-now",
     "licenseFile": "node_modules/performance-now/license.txt"
   },
@@ -4747,21 +4006,6 @@
     "licenseFile": "node_modules/make-dir/node_modules/pify/license"
   },
   "pkg-dir@3.0.0": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/performance-now",
-    "licenseFile": "node_modules/performance-now/license.txt"
-  },
-  "pify@2.3.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/pify",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/pify",
-    "licenseFile": "node_modules/pify/license"
-  },
-  "pkg-dir@2.0.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/pkg-dir",
     "publisher": "Sindre Sorhus",
@@ -4818,11 +4062,7 @@
   "process-nextick-args@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/calvinmetcalf/process-nextick-args",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-uri/node_modules/process-nextick-args",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/get-uri/node_modules/process-nextick-args",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/get-uri/node_modules/process-nextick-args/license.md"
   },
   "process@0.11.10": {
@@ -4877,11 +4117,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react/node_modules/prop-types",
     "licenseFile": "node_modules/react/node_modules/prop-types/LICENSE"
   },
-<<<<<<< HEAD
   "proxy-agent@3.0.3": {
-=======
-  "proxy-agent@3.0.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-proxy-agent",
     "publisher": "Nathan Rajlich",
@@ -4896,11 +4132,7 @@
     "publisher": "Rob Wu",
     "email": "rob@robwu.nl",
     "url": "https://robwu.nl/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/proxy-from-env",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/proxy-from-env",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/proxy-from-env/README.md"
   },
   "prr@1.0.1": {
@@ -4925,7 +4157,6 @@
     "licenses": "MIT",
     "repository": "https://github.com/wrangr/psl",
     "publisher": "Lupo Montero",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/psl",
     "licenseFile": "node_modules/psl/README.md"
   },
@@ -4934,16 +4165,6 @@
     "repository": "https://github.com/crypto-browserify/publicEncrypt",
     "publisher": "Calvin Metcalf",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/public-encrypt",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/psl",
-    "licenseFile": "node_modules/psl/README.md"
-  },
-  "public-encrypt@4.0.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/crypto-browserify/publicEncrypt",
-    "publisher": "Calvin Metcalf",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/public-encrypt",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/public-encrypt/LICENSE"
   },
   "pump@2.0.1": {
@@ -4982,13 +4203,8 @@
     "repository": "https://github.com/bestiejs/punycode.js",
     "publisher": "Mathias Bynens",
     "url": "https://mathiasbynens.be/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/tough-cookie/node_modules/punycode",
     "licenseFile": "node_modules/tough-cookie/node_modules/punycode/LICENSE-MIT.txt"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/tough-cookie/node_modules/punycode",
-    "licenseFile": "node_modules/tough-cookie/node_modules/punycode/README.md"
->>>>>>> enhance: add login-page footer
   },
   "punycode@2.1.0": {
     "licenses": "MIT",
@@ -5005,14 +4221,6 @@
     "url": "https://mathiasbynens.be/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/punycode",
     "licenseFile": "node_modules/punycode/LICENSE-MIT.txt"
-  },
-  "punycode@2.1.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/bestiejs/punycode.js",
-    "publisher": "Mathias Bynens",
-    "url": "https://mathiasbynens.be/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/punycode",
-    "licenseFile": "node_modules/punycode/README.md"
   },
   "pupa@1.0.0": {
     "licenses": "MIT",
@@ -5032,11 +4240,7 @@
   "qs@6.5.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/ljharb/qs",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/qs",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/qs",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/qs/LICENSE"
   },
   "querystring-es3@0.2.1": {
@@ -5190,11 +4394,7 @@
   "readable-stream@2.3.3": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/readable-stream",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/concat-stream/node_modules/readable-stream",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/concat-stream/node_modules/readable-stream",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/concat-stream/node_modules/readable-stream/LICENSE"
   },
   "readable-stream@2.3.6": {
@@ -5203,17 +4403,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-uri/node_modules/readable-stream",
     "licenseFile": "node_modules/get-uri/node_modules/readable-stream/LICENSE"
   },
-<<<<<<< HEAD
   "readdirp@2.2.1": {
-=======
-  "readable-stream@2.3.6": {
-    "licenses": "MIT",
-    "repository": "https://github.com/nodejs/readable-stream",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/get-uri/node_modules/readable-stream",
-    "licenseFile": "node_modules/get-uri/node_modules/readable-stream/LICENSE"
-  },
-  "readdirp@2.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/paulmillr/readdirp",
     "publisher": "Thorsten Lorenz",
@@ -5222,11 +4412,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/readdirp",
     "licenseFile": "node_modules/readdirp/LICENSE"
   },
-<<<<<<< HEAD
   "redux-form@7.4.2": {
-=======
-  "redux-form@7.0.4": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/erikras/redux-form",
     "publisher": "Erik Rasmussen",
@@ -5249,11 +4435,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/redux",
     "licenseFile": "node_modules/redux/LICENSE.md"
   },
-<<<<<<< HEAD
   "regenerator-runtime@0.11.1": {
-=======
-  "regenerator-runtime@0.10.5": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime",
     "publisher": "Ben Newman",
@@ -5261,7 +4443,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/twitter-text/node_modules/regenerator-runtime",
     "licenseFile": "node_modules/twitter-text/node_modules/regenerator-runtime/README.md"
   },
-<<<<<<< HEAD
   "regenerator-runtime@0.12.1": {
     "licenses": "MIT",
     "repository": "https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime",
@@ -5270,8 +4451,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/runtime-corejs2/node_modules/regenerator-runtime",
     "licenseFile": "node_modules/@babel/runtime-corejs2/node_modules/regenerator-runtime/README.md"
   },
-=======
->>>>>>> enhance: add login-page footer
   "regex-not@1.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/regex-not",
@@ -5280,7 +4459,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/regex-not",
     "licenseFile": "node_modules/regex-not/LICENSE"
   },
-<<<<<<< HEAD
   "regexpp@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mysticatea/regexpp",
@@ -5289,8 +4467,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/regexpp",
     "licenseFile": "node_modules/regexpp/LICENSE"
   },
-=======
->>>>>>> enhance: add login-page footer
   "remove-trailing-separator@1.1.0": {
     "licenses": "ISC",
     "repository": "https://github.com/darsain/remove-trailing-separator",
@@ -5338,11 +4514,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/request-promise",
     "licenseFile": "node_modules/request-promise/LICENSE"
   },
-<<<<<<< HEAD
   "request@2.83.0": {
-=======
-  "request@2.88.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "Apache-2.0",
     "repository": "https://github.com/request/request",
     "publisher": "Mikeal Rogers",
@@ -5350,7 +4522,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/request",
     "licenseFile": "node_modules/notebookjs/node_modules/request/LICENSE"
   },
-<<<<<<< HEAD
   "request@2.88.0": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/request/request",
@@ -5359,8 +4530,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/request",
     "licenseFile": "node_modules/request/LICENSE"
   },
-=======
->>>>>>> enhance: add login-page footer
   "require-directory@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/troygoode/node-require-directory",
@@ -5396,7 +4565,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-cwd",
     "licenseFile": "node_modules/resolve-cwd/license"
   },
-<<<<<<< HEAD
   "resolve-from@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/resolve-from",
@@ -5406,8 +4574,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-from",
     "licenseFile": "node_modules/resolve-from/license"
   },
-=======
->>>>>>> enhance: add login-page footer
   "resolve-from@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/resolve-from",
@@ -5421,11 +4587,7 @@
     "licenses": "MIT",
     "repository": "https://github.com/lydell/resolve-url",
     "publisher": "Simon Lydell",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-url",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/resolve-url",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/resolve-url/LICENSE"
   },
   "restore-cursor@2.0.0": {
@@ -5460,22 +4622,13 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/flat-cache/node_modules/rimraf",
     "licenseFile": "node_modules/flat-cache/node_modules/rimraf/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/cacache/node_modules/rimraf",
-    "licenseFile": "node_modules/cacache/node_modules/rimraf/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "ripemd160@2.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/ripemd160",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ripemd160",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/ripemd160",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/ripemd160/LICENSE"
   },
   "run-async@2.3.0": {
@@ -5495,11 +4648,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/run-queue",
     "licenseFile": "node_modules/run-queue/README.md"
   },
-<<<<<<< HEAD
   "rxjs@6.3.3": {
-=======
-  "rxjs@6.2.2": {
->>>>>>> enhance: add login-page footer
     "licenses": "Apache-2.0",
     "repository": "https://github.com/reactivex/rxjs",
     "publisher": "Ben Lesh",
@@ -5513,11 +4662,7 @@
     "publisher": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
     "url": "http://feross.org",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/safe-buffer",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/safe-buffer",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/safe-buffer/LICENSE"
   },
   "safe-buffer@5.1.2": {
@@ -5526,11 +4671,7 @@
     "publisher": "Feross Aboukhadijeh",
     "email": "feross@feross.org",
     "url": "http://feross.org",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/request/node_modules/safe-buffer",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/request/node_modules/safe-buffer",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/request/node_modules/safe-buffer/LICENSE"
   },
   "safe-regex@1.1.0": {
@@ -5548,11 +4689,7 @@
     "publisher": "Nikita Skovoroda",
     "email": "chalkerx@gmail.com",
     "url": "https://github.com/ChALkeR",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/safer-buffer",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/safer-buffer",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/safer-buffer/LICENSE"
   },
   "sax@1.2.4": {
@@ -5575,7 +4712,6 @@
     "repository": "https://github.com/webpack-contrib/schema-utils",
     "publisher": "Webpack Contrib",
     "url": "https://github.com/webpack-contrib",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/schema-utils",
     "licenseFile": "node_modules/schema-utils/LICENSE"
   },
@@ -5586,10 +4722,6 @@
     "url": "https://github.com/webpack-contrib",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/terser-webpack-plugin/node_modules/schema-utils",
     "licenseFile": "node_modules/terser-webpack-plugin/node_modules/schema-utils/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/schema-utils",
-    "licenseFile": "node_modules/schema-utils/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "secure-keys@1.0.0": {
     "licenses": "MIT",
@@ -5607,17 +4739,10 @@
   "semver@5.5.0": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/semver",
     "licenseFile": "node_modules/fsevents/node_modules/semver/LICENSE"
   },
   "semver@5.6.0": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/semver",
-    "licenseFile": "node_modules/fsevents/node_modules/semver/LICENSE"
-  },
-  "semver@5.5.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/semver",
@@ -5704,7 +4829,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/signal-exit",
     "licenseFile": "node_modules/signal-exit/LICENSE.txt"
   },
-<<<<<<< HEAD
   "slice-ansi@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/slice-ansi",
@@ -5712,21 +4836,11 @@
     "licenseFile": "node_modules/slice-ansi/license"
   },
   "smart-buffer@4.0.1": {
-=======
-  "smart-buffer@1.1.15": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/JoshGlazebrook/smart-buffer",
     "publisher": "Josh Glazebrook",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/smart-buffer",
     "licenseFile": "node_modules/smart-buffer/LICENSE"
-  },
-  "smart-buffer@4.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/JoshGlazebrook/smart-buffer",
-    "publisher": "Josh Glazebrook",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/socks-proxy-agent/node_modules/smart-buffer",
-    "licenseFile": "node_modules/socks-proxy-agent/node_modules/smart-buffer/LICENSE"
   },
   "snapdragon-node@2.1.1": {
     "licenses": "MIT",
@@ -5752,7 +4866,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/snapdragon",
     "licenseFile": "node_modules/snapdragon/LICENSE"
   },
-<<<<<<< HEAD
   "sntp@2.1.0": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/hueniverse/sntp",
@@ -5763,41 +4876,21 @@
     "licenseFile": "node_modules/notebookjs/node_modules/sntp/LICENSE"
   },
   "socks-proxy-agent@4.0.1": {
-=======
-  "socks-proxy-agent@3.0.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-socks-proxy-agent",
     "publisher": "Nathan Rajlich",
     "email": "nathan@tootallnate.net",
     "url": "http://n8.io/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/socks-proxy-agent",
     "licenseFile": "node_modules/socks-proxy-agent/README.md"
   },
   "socks@2.2.2": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/pac-proxy-agent/node_modules/socks-proxy-agent",
-    "licenseFile": "node_modules/pac-proxy-agent/node_modules/socks-proxy-agent/README.md"
-  },
-  "socks-proxy-agent@4.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/TooTallNate/node-socks-proxy-agent",
-    "publisher": "Nathan Rajlich",
-    "email": "nathan@tootallnate.net",
-    "url": "http://n8.io/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/socks-proxy-agent",
-    "licenseFile": "node_modules/socks-proxy-agent/README.md"
-  },
-  "socks@1.1.10": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/JoshGlazebrook/socks",
     "publisher": "Josh Glazebrook",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/socks",
     "licenseFile": "node_modules/socks/LICENSE"
   },
-<<<<<<< HEAD
   "sort-keys-length@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/kevva/sort-keys-length",
@@ -5815,14 +4908,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/sort-keys",
     "licenseFile": "node_modules/sort-keys/license"
-=======
-  "socks@2.2.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/JoshGlazebrook/socks",
-    "publisher": "Josh Glazebrook",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/socks-proxy-agent/node_modules/socks",
-    "licenseFile": "node_modules/socks-proxy-agent/node_modules/socks/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "source-list-map@2.0.1": {
     "licenses": "MIT",
@@ -5851,11 +4936,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/source-map-url",
     "licenseFile": "node_modules/source-map-url/LICENSE"
   },
-<<<<<<< HEAD
   "source-map@0.5.7": {
-=======
-  "source-map@0.5.6": {
->>>>>>> enhance: add login-page footer
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/mozilla/source-map",
     "publisher": "Nick Fitzgerald",
@@ -5892,17 +4973,10 @@
     "licenses": "MIT",
     "repository": "https://github.com/arekinath/node-sshpk",
     "publisher": "Joyent, Inc",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/sshpk",
     "licenseFile": "node_modules/notebookjs/node_modules/sshpk/LICENSE"
   },
   "sshpk@1.15.2": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/sshpk",
-    "licenseFile": "node_modules/notebookjs/node_modules/sshpk/LICENSE"
-  },
-  "sshpk@1.14.2": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/joyent/node-sshpk",
     "publisher": "Joyent, Inc",
@@ -6007,18 +5081,12 @@
   "string_decoder@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/string_decoder",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/concat-stream/node_modules/string_decoder",
     "licenseFile": "node_modules/concat-stream/node_modules/string_decoder/LICENSE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/memory-fs/node_modules/string_decoder",
-    "licenseFile": "node_modules/memory-fs/node_modules/string_decoder/LICENSE"
->>>>>>> enhance: add login-page footer
   },
   "string_decoder@1.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/string_decoder",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-uri/node_modules/string_decoder",
     "licenseFile": "node_modules/get-uri/node_modules/string_decoder/LICENSE"
   },
@@ -6037,11 +5105,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/stringstream",
     "licenseFile": "node_modules/notebookjs/node_modules/stringstream/LICENSE.txt"
   },
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/get-uri/node_modules/string_decoder",
-    "licenseFile": "node_modules/get-uri/node_modules/string_decoder/LICENSE"
-  },
->>>>>>> enhance: add login-page footer
   "strip-ansi@3.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/strip-ansi",
@@ -6057,7 +5120,6 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/strip-ansi",
     "licenseFile": "node_modules/yargs/node_modules/strip-ansi/license"
   },
@@ -6069,10 +5131,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer/node_modules/strip-ansi",
     "licenseFile": "node_modules/inquirer/node_modules/strip-ansi/license"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/strip-ansi",
-    "licenseFile": "node_modules/webpack-cli/node_modules/strip-ansi/license"
->>>>>>> enhance: add login-page footer
   },
   "strip-eof@1.0.0": {
     "licenses": "MIT",
@@ -6089,33 +5147,19 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/strip-json-comments",
     "licenseFile": "node_modules/strip-json-comments/license"
   },
   "supports-color@5.5.0": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/strip-json-comments",
-    "licenseFile": "node_modules/fsevents/node_modules/strip-json-comments/license"
-  },
-  "supports-color@5.4.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/chalk/supports-color",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight/node_modules/supports-color",
     "licenseFile": "node_modules/@babel/highlight/node_modules/supports-color/license"
   },
   "symbol-observable@1.2.0": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/webpack-cli/node_modules/supports-color",
-    "licenseFile": "node_modules/webpack-cli/node_modules/supports-color/license"
-  },
-  "symbol-observable@1.0.4": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/blesh/symbol-observable",
     "publisher": "Ben Lesh",
@@ -6156,7 +5200,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/tar",
     "licenseFile": "node_modules/fsevents/node_modules/tar/LICENSE"
   },
-<<<<<<< HEAD
   "terser-webpack-plugin@1.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack-contrib/terser-webpack-plugin",
@@ -6183,21 +5226,13 @@
     "licenseFile": "node_modules/text-table/LICENSE"
   },
   "through2@2.0.5": {
-=======
-  "through2@2.0.3": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/through2",
     "publisher": "Rod Vagg",
     "email": "r@va.gg",
     "url": "https://github.com/rvagg",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mississippi/node_modules/through2",
     "licenseFile": "node_modules/mississippi/node_modules/through2/LICENSE.md"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mississippi/node_modules/through2",
-    "licenseFile": "node_modules/mississippi/node_modules/through2/LICENSE.html"
->>>>>>> enhance: add login-page footer
   },
   "through@2.3.8": {
     "licenses": "MIT",
@@ -6246,7 +5281,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/to-arraybuffer",
     "licenseFile": "node_modules/to-arraybuffer/LICENSE"
   },
-<<<<<<< HEAD
   "to-fast-properties@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/to-fast-properties",
@@ -6256,8 +5290,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/types/node_modules/to-fast-properties",
     "licenseFile": "node_modules/@babel/types/node_modules/to-fast-properties/license"
   },
-=======
->>>>>>> enhance: add login-page footer
   "to-object-path@0.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/to-object-path",
@@ -6287,11 +5319,7 @@
     "repository": "https://github.com/salesforce/tough-cookie",
     "publisher": "Jeremy Stashewsky",
     "email": "jstashewsky@salesforce.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/tough-cookie",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/tough-cookie",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/notebookjs/node_modules/tough-cookie/LICENSE"
   },
   "tough-cookie@2.4.3": {
@@ -6299,11 +5327,7 @@
     "repository": "https://github.com/salesforce/tough-cookie",
     "publisher": "Jeremy Stashewsky",
     "email": "jstash@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/tough-cookie",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/tough-cookie",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/tough-cookie/LICENSE"
   },
   "tr46@1.0.1": {
@@ -6314,7 +5338,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/tr46",
     "licenseFile": "node_modules/notebookjs/node_modules/tr46/LICENSE.md"
   },
-<<<<<<< HEAD
   "trim-right@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/trim-right",
@@ -6323,14 +5346,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/trim-right",
     "licenseFile": "node_modules/trim-right/license"
-=======
-  "tslib@1.9.3": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/Microsoft/tslib",
-    "publisher": "Microsoft Corp.",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/tslib",
-    "licenseFile": "node_modules/tslib/LICENSE.txt"
->>>>>>> enhance: add login-page footer
   },
   "tslib@1.9.3": {
     "licenses": "Apache-2.0",
@@ -6402,7 +5417,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ua-parser-js",
     "licenseFile": "node_modules/ua-parser-js/readme.md"
   },
-<<<<<<< HEAD
   "uc.micro@1.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/markdown-it/uc.micro",
@@ -6410,31 +5424,6 @@
     "licenseFile": "node_modules/uc.micro/LICENSE.txt"
   },
   "uncontrollable@5.1.0": {
-=======
-  "uc.micro@1.0.3": {
-    "licenses": "WTFPL",
-    "repository": "https://github.com/markdown-it/uc.micro",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uc.micro",
-    "licenseFile": "node_modules/uc.micro/README.md"
-  },
-  "uglify-es@3.3.9": {
-    "licenses": "BSD-2-Clause",
-    "repository": "https://github.com/mishoo/UglifyJS2.git#harmony",
-    "publisher": "Mihai Bazon",
-    "email": "mihai.bazon@gmail.com",
-    "url": "http://lisperator.net/",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uglifyjs-webpack-plugin/node_modules/uglify-es",
-    "licenseFile": "node_modules/uglifyjs-webpack-plugin/node_modules/uglify-es/LICENSE"
-  },
-  "uglifyjs-webpack-plugin@1.3.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/webpack-contrib/uglifyjs-webpack-plugin",
-    "publisher": "webpack Contrib Team",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uglifyjs-webpack-plugin",
-    "licenseFile": "node_modules/uglifyjs-webpack-plugin/LICENSE"
-  },
-  "uncontrollable@4.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/jquense/uncontrollable",
     "publisher": "Jason Quense",
@@ -6492,11 +5481,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/unset-value",
     "licenseFile": "node_modules/unset-value/LICENSE"
   },
-<<<<<<< HEAD
   "unused-filename@1.0.0": {
-=======
-  "unused-filename@0.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/unused-filename",
     "publisher": "Sindre Sorhus",
@@ -6518,11 +5503,7 @@
     "repository": "https://github.com/garycourt/uri-js",
     "publisher": "Gary Court",
     "email": "gary.court@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/uri-js",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/uri-js",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/uri-js/README.md"
   },
   "urix@0.1.0": {
@@ -6560,7 +5541,6 @@
     "repository": "https://github.com/defunctzombie/node-util",
     "publisher": "Joyent",
     "url": "http://www.joyent.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/assert/node_modules/util",
     "licenseFile": "node_modules/assert/node_modules/util/LICENSE"
   },
@@ -6573,40 +5553,17 @@
     "licenseFile": "node_modules/util/LICENSE"
   },
   "uuid@3.2.1": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/assert/node_modules/util",
-    "licenseFile": "node_modules/assert/node_modules/util/LICENSE"
-  },
-  "util@0.10.4": {
-    "licenses": "MIT",
-    "repository": "https://github.com/defunctzombie/node-util",
-    "publisher": "Joyent",
-    "url": "http://www.joyent.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/util",
-    "licenseFile": "node_modules/util/LICENSE"
-  },
-  "uuid@3.2.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/kelektiv/node-uuid",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/notebookjs/node_modules/uuid",
-    "licenseFile": "node_modules/notebookjs/node_modules/uuid/LICENSE.md"
-  },
-  "uuid@3.3.2": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/kelektiv/node-uuid",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/uuid",
     "licenseFile": "node_modules/notebookjs/node_modules/uuid/LICENSE.md"
   },
-<<<<<<< HEAD
   "uuid@3.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/kelektiv/node-uuid",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/uuid",
     "licenseFile": "node_modules/uuid/LICENSE.md"
   },
-=======
->>>>>>> enhance: add login-page footer
   "v8-compile-cache@2.0.2": {
     "licenses": "MIT",
     "publisher": "Andres Suarez",
@@ -6626,11 +5583,7 @@
   "verror@1.10.0": {
     "licenses": "MIT",
     "repository": "https://github.com/davepacheco/node-verror",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/verror",
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/verror",
->>>>>>> enhance: add login-page footer
     "licenseFile": "node_modules/verror/LICENSE"
   },
   "vm-browserify@0.0.4": {
@@ -6675,11 +5628,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/webidl-conversions",
     "licenseFile": "node_modules/notebookjs/node_modules/webidl-conversions/LICENSE.md"
   },
-<<<<<<< HEAD
   "webpack-cli@3.1.2": {
-=======
-  "webpack-cli@3.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/webpack/webpack-cli",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-cli",
@@ -6692,11 +5641,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-sources",
     "licenseFile": "node_modules/webpack-sources/LICENSE"
   },
-<<<<<<< HEAD
   "webpack@4.27.1": {
-=======
-  "webpack@4.16.5": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/webpack/webpack",
     "publisher": "Tobias Koppers @sokra",
@@ -6800,7 +5745,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/wrappy",
     "licenseFile": "node_modules/wrappy/LICENSE"
   },
-<<<<<<< HEAD
   "write@0.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/write",
@@ -6809,8 +5753,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/write",
     "licenseFile": "node_modules/write/LICENSE"
   },
-=======
->>>>>>> enhance: add login-page footer
   "ws@4.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/websockets/ws",
@@ -6837,26 +5779,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/xregexp",
     "licenseFile": "node_modules/xregexp/README.md"
   },
-  "xregexp@4.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/slevithan/xregexp",
-    "publisher": "Steven Levithan",
-    "email": "steves_list@hotmail.com",
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/yargs/node_modules/xregexp",
-    "licenseFile": "node_modules/yargs/node_modules/xregexp/LICENSE"
-  },
   "xtend@4.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/Raynos/xtend",
     "publisher": "Raynos",
     "email": "raynos2@gmail.com",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/stream-http/node_modules/xtend",
     "licenseFile": "node_modules/stream-http/node_modules/xtend/LICENCE"
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/mississippi/node_modules/xtend",
-    "licenseFile": "node_modules/mississippi/node_modules/xtend/LICENCE"
->>>>>>> enhance: add login-page footer
   },
   "y18n@3.2.1": {
     "licenses": "ISC",
@@ -6889,17 +5818,10 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
-<<<<<<< HEAD
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/yallist",
     "licenseFile": "node_modules/fsevents/node_modules/yallist/LICENSE"
   },
   "yargs-parser@11.1.1": {
-=======
-    "path": "/Users/cosmox/CodeBlockProject/Lepton/node_modules/fsevents/node_modules/yallist",
-    "licenseFile": "node_modules/fsevents/node_modules/yallist/LICENSE"
-  },
-  "yargs-parser@10.1.0": {
->>>>>>> enhance: add login-page footer
     "licenses": "ISC",
     "repository": "https://github.com/yargs/yargs-parser",
     "publisher": "Ben Coe",
@@ -6907,11 +5829,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs-parser",
     "licenseFile": "node_modules/yargs-parser/LICENSE.txt"
   },
-<<<<<<< HEAD
   "yargs@12.0.5": {
-=======
-  "yargs@12.0.1": {
->>>>>>> enhance: add login-page footer
     "licenses": "MIT",
     "repository": "https://github.com/yargs/yargs",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs",
