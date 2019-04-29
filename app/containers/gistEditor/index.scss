@@ -15,6 +15,7 @@
 
 .CodeMirror-scroll {
   min-height: 400px;
+  background: var(--bg-primary);
 }
 
 .CodeMirror-empty {
@@ -65,3 +66,4 @@
 @import '../../../node_modules/codemirror/mode/tiki/tiki.css';
 @import '../../../node_modules/codemirror/addon/dialog/dialog.css';
 @import '../../../node_modules/codemirror/addon/fold/foldgutter.css';
+@import '../../../node_modules/codemirror-one-dark-theme/one-dark.css';

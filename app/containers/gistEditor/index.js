@@ -152,7 +152,7 @@ import { remote } from 'electron'
 const conf = remote.getGlobal('conf')
 
 const defaultOptions = Object.assign({}, {
-  theme: 'github',
+  theme: 'one-dark',
   lineNumbers: true,
   matchBrackets: true,
   matchTags: true,
