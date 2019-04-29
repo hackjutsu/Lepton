@@ -52,7 +52,7 @@ const kIsPrivate = conf.get('snippet:newSnippetPrivate')
 const hideProfilePhoto = conf.get('userPanel:hideProfilePhoto')
 
 const themeManager = new ThemeManager()
-themeManager.setTheme('dark')
+themeManager.setTheme(conf.get('theme'))
 
 class UserPanel extends Component {
   componentDidMount () {

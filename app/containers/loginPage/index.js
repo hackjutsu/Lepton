@@ -6,13 +6,7 @@ import { remote, ipcRenderer } from 'electron'
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
-
-const darkTheme = true
-if (darkTheme) {
-  import('./index.scss')
-} else {
-  import('./index.dark.scss')
-}
+import './index.scss'
 
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
