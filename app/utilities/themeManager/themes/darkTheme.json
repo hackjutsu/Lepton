@@ -6,6 +6,7 @@
     "text-secondary": "#7c7d83",
     "text-secondary-darken": "#9a9ca2",
     "text-invert": "#2a2a2a",
+    "text-code-block": "rgba(171, 178, 190, 1)",
     "accent-success": "#000",
     "accent-warning": "#000",
     "accent-regular": "#ececec",
