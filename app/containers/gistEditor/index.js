@@ -151,8 +151,9 @@ import './index.scss'
 import { remote } from 'electron'
 const conf = remote.getGlobal('conf')
 
+const highlightTheme = conf.get('theme') === 'dark' ? 'one-dark' : 'github'
 const defaultOptions = Object.assign({}, {
-  theme: 'one-dark',
+  theme: highlightTheme,
   lineNumbers: true,
   matchBrackets: true,
   matchTags: true,

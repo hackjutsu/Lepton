@@ -10,5 +10,6 @@
     "accent-success": "#000",
     "accent-warning": "#000",
     "accent-regular": "#ececec",
-    "shadow-color": "rgba(0, 0, 0, 0.55)"
+    "shadow-color": "rgba(0, 0, 0, 0.55)",
+    "modal-close-button": "white"
 }

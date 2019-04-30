@@ -32,6 +32,15 @@
   }
 }
 
+/*For the 'x' close button at top-right corner of the modal*/
+div > div.modal-header > button > span:nth-child(1) {
+  color: var(--modal-close-button);
+}
+div > div.modal-header > button {
+  color: var(--modal-close-button);
+}
+/**/
+
 /*For the resizer handle*/
 .Resizer {
   background: #000;
