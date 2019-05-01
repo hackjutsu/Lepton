@@ -11,6 +11,7 @@
     width: 100%;
     padding: 10px;
     border: 0;
+    background: var(--bg-primary);
   }
 
   .search-box:focus {
@@ -26,17 +27,17 @@
 
   .search-result-item {
     padding: 10px 10px;
-    border-top: solid 1.5px rgb(237, 237, 237);
+    border-top: solid 1px var(--border-color);
   }
 
   .search-result-item:hover {
-    background: rgb(249, 249, 249);
+    background: rgba(0, 0, 0, 0.3);
     cursor: pointer;
   }
 
   .search-result-item-selected {
      @extend .search-result-item;
-     background: rgb(237, 237, 237);
+     background: rgba(0, 0, 0, 0.3);
   }
 
   .list-group {
