@@ -35,6 +35,7 @@ class Dashboard extends Component {
     )
   }
 
+  // https://github.com/chartjs/Chart.js/blob/v1.1.1/docs/03-Radar-Chart.md
   buildRadarChart (data, labels) {
     const GREY = '#C2C4D1'
     const chartData = {
