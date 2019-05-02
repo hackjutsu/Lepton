@@ -93,121 +93,121 @@
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/ast",
-    "licenseFile": "node_modules/@webassemblyjs/ast/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/ast",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/ast/LICENSE"
   },
   "@webassemblyjs/floating-point-hex-parser@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Mauro Bringolf",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/floating-point-hex-parser",
-    "licenseFile": "node_modules/@webassemblyjs/floating-point-hex-parser/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/floating-point-hex-parser",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/floating-point-hex-parser/LICENSE"
   },
   "@webassemblyjs/helper-api-error@1.7.11": {
     "licenses": "MIT",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-api-error",
-    "licenseFile": "node_modules/@webassemblyjs/helper-api-error/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-api-error",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-api-error/LICENSE"
   },
   "@webassemblyjs/helper-buffer@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-buffer",
-    "licenseFile": "node_modules/@webassemblyjs/helper-buffer/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-buffer",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-buffer/LICENSE"
   },
   "@webassemblyjs/helper-code-frame@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-code-frame",
-    "licenseFile": "node_modules/@webassemblyjs/helper-code-frame/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-code-frame",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-code-frame/LICENSE"
   },
   "@webassemblyjs/helper-fsm@1.7.11": {
     "licenses": "ISC",
     "publisher": "Mauro Bringolf",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-fsm",
-    "licenseFile": "node_modules/@webassemblyjs/helper-fsm/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-fsm",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-fsm/LICENSE"
   },
   "@webassemblyjs/helper-module-context@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-module-context",
-    "licenseFile": "node_modules/@webassemblyjs/helper-module-context/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-module-context",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-module-context/LICENSE"
   },
   "@webassemblyjs/helper-wasm-bytecode@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-wasm-bytecode",
-    "licenseFile": "node_modules/@webassemblyjs/helper-wasm-bytecode/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-bytecode",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-bytecode/LICENSE"
   },
   "@webassemblyjs/helper-wasm-section@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-wasm-section",
-    "licenseFile": "node_modules/@webassemblyjs/helper-wasm-section/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-section",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-section/LICENSE"
   },
   "@webassemblyjs/ieee754@1.7.11": {
     "licenses": "MIT",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/ieee754",
-    "licenseFile": "node_modules/@webassemblyjs/ieee754/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/ieee754",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/ieee754/LICENSE"
   },
   "@webassemblyjs/leb128@1.7.11": {
     "licenses": "MIT",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/leb128",
-    "licenseFile": "node_modules/@webassemblyjs/leb128/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/leb128",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/leb128/LICENSE.txt"
   },
   "@webassemblyjs/utf8@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/utf8",
-    "licenseFile": "node_modules/@webassemblyjs/utf8/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/utf8",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/utf8/LICENSE"
   },
   "@webassemblyjs/wasm-edit@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-edit",
-    "licenseFile": "node_modules/@webassemblyjs/wasm-edit/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-edit",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-edit/LICENSE"
   },
   "@webassemblyjs/wasm-gen@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-gen",
-    "licenseFile": "node_modules/@webassemblyjs/wasm-gen/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-gen",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-gen/LICENSE"
   },
   "@webassemblyjs/wasm-opt@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-opt",
-    "licenseFile": "node_modules/@webassemblyjs/wasm-opt/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-opt",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-opt/LICENSE"
   },
   "@webassemblyjs/wasm-parser@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-parser",
-    "licenseFile": "node_modules/@webassemblyjs/wasm-parser/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-parser",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-parser/LICENSE"
   },
   "@webassemblyjs/wast-parser@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wast-parser",
-    "licenseFile": "node_modules/@webassemblyjs/wast-parser/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wast-parser",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wast-parser/LICENSE"
   },
   "@webassemblyjs/wast-printer@1.7.11": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wast-printer",
-    "licenseFile": "node_modules/@webassemblyjs/wast-printer/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wast-printer",
+    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wast-printer/LICENSE"
   },
   "@xtuc/ieee754@1.2.0": {
     "licenses": "BSD-3-Clause",
@@ -611,6 +611,12 @@
     "email": "sebmck@gmail.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/babel-eslint",
     "licenseFile": "node_modules/babel-eslint/LICENSE"
+  },
+  "babel-plugin-syntax-dynamic-import@6.18.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-dynamic-import",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/babel-plugin-syntax-dynamic-import",
+    "licenseFile": "node_modules/babel-plugin-syntax-dynamic-import/README.md"
   },
   "babel-runtime@6.26.0": {
     "licenses": "MIT",
@@ -1045,6 +1051,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/code-point-at",
     "licenseFile": "node_modules/code-point-at/license"
   },
+  "codemirror-one-dark-theme@1.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/aerobird98/codemirror-one-dark-theme",
+    "publisher": "Aerobird98",
+    "url": "Adam Török",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/codemirror-one-dark-theme",
+    "licenseFile": "node_modules/codemirror-one-dark-theme/LICENSE"
+  },
   "codemirror@5.42.0": {
     "licenses": "MIT",
     "repository": "https://github.com/codemirror/CodeMirror",
@@ -1326,21 +1340,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/date-now",
     "licenseFile": "node_modules/date-now/LICENCE"
   },
-  "debug@2.6.8": {
+  "debug@2.6.9": {
     "licenses": "MIT",
     "repository": "https://github.com/visionmedia/debug",
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/debug",
     "licenseFile": "node_modules/debug/LICENSE"
-  },
-  "debug@2.6.9": {
-    "licenses": "MIT",
-    "repository": "https://github.com/visionmedia/debug",
-    "publisher": "TJ Holowaychuk",
-    "email": "tj@vision-media.ca",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/debug",
-    "licenseFile": "node_modules/fsevents/node_modules/debug/LICENSE"
   },
   "debug@3.1.0": {
     "licenses": "MIT",
@@ -1862,15 +1868,6 @@
     "url": "https://github.com/jonschlinkert",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extend-shallow",
     "licenseFile": "node_modules/extend-shallow/LICENSE"
-  },
-  "extend@3.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/justmoon/node-extend",
-    "publisher": "Stefan Thomas",
-    "email": "justmoon@members.fsf.org",
-    "url": "http://www.justmoon.net",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/extend",
-    "licenseFile": "node_modules/notebookjs/node_modules/extend/LICENSE"
   },
   "extend@3.0.2": {
     "licenses": "MIT",
@@ -3202,6 +3199,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/lodash.sortby",
     "licenseFile": "node_modules/notebookjs/node_modules/lodash.sortby/LICENSE"
   },
+  "lodash@4.17.10": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lodash/lodash",
+    "publisher": "John-David Dalton",
+    "email": "john.david.dalton@gmail.com",
+    "url": "http://allyoucanleet.com/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lodash",
+    "licenseFile": "node_modules/lodash/LICENSE"
+  },
   "lodash@4.17.11": {
     "licenses": "MIT",
     "repository": "https://github.com/lodash/lodash",
@@ -3210,15 +3216,6 @@
     "url": "http://allyoucanleet.com/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/types/node_modules/lodash",
     "licenseFile": "node_modules/@babel/types/node_modules/lodash/LICENSE"
-  },
-  "lodash@4.17.4": {
-    "licenses": "MIT",
-    "repository": "https://github.com/lodash/lodash",
-    "publisher": "John-David Dalton",
-    "email": "john.david.dalton@gmail.com",
-    "url": "http://allyoucanleet.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lodash",
-    "licenseFile": "node_modules/lodash/LICENSE"
   },
   "lodash@4.17.5": {
     "licenses": "MIT",
