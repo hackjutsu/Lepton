@@ -136,4 +136,11 @@
     div[style="max-height:1000px;max-width:1500px;overflow:auto;"] {
       max-height: none !important;    
     }
+
+    code {
+      padding: 2px 4px;
+      font-size: 90%;
+      color: var(--text-primary);
+      background-color: transparent;
+    }
   }
