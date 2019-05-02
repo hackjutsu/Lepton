@@ -132,4 +132,11 @@
     vertical-align: middle;
     fill: currentColor;
   }
+
+  hr {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 1;
+    border-top: 1px solid var(--border-color);
+  }
 }
