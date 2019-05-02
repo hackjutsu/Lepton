@@ -241,11 +241,11 @@ class UserPanel extends Component {
             dangerouslySetInnerHTML={{ __html: syncIcon }} />
           <span>Sync</span>
         </a>
-        <button
+        {/* <button
           className='theme-toggle'
           onClick={ this.toggleTheme.bind(this) }>
           toggle theme
-        </button>
+        </button> */}
         <div className='customized-tag-small'>{ this.props.syncTime }</div>
       </div>
     )
