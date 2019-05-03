@@ -1,15 +1,19 @@
 'use strict'
 
+import { remote } from 'electron'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
 import LicenseInfo from '../../../license.json'
-import logoImage from './logo.png'
+import logoLightImage from './logo-light.png'
+import logoDarkImage from './logo-dark.png'
 import appInfo from '../../../package.json'
 import { updateAboutModalStatus } from '../../actions'
 
 import './index.scss'
+
+const conf = remote.getGlobal('conf')
 
 class AboutPage extends Component {
   renderAboutSection () {
@@ -34,6 +38,8 @@ class AboutPage extends Component {
         </div>
       )
     })
+
+    const logoImage = conf.get('theme') === 'dark' ? logoDarkImage : logoLightImage
 
     return (
       <div className='about-section'>
