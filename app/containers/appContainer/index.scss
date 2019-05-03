@@ -93,3 +93,9 @@ div > div.modal-header > button {
 .Resizer.disabled:hover {
   border-color: transparent;
 }
+
+.btn-default {
+  color: var(--text-primary);
+  background-color: transparent;
+  border-color: #ccc;
+}
