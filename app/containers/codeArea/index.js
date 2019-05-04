@@ -1,11 +1,11 @@
 'use strict'
 
-import React, { Component } from 'react'
 import { remote } from 'electron'
 import HighlightJS from 'highlight.js'
 import hljsDefineSolidity from 'highlightjs-solidity'
 import Markdown from '../../utilities/markdown'
 import nb from '../../utilities/jupyterNotebook'
+import React, { Component } from 'react'
 
 import '../../utilities/vendor/prism/prism.scss'
 import './jupyterNotebook.scss'

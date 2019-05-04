@@ -1,11 +1,13 @@
 'use strict'
 
-import React, { Component } from 'react'
+import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { remote, ipcRenderer } from 'electron'
-import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
+import React, { Component } from 'react'
+
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
+
 import './index.scss'
 
 const conf = remote.getGlobal('conf')

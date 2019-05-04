@@ -1,22 +1,24 @@
 'use strict'
 
-import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
-import { bindActionCreators } from 'redux'
+import { remote } from 'electron'
+import React, { Component } from 'react'
 import {
+  addLangPrefix as Prefixed,
   descriptionParser,
-  addLangPrefix as Prefixed } from '../../utilities/parser'
+} from '../../utilities/parser'
 import {
-  selectGistTag,
-  selectGist,
   fetchSingleGist,
+  selectGist,
+  selectGistTag,
+  updatescrollRequestStatus,
   updateSearchWindowStatus,
-  updatescrollRequestStatus } from '../../actions'
+} from '../../actions'
 
 import './index.scss'
 
-import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
 class SearchPage extends Component {

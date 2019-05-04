@@ -1,11 +1,12 @@
 'use strict'
 
-import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
 import { Radar } from 'react-chartjs'
 import { updateDashboardModalStatus } from '../../actions'
+import React, { Component } from 'react'
+
 import robotocatImage from '../../utilities/octodex/robotocat.png'
 
 import './index.scss'

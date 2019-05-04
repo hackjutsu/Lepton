@@ -1,9 +1,10 @@
 'use strict'
 
-import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Well } from 'react-bootstrap'
+import React, { Component } from 'react'
 import Snippet from '../snippet'
+
 import './index.scss'
 
 class SnippetPanel extends Component {

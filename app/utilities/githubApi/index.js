@@ -1,11 +1,11 @@
 'use strict'
 
 import { Promise } from 'bluebird'
-import Request from 'request'
-import ReqPromise from 'request-promise'
+import { remote } from 'electron'
 import Notifier from '../notifier'
 import ProxyAgent from 'proxy-agent'
-import { remote } from 'electron'
+import ReqPromise from 'request-promise'
+import Request from 'request'
 
 const TAG = '[REST] '
 const kTimeoutUnit = 10 * 1000 // ms

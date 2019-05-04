@@ -1,5 +1,6 @@
 module.exports = {
     "theme": "dark",
+    // "theme": "light",
     "userPanel": {
         "hideProfilePhoto": false
     },
@@ -24,5 +25,6 @@ module.exports = {
         "host": "",
         "token": "",
         "avatarUrl": ""
+ 
     }
 }

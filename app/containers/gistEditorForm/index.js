@@ -1,12 +1,12 @@
 'use strict'
 
-import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
+import { ipcRenderer } from 'electron'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
+import React, { Component } from 'react'
 import validFilename from 'valid-filename'
-import { ipcRenderer } from 'electron'
 
 import tipsIcon from './ei-question.svg'
 
