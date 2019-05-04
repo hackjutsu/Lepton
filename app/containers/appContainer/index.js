@@ -1,6 +1,6 @@
 'use strict'
 
-import { shell } from 'electron'
+import { remote, shell } from 'electron'
 import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -15,8 +15,13 @@ import SearchPage from '../searchPage'
 import AboutPage from '../aboutPage'
 import Dashboard from '../dashboard'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
+import ThemeManager from '../../utilities/themeManager'
 
 import './index.scss'
+
+const conf = remote.getGlobal('conf')
+const themeManager = new ThemeManager()
+themeManager.setTheme(conf.get('theme'))
 
 class AppContainer extends Component {
   renderAboutPage () {
