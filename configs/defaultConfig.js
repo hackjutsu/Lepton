@@ -1,6 +1,5 @@
 module.exports = {
-    "theme": "dark",
-    // "theme": "light",
+    "theme": "light",
     "userPanel": {
         "hideProfilePhoto": false
     },
