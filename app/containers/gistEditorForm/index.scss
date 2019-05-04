@@ -3,6 +3,7 @@
   .font-style-base {
     font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
     font-size: 14px;
+    color: var(--text-primary);
   }
 
   .font-style-blue {
@@ -97,7 +98,7 @@
   }
 
   .gist-editor-privacy-checkbox {
-    @extend .font-style-blue;
+    @extend .font-style-base;
     display: inline;
     float: right;
   }
