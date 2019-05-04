@@ -13,6 +13,13 @@
   background-color: var(--bg-secondary);
 }
 
+// To overwrite the gutter color under one-dark theme
+.cm-s-one-dark .CodeMirror-gutter, 
+.cm-s-one-dark .CodeMirror-gutters {
+  border: none;
+  background-color: var(--bg-secondary);
+}
+
 .CodeMirror-scroll {
   min-height: 400px;
   background: var(--bg-primary);
