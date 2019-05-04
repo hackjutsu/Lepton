@@ -1,15 +1,15 @@
 'use strict'
 
-import { remote } from 'electron'
-import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
-import LicenseInfo from '../../../license.json'
-import logoLightImage from './logo-light.png'
-import logoDarkImage from './logo-dark.png'
-import appInfo from '../../../package.json'
+import { remote } from 'electron'
 import { updateAboutModalStatus } from '../../actions'
+import appInfo from '../../../package.json'
+import LicenseInfo from '../../../license.json'
+import logoDarkImage from './logo-dark.png'
+import logoLightImage from './logo-light.png'
+import React, { Component } from 'react'
 
 import './index.scss'
 

@@ -1,5 +1,5 @@
-import darkTheme from './themes/darkTheme.json';
-import lightTheme from './themes/lightTheme.json';
+import darkTheme from './themes/darkTheme.json'
+import lightTheme from './themes/lightTheme.json'
 
 const LIGHT_THEME = 'light'
 const DARK_THEME = 'dark'

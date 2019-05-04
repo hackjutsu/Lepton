@@ -1,40 +1,41 @@
 'use strict'
 
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Image, Modal, Button, ProgressBar } from 'react-bootstrap'
+import { connect } from 'react-redux'
 import { default as GistEditorForm, NEW_GIST } from '../gistEditorForm'
+import { Image, Modal, Button, ProgressBar } from 'react-bootstrap'
+import { remote, ipcRenderer } from 'electron'
 import HumanReadableTime from 'human-readable-time'
 import Notifier from '../../utilities/notifier'
-import './index.scss'
+import React, { Component } from 'react'
 import {
   addLangPrefix as Prefixed,
+  descriptionParser,
   parseCustomTags,
-  descriptionParser } from '../../utilities/parser'
-
+} from '../../utilities/parser'
 import {
-  removeAccessToken,
   logoutUserSession,
-  updateSingleGist,
-  updateGistTags,
-  selectGistTag,
+  removeAccessToken,
   selectGist,
+  selectGistTag,
   updateGistNewModeStatus,
-  updateLogoutModalStatus } from '../../actions/index'
-
+  updateGistTags,
+  updateLogoutModalStatus,
+  updateSingleGist,
+} from '../../actions/index'
 import {
+  CREATE_SINGLE_GIST,
   getGitHubApi,
-  CREATE_SINGLE_GIST
 } from '../../utilities/githubApi'
 
+import './index.scss'
+
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
-import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
 import logoutIcon from './logout.svg'
 import newIcon from './new.svg'
+import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
 import syncIcon from './sync.svg'
 
-import { remote, ipcRenderer } from 'electron'
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 

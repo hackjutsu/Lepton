@@ -1,14 +1,14 @@
 'use strict'
 
-import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
 import { descriptionParser } from '../../utilities/parser'
+import { remote } from 'electron'
+import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
+import React, { Component } from 'react'
 
 import './index.scss'
 
-import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 const conf = remote.getGlobal('conf')
 

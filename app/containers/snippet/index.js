@@ -1,44 +1,44 @@
 'use strict'
 
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Panel, Modal, Button, ProgressBar, Collapse } from 'react-bootstrap'
+import { connect } from 'react-redux'
 import { default as GistEditorForm, UPDATE_GIST } from '../gistEditorForm'
-import CodeArea from '../codeArea'
+import { Panel, Modal, Button, ProgressBar, Collapse } from 'react-bootstrap'
 import { remote, clipboard, ipcRenderer } from 'electron'
-import Notifier from '../../utilities/notifier'
-import HumanReadableTime from 'human-readable-time'
 import Autolinker from 'autolinker'
+import CodeArea from '../codeArea'
+import HumanReadableTime from 'human-readable-time'
 import Moment from 'moment'
+import Notifier from '../../utilities/notifier'
+import React, { Component } from 'react'
 import {
   addLangPrefix as Prefixed,
+  descriptionParser,
   parseCustomTags,
-  descriptionParser } from '../../utilities/parser'
-
+} from '../../utilities/parser'
 import {
-  updateSingleGist,
-  updateGistRawModal,
-  updateGistEditModeStatus,
-  updateGistDeleteModeStatus,
   selectGistTag,
   updateFileExpandStatus,
-  updateGistTags } from '../../actions'
-
+  updateGistDeleteModeStatus,
+  updateGistEditModeStatus,
+  updateGistRawModal,
+  updateGistTags,
+  updateSingleGist,
+} from '../../actions'
 import {
-  getGitHubApi,
+  DELETE_SINGLE_GIST,
   EDIT_SINGLE_GIST,
-  DELETE_SINGLE_GIST
+  getGitHubApi,
 } from '../../utilities/githubApi'
 
 import './index.scss'
 
 import editIcon from './ei-edit.svg'
-import openInWebIcon from './ei-share.svg'
 import eyeIcon from './ei-eye.svg'
-import trashIcon from './ei-trash.svg'
+import openInWebIcon from './ei-share.svg'
 import secretIcon from './lock.svg'
 import tagsIcon from './tags.svg'
+import trashIcon from './ei-trash.svg'
 
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
