@@ -26,7 +26,7 @@
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
 
-| Light Theme     | Dark Theme    |
+| [Light Theme](https://github.com/hackjutsu/Lepton#cutomization)     | [Dark Theme](https://github.com/hackjutsu/Lepton#cutomization)    |
 | :-------------:| :-----:|
 |![Screenshot](./docs/img/portfolio/lepton-light.png)|![Screenshot](./docs/img/portfolio/lepton-dark.png)|
 
