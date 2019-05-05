@@ -13,18 +13,22 @@
 - Unlimited public/private snippets
 - Unlimited tags
 - Language groups
-- Markdown support
-- Jupyter Notebook viewer support
-- macOS/Win/Linux support
+- Markdown/JupyterNotebook support
 - GitHub Enterprise support
 - Immersive mode
 - Customizable
+- Light/Dark theme
+- macOS/Win/Linux
 - Dashboard
 - Search
 - Proxy
 - Free
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
+
+| Light Theme     | Dark Theme    |
+| :-------------:| :-----:|
+|![Screenshot](./docs/img/portfolio/lepton-light.png)|![Screenshot](./docs/img/portfolio/lepton-dark.png)|
 
 |      Organize         |  Markdown | Jupyter Notebook |
 | :-------------:| :-----:| :-----: |
@@ -47,6 +51,18 @@
 | Dashboard      | `Cmd/Ctrl + D` |  Toggle the [dashboard](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/dashboard.png)     |
 | About Page     | `Cmd/Ctrl + ,` |  Toggle the [About page](https://github.com/hackjutsu/Lepton/blob/dev/docs/img/portfolio/about.png)    |
 | Search         | `Shift + Space`|  Toggle the [search bar](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/search_bar.png)    |
+
+## Cutomization
+Lepton can be costomized by `<home_dir>/.leptonrc` in the these fields. (Create the file if it does not exist.)
+
+- Theme (light/dark)
+- Snippet
+- Editor
+- Logger
+- Proxy
+- Enterprise
+
+Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore different customization options.
 
 ## Tech Stack
 ![Based on](./docs/img/erb-logo.png)
@@ -113,17 +129,6 @@ Build apps for the current OS with the current arch.
 ```bash
 $ npm run dist
 ```
-
-## Configurations
-Lepton can be configured by `<home_dir>/.leptonrc` in the these fields. (Create the file if it does not exist.)
-
-- Snippet
-- Editor
-- Logger
-- Proxy
-- Enterprise
-
-Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore their options.
 
 ## FAQ
 [--> Wiki FAQ](https://github.com/hackjutsu/Lepton/wiki/FAQ)
