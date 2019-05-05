@@ -79,6 +79,9 @@ Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9d
 ```bash
 brew cask install lepton
 ```
+- Install via SnapCraft (Linux)
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/lepton)
 
 ## Development
 
