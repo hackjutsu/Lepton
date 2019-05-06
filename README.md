@@ -52,8 +52,8 @@
 | About Page     | `Cmd/Ctrl + ,` |  Toggle the [About page](https://github.com/hackjutsu/Lepton/blob/dev/docs/img/portfolio/about.png)    |
 | Search         | `Shift + Space`|  Toggle the [search bar](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/search_bar.png)    |
 
-## Cutomization
-Lepton can be costomized by `<home_dir>/.leptonrc` in the these fields. (Create the file if it does not exist.)
+## Customization
+Lepton can be customized by `<home_dir>/.leptonrc` in the these fields. (Create the file if it does not exist.)
 
 - Theme (light/dark)
 - Snippet
