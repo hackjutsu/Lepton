@@ -7,8 +7,14 @@ import MdKatex from 'markdown-it-katex'
 
 // Configure markdown-it
 const Md = MarkdownIt({
+  
   highlight: (str, lang) => {
-    return HighlightJS.highlightAuto(str).value
+    if (lang && HighlightJS.getLanguage(lang)) {
+      try {
+        return HighlightJS.highlight(lang, str).value;
+      } catch (__) {}
+    }
+    return HighlightJS.highlightAuto(str).value;
   }
 })
   .use(MdTaskList)
