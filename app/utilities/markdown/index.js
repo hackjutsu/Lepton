@@ -7,7 +7,7 @@ import MdKatex from 'markdown-it-katex'
 
 // Configure markdown-it
 const Md = MarkdownIt({
-  
+  linkify: true,
   highlight: (str, lang) => {
     if (lang && HighlightJS.getLanguage(lang)) {
       try {
