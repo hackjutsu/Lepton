@@ -160,6 +160,7 @@ $ npm run dist
       <td><img src=https://avatars3.githubusercontent.com/u/13814048?v=3><a href="https://github.com/rawrmonstar">rawrmonstar</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/965804?v=3><a href="https://github.com/baybatu">baybatu</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/22477950?v=3><a href="https://github.com/samuelmeuli">samuelmeuli</a></td>
+      <td><img src=https://avatars0.githubusercontent.com/u/8838135?v=3><a href="https://github.com/anthonyattard">anthonyattard</a></td>
    </tr>
 </table>
 
