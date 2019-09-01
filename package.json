@@ -71,7 +71,7 @@
     "electron-updater": "^4.0.0",
     "electron-window-state": "^5.0.0",
     "fuse.js": "^3.3.0",
-    "highlight.js": "^9.13.1",
+    "highlight.js": "^9.15.10",
     "highlightjs-solidity": "^1.0.6",
     "human-readable-time": "^0.3.0",
     "image-downloader": "^3.4.2",
