@@ -6,5 +6,8 @@ export default function (title, message = '') {
     body: message,
     silent: true
   }
-  new Notification(option.title, option)
+
+  if (!conf.get('disableNotification')) {
+    new Notification(option.title, option)
+  }
 }
