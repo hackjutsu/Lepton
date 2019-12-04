@@ -60,7 +60,8 @@ const template = [
         role: 'resetzoom'
       },
       {
-        role: 'zoomin'
+        role: 'zoomin',
+        accelerator: 'CmdOrCtrl+='
       },
       {
         role: 'zoomout'
