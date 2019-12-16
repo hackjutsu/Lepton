@@ -262,7 +262,6 @@ function reSyncUserGists () {
 }
 
 function updateUserGists (userLoginId, token) {
-  logger.debug('!!! inside updateUserGists')
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   return getGitHubApi(GET_ALL_GISTS)(token, userLoginId)
     .then((gistList) => {
@@ -274,7 +273,6 @@ function updateUserGists (userLoginId, token) {
       let gistTags = {}
       let fuseSearchIndex = []
 
-      logger.debug('!!! before interating gist list')
       gistList.forEach((gist) => {
         let langs = new Set()
         let filenameRecords = ''
@@ -349,23 +347,15 @@ function updateUserGists (userLoginId, token) {
       // refresh the redux state
       let humanReadableSyncTime = HumanReadableTime(new Date())
       setSyncTime(humanReadableSyncTime)
-      logger.debug('!!! before updateGistStoreAfterSync')
       updateGistStoreAfterSync(gists)
-      logger.debug('!!! after updateGistStoreAfterSync')
       updateGistTagsAfterSync(gistTags)
       updateActiveGistTagAfterSync(gistTags, activeTagCandidate)
-      logger.debug('!!! before updateActiveGistAfterSync')
       updateActiveGistAfterSync(gists, gistTags, activeTagCandidate)
-      logger.debug('!!! after updateActiveGistAfterSync')
 
       // clean up the snapshot for the previous state
-      logger.debug('!!! before clearSyncSnapshot')
       clearSyncSnapshot()
-      logger.debug('!!! after clearSyncSnapshot')
 
-      logger.debug('!!! before Notifier')
       Notifier('Sync succeeds', humanReadableSyncTime)
-      logger.debug('!!! after Notifier')
 
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
     })
@@ -409,7 +399,6 @@ function initUserSession (token) {
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
     })
     .catch((err) => {
-      logger.debug('!!!!!!')
       logger.debug('-----> Failure with ' + JSON.stringify(err))
       logger.error('The request has failed: \n' + JSON.stringify(err))
 
