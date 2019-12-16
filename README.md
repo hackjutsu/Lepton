@@ -162,6 +162,10 @@ $ npm run dist
       <td><img src=https://avatars2.githubusercontent.com/u/22477950?v=3><a href="https://github.com/samuelmeuli">samuelmeuli</a></td>
       <td><img src=https://avatars0.githubusercontent.com/u/8838135?v=3><a href="https://github.com/anthonyattard">anthonyattard</a></td>
    </tr>
+      <tr>
+      <td><img src=https://avatars1.githubusercontent.com/u/5918765?v=3><a href="https://github.com/alexandreamadocastro">lexandreamadocastro</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/1998649?v=3><a href="https://github.com/abnersajr">abnersajr</a></td>
+   </tr>
 </table>
 
 ## License
