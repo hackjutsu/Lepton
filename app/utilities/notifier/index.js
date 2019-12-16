@@ -1,4 +1,6 @@
-'use strict'
+import { remote } from 'electron'
+
+const conf = remote.getGlobal('conf')
 
 export default function (title, message = '') {
   let option = {
