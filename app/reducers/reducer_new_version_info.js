@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_NEW_VERSION_INFO } from '../actions'
 
 export default function (state = { version: '', url: '' }, action) {

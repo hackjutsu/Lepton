@@ -1,5 +1,3 @@
-'use strict'
-
 import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
 import { ipcRenderer } from 'electron'

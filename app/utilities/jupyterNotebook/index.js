@@ -1,5 +1,3 @@
-'use strict'
-
 const nb = require('notebookjs')
 const Prism = require('prismjs')
 const highlighter = (code, lang) => {

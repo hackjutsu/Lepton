@@ -1,5 +1,3 @@
-'use strict'
-
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { remote, ipcRenderer } from 'electron'

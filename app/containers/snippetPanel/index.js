@@ -1,5 +1,3 @@
-'use strict'
-
 import { connect } from 'react-redux'
 import { Well } from 'react-bootstrap'
 import React, { Component } from 'react'

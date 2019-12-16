@@ -1,5 +1,3 @@
-'use strict'
-
 import { Alert } from 'react-bootstrap'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'

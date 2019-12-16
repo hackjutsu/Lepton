@@ -1,5 +1,3 @@
-'use strict'
-
 import HighlightJS from 'highlight.js'
 import MarkdownIt from 'markdown-it'
 import MdTaskList from 'markdown-it-task-lists'

@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_USER_SESSION, LOGOUT_USER_SESSION } from '../actions'
 
 export default function (state = { activeStatus: 'INACTIVE' }, action) {

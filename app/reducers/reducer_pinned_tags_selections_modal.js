@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_PINNED_TAGS_MODAL_STATUS } from '../actions'
 
 export default function (state = 'OFF', action) {

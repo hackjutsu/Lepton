@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_GIST_DELETE_MODAL_STATUS } from '../actions/index'
 
 export default function (state = 'OFF', action) {

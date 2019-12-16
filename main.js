@@ -1,5 +1,3 @@
-'use strict'
-
 const os = require('os')
 const electron = require('electron')
 const nconf = require('nconf')

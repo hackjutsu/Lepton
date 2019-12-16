@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_GIST_TAGS, LOGOUT_USER_SESSION } from '../actions'
 
 export default function (state = {}, action) {

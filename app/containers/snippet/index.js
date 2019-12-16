@@ -1,5 +1,3 @@
-'use strict'
-
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { default as GistEditorForm, UPDATE_GIST } from '../gistEditorForm'

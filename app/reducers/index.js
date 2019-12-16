@@ -1,5 +1,3 @@
-'use strict'
-
 import { combineReducers } from 'redux'
 import { reducer as form } from 'redux-form'
 import aboutModalStatus from './reducer_about_modal'

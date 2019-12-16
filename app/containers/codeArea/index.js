@@ -1,5 +1,3 @@
-'use strict'
-
 import { remote } from 'electron'
 import HighlightJS from 'highlight.js'
 import hljsDefineSolidity from 'highlightjs-solidity'

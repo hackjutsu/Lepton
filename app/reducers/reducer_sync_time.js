@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_SYNC_TIME } from '../actions'
 
 export default function (state = null, action) {

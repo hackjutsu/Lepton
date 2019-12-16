@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_FILE_EXPAND_STATUS } from '../actions'
 
 export default function (state = [], action) {

@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_GISTS, UPDATE_SINGLE_GIST } from '../actions'
 
 export default function (state = {}, action) {

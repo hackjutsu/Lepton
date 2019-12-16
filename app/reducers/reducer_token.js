@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_ACCESS_TOKEN, REMOVE_ACCESS_TOKEN } from '../actions'
 
 export default function (state = null, action) {

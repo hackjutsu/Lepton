@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_PINNED_TAGS } from '../actions'
 
 export default function (state = [], action) {

@@ -1,4 +1,3 @@
-'use strict'
 const twitter = require('twitter-text')
 
 /* Old(Legacy) Style:  [my_title] my_description #tags: tag1, tag2, tag3

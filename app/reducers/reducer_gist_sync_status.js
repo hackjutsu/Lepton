@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_GIST_SYNC_STATUS } from '../actions'
 
 export default function (state = 'DONE', action) {

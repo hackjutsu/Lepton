@@ -1,5 +1,3 @@
-'use strict'
-
 import { UPDATE_GIST_EDIT_MODAL } from '../actions'
 
 export default function (state = 'OFF', action) {

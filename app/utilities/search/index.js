@@ -1,4 +1,3 @@
-'use strict'
 const Fuse = require('fuse.js')
 
 let fuse = null

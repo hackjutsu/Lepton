@@ -1,5 +1,3 @@
-'use strict'
-
 import { SELECT_GIST_TAG, LOGOUT_USER_SESSION } from '../actions'
 import { addLangPrefix as Prefixed } from '../utilities/parser'
 

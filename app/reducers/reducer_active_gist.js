@@ -1,5 +1,3 @@
-'use strict'
-
 import { SELECT_GIST, LOGOUT_USER_SESSION } from '../actions'
 
 export default function (state = null, action) {

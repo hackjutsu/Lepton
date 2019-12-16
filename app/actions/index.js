@@ -1,5 +1,3 @@
-'use strict'
-
 import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/githubApi'
 import Notifier from '../utilities/notifier'
 import { remote } from 'electron'
