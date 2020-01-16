@@ -226,7 +226,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@xtuc/long",
     "licenseFile": "node_modules/@xtuc/long/LICENSE"
   },
-  "Lepton@1.8.1": {
+  "Lepton@1.8.2": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -2366,7 +2366,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/hawk",
     "licenseFile": "node_modules/notebookjs/node_modules/hawk/LICENSE"
   },
-  "highlight.js@9.13.1": {
+  "highlight.js@9.15.10": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/highlightjs/highlight.js",
     "publisher": "Ivan Sagalaev",
