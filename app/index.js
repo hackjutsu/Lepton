@@ -397,6 +397,8 @@ function initUserSession (token) {
 
       logger.info('[Dispatch] updateUserSession ACTIVE')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
+
+      ipcRenderer.send('session-ready')
     })
     .catch((err) => {
       logger.debug('-----> Failure with ' + JSON.stringify(err))

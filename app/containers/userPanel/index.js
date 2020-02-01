@@ -267,6 +267,7 @@ class UserPanel extends Component {
     })
     removeAccessToken()
     remote.getCurrentWindow().setTitle('Lepton') // update the app title
+    ipcRenderer.send('session-destroyed')
   }
 
   renderProfile () {

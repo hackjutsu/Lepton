@@ -85,6 +85,14 @@ function createWindow (autoLogin) {
     })
   }
 
+  ipcMain.on('session-ready', () => {
+    setUpTouchBar()
+  })
+
+  ipcMain.on('session-destroyed', () => {
+    mainWindow.setTouchBar(null)
+  })
+
   // Let us register listeners on the window, so we can update the state
   // automatically (the listeners will be removed when the window is closed)
   // and restore the maximized or full screen state
@@ -231,6 +239,57 @@ function setUpApplicationMenu () {
   let template = [...mainMenuTemplate, gistMenu]
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
+}
+
+function setUpTouchBar() {
+  const makeIcon = name => {
+    return electron.nativeImage
+      .createFromPath(path.join(__dirname, `/build/touchbar/${name}.png`))
+      .resize({
+        width: 16,
+        height: 16
+      })
+  }
+  const { TouchBar } = electron
+  const { TouchBarButton, TouchBarSpacer, TouchBarGroup } = TouchBar
+  const touchBar = new TouchBar({
+    items: [
+      new TouchBarButton({
+        label: "Immersive",
+        icon: makeIcon("immersive"),
+        iconPosition: "left",
+        click: () => mainWindow.send("immersive-mode")
+      }),
+      new TouchBarButton({
+        label: "Sync",
+        icon: makeIcon("sync"),
+        iconPosition: "left",
+        click: () => mainWindow.send("sync-gists")
+      }),
+      new TouchBarButton({
+        label: "Search",
+        icon: makeIcon("search"),
+        iconPosition: "left",
+        click: () => mainWindow.send("search-gist")
+      }),
+      new TouchBarSpacer({
+        size: "flexible"
+      }),
+      new TouchBarButton({
+        label: "New",
+        icon: makeIcon("new"),
+        iconPosition: "left",
+        click: () => mainWindow.send("new-gist")
+      }),
+      new TouchBarButton({
+        label: "Edit",
+        icon: makeIcon("edit"),
+        iconPosition: "left",
+        click: () => mainWindow.send("edit-gist")
+      })
+    ]
+  })
+  mainWindow.setTouchBar(touchBar)
 }
 
 function initGlobalConfigs () {
