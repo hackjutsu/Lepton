@@ -35,15 +35,19 @@ for (const key of Object.getOwnPropertyNames(defaultConfig)) {
 
 let mainWindow = null
 
-const keyShortcutForSearch = 'Shift+Space'
-const keyNewGist = 'CommandOrControl+N'
-const keyEditGist = 'CommandOrControl+E'
-const keySubmitGist = 'CommandOrControl+S'
-const keyImmersiveMode = 'CommandOrControl+I'
-const keyAboutPage = 'CommandOrControl+,'
-const keyDashboard = 'CommandOrControl+D'
-const keyEditorExit = 'CommandOrControl+Escape'
-const keySyncGists = 'CommandOrControl+R'
+const defaultShotcuts = {
+  "keyShortcutForSearch": "Shift+Space",
+  "keyNewGist": "CommandOrControl+N",
+  "keyEditGist": "CommandOrControl+E",
+  "keySubmitGist": "CommandOrControl+S",
+  "keyImmersiveMode": "CommandOrControl+I",
+  "keyAboutPage": "CommandOrControl+,",
+  "keyDashboard": "CommandOrControl+D",
+  "keyEditorExit": "CommandOrControl+Escape",
+  "keySyncGists": "CommandOrControl+R"
+}
+const shortcuts = {...defaultShotcuts, ...global.conf.shortcuts }
+
 
 function createWindowAndAutoLogin () {
   createWindow(true)
@@ -186,32 +190,32 @@ function setUpApplicationMenu () {
     submenu: [
       {
         label: 'New Gist',
-        accelerator: keyNewGist,
+        accelerator: shortcuts.keyNewGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('new-gist')
       },
       {
         label: 'Edit Gist',
-        accelerator: keyEditGist,
+        accelerator: shortcuts.keyEditGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('edit-gist')
       },
       {
         label: 'Submit Gist',
-        accelerator: keySubmitGist,
+        accelerator: shortcuts.keySubmitGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('submit-gist')
       },
       {
         label: 'Sync Gist',
-        accelerator: keySyncGists,
+        accelerator: shortcuts.keySyncGists,
         click: (item, mainWindow) => mainWindow && mainWindow.send('sync-gists')
       },
       {
         label: 'Exit Editor',
-        accelerator: keyEditorExit,
+        accelerator: shortcuts.keyEditorExit,
         click: (item, mainWindow) => mainWindow && mainWindow.send('exit-editor')
       },
       {
         label: 'Immersive Mode',
-        accelerator: keyImmersiveMode,
+        accelerator: shortcuts.keyImmersiveMode,
         click: (item, mainWindow) => mainWindow && mainWindow.send('immersive-mode')
       },
       {
@@ -221,17 +225,17 @@ function setUpApplicationMenu () {
       },
       {
         label: 'Dashboard',
-        accelerator: keyDashboard,
+        accelerator: shortcuts.keyDashboard,
         click: (item, mainWindow) => mainWindow && mainWindow.send('dashboard')
       },
       {
         label: 'About',
-        accelerator: keyAboutPage,
+        accelerator: shortcuts.keyAboutPage,
         click: (item, mainWindow) => mainWindow && mainWindow.send('about-page')
       },
       {    
         label: 'Search',
-        accelerator: keyShortcutForSearch,
+        accelerator: shortcuts.keyShortcutForSearch,
         click: (item, mainWindow) => mainWindow && mainWindow.send('search-gist')
       }
     ]
