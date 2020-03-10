@@ -16,7 +16,7 @@ module.exports = {
         "expanded": true,
         "newSnippetPrivate": false
     },
-    "editor" : {
+    "editor": {
         "tabSize": 4
     },
     "enterprise": {
@@ -24,7 +24,18 @@ module.exports = {
         "host": "",
         "token": "",
         "avatarUrl": ""
- 
+
     },
-    "disableNotification": false
+    "disableNotification": false,
+    "shortcuts": {
+        "keyShortcutForSearch": "Shift+Space",
+        "keyNewGist": "CommandOrControl+N",
+        "keyEditGist": "CommandOrControl+E",
+        "keySubmitGist": "CommandOrControl+S",
+        "keyImmersiveMode": "CommandOrControl+I",
+        "keyAboutPage": "CommandOrControl+,",
+        "keyDashboard": "CommandOrControl+D",
+        "keyEditorExit": "CommandOrControl+Escape",
+        "keySyncGists": "CommandOrControl+R"
+    }
 }

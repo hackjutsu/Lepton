@@ -35,19 +35,7 @@ for (const key of Object.getOwnPropertyNames(defaultConfig)) {
 
 let mainWindow = null
 
-const defaultShotcuts = {
-  "keyShortcutForSearch": "Shift+Space",
-  "keyNewGist": "CommandOrControl+N",
-  "keyEditGist": "CommandOrControl+E",
-  "keySubmitGist": "CommandOrControl+S",
-  "keyImmersiveMode": "CommandOrControl+I",
-  "keyAboutPage": "CommandOrControl+,",
-  "keyDashboard": "CommandOrControl+D",
-  "keyEditorExit": "CommandOrControl+Escape",
-  "keySyncGists": "CommandOrControl+R"
-}
-const shortcuts = {...defaultShotcuts, ...global.conf.shortcuts }
-
+const shortcuts = nconf.get('shortcuts')
 
 function createWindowAndAutoLogin () {
   createWindow(true)
@@ -246,8 +234,7 @@ function initGlobalConfigs () {
   } catch (error) {
     logger.error('[.leptonrc] Please correct the mistakes in your configuration file: [%s].\n' + error, configFilePath)
   }
-
-  nconf.defaults(defaultConfig)  
+  nconf.defaults(defaultConfig)
   global.conf = nconf
 }
 
