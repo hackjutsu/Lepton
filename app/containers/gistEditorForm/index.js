@@ -167,7 +167,7 @@ const renderGistFiles = ({ fields, formStyle, filenameList }) => (
       </a>
       <div className='gist-editor-privacy-checkbox'>
         <Field name='private' id='private' component='input' type='checkbox' disabled={ formStyle === UPDATE_GIST }/>
-         &nbsp;private
+         &nbsp;secret
       </div>
     </div>
   </ListGroup>

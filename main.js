@@ -18,7 +18,7 @@ const isDev = require('electron-is-dev')
 const defaultConfig = require('./configs/defaultConfig')
 const appInfo = require('./package.json')
 
-const autoUpdater = require('electron-updater').autoUpdater
+const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
 autoUpdater.autoDownload = true
 
@@ -140,7 +140,9 @@ function createWindow (autoLogin) {
 
 app.on('ready', () => {
     // createWindow()
+    logger.info("!!!!!!!!!!!!!!!!!!")
     autoUpdater.checkForUpdatesAndNotify()
+    logger.info("!!!!!!!!!!!!!!!!!!")
     createWindowAndAutoLogin()
 })
 
