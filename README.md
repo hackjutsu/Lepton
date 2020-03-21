@@ -165,6 +165,8 @@ $ npm run dist
       <tr>
       <td><img src=https://avatars1.githubusercontent.com/u/5918765?v=3><a href="https://github.com/alexandreamadocastro">lexandreamadocastro</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/1998649?v=3><a href="https://github.com/abnersajr">abnersajr</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/5442563?v=3><a href="https://github.com/seancheung">seancheung</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/32508538?v=3><a href="https://github.com/moia-sven-ole">moia-sven-ole</a></td>
    </tr>
 </table>
 

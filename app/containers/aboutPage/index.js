@@ -70,6 +70,8 @@ class AboutPage extends Component {
           <div className='contributor'><a href='https://github.com/anthonyattard'>anthonyattard</a></div>
           <div className='contributor'><a href='https://github.com/alexandreamadocastro'>alexandreamadocastro</a></div>
           <div className='contributor'><a href='https://github.com/abnersajr'>abnersajr</a></div>
+          <div className='contributor'><a href='https://github.com/seancheung'>seancheung</a></div>
+          <div className='contributor'><a href='https://github.com/moia-sven-ole'>moia-sven-ole</a></div>
         </div>
         <div className='setting-title'>Acknowledgement</div>
         <div className='license-section'>
