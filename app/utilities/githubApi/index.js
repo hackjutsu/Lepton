@@ -49,11 +49,9 @@ function getUserProfile (token) {
     agent: proxyAgent,
     headers: {
       'User-Agent': userAgent,
+      'Authorization': 'token ' + token
     },
     method: 'GET',
-    qs: {
-      access_token: token
-    },
     json: true, // Automatically parses the JSON string in the response
     timeout: 2 * kTimeoutUnit
   })
