@@ -90,7 +90,7 @@ brew cask install lepton
 
 ```bash
 $ git clone git@github.com:hackjutsu/Lepton.git
-$ cd Lepton && npm i
+$ cd Lepton && yarn install
 ```
 
 ### Client ID/Secret
@@ -104,7 +104,7 @@ module.exports = {
 
 ### Run
 ```bash
-$ npm run build && npm run start
+$ yarn build && yarn start
 ```
 
 ## Build Installer App
@@ -112,25 +112,25 @@ $ npm run build && npm run start
 
 Build apps for macOS.
 ```bash
-$ npm run dist -- -m
+$ yarn dist -- -m
 ```
 Build apps for Windows.
 ```bash
-$ npm run dist -- -w
+$ yarn dist -- -w
 ```
 Build apps for Linux. 
 
 >Need a running [Docker](https://www.docker.com/) daemon to build a `snap` package.
 ```bash
-$ npm run dist -- -l
+$ yarn dist -- -l
 ```
 Build apps for macOS, Windows and Linux.
 ```bash
-$ npm run dist -- -wml
+$ yarn dist -- -wml
 ```
 Build apps for the current OS with the current arch.
 ```bash
-$ npm run dist
+$ yarn dist
 ```
 
 ## FAQ
