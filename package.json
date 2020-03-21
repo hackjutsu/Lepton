@@ -1,20 +1,21 @@
 {
   "name": "Lepton",
-  "version": "1.8.3",
+  "version": "1.8.3-alpha",
   "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
   "scripts": {
     "lint": "eslint app",
-    "license": "license-checker --production --relativeLicensePath --json > license.json",
-    "watch": "webpack --watch",
     "start": "electron ./main.js",
-    "build": "npm run pack",
-    "packDev": "webpack --display-modules --mode development",
-    "pack": "webpack --mode production",
+    "build": "npm run webpack-dev",
+    "license": "license-checker --production --relativeLicensePath --json > license.json",
+    "webpack-watch": "webpack --watch",
+    "webpack-dev": "webpack --display-modules --mode development",
+    "webpack-prod": "webpack --mode production",
     "test": "webpack --display-modules --mode development",
-    "dist": "build",
-    "release": "build"
+    "dist": "electron-builder",
+    "pack": "electron-builder --dir",
+    "release": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,7 @@
     "babel-preset-react": "^6.16.0",
     "css-loader": "^2.0.0",
     "electron": "^4.0.5",
-    "electron-builder": "^20.38.2",
+    "electron-builder": "^22.4.0",
     "eslint": "^5.0.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",

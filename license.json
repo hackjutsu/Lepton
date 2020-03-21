@@ -226,7 +226,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@xtuc/long",
     "licenseFile": "node_modules/@xtuc/long/LICENSE"
   },
-  "Lepton@1.8.3": {
+  "Lepton@1.8.3-alpha": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
