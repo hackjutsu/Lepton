@@ -140,9 +140,7 @@ function createWindow (autoLogin) {
 
 app.on('ready', () => {
     // createWindow()
-    logger.info("!!!!!!!!!!!!!!!!!!")
     autoUpdater.checkForUpdatesAndNotify()
-    logger.info("!!!!!!!!!!!!!!!!!!")
     createWindowAndAutoLogin()
 })
 
