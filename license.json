@@ -1,5 +1,5 @@
 {
-  "@babel/code-frame@7.0.0": {
+  "@babel/code-frame@7.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-code-frame",
     "publisher": "Sebastian McKenzie",
@@ -7,7 +7,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/code-frame",
     "licenseFile": "node_modules/@babel/code-frame/LICENSE"
   },
-  "@babel/generator@7.3.4": {
+  "@babel/generator@7.9.0": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-generator",
     "publisher": "Sebastian McKenzie",
@@ -15,25 +15,31 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/generator",
     "licenseFile": "node_modules/@babel/generator/LICENSE"
   },
-  "@babel/helper-function-name@7.1.0": {
+  "@babel/helper-function-name@7.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-helper-function-name",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/helper-function-name",
     "licenseFile": "node_modules/@babel/helper-function-name/LICENSE"
   },
-  "@babel/helper-get-function-arity@7.0.0": {
+  "@babel/helper-get-function-arity@7.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-helper-get-function-arity",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/helper-get-function-arity",
     "licenseFile": "node_modules/@babel/helper-get-function-arity/LICENSE"
   },
-  "@babel/helper-split-export-declaration@7.0.0": {
+  "@babel/helper-split-export-declaration@7.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-helper-split-export-declaration",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/helper-split-export-declaration",
     "licenseFile": "node_modules/@babel/helper-split-export-declaration/LICENSE"
   },
-  "@babel/highlight@7.0.0": {
+  "@babel/helper-validator-identifier@7.9.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel/tree/master/packages/babel-helper-validator-identifier",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/helper-validator-identifier",
+    "licenseFile": "node_modules/@babel/helper-validator-identifier/LICENSE"
+  },
+  "@babel/highlight@7.9.0": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-highlight",
     "publisher": "suchipi",
@@ -41,7 +47,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight",
     "licenseFile": "node_modules/@babel/highlight/LICENSE"
   },
-  "@babel/parser@7.3.4": {
+  "@babel/parser@7.9.2": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-parser",
     "publisher": "Sebastian McKenzie",
@@ -49,7 +55,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/parser",
     "licenseFile": "node_modules/@babel/parser/LICENSE"
   },
-  "@babel/runtime-corejs2@7.2.0": {
+  "@babel/runtime-corejs2@7.9.2": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-runtime-corejs2",
     "publisher": "Sebastian McKenzie",
@@ -57,15 +63,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/runtime-corejs2",
     "licenseFile": "node_modules/@babel/runtime-corejs2/LICENSE"
   },
-  "@babel/runtime@7.2.0": {
+  "@babel/runtime@7.9.2": {
     "licenses": "MIT",
-    "repository": "https://github.com/babel/babel/tree/master/packages/babel-runtime",
+    "repository": "https://github.com/babel/babel",
     "publisher": "Sebastian McKenzie",
     "email": "sebmck@gmail.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/runtime",
     "licenseFile": "node_modules/@babel/runtime/LICENSE"
   },
-  "@babel/template@7.2.2": {
+  "@babel/template@7.8.6": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-template",
     "publisher": "Sebastian McKenzie",
@@ -73,7 +79,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/template",
     "licenseFile": "node_modules/@babel/template/LICENSE"
   },
-  "@babel/traverse@7.3.4": {
+  "@babel/traverse@7.9.0": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-traverse",
     "publisher": "Sebastian McKenzie",
@@ -81,7 +87,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/traverse",
     "licenseFile": "node_modules/@babel/traverse/LICENSE"
   },
-  "@babel/types@7.3.4": {
+  "@babel/types@7.9.0": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-types",
     "publisher": "Sebastian McKenzie",
@@ -89,125 +95,137 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/types",
     "licenseFile": "node_modules/@babel/types/LICENSE"
   },
-  "@webassemblyjs/ast@1.7.11": {
+  "@types/node@13.9.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@types/node",
+    "licenseFile": "node_modules/@types/node/LICENSE"
+  },
+  "@types/semver@7.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@types/semver",
+    "licenseFile": "node_modules/@types/semver/LICENSE"
+  },
+  "@webassemblyjs/ast@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/ast",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/ast/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/ast",
+    "licenseFile": "node_modules/@webassemblyjs/ast/LICENSE"
   },
-  "@webassemblyjs/floating-point-hex-parser@1.7.11": {
+  "@webassemblyjs/floating-point-hex-parser@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Mauro Bringolf",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/floating-point-hex-parser",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/floating-point-hex-parser/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/floating-point-hex-parser",
+    "licenseFile": "node_modules/@webassemblyjs/floating-point-hex-parser/LICENSE"
   },
-  "@webassemblyjs/helper-api-error@1.7.11": {
+  "@webassemblyjs/helper-api-error@1.8.5": {
     "licenses": "MIT",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-api-error",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-api-error/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-api-error",
+    "licenseFile": "node_modules/@webassemblyjs/helper-api-error/LICENSE"
   },
-  "@webassemblyjs/helper-buffer@1.7.11": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-buffer",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-buffer/LICENSE"
-  },
-  "@webassemblyjs/helper-code-frame@1.7.11": {
+  "@webassemblyjs/helper-buffer@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-code-frame",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-code-frame/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-buffer",
+    "licenseFile": "node_modules/@webassemblyjs/helper-buffer/LICENSE"
   },
-  "@webassemblyjs/helper-fsm@1.7.11": {
+  "@webassemblyjs/helper-code-frame@1.8.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/xtuc/webassemblyjs",
+    "publisher": "Sven Sauleau",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-code-frame",
+    "licenseFile": "node_modules/@webassemblyjs/helper-code-frame/LICENSE"
+  },
+  "@webassemblyjs/helper-fsm@1.8.5": {
     "licenses": "ISC",
     "publisher": "Mauro Bringolf",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-fsm",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-fsm/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-fsm",
+    "licenseFile": "node_modules/@webassemblyjs/helper-fsm/LICENSE"
   },
-  "@webassemblyjs/helper-module-context@1.7.11": {
+  "@webassemblyjs/helper-module-context@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-module-context",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-module-context/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-module-context",
+    "licenseFile": "node_modules/@webassemblyjs/helper-module-context/LICENSE"
   },
-  "@webassemblyjs/helper-wasm-bytecode@1.7.11": {
+  "@webassemblyjs/helper-wasm-bytecode@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-bytecode",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-bytecode/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-wasm-bytecode",
+    "licenseFile": "node_modules/@webassemblyjs/helper-wasm-bytecode/LICENSE"
   },
-  "@webassemblyjs/helper-wasm-section@1.7.11": {
+  "@webassemblyjs/helper-wasm-section@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-section",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/helper-wasm-section/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/helper-wasm-section",
+    "licenseFile": "node_modules/@webassemblyjs/helper-wasm-section/LICENSE"
   },
-  "@webassemblyjs/ieee754@1.7.11": {
+  "@webassemblyjs/ieee754@1.8.5": {
     "licenses": "MIT",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/ieee754",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/ieee754/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/ieee754",
+    "licenseFile": "node_modules/@webassemblyjs/ieee754/LICENSE"
   },
-  "@webassemblyjs/leb128@1.7.11": {
+  "@webassemblyjs/leb128@1.8.5": {
     "licenses": "MIT",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/leb128",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/leb128/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/leb128",
+    "licenseFile": "node_modules/@webassemblyjs/leb128/LICENSE.txt"
   },
-  "@webassemblyjs/utf8@1.7.11": {
-    "licenses": "MIT",
-    "repository": "https://github.com/xtuc/webassemblyjs",
-    "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/utf8",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/utf8/LICENSE"
-  },
-  "@webassemblyjs/wasm-edit@1.7.11": {
+  "@webassemblyjs/utf8@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-edit",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-edit/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/utf8",
+    "licenseFile": "node_modules/@webassemblyjs/utf8/LICENSE"
   },
-  "@webassemblyjs/wasm-gen@1.7.11": {
+  "@webassemblyjs/wasm-edit@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-gen",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-gen/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-edit",
+    "licenseFile": "node_modules/@webassemblyjs/wasm-edit/LICENSE"
   },
-  "@webassemblyjs/wasm-opt@1.7.11": {
+  "@webassemblyjs/wasm-gen@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-opt",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-opt/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-gen",
+    "licenseFile": "node_modules/@webassemblyjs/wasm-gen/LICENSE"
   },
-  "@webassemblyjs/wasm-parser@1.7.11": {
+  "@webassemblyjs/wasm-opt@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wasm-parser",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wasm-parser/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-opt",
+    "licenseFile": "node_modules/@webassemblyjs/wasm-opt/LICENSE"
   },
-  "@webassemblyjs/wast-parser@1.7.11": {
+  "@webassemblyjs/wasm-parser@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wast-parser",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wast-parser/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wasm-parser",
+    "licenseFile": "node_modules/@webassemblyjs/wasm-parser/LICENSE"
   },
-  "@webassemblyjs/wast-printer@1.7.11": {
+  "@webassemblyjs/wast-parser@1.8.5": {
     "licenses": "MIT",
     "repository": "https://github.com/xtuc/webassemblyjs",
     "publisher": "Sven Sauleau",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/@webassemblyjs/wast-printer",
-    "licenseFile": "node_modules/webpack/node_modules/@webassemblyjs/wast-printer/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wast-parser",
+    "licenseFile": "node_modules/@webassemblyjs/wast-parser/LICENSE"
+  },
+  "@webassemblyjs/wast-printer@1.8.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/xtuc/webassemblyjs",
+    "publisher": "Sven Sauleau",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@webassemblyjs/wast-printer",
+    "licenseFile": "node_modules/@webassemblyjs/wast-printer/LICENSE"
   },
   "@xtuc/ieee754@1.2.0": {
     "licenses": "BSD-3-Clause",
@@ -218,7 +236,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@xtuc/ieee754",
     "licenseFile": "node_modules/@xtuc/ieee754/LICENSE"
   },
-  "@xtuc/long@4.2.1": {
+  "@xtuc/long@4.2.2": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/dcodeIO/long.js",
     "publisher": "Daniel Wirtz",
@@ -226,20 +244,20 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@xtuc/long",
     "licenseFile": "node_modules/@xtuc/long/LICENSE"
   },
-  "Lepton@1.8.3-alpha": {
+  "Lepton@1.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
     "path": "/Users/cosmoqiu/Projects/Lepton",
     "licenseFile": "LICENSE"
   },
-  "abab@1.0.4": {
-    "licenses": "ISC",
+  "abab@2.0.3": {
+    "licenses": "BSD-3-Clause",
     "repository": "https://github.com/jsdom/abab",
     "publisher": "Jeff Carpenter",
     "email": "gcarpenterv@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/abab",
-    "licenseFile": "node_modules/notebookjs/node_modules/abab/LICENSE.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/abab",
+    "licenseFile": "node_modules/abab/LICENSE.md"
   },
   "abbrev@1.1.1": {
     "licenses": "ISC",
@@ -249,46 +267,47 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/abbrev",
     "licenseFile": "node_modules/fsevents/node_modules/abbrev/LICENSE"
   },
-  "acorn-dynamic-import@3.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/kesne/acorn-dynamic-import",
-    "publisher": "Jordan Gensler",
-    "email": "jordangens@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/acorn-dynamic-import",
-    "licenseFile": "node_modules/acorn-dynamic-import/LICENSE"
-  },
-  "acorn-globals@4.1.0": {
+  "acorn-globals@6.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/ForbesLindesay/acorn-globals",
     "publisher": "ForbesLindesay",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/acorn-globals",
-    "licenseFile": "node_modules/notebookjs/node_modules/acorn-globals/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/acorn-globals",
+    "licenseFile": "node_modules/acorn-globals/LICENSE"
   },
-  "acorn-jsx@5.0.1": {
+  "acorn-jsx@5.2.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/RReverser/acorn-jsx",
+    "repository": "https://github.com/acornjs/acorn-jsx",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/acorn-jsx",
     "licenseFile": "node_modules/acorn-jsx/LICENSE"
   },
-  "acorn@5.5.1": {
+  "acorn-walk@7.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/acornjs/acorn",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/acorn",
-    "licenseFile": "node_modules/notebookjs/node_modules/acorn/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/acorn-walk",
+    "licenseFile": "node_modules/acorn-walk/LICENSE"
   },
-  "acorn@5.7.3": {
+  "acorn@6.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/acornjs/acorn",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/acorn",
     "licenseFile": "node_modules/acorn/LICENSE"
   },
-  "acorn@6.0.4": {
+  "acorn@7.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/acornjs/acorn",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/espree/node_modules/acorn",
-    "licenseFile": "node_modules/espree/node_modules/acorn/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsdom/node_modules/acorn",
+    "licenseFile": "node_modules/jsdom/node_modules/acorn/LICENSE"
   },
   "agent-base@4.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/TooTallNate/node-agent-base",
+    "publisher": "Nathan Rajlich",
+    "email": "nathan@tootallnate.net",
+    "url": "http://n8.io/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/socks-proxy-agent/node_modules/agent-base",
+    "licenseFile": "node_modules/socks-proxy-agent/node_modules/agent-base/README.md"
+  },
+  "agent-base@4.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-agent-base",
     "publisher": "Nathan Rajlich",
@@ -297,41 +316,27 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/agent-base",
     "licenseFile": "node_modules/agent-base/README.md"
   },
-  "ajv-errors@1.0.0": {
+  "ajv-errors@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/ajv-errors",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv-errors",
     "licenseFile": "node_modules/ajv-errors/LICENSE"
   },
-  "ajv-keywords@3.1.0": {
+  "ajv-keywords@3.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/ajv-keywords",
     "publisher": "Evgeny Poberezkin",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv-keywords",
     "licenseFile": "node_modules/ajv-keywords/LICENSE"
   },
-  "ajv@5.5.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/ajv",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/ajv",
-    "licenseFile": "node_modules/notebookjs/node_modules/ajv/LICENSE"
-  },
-  "ajv@6.3.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/ajv",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/schema-utils/node_modules/ajv",
-    "licenseFile": "node_modules/schema-utils/node_modules/ajv/LICENSE"
-  },
-  "ajv@6.6.1": {
+  "ajv@6.12.0": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/ajv",
     "publisher": "Evgeny Poberezkin",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv",
     "licenseFile": "node_modules/ajv/LICENSE"
   },
-  "ansi-escapes@3.1.0": {
+  "ansi-escapes@3.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/ansi-escapes",
     "publisher": "Sindre Sorhus",
@@ -355,17 +360,17 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/ansi-regex",
-    "licenseFile": "node_modules/yargs/node_modules/ansi-regex/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer/node_modules/string-width/node_modules/ansi-regex",
+    "licenseFile": "node_modules/inquirer/node_modules/string-width/node_modules/ansi-regex/license"
   },
-  "ansi-regex@4.0.0": {
+  "ansi-regex@4.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/ansi-regex",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer/node_modules/strip-ansi/node_modules/ansi-regex",
-    "licenseFile": "node_modules/inquirer/node_modules/strip-ansi/node_modules/ansi-regex/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/ansi-regex",
+    "licenseFile": "node_modules/yargs/node_modules/ansi-regex/license"
   },
   "ansi-styles@3.2.1": {
     "licenses": "MIT",
@@ -373,16 +378,16 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight/node_modules/ansi-styles",
-    "licenseFile": "node_modules/@babel/highlight/node_modules/ansi-styles/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ansi-styles",
+    "licenseFile": "node_modules/ansi-styles/license"
   },
-  "ansi_up@2.0.2": {
+  "ansi_up@4.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/drudru/ansi_up",
     "publisher": "drudru",
     "email": "drudru@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/ansi_up",
-    "licenseFile": "node_modules/notebookjs/node_modules/ansi_up/Readme.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ansi_up",
+    "licenseFile": "node_modules/ansi_up/LICENSE"
   },
   "anymatch@2.0.0": {
     "licenses": "ISC",
@@ -400,7 +405,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/aproba",
     "licenseFile": "node_modules/aproba/LICENSE"
   },
-  "are-we-there-yet@1.1.4": {
+  "are-we-there-yet@1.1.5": {
     "licenses": "ISC",
     "repository": "https://github.com/iarna/are-we-there-yet",
     "publisher": "Rebecca Turner",
@@ -438,15 +443,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/arr-union",
     "licenseFile": "node_modules/arr-union/LICENSE"
   },
-  "array-equal@1.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/component/array-equal",
-    "publisher": "Jonathan Ong",
-    "email": "me@jongleberry.com",
-    "url": "http://jongleberry.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/array-equal",
-    "licenseFile": "node_modules/notebookjs/node_modules/array-equal/LICENSE"
-  },
   "array-unique@0.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/array-unique",
@@ -455,7 +451,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/array-unique",
     "licenseFile": "node_modules/array-unique/LICENSE"
   },
-  "asap@2.0.5": {
+  "asap@2.0.6": {
     "licenses": "MIT",
     "repository": "https://github.com/kriskowal/asap",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/asap",
@@ -467,14 +463,6 @@
     "publisher": "Fedor Indutny",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/asn1.js",
     "licenseFile": "node_modules/asn1.js/README.md"
-  },
-  "asn1@0.2.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mcavage/node-asn1",
-    "publisher": "Mark Cavage",
-    "email": "mcavage@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/asn1",
-    "licenseFile": "node_modules/notebookjs/node_modules/asn1/LICENSE"
   },
   "asn1@0.2.4": {
     "licenses": "MIT",
@@ -492,9 +480,9 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/assert-plus",
     "licenseFile": "node_modules/assert-plus/README.md"
   },
-  "assert@1.4.1": {
+  "assert@1.5.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/defunctzombie/commonjs-assert",
+    "repository": "https://github.com/browserify/commonjs-assert",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/assert",
     "licenseFile": "node_modules/assert/LICENSE"
   },
@@ -506,13 +494,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/assign-symbols",
     "licenseFile": "node_modules/assign-symbols/LICENSE"
   },
-  "ast-types@0.9.6": {
+  "ast-types@0.13.2": {
     "licenses": "MIT",
     "repository": "https://github.com/benjamn/ast-types",
     "publisher": "Ben Newman",
     "email": "bn@cs.stanford.edu",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ast-types",
-    "licenseFile": "node_modules/ast-types/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/degenerator/node_modules/ast-types",
+    "licenseFile": "node_modules/degenerator/node_modules/ast-types/LICENSE"
   },
   "astral-regex@1.0.0": {
     "licenses": "MIT",
@@ -523,20 +511,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/astral-regex",
     "licenseFile": "node_modules/astral-regex/license"
   },
-  "async-each@1.0.1": {
+  "async-each@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/paulmillr/async-each",
     "publisher": "Paul Miller",
-    "url": "http://paulmillr.com/",
+    "url": "https://paulmillr.com/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/async-each",
     "licenseFile": "node_modules/async-each/README.md"
-  },
-  "async-limiter@1.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/strml/async-limiter",
-    "publisher": "Samuel Reed",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/async-limiter",
-    "licenseFile": "node_modules/notebookjs/node_modules/async-limiter/LICENSE"
   },
   "async@1.0.0": {
     "licenses": "MIT",
@@ -549,8 +530,8 @@
     "licenses": "MIT",
     "repository": "https://github.com/caolan/async",
     "publisher": "Caolan McMahon",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/async",
-    "licenseFile": "node_modules/nconf/node_modules/async/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/async",
+    "licenseFile": "node_modules/async/LICENSE"
   },
   "asynckit@0.4.0": {
     "licenses": "MIT",
@@ -569,7 +550,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/atob",
     "licenseFile": "node_modules/atob/LICENSE"
   },
-  "autolinker@1.8.1": {
+  "autolinker@1.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/gregjacobs/Autolinker.js",
     "publisher": "Gregory Jacobs",
@@ -586,16 +567,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/aws-sign2",
     "licenseFile": "node_modules/aws-sign2/LICENSE"
   },
-  "aws4@1.6.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mhart/aws4",
-    "publisher": "Michael Hart",
-    "email": "michael.hart.au@gmail.com",
-    "url": "http://github.com/mhart",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/aws4",
-    "licenseFile": "node_modules/notebookjs/node_modules/aws4/LICENSE"
-  },
-  "aws4@1.8.0": {
+  "aws4@1.9.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mhart/aws4",
     "publisher": "Michael Hart",
@@ -604,7 +576,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/aws4",
     "licenseFile": "node_modules/aws4/LICENSE"
   },
-  "babel-eslint@10.0.1": {
+  "babel-eslint@10.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/babel/babel-eslint",
     "publisher": "Sebastian McKenzie",
@@ -623,8 +595,8 @@
     "repository": "https://github.com/babel/babel/tree/master/packages/babel-runtime",
     "publisher": "Sebastian McKenzie",
     "email": "sebmck@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/twitter-text/node_modules/babel-runtime",
-    "licenseFile": "node_modules/twitter-text/node_modules/babel-runtime/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/babel-runtime",
+    "licenseFile": "node_modules/babel-runtime/README.md"
   },
   "balanced-match@1.0.0": {
     "licenses": "MIT",
@@ -635,7 +607,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/balanced-match",
     "licenseFile": "node_modules/balanced-match/LICENSE.md"
   },
-  "base64-js@1.3.0": {
+  "base64-js@1.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/beatgammit/base64-js",
     "publisher": "T. Jameson Little",
@@ -651,18 +623,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base",
     "licenseFile": "node_modules/base/LICENSE"
   },
-  "bcrypt-pbkdf@1.0.1": {
-    "licenses": "BSD-3-Clause",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/bcrypt-pbkdf",
-    "licenseFile": "node_modules/notebookjs/node_modules/bcrypt-pbkdf/README.md"
-  },
   "bcrypt-pbkdf@1.0.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/joyent/node-bcrypt-pbkdf",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bcrypt-pbkdf",
     "licenseFile": "node_modules/bcrypt-pbkdf/LICENSE"
   },
-  "big.js@3.1.3": {
+  "big.js@5.2.2": {
     "licenses": "MIT",
     "repository": "https://github.com/MikeMcl/big.js",
     "publisher": "Michael Mclaughlin",
@@ -670,7 +637,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/big.js",
     "licenseFile": "node_modules/big.js/LICENCE"
   },
-  "binary-extensions@1.12.0": {
+  "binary-extensions@1.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/binary-extensions",
     "publisher": "Sindre Sorhus",
@@ -679,13 +646,16 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/binary-extensions",
     "licenseFile": "node_modules/binary-extensions/license"
   },
-  "bluebird-lst@1.0.6": {
+  "bindings@1.5.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/develar/fs-extra-p",
-    "publisher": "Vladimir Krivosheev",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bluebird-lst"
+    "repository": "https://github.com/TooTallNate/node-bindings",
+    "publisher": "Nathan Rajlich",
+    "email": "nathan@tootallnate.net",
+    "url": "http://tootallnate.net",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bindings",
+    "licenseFile": "node_modules/bindings/LICENSE.md"
   },
-  "bluebird@3.5.3": {
+  "bluebird@3.7.2": {
     "licenses": "MIT",
     "repository": "https://github.com/petkaantonov/bluebird",
     "publisher": "Petka Antonov",
@@ -702,44 +672,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bn.js",
     "licenseFile": "node_modules/bn.js/README.md"
   },
-  "boom@4.3.1": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/hapijs/boom",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/boom",
-    "licenseFile": "node_modules/notebookjs/node_modules/boom/LICENSE"
-  },
-  "boom@5.2.0": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/hapijs/boom",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/cryptiles/node_modules/boom",
-    "licenseFile": "node_modules/notebookjs/node_modules/cryptiles/node_modules/boom/LICENSE"
-  },
-  "bowser@1.9.4": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ded/bowser",
-    "publisher": "Dustin Diaz",
-    "email": "dustin@dustindiaz.com",
-    "url": "http://dustindiaz.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bowser",
-    "licenseFile": "node_modules/bowser/LICENSE"
-  },
   "brace-expansion@1.1.11": {
     "licenses": "MIT",
     "repository": "https://github.com/juliangruber/brace-expansion",
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/brace-expansion",
-    "licenseFile": "node_modules/fsevents/node_modules/brace-expansion/LICENSE"
-  },
-  "brace-expansion@1.1.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/juliangruber/brace-expansion",
-    "publisher": "Julian Gruber",
-    "email": "mail@juliangruber.com",
-    "url": "http://juliangruber.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/brace-expansion",
-    "licenseFile": "node_modules/brace-expansion/README.md"
+    "licenseFile": "node_modules/brace-expansion/LICENSE"
   },
   "braces@2.3.2": {
     "licenses": "MIT",
@@ -757,12 +697,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/brorand",
     "licenseFile": "node_modules/brorand/README.md"
   },
-  "browser-process-hrtime@0.1.2": {
+  "browser-process-hrtime@1.0.0": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/kumavis/browser-process-hrtime",
     "publisher": "kumavis",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/browser-process-hrtime",
-    "licenseFile": "node_modules/notebookjs/node_modules/browser-process-hrtime/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/browser-process-hrtime",
+    "licenseFile": "node_modules/browser-process-hrtime/LICENSE"
   },
   "browserify-aes@1.2.0": {
     "licenses": "MIT",
@@ -819,7 +759,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/buffer-xor",
     "licenseFile": "node_modules/buffer-xor/LICENSE"
   },
-  "buffer@4.9.1": {
+  "buffer@4.9.2": {
     "licenses": "MIT",
     "repository": "https://github.com/feross/buffer",
     "publisher": "Feross Aboukhadijeh",
@@ -828,7 +768,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/buffer",
     "licenseFile": "node_modules/buffer/LICENSE"
   },
-  "builder-util-runtime@8.0.2": {
+  "builder-util-runtime@8.6.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
@@ -844,7 +784,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/builtin-status-codes",
     "licenseFile": "node_modules/builtin-status-codes/license"
   },
-  "bytes@3.0.0": {
+  "bytes@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/visionmedia/bytes.js",
     "publisher": "TJ Holowaychuk",
@@ -853,9 +793,9 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/bytes",
     "licenseFile": "node_modules/bytes/LICENSE"
   },
-  "cacache@11.3.1": {
+  "cacache@12.0.3": {
     "licenses": "ISC",
-    "repository": "https://github.com/zkat/cacache",
+    "repository": "https://github.com/npm/cacache",
     "publisher": "Kat Marchán",
     "email": "kzm@sykosomatic.org",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cacache",
@@ -869,23 +809,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cache-base",
     "licenseFile": "node_modules/cache-base/LICENSE"
   },
-  "caller-path@0.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/caller-path",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "http://sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/caller-path",
-    "licenseFile": "node_modules/caller-path/readme.md"
-  },
-  "callsites@0.2.0": {
+  "callsites@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/callsites",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
-    "url": "http://sindresorhus.com",
+    "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/callsites",
-    "licenseFile": "node_modules/callsites/readme.md"
+    "licenseFile": "node_modules/callsites/license"
   },
   "camelcase@2.1.1": {
     "licenses": "MIT",
@@ -893,17 +824,17 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "http://sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/camelcase",
-    "licenseFile": "node_modules/camelcase/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/camelcase",
+    "licenseFile": "node_modules/nconf/node_modules/camelcase/license"
   },
-  "camelcase@5.0.0": {
+  "camelcase@5.3.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/camelcase",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs-parser/node_modules/camelcase",
-    "licenseFile": "node_modules/yargs-parser/node_modules/camelcase/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/camelcase",
+    "licenseFile": "node_modules/camelcase/license"
   },
   "caseless@0.12.0": {
     "licenses": "Apache-2.0",
@@ -913,11 +844,11 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/caseless",
     "licenseFile": "node_modules/caseless/LICENSE"
   },
-  "chalk@2.4.1": {
+  "chalk@2.4.2": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/chalk",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight/node_modules/chalk",
-    "licenseFile": "node_modules/@babel/highlight/node_modules/chalk/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/chalk",
+    "licenseFile": "node_modules/chalk/license"
   },
   "chardet@0.7.0": {
     "licenses": "MIT",
@@ -933,24 +864,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/chart.js",
     "licenseFile": "node_modules/chart.js/LICENSE.md"
   },
-  "chokidar@2.0.4": {
+  "chokidar@2.1.8": {
     "licenses": "MIT",
     "repository": "https://github.com/paulmillr/chokidar",
     "publisher": "Paul Miller",
-    "url": "http://paulmillr.com",
+    "url": "https://paulmillr.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/chokidar",
     "licenseFile": "node_modules/chokidar/README.md"
   },
-  "chownr@1.0.1": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/chownr",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/chownr",
-    "licenseFile": "node_modules/fsevents/node_modules/chownr/LICENSE"
-  },
-  "chownr@1.1.1": {
+  "chownr@1.1.4": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/chownr",
     "publisher": "Isaac Z. Schlueter",
@@ -959,7 +881,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/chownr",
     "licenseFile": "node_modules/chownr/LICENSE"
   },
-  "chrome-trace-event@1.0.0": {
+  "chrome-trace-event@1.0.2": {
     "licenses": "MIT",
     "repository": "github.com:samccone/chrome-trace-event",
     "publisher": "Trent Mick, Sam Saccone",
@@ -974,14 +896,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cipher-base",
     "licenseFile": "node_modules/cipher-base/LICENSE"
   },
-  "circular-json@0.3.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/WebReflection/circular-json",
-    "publisher": "Andrea Giammarchi",
-    "url": "http://webreflection.blogspot.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/circular-json",
-    "licenseFile": "node_modules/circular-json/LICENSE.txt"
-  },
   "class-utils@0.3.6": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/class-utils",
@@ -990,7 +904,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/class-utils",
     "licenseFile": "node_modules/class-utils/LICENSE"
   },
-  "classnames@2.2.5": {
+  "classnames@2.2.6": {
     "licenses": "MIT",
     "repository": "https://github.com/JedWatson/classnames",
     "publisher": "Jed Watson",
@@ -1014,11 +928,11 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cli-width",
     "licenseFile": "node_modules/cli-width/LICENSE"
   },
-  "clipboard@2.0.1": {
+  "clipboard@2.0.6": {
     "licenses": "MIT",
     "repository": "https://github.com/zenorocha/clipboard.js",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/clipboard",
-    "licenseFile": "node_modules/clipboard/readme.md"
+    "licenseFile": "node_modules/clipboard/LICENSE"
   },
   "cliui@3.2.0": {
     "licenses": "ISC",
@@ -1028,7 +942,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cliui",
     "licenseFile": "node_modules/cliui/LICENSE.txt"
   },
-  "cliui@4.1.0": {
+  "cliui@5.0.0": {
     "licenses": "ISC",
     "repository": "https://github.com/yargs/cliui",
     "publisher": "Ben Coe",
@@ -1039,8 +953,8 @@
   "co@4.6.0": {
     "licenses": "MIT",
     "repository": "https://github.com/tj/co",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/co",
-    "licenseFile": "node_modules/notebookjs/node_modules/co/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/co",
+    "licenseFile": "node_modules/co/LICENSE"
   },
   "code-point-at@1.1.0": {
     "licenses": "MIT",
@@ -1059,7 +973,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/codemirror-one-dark-theme",
     "licenseFile": "node_modules/codemirror-one-dark-theme/LICENSE"
   },
-  "codemirror@5.42.0": {
+  "codemirror@5.52.2": {
     "licenses": "MIT",
     "repository": "https://github.com/codemirror/CodeMirror",
     "publisher": "Marijn Haverbeke",
@@ -1096,19 +1010,10 @@
     "licenses": "MIT",
     "repository": "https://github.com/Marak/colors.js",
     "publisher": "Marak Squires",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/winston/node_modules/colors",
-    "licenseFile": "node_modules/winston/node_modules/colors/ReadMe.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/colors",
+    "licenseFile": "node_modules/colors/ReadMe.md"
   },
-  "combined-stream@1.0.6": {
-    "licenses": "MIT",
-    "repository": "https://github.com/felixge/node-combined-stream",
-    "publisher": "Felix Geisendörfer",
-    "email": "felix@debuggable.com",
-    "url": "http://debuggable.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/combined-stream",
-    "licenseFile": "node_modules/notebookjs/node_modules/combined-stream/License"
-  },
-  "combined-stream@1.0.7": {
+  "combined-stream@1.0.8": {
     "licenses": "MIT",
     "repository": "https://github.com/felixge/node-combined-stream",
     "publisher": "Felix Geisendörfer",
@@ -1117,13 +1022,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/combined-stream",
     "licenseFile": "node_modules/combined-stream/License"
   },
-  "commander@2.17.1": {
+  "commander@2.20.3": {
     "licenses": "MIT",
     "repository": "https://github.com/tj/commander.js",
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/commander",
-    "licenseFile": "node_modules/commander/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/terser/node_modules/commander",
+    "licenseFile": "node_modules/terser/node_modules/commander/LICENSE"
   },
   "commondir@1.0.1": {
     "licenses": "MIT",
@@ -1134,7 +1039,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/commondir",
     "licenseFile": "node_modules/commondir/LICENSE"
   },
-  "component-emitter@1.2.1": {
+  "component-emitter@1.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/component/emitter",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/component-emitter",
@@ -1149,7 +1054,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/concat-map",
     "licenseFile": "node_modules/concat-map/LICENSE"
   },
-  "concat-stream@1.6.0": {
+  "concat-stream@1.6.2": {
     "licenses": "MIT",
     "repository": "https://github.com/maxogden/concat-stream",
     "publisher": "Max Ogden",
@@ -1157,9 +1062,9 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/concat-stream",
     "licenseFile": "node_modules/concat-stream/LICENSE"
   },
-  "console-browserify@1.1.0": {
+  "console-browserify@1.2.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/Raynos/console-browserify",
+    "repository": "https://github.com/browserify/console-browserify",
     "publisher": "Raynos",
     "email": "raynos2@gmail.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/console-browserify",
@@ -1183,15 +1088,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/constants-browserify",
     "licenseFile": "node_modules/constants-browserify/README.md"
   },
-  "content-type-parser@1.0.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jsdom/content-type-parser",
-    "publisher": "Domenic Denicola",
-    "email": "d@domenic.me",
-    "url": "https://domenic.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/content-type-parser",
-    "licenseFile": "node_modules/notebookjs/node_modules/content-type-parser/LICENSE.txt"
-  },
   "copy-concurrently@1.0.5": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/copy-concurrently",
@@ -1212,14 +1108,14 @@
   "core-js@1.2.7": {
     "licenses": "MIT",
     "repository": "https://github.com/zloirock/core-js",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/core-js",
-    "licenseFile": "node_modules/core-js/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fbjs/node_modules/core-js",
+    "licenseFile": "node_modules/fbjs/node_modules/core-js/LICENSE"
   },
-  "core-js@2.6.0": {
+  "core-js@2.6.11": {
     "licenses": "MIT",
     "repository": "https://github.com/zloirock/core-js",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/runtime-corejs2/node_modules/core-js",
-    "licenseFile": "node_modules/@babel/runtime-corejs2/node_modules/core-js/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/core-js",
+    "licenseFile": "node_modules/core-js/LICENSE"
   },
   "core-util-is@1.0.2": {
     "licenses": "MIT",
@@ -1260,14 +1156,8 @@
     "repository": "https://github.com/moxystudio/node-cross-spawn",
     "publisher": "André Cruz",
     "email": "andre@moxy.studio",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-cli/node_modules/cross-spawn",
-    "licenseFile": "node_modules/webpack-cli/node_modules/cross-spawn/LICENSE"
-  },
-  "cryptiles@3.1.2": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/hapijs/cryptiles",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/cryptiles",
-    "licenseFile": "node_modules/notebookjs/node_modules/cryptiles/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cross-spawn",
+    "licenseFile": "node_modules/cross-spawn/LICENSE"
   },
   "crypto-browserify@3.12.0": {
     "licenses": "MIT",
@@ -1278,27 +1168,27 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/crypto-browserify",
     "licenseFile": "node_modules/crypto-browserify/LICENSE"
   },
-  "css-in-js-utils@2.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/rofrischmann/css-in-js-utils",
-    "publisher": "Robin Frischmann",
-    "email": "robin@rofrischmann.de",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/css-in-js-utils",
-    "licenseFile": "node_modules/css-in-js-utils/LICENSE"
-  },
-  "cssom@0.3.2": {
+  "cssom@0.3.8": {
     "licenses": "MIT",
     "repository": "https://github.com/NV/CSSOM",
     "publisher": "Nikita Vasilyev",
     "email": "me@elv1s.ru",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/cssom",
-    "licenseFile": "node_modules/notebookjs/node_modules/cssom/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cssstyle/node_modules/cssom",
+    "licenseFile": "node_modules/cssstyle/node_modules/cssom/LICENSE.txt"
   },
-  "cssstyle@0.2.37": {
+  "cssom@0.4.4": {
     "licenses": "MIT",
-    "repository": "https://github.com/chad3814/CSSStyleDeclaration",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/cssstyle",
-    "licenseFile": "node_modules/notebookjs/node_modules/cssstyle/README.md"
+    "repository": "https://github.com/NV/CSSOM",
+    "publisher": "Nikita Vasilyev",
+    "email": "me@elv1s.ru",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cssom",
+    "licenseFile": "node_modules/cssom/LICENSE.txt"
+  },
+  "cssstyle@2.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jsdom/cssstyle",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cssstyle",
+    "licenseFile": "node_modules/cssstyle/LICENSE"
   },
   "cycle@1.0.3": {
     "licenses": "Custom: https://github.com/douglascrockford/JSON-js",
@@ -1306,13 +1196,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cycle",
     "licenseFile": "node_modules/cycle/README.md"
   },
-  "cyclist@0.2.2": {
-    "licenses": "MIT*",
+  "cyclist@1.0.1": {
+    "licenses": "MIT",
     "repository": "https://github.com/mafintosh/cyclist",
     "publisher": "Mathias Buus Madsen",
     "email": "mathiasbuus@gmail.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cyclist",
-    "licenseFile": "node_modules/cyclist/README.md"
+    "licenseFile": "node_modules/cyclist/LICENSE"
   },
   "dashdash@1.14.1": {
     "licenses": "MIT",
@@ -1332,13 +1222,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/data-uri-to-buffer",
     "licenseFile": "node_modules/data-uri-to-buffer/README.md"
   },
-  "date-now@0.1.4": {
+  "data-urls@2.0.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/Colingo/date-now",
-    "publisher": "Raynos",
-    "email": "raynos2@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/date-now",
-    "licenseFile": "node_modules/date-now/LICENCE"
+    "repository": "https://github.com/jsdom/data-urls",
+    "publisher": "Domenic Denicola",
+    "email": "d@domenic.me",
+    "url": "https://domenic.me/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/data-urls",
+    "licenseFile": "node_modules/data-urls/LICENSE.txt"
   },
   "debug@2.6.9": {
     "licenses": "MIT",
@@ -1361,16 +1252,8 @@
     "repository": "https://github.com/visionmedia/debug",
     "publisher": "TJ Holowaychuk",
     "email": "tj@vision-media.ca",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/proxy-agent/node_modules/debug",
-    "licenseFile": "node_modules/proxy-agent/node_modules/debug/LICENSE"
-  },
-  "debug@4.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/visionmedia/debug",
-    "publisher": "TJ Holowaychuk",
-    "email": "tj@vision-media.ca",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/builder-util-runtime/node_modules/debug",
-    "licenseFile": "node_modules/builder-util-runtime/node_modules/debug/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/https-proxy-agent/node_modules/debug",
+    "licenseFile": "node_modules/https-proxy-agent/node_modules/debug/LICENSE"
   },
   "debug@4.1.1": {
     "licenses": "MIT",
@@ -1389,6 +1272,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/decamelize",
     "licenseFile": "node_modules/decamelize/license"
   },
+  "decimal.js@10.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/MikeMcl/decimal.js",
+    "publisher": "Michael Mclaughlin",
+    "email": "M8ch88l@gmail.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/decimal.js",
+    "licenseFile": "node_modules/decimal.js/LICENCE.md"
+  },
   "decode-uri-component@0.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/SamVerschueren/decode-uri-component",
@@ -1398,7 +1289,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/decode-uri-component",
     "licenseFile": "node_modules/decode-uri-component/license"
   },
-  "deep-extend@0.5.1": {
+  "deep-extend@0.6.0": {
     "licenses": "MIT",
     "repository": "https://github.com/unclechu/node-deep-extend",
     "publisher": "Viacheslav Lotsmanov",
@@ -1412,16 +1303,16 @@
     "publisher": "Thorsten Lorenz",
     "email": "thlorenz@gmx.de",
     "url": "http://thlorenz.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/deep-is",
-    "licenseFile": "node_modules/notebookjs/node_modules/deep-is/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/deep-is",
+    "licenseFile": "node_modules/deep-is/LICENSE"
   },
   "define-property@0.2.5": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/define-property",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/class-utils/node_modules/define-property",
-    "licenseFile": "node_modules/class-utils/node_modules/define-property/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/define-property",
+    "licenseFile": "node_modules/define-property/LICENSE"
   },
   "define-property@1.0.0": {
     "licenses": "MIT",
@@ -1436,8 +1327,8 @@
     "repository": "https://github.com/jonschlinkert/define-property",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/define-property",
-    "licenseFile": "node_modules/define-property/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/to-regex/node_modules/define-property",
+    "licenseFile": "node_modules/to-regex/node_modules/define-property/LICENSE"
   },
   "degenerator@1.0.4": {
     "licenses": "MIT",
@@ -1477,13 +1368,21 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/depd",
     "licenseFile": "node_modules/depd/LICENSE"
   },
-  "des.js@1.0.0": {
+  "des.js@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/indutny/des.js",
     "publisher": "Fedor Indutny",
     "email": "fedor@indutny.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/des.js",
     "licenseFile": "node_modules/des.js/README.md"
+  },
+  "detect-file@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/doowb/detect-file",
+    "publisher": "Brian Woodward",
+    "url": "https://github.com/doowb",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/detect-file",
+    "licenseFile": "node_modules/detect-file/LICENSE"
   },
   "detect-libc@1.0.3": {
     "licenses": "Apache-2.0",
@@ -1500,11 +1399,11 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/diffie-hellman",
     "licenseFile": "node_modules/diffie-hellman/LICENSE"
   },
-  "doctrine@2.1.0": {
+  "doctrine@3.0.0": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/eslint/doctrine",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/doctrine",
-    "licenseFile": "node_modules/doctrine/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/doctrine",
+    "licenseFile": "node_modules/eslint/node_modules/doctrine/LICENSE"
   },
   "dom-helpers@3.4.0": {
     "licenses": "MIT",
@@ -1523,30 +1422,21 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/domain-browser",
     "licenseFile": "node_modules/domain-browser/LICENSE.md"
   },
-  "domexception@1.0.1": {
+  "domexception@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jsdom/domexception",
     "publisher": "Domenic Denicola",
     "email": "d@domenic.me",
     "url": "https://domenic.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/domexception",
-    "licenseFile": "node_modules/notebookjs/node_modules/domexception/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/domexception",
+    "licenseFile": "node_modules/domexception/LICENSE.txt"
   },
-  "duplexify@3.6.1": {
+  "duplexify@3.7.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/duplexify",
     "publisher": "Mathias Buus",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/duplexify",
     "licenseFile": "node_modules/duplexify/LICENSE"
-  },
-  "ecc-jsbn@0.1.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/quartzjer/ecc-jsbn",
-    "publisher": "Jeremie Miller",
-    "email": "jeremie@jabber.org",
-    "url": "http://jeremie.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/ecc-jsbn",
-    "licenseFile": "node_modules/notebookjs/node_modules/ecc-jsbn/LICENSE"
   },
   "ecc-jsbn@0.1.2": {
     "licenses": "MIT",
@@ -1566,7 +1456,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-context-menu",
     "licenseFile": "node_modules/electron-context-menu/license"
   },
-  "electron-dl@1.12.0": {
+  "electron-dl@1.14.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/electron-dl",
     "publisher": "Sindre Sorhus",
@@ -1582,14 +1472,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-is-accelerator",
     "licenseFile": "node_modules/electron-is-accelerator/LICENSE"
   },
-  "electron-is-dev@1.0.1": {
+  "electron-is-dev@1.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/electron-is-dev",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-context-menu/node_modules/electron-is-dev",
-    "licenseFile": "node_modules/electron-context-menu/node_modules/electron-is-dev/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-is-dev",
+    "licenseFile": "node_modules/electron-is-dev/license"
   },
   "electron-json-storage-sync@1.1.1": {
     "licenses": "MIT",
@@ -1598,14 +1488,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-json-storage-sync",
     "licenseFile": "node_modules/electron-json-storage-sync/LICENSE"
   },
-  "electron-localshortcut@3.1.0": {
+  "electron-localshortcut@3.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/parro-it/electron-localshortcut",
     "publisher": "andrea@parro.it",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-localshortcut",
     "licenseFile": "node_modules/electron-localshortcut/license"
   },
-  "electron-updater@4.0.5": {
+  "electron-updater@4.2.5": {
     "licenses": "MIT",
     "repository": "https://github.com/electron-userland/electron-builder",
     "publisher": "Vladimir Krivosheev",
@@ -1619,7 +1509,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-window-state",
     "licenseFile": "node_modules/electron-window-state/license"
   },
-  "elliptic@6.4.1": {
+  "elliptic@6.5.2": {
     "licenses": "MIT",
     "repository": "https://github.com/indutny/elliptic",
     "publisher": "Fedor Indutny",
@@ -1627,7 +1517,24 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/elliptic",
     "licenseFile": "node_modules/elliptic/README.md"
   },
+  "emoji-regex@7.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mathiasbynens/emoji-regex",
+    "publisher": "Mathias Bynens",
+    "url": "https://mathiasbynens.be/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/emoji-regex",
+    "licenseFile": "node_modules/emoji-regex/LICENSE-MIT.txt"
+  },
   "emojis-list@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kikobeats/emojis-list",
+    "publisher": "Kiko Beats",
+    "email": "josefrancisco.verdu@gmail.com",
+    "url": "https://github.com/Kikobeats",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-cli/node_modules/emojis-list",
+    "licenseFile": "node_modules/webpack-cli/node_modules/emojis-list/LICENSE.md"
+  },
+  "emojis-list@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/kikobeats/emojis-list",
     "publisher": "Kiko Beats",
@@ -1643,7 +1550,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/encoding",
     "licenseFile": "node_modules/encoding/LICENSE"
   },
-  "end-of-stream@1.4.1": {
+  "end-of-stream@1.4.4": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/end-of-stream",
     "publisher": "Mathias Buus",
@@ -1657,6 +1564,13 @@
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/enhanced-resolve",
     "licenseFile": "node_modules/enhanced-resolve/LICENSE"
+  },
+  "enhanced-resolve@4.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/webpack/enhanced-resolve",
+    "publisher": "Tobias Koppers @sokra",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/enhanced-resolve",
+    "licenseFile": "node_modules/webpack/node_modules/enhanced-resolve/LICENSE"
   },
   "entities@1.1.2": {
     "licenses": "BSD-2-Clause",
@@ -1679,7 +1593,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/es6-error",
     "licenseFile": "node_modules/es6-error/LICENSE.md"
   },
-  "es6-promise@4.2.5": {
+  "es6-promise@4.2.8": {
     "licenses": "MIT",
     "repository": "https://github.com/stefanpenner/es6-promise",
     "publisher": "Yehuda Katz, Tom Dale, Stefan Penner and contributors",
@@ -1704,38 +1618,26 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/escape-string-regexp",
     "licenseFile": "node_modules/escape-string-regexp/license"
   },
-  "escodegen@1.11.0": {
+  "escodegen@1.14.1": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/estools/escodegen",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/escodegen",
     "licenseFile": "node_modules/escodegen/LICENSE.BSD"
   },
-  "escodegen@1.9.1": {
-    "licenses": "BSD-2-Clause",
-    "repository": "https://github.com/estools/escodegen",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/escodegen",
-    "licenseFile": "node_modules/notebookjs/node_modules/escodegen/LICENSE.BSD"
-  },
-  "eslint-scope@3.7.1": {
-    "licenses": "BSD-2-Clause",
-    "repository": "https://github.com/eslint/eslint-scope",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/babel-eslint/node_modules/eslint-scope",
-    "licenseFile": "node_modules/babel-eslint/node_modules/eslint-scope/LICENSE"
-  },
-  "eslint-scope@4.0.0": {
+  "eslint-scope@4.0.3": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/eslint/eslint-scope",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint-scope",
     "licenseFile": "node_modules/eslint-scope/LICENSE"
   },
-  "eslint-utils@1.3.1": {
+  "eslint-utils@1.4.3": {
     "licenses": "MIT",
     "repository": "https://github.com/mysticatea/eslint-utils",
     "publisher": "Toru Nagashima",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint-utils",
     "licenseFile": "node_modules/eslint-utils/LICENSE"
   },
-  "eslint-visitor-keys@1.0.0": {
+  "eslint-visitor-keys@1.1.0": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/eslint/eslint-visitor-keys",
     "publisher": "Toru Nagashima",
@@ -1743,7 +1645,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint-visitor-keys",
     "licenseFile": "node_modules/eslint-visitor-keys/LICENSE"
   },
-  "eslint@5.10.0": {
+  "eslint@5.16.0": {
     "licenses": "MIT",
     "repository": "https://github.com/eslint/eslint",
     "publisher": "Nicholas C. Zakas",
@@ -1751,7 +1653,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint",
     "licenseFile": "node_modules/eslint/LICENSE"
   },
-  "espree@5.0.0": {
+  "espree@5.0.1": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/eslint/espree",
     "publisher": "Nicholas C. Zakas",
@@ -1764,18 +1666,18 @@
     "repository": "https://github.com/jquery/esprima",
     "publisher": "Ariya Hidayat",
     "email": "ariya.hidayat@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/esprima",
-    "licenseFile": "node_modules/notebookjs/node_modules/esprima/LICENSE.BSD"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/esprima",
+    "licenseFile": "node_modules/esprima/LICENSE.BSD"
   },
   "esprima@4.0.1": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/jquery/esprima",
     "publisher": "Ariya Hidayat",
     "email": "ariya.hidayat@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/esprima",
-    "licenseFile": "node_modules/electron-updater/node_modules/esprima/LICENSE.BSD"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/js-yaml/node_modules/esprima",
+    "licenseFile": "node_modules/js-yaml/node_modules/esprima/LICENSE.BSD"
   },
-  "esquery@1.0.1": {
+  "esquery@1.1.0": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/jrfeenst/esquery",
     "publisher": "Joel Feenstra",
@@ -1789,19 +1691,19 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/esrecurse",
     "licenseFile": "node_modules/esrecurse/README.md"
   },
-  "estraverse@4.2.0": {
+  "estraverse@4.3.0": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/estools/estraverse",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/estraverse",
     "licenseFile": "node_modules/estraverse/LICENSE.BSD"
   },
-  "esutils@2.0.2": {
-    "licenses": "BSD",
+  "esutils@2.0.3": {
+    "licenses": "BSD-2-Clause",
     "repository": "https://github.com/estools/esutils",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/esutils",
     "licenseFile": "node_modules/esutils/LICENSE.BSD"
   },
-  "events@1.1.1": {
+  "events@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/Gozala/events",
     "publisher": "Irakli Gozalishvili",
@@ -1818,14 +1720,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/evp_bytestokey",
     "licenseFile": "node_modules/evp_bytestokey/LICENSE"
   },
-  "execa@0.10.0": {
+  "execa@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/execa",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/os-locale/node_modules/execa",
-    "licenseFile": "node_modules/os-locale/node_modules/execa/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/execa",
+    "licenseFile": "node_modules/execa/license"
   },
   "expand-brackets@2.1.4": {
     "licenses": "MIT",
@@ -1834,6 +1736,14 @@
     "url": "https://github.com/jonschlinkert",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/expand-brackets",
     "licenseFile": "node_modules/expand-brackets/LICENSE"
+  },
+  "expand-tilde@2.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/expand-tilde",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/expand-tilde",
+    "licenseFile": "node_modules/expand-tilde/LICENSE"
   },
   "ext-list@2.2.2": {
     "licenses": "MIT",
@@ -1858,16 +1768,16 @@
     "repository": "https://github.com/jonschlinkert/extend-shallow",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/braces/node_modules/extend-shallow",
-    "licenseFile": "node_modules/braces/node_modules/extend-shallow/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extend-shallow",
+    "licenseFile": "node_modules/extend-shallow/LICENSE"
   },
   "extend-shallow@3.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/extend-shallow",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extend-shallow",
-    "licenseFile": "node_modules/extend-shallow/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/split-string/node_modules/extend-shallow",
+    "licenseFile": "node_modules/split-string/node_modules/extend-shallow/LICENSE"
   },
   "extend@3.0.2": {
     "licenses": "MIT",
@@ -1878,7 +1788,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extend",
     "licenseFile": "node_modules/extend/LICENSE"
   },
-  "external-editor@3.0.3": {
+  "external-editor@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/mrkmg/node-external-editor",
     "publisher": "Kevin Gravier",
@@ -1901,6 +1811,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extsprintf",
     "licenseFile": "node_modules/extsprintf/LICENSE"
   },
+  "extsprintf@1.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/davepacheco/node-extsprintf",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/verror/node_modules/extsprintf",
+    "licenseFile": "node_modules/verror/node_modules/extsprintf/LICENSE"
+  },
   "eyes@0.1.8": {
     "licenses": "MIT",
     "publisher": "Alexis Sellier",
@@ -1908,28 +1824,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eyes",
     "licenseFile": "node_modules/eyes/LICENSE"
   },
-  "fast-deep-equal@1.0.0": {
+  "fast-deep-equal@3.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/fast-deep-equal",
     "publisher": "Evgeny Poberezkin",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fast-deep-equal",
     "licenseFile": "node_modules/fast-deep-equal/LICENSE"
   },
-  "fast-deep-equal@1.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/fast-deep-equal",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/fast-deep-equal",
-    "licenseFile": "node_modules/notebookjs/node_modules/fast-deep-equal/LICENSE"
-  },
-  "fast-deep-equal@2.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/fast-deep-equal",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv/node_modules/fast-deep-equal",
-    "licenseFile": "node_modules/ajv/node_modules/fast-deep-equal/LICENSE"
-  },
-  "fast-json-stable-stringify@2.0.0": {
+  "fast-json-stable-stringify@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/fast-json-stable-stringify",
     "publisher": "James Halliday",
@@ -1944,11 +1846,11 @@
     "publisher": "Ramesh Nair",
     "email": "ram@hiddentao.com",
     "url": "http://www.hiddentao.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/fast-levenshtein",
-    "licenseFile": "node_modules/notebookjs/node_modules/fast-levenshtein/LICENSE.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fast-levenshtein",
+    "licenseFile": "node_modules/fast-levenshtein/LICENSE.md"
   },
-  "fbjs@0.8.12": {
-    "licenses": "BSD-3-Clause",
+  "fbjs@0.8.17": {
+    "licenses": "MIT",
     "repository": "https://github.com/facebook/fbjs",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fbjs",
     "licenseFile": "node_modules/fbjs/LICENSE"
@@ -1970,7 +1872,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/figures",
     "licenseFile": "node_modules/figures/license"
   },
-  "file-entry-cache@2.0.0": {
+  "file-entry-cache@5.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/royriojas/file-entry-cache",
     "publisher": "Roy Riojas",
@@ -2004,7 +1906,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fill-range",
     "licenseFile": "node_modules/fill-range/LICENSE"
   },
-  "find-cache-dir@2.0.0": {
+  "find-cache-dir@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/avajs/find-cache-dir",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/terser-webpack-plugin/node_modules/find-cache-dir",
@@ -2019,7 +1921,16 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/find-up",
     "licenseFile": "node_modules/import-local/node_modules/find-up/license"
   },
-  "flat-cache@1.3.4": {
+  "findup-sync@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gulpjs/findup-sync",
+    "publisher": "Gulp Team",
+    "email": "team@gulpjs.com",
+    "url": "http://gulpjs.com/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/findup-sync",
+    "licenseFile": "node_modules/findup-sync/LICENSE"
+  },
+  "flat-cache@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/royriojas/flat-cache",
     "publisher": "Roy Riojas",
@@ -2027,7 +1938,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/flat-cache",
     "licenseFile": "node_modules/flat-cache/LICENSE"
   },
-  "flush-write-stream@1.0.3": {
+  "flatted@2.0.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/WebReflection/flatted",
+    "publisher": "Andrea Giammarchi",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/flatted",
+    "licenseFile": "node_modules/flatted/LICENSE"
+  },
+  "flush-write-stream@1.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/flush-write-stream",
     "publisher": "Mathias Buus",
@@ -2051,15 +1969,6 @@
     "url": "http://www.futurealoof.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/forever-agent",
     "licenseFile": "node_modules/forever-agent/LICENSE"
-  },
-  "form-data@2.3.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/form-data/form-data",
-    "publisher": "Felix Geisendörfer",
-    "email": "felix@debuggable.com",
-    "url": "http://debuggable.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/form-data",
-    "licenseFile": "node_modules/notebookjs/node_modules/form-data/License"
   },
   "form-data@2.3.3": {
     "licenses": "MIT",
@@ -2087,13 +1996,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/from2",
     "licenseFile": "node_modules/from2/LICENSE.md"
   },
-  "fs-extra-p@7.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/develar/fs-extra-p",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fs-extra-p",
-    "licenseFile": "node_modules/fs-extra-p/LICENSE"
-  },
-  "fs-extra@7.0.1": {
+  "fs-extra@8.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
@@ -2101,7 +2004,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fs-extra",
     "licenseFile": "node_modules/fs-extra/LICENSE"
   },
-  "fs-minipass@1.2.5": {
+  "fs-minipass@1.2.7": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/fs-minipass",
     "publisher": "Isaac Z. Schlueter",
@@ -2128,7 +2031,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fs.realpath",
     "licenseFile": "node_modules/fs.realpath/LICENSE"
   },
-  "fsevents@1.2.4": {
+  "fsevents@1.2.12": {
     "licenses": "MIT",
     "repository": "https://github.com/strongloop/fsevents",
     "publisher": "Philipp Dunkel",
@@ -2151,7 +2054,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/functional-red-black-tree",
     "licenseFile": "node_modules/functional-red-black-tree/LICENSE"
   },
-  "fuse.js@3.3.0": {
+  "fuse.js@3.6.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/krisk/Fuse",
     "publisher": "Kirollos Risk",
@@ -2168,14 +2071,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/gauge",
     "licenseFile": "node_modules/fsevents/node_modules/gauge/LICENSE"
   },
-  "get-caller-file@1.0.3": {
+  "get-caller-file@2.0.5": {
     "licenses": "ISC",
     "repository": "https://github.com/stefanpenner/get-caller-file",
     "publisher": "Stefan Penner",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-caller-file",
     "licenseFile": "node_modules/get-caller-file/LICENSE.md"
   },
-  "get-stream@3.0.0": {
+  "get-stream@4.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/get-stream",
     "publisher": "Sindre Sorhus",
@@ -2184,7 +2087,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-stream",
     "licenseFile": "node_modules/get-stream/license"
   },
-  "get-uri@2.0.2": {
+  "get-uri@2.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-get-uri",
     "publisher": "Nathan Rajlich",
@@ -2217,7 +2120,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/glob-parent",
     "licenseFile": "node_modules/glob-parent/LICENSE"
   },
-  "glob@7.1.2": {
+  "glob@7.1.6": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-glob",
     "publisher": "Isaac Z. Schlueter",
@@ -2226,31 +2129,46 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/glob",
     "licenseFile": "node_modules/glob/LICENSE"
   },
-  "global-modules-path@2.3.1": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/rosen-vladimirov/global-modules-path",
-    "publisher": "Telerik",
-    "email": "support@telerik.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/global-modules-path",
-    "licenseFile": "node_modules/global-modules-path/LICENSE"
+  "global-modules@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/global-modules",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-dir/node_modules/global-modules",
+    "licenseFile": "node_modules/resolve-dir/node_modules/global-modules/LICENSE"
   },
-  "globals@11.11.0": {
+  "global-modules@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/global-modules",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/global-modules",
+    "licenseFile": "node_modules/global-modules/LICENSE"
+  },
+  "global-prefix@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/global-prefix",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-dir/node_modules/global-prefix",
+    "licenseFile": "node_modules/resolve-dir/node_modules/global-prefix/LICENSE"
+  },
+  "global-prefix@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/global-prefix",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/global-prefix",
+    "licenseFile": "node_modules/global-prefix/LICENSE"
+  },
+  "globals@11.12.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/globals",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/traverse/node_modules/globals",
-    "licenseFile": "node_modules/@babel/traverse/node_modules/globals/license"
-  },
-  "globals@11.9.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/globals",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/globals",
-    "licenseFile": "node_modules/eslint/node_modules/globals/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/globals",
+    "licenseFile": "node_modules/globals/license"
   },
   "good-listener@1.2.2": {
     "licenses": "MIT",
@@ -2258,7 +2176,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/good-listener",
     "licenseFile": "node_modules/good-listener/readme.md"
   },
-  "graceful-fs@4.1.11": {
+  "graceful-fs@4.2.3": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-graceful-fs",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/graceful-fs",
@@ -2272,15 +2190,6 @@
     "url": "https://www.ahmadnassri.com/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/har-schema",
     "licenseFile": "node_modules/har-schema/LICENSE"
-  },
-  "har-validator@5.0.3": {
-    "licenses": "ISC",
-    "repository": "https://github.com/ahmadnassri/har-validator",
-    "publisher": "Ahmad Nassri",
-    "email": "ahmad@ahmadnassri.com",
-    "url": "https://www.ahmadnassri.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/har-validator",
-    "licenseFile": "node_modules/notebookjs/node_modules/har-validator/LICENSE"
   },
   "har-validator@5.1.3": {
     "licenses": "MIT",
@@ -2357,16 +2266,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hash.js",
     "licenseFile": "node_modules/hash.js/README.md"
   },
-  "hawk@6.0.2": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/hueniverse/hawk",
-    "publisher": "Eran Hammer",
-    "email": "eran@hammer.io",
-    "url": "http://hueniverse.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/hawk",
-    "licenseFile": "node_modules/notebookjs/node_modules/hawk/LICENSE"
-  },
-  "highlight.js@9.15.10": {
+  "highlight.js@9.18.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/highlightjs/highlight.js",
     "publisher": "Ivan Sagalaev",
@@ -2374,7 +2274,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/highlight.js",
     "licenseFile": "node_modules/highlight.js/LICENSE"
   },
-  "highlightjs-solidity@1.0.6": {
+  "highlightjs-solidity@1.0.11": {
     "licenses": "MIT",
     "repository": "https://github.com/pospi/highlightjs-solidity",
     "publisher": "pospi",
@@ -2389,21 +2289,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hmac-drbg",
     "licenseFile": "node_modules/hmac-drbg/README.md"
   },
-  "hoek@4.2.1": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/hapijs/hoek",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/hoek",
-    "licenseFile": "node_modules/notebookjs/node_modules/hoek/LICENSE"
-  },
   "hoist-non-react-statics@2.5.5": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/mridgway/hoist-non-react-statics",
-    "publisher": "Michael Ridgway",
-    "email": "mcridgway@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/redux-form/node_modules/hoist-non-react-statics",
-    "licenseFile": "node_modules/redux-form/node_modules/hoist-non-react-statics/LICENSE.md"
-  },
-  "hoist-non-react-statics@3.2.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/mridgway/hoist-non-react-statics",
     "publisher": "Michael Ridgway",
@@ -2411,16 +2297,32 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hoist-non-react-statics",
     "licenseFile": "node_modules/hoist-non-react-statics/LICENSE.md"
   },
-  "html-encoding-sniffer@1.0.2": {
+  "hoist-non-react-statics@3.3.2": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/mridgway/hoist-non-react-statics",
+    "publisher": "Michael Ridgway",
+    "email": "mcridgway@gmail.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-redux/node_modules/hoist-non-react-statics",
+    "licenseFile": "node_modules/react-redux/node_modules/hoist-non-react-statics/LICENSE.md"
+  },
+  "homedir-polyfill@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/doowb/homedir-polyfill",
+    "publisher": "Brian Woodward",
+    "url": "https://github.com/doowb",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/homedir-polyfill",
+    "licenseFile": "node_modules/homedir-polyfill/LICENSE"
+  },
+  "html-encoding-sniffer@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jsdom/html-encoding-sniffer",
     "publisher": "Domenic Denicola",
     "email": "d@domenic.me",
     "url": "https://domenic.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/html-encoding-sniffer",
-    "licenseFile": "node_modules/notebookjs/node_modules/html-encoding-sniffer/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/html-encoding-sniffer",
+    "licenseFile": "node_modules/html-encoding-sniffer/LICENSE.txt"
   },
-  "http-errors@1.6.3": {
+  "http-errors@1.7.3": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/http-errors",
     "publisher": "Jonathan Ong",
@@ -2454,7 +2356,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/https-browserify",
     "licenseFile": "node_modules/https-browserify/LICENSE"
   },
-  "https-proxy-agent@2.2.1": {
+  "https-proxy-agent@3.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-https-proxy-agent",
     "publisher": "Nathan Rajlich",
@@ -2470,15 +2372,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/human-readable-time",
     "licenseFile": "node_modules/human-readable-time/license"
   },
-  "hyphenate-style-name@1.0.2": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/rexxars/hyphenate-style-name",
-    "publisher": "Espen Hovlandsdal",
-    "email": "espen@hovlandsdal.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/hyphenate-style-name",
-    "licenseFile": "node_modules/hyphenate-style-name/LICENSE"
-  },
-  "iconv-lite@0.4.18": {
+  "iconv-lite@0.4.24": {
     "licenses": "MIT",
     "repository": "https://github.com/ashtuchkin/iconv-lite",
     "publisher": "Alexander Shtuchkin",
@@ -2486,39 +2380,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/iconv-lite",
     "licenseFile": "node_modules/iconv-lite/LICENSE"
   },
-  "iconv-lite@0.4.19": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ashtuchkin/iconv-lite",
-    "publisher": "Alexander Shtuchkin",
-    "email": "ashtuchkin@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/iconv-lite",
-    "licenseFile": "node_modules/notebookjs/node_modules/iconv-lite/LICENSE"
-  },
-  "iconv-lite@0.4.21": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ashtuchkin/iconv-lite",
-    "publisher": "Alexander Shtuchkin",
-    "email": "ashtuchkin@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/iconv-lite",
-    "licenseFile": "node_modules/fsevents/node_modules/iconv-lite/LICENSE"
-  },
-  "iconv-lite@0.4.23": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ashtuchkin/iconv-lite",
-    "publisher": "Alexander Shtuchkin",
-    "email": "ashtuchkin@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/raw-body/node_modules/iconv-lite",
-    "licenseFile": "node_modules/raw-body/node_modules/iconv-lite/LICENSE"
-  },
-  "iconv-lite@0.4.24": {
-    "licenses": "MIT",
-    "repository": "https://github.com/ashtuchkin/iconv-lite",
-    "publisher": "Alexander Shtuchkin",
-    "email": "ashtuchkin@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/external-editor/node_modules/iconv-lite",
-    "licenseFile": "node_modules/external-editor/node_modules/iconv-lite/LICENSE"
-  },
-  "ieee754@1.1.12": {
+  "ieee754@1.1.13": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/feross/ieee754",
     "publisher": "Feross Aboukhadijeh",
@@ -2534,7 +2396,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/iferr",
     "licenseFile": "node_modules/iferr/LICENSE"
   },
-  "ignore-walk@3.0.1": {
+  "ignore-walk@3.0.3": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/ignore-walk",
     "publisher": "Isaac Z. Schlueter",
@@ -2550,12 +2412,21 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ignore",
     "licenseFile": "node_modules/ignore/LICENSE-MIT"
   },
-  "image-downloader@3.4.2": {
+  "image-downloader@3.5.0": {
     "licenses": "MIT",
     "repository": "git+https://gitlab.com/demsking/image-downloader",
     "publisher": "Sébastien Demanou",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/image-downloader",
     "licenseFile": "node_modules/image-downloader/LICENSE"
+  },
+  "import-fresh@3.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/import-fresh",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-fresh",
+    "licenseFile": "node_modules/import-fresh/license"
   },
   "import-local@2.0.0": {
     "licenses": "MIT",
@@ -2575,10 +2446,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/imurmurhash",
     "licenseFile": "node_modules/imurmurhash/README.md"
   },
-  "indexof@0.0.1": {
-    "licenses": "MIT*",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/indexof",
-    "licenseFile": "node_modules/indexof/Readme.md"
+  "infer-owner@1.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/infer-owner",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "https://izs.me",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/infer-owner",
+    "licenseFile": "node_modules/infer-owner/LICENSE"
   },
   "inflight@1.0.6": {
     "licenses": "ISC",
@@ -2598,10 +2473,16 @@
   "inherits@2.0.3": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/inherits",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/util/node_modules/inherits",
+    "licenseFile": "node_modules/util/node_modules/inherits/LICENSE"
+  },
+  "inherits@2.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/inherits",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inherits",
     "licenseFile": "node_modules/inherits/LICENSE"
   },
-  "ini@1.3.4": {
+  "ini@1.3.5": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/ini",
     "publisher": "Isaac Z. Schlueter",
@@ -2610,35 +2491,20 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ini",
     "licenseFile": "node_modules/ini/LICENSE"
   },
-  "ini@1.3.5": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/ini",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/ini",
-    "licenseFile": "node_modules/fsevents/node_modules/ini/LICENSE"
-  },
-  "inline-style-prefixer@3.0.8": {
-    "licenses": "MIT",
-    "repository": "https://github.com/rofrischmann/inline-style-prefixer",
-    "publisher": "Robin Frischmann",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inline-style-prefixer",
-    "licenseFile": "node_modules/inline-style-prefixer/LICENSE"
-  },
-  "inquirer@6.2.1": {
+  "inquirer@6.5.2": {
     "licenses": "MIT",
     "repository": "https://github.com/SBoudrias/Inquirer.js",
     "publisher": "Simon Boudrias",
     "email": "admin@simonboudrias.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer",
-    "licenseFile": "node_modules/inquirer/README.md"
+    "licenseFile": "node_modules/inquirer/LICENSE"
   },
-  "interpret@1.1.0": {
+  "interpret@1.2.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/tkellen/node-interpret",
-    "publisher": "Tyler Kellen",
-    "url": "http://goingslowly.com/",
+    "repository": "https://github.com/gulpjs/interpret",
+    "publisher": "Gulp Team",
+    "email": "team@gulpjs.com",
+    "url": "http://gulpjs.com/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/interpret",
     "licenseFile": "node_modules/interpret/LICENSE"
   },
@@ -2647,8 +2513,8 @@
     "repository": "https://github.com/zertosh/invariant",
     "publisher": "Andres Suarez",
     "email": "zertosh@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-bootstrap/node_modules/invariant",
-    "licenseFile": "node_modules/react-bootstrap/node_modules/invariant/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/invariant",
+    "licenseFile": "node_modules/invariant/LICENSE"
   },
   "invert-kv@1.0.0": {
     "licenses": "MIT",
@@ -2665,8 +2531,17 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/os-locale/node_modules/invert-kv",
-    "licenseFile": "node_modules/os-locale/node_modules/invert-kv/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/invert-kv",
+    "licenseFile": "node_modules/yargs/node_modules/invert-kv/license"
+  },
+  "ip-regex@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/ip-regex",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ip-regex",
+    "licenseFile": "node_modules/ip-regex/license"
   },
   "ip@1.1.5": {
     "licenses": "MIT",
@@ -2681,16 +2556,16 @@
     "repository": "https://github.com/jonschlinkert/is-accessor-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-accessor-descriptor",
-    "licenseFile": "node_modules/is-accessor-descriptor/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/define-property/node_modules/is-accessor-descriptor",
+    "licenseFile": "node_modules/define-property/node_modules/is-accessor-descriptor/LICENSE"
   },
   "is-accessor-descriptor@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/is-accessor-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base/node_modules/is-accessor-descriptor",
-    "licenseFile": "node_modules/base/node_modules/is-accessor-descriptor/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-accessor-descriptor",
+    "licenseFile": "node_modules/is-accessor-descriptor/LICENSE"
   },
   "is-binary-path@1.0.1": {
     "licenses": "MIT",
@@ -2715,32 +2590,32 @@
     "repository": "https://github.com/jonschlinkert/is-data-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-data-descriptor",
-    "licenseFile": "node_modules/is-data-descriptor/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/define-property/node_modules/is-data-descriptor",
+    "licenseFile": "node_modules/define-property/node_modules/is-data-descriptor/LICENSE"
   },
   "is-data-descriptor@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/is-data-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base/node_modules/is-data-descriptor",
-    "licenseFile": "node_modules/base/node_modules/is-data-descriptor/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-data-descriptor",
+    "licenseFile": "node_modules/is-data-descriptor/LICENSE"
   },
   "is-descriptor@0.1.6": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/is-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-descriptor",
-    "licenseFile": "node_modules/is-descriptor/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/define-property/node_modules/is-descriptor",
+    "licenseFile": "node_modules/define-property/node_modules/is-descriptor/LICENSE"
   },
   "is-descriptor@1.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/is-descriptor",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/base/node_modules/is-descriptor",
-    "licenseFile": "node_modules/base/node_modules/is-descriptor/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-descriptor",
+    "licenseFile": "node_modules/is-descriptor/LICENSE"
   },
   "is-extendable@0.1.1": {
     "licenses": "MIT",
@@ -2755,8 +2630,8 @@
     "repository": "https://github.com/jonschlinkert/is-extendable",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/extend-shallow/node_modules/is-extendable",
-    "licenseFile": "node_modules/extend-shallow/node_modules/is-extendable/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/split-string/node_modules/is-extendable",
+    "licenseFile": "node_modules/split-string/node_modules/is-extendable/LICENSE"
   },
   "is-extglob@2.1.1": {
     "licenses": "MIT",
@@ -2772,8 +2647,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-fullwidth-code-point",
-    "licenseFile": "node_modules/is-fullwidth-code-point/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/string-width/node_modules/is-fullwidth-code-point",
+    "licenseFile": "node_modules/string-width/node_modules/is-fullwidth-code-point/license"
   },
   "is-fullwidth-code-point@2.0.0": {
     "licenses": "MIT",
@@ -2781,8 +2656,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/is-fullwidth-code-point",
-    "licenseFile": "node_modules/yargs/node_modules/is-fullwidth-code-point/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-fullwidth-code-point",
+    "licenseFile": "node_modules/is-fullwidth-code-point/license"
   },
   "is-glob@3.1.0": {
     "licenses": "MIT",
@@ -2792,9 +2667,9 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/glob-parent/node_modules/is-glob",
     "licenseFile": "node_modules/glob-parent/node_modules/is-glob/LICENSE"
   },
-  "is-glob@4.0.0": {
+  "is-glob@4.0.1": {
     "licenses": "MIT",
-    "repository": "https://github.com/jonschlinkert/is-glob",
+    "repository": "https://github.com/micromatch/is-glob",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-glob",
@@ -2824,6 +2699,14 @@
     "url": "https://github.com/jonschlinkert",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-plain-object",
     "licenseFile": "node_modules/is-plain-object/LICENSE"
+  },
+  "is-potential-custom-element-name@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/mathiasbynens/is-potential-custom-element-name",
+    "publisher": "Mathias Bynens",
+    "url": "https://mathiasbynens.be/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-potential-custom-element-name",
+    "licenseFile": "node_modules/is-potential-custom-element-name/LICENSE-MIT.txt"
   },
   "is-promise@2.1.0": {
     "licenses": "MIT",
@@ -2858,14 +2741,23 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-windows",
     "licenseFile": "node_modules/is-windows/LICENSE"
   },
+  "is-wsl@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/is-wsl",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-wsl",
+    "licenseFile": "node_modules/is-wsl/license"
+  },
   "isarray@0.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/juliangruber/isarray",
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/isarray",
-    "licenseFile": "node_modules/isarray/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ftp/node_modules/isarray",
+    "licenseFile": "node_modules/ftp/node_modules/isarray/README.md"
   },
   "isarray@1.0.0": {
     "licenses": "MIT",
@@ -2873,8 +2765,8 @@
     "publisher": "Julian Gruber",
     "email": "mail@juliangruber.com",
     "url": "http://juliangruber.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-uri/node_modules/isarray",
-    "licenseFile": "node_modules/get-uri/node_modules/isarray/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/isarray",
+    "licenseFile": "node_modules/isarray/README.md"
   },
   "isexe@2.0.0": {
     "licenses": "ISC",
@@ -2917,27 +2809,20 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/isstream",
     "licenseFile": "node_modules/isstream/LICENSE.md"
   },
-  "js-tokens@3.0.2": {
+  "js-tokens@4.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/lydell/js-tokens",
     "publisher": "Simon Lydell",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/js-tokens",
     "licenseFile": "node_modules/js-tokens/LICENSE"
   },
-  "js-tokens@4.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/lydell/js-tokens",
-    "publisher": "Simon Lydell",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight/node_modules/js-tokens",
-    "licenseFile": "node_modules/@babel/highlight/node_modules/js-tokens/LICENSE"
-  },
-  "js-yaml@3.12.0": {
+  "js-yaml@3.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/nodeca/js-yaml",
     "publisher": "Vladimir Zapparov",
     "email": "dervus.grim@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/js-yaml",
-    "licenseFile": "node_modules/electron-updater/node_modules/js-yaml/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/js-yaml",
+    "licenseFile": "node_modules/js-yaml/LICENSE"
   },
   "jsbn@0.1.1": {
     "licenses": "MIT",
@@ -2946,11 +2831,11 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsbn",
     "licenseFile": "node_modules/jsbn/LICENSE"
   },
-  "jsdom@11.6.2": {
+  "jsdom@16.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jsdom/jsdom",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/jsdom",
-    "licenseFile": "node_modules/notebookjs/node_modules/jsdom/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsdom",
+    "licenseFile": "node_modules/jsdom/LICENSE.txt"
   },
   "jsesc@2.5.2": {
     "licenses": "MIT",
@@ -2965,22 +2850,15 @@
     "repository": "https://github.com/zkat/json-parse-better-errors",
     "publisher": "Kat Marchán",
     "email": "kzm@zkat.tech",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/json-parse-better-errors",
-    "licenseFile": "node_modules/webpack/node_modules/json-parse-better-errors/LICENSE.md"
-  },
-  "json-schema-traverse@0.3.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/epoberezkin/json-schema-traverse",
-    "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/json-schema-traverse",
-    "licenseFile": "node_modules/notebookjs/node_modules/json-schema-traverse/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/json-parse-better-errors",
+    "licenseFile": "node_modules/json-parse-better-errors/LICENSE.md"
   },
   "json-schema-traverse@0.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/epoberezkin/json-schema-traverse",
     "publisher": "Evgeny Poberezkin",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ajv/node_modules/json-schema-traverse",
-    "licenseFile": "node_modules/ajv/node_modules/json-schema-traverse/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/json-schema-traverse",
+    "licenseFile": "node_modules/json-schema-traverse/LICENSE"
   },
   "json-schema@0.2.3": {
     "licenses": [
@@ -3010,9 +2888,9 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/json-stringify-safe",
     "licenseFile": "node_modules/json-stringify-safe/LICENSE"
   },
-  "json5@0.5.1": {
+  "json5@1.0.1": {
     "licenses": "MIT",
-    "repository": "https://github.com/aseemk/json5",
+    "repository": "https://github.com/json5/json5",
     "publisher": "Aseem Kishore",
     "email": "aseem.kishore@gmail.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/json5",
@@ -3038,7 +2916,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/katex",
     "licenseFile": "node_modules/katex/LICENSE.txt"
   },
-  "keyboardevent-from-electron-accelerator@1.1.0": {
+  "keyboardevent-from-electron-accelerator@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/parro-it/keyboardevent-from-electron-accelerator",
     "publisher": "Andrea",
@@ -3083,10 +2961,10 @@
     "repository": "https://github.com/jonschlinkert/kind-of",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-descriptor/node_modules/kind-of",
-    "licenseFile": "node_modules/is-descriptor/node_modules/kind-of/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/define-property/node_modules/kind-of",
+    "licenseFile": "node_modules/define-property/node_modules/kind-of/LICENSE"
   },
-  "kind-of@6.0.2": {
+  "kind-of@6.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/kind-of",
     "publisher": "Jon Schlinkert",
@@ -3094,9 +2972,9 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/kind-of",
     "licenseFile": "node_modules/kind-of/LICENSE"
   },
-  "lazy-val@1.0.3": {
+  "lazy-val@1.0.4": {
     "licenses": "MIT",
-    "repository": "https://github.com/develar/read-config-file",
+    "repository": "https://github.com/develar/lazy-val",
     "publisher": "Vladimir Krivosheev",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lazy-val",
     "licenseFile": "node_modules/lazy-val/readme.md"
@@ -3116,38 +2994,38 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/os-locale/node_modules/lcid",
-    "licenseFile": "node_modules/os-locale/node_modules/lcid/license"
-  },
-  "left-pad@1.2.0": {
-    "licenses": "WTFPL",
-    "repository": "https://github.com/stevemao/left-pad",
-    "publisher": "azer",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/left-pad",
-    "licenseFile": "node_modules/notebookjs/node_modules/left-pad/COPYING"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/lcid",
+    "licenseFile": "node_modules/yargs/node_modules/lcid/license"
   },
   "levn@0.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/gkz/levn",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/levn",
-    "licenseFile": "node_modules/notebookjs/node_modules/levn/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/levn",
+    "licenseFile": "node_modules/levn/LICENSE"
   },
-  "linkify-it@2.1.0": {
+  "linkify-it@2.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/markdown-it/linkify-it",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/linkify-it",
     "licenseFile": "node_modules/linkify-it/LICENSE"
   },
-  "loader-runner@2.3.1": {
+  "loader-runner@2.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/loader-runner",
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/loader-runner",
     "licenseFile": "node_modules/loader-runner/LICENSE"
   },
-  "loader-utils@1.1.0": {
+  "loader-utils@1.2.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/webpack/loader-utils",
+    "publisher": "Tobias Koppers @sokra",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-cli/node_modules/loader-utils",
+    "licenseFile": "node_modules/webpack-cli/node_modules/loader-utils/LICENSE"
+  },
+  "loader-utils@1.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/loader-utils",
     "publisher": "Tobias Koppers @sokra",
@@ -3163,14 +3041,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/locate-path",
     "licenseFile": "node_modules/import-local/node_modules/locate-path/license"
   },
-  "lodash-es@4.17.11": {
+  "lodash-es@4.17.15": {
     "licenses": "MIT",
     "repository": "https://github.com/lodash/lodash",
     "publisher": "John-David Dalton",
     "email": "john.david.dalton@gmail.com",
-    "url": "http://allyoucanleet.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/redux-form/node_modules/lodash-es",
-    "licenseFile": "node_modules/redux-form/node_modules/lodash-es/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lodash-es",
+    "licenseFile": "node_modules/lodash-es/LICENSE"
   },
   "lodash.debounce@4.0.8": {
     "licenses": "MIT",
@@ -3196,37 +3073,18 @@
     "publisher": "John-David Dalton",
     "email": "john.david.dalton@gmail.com",
     "url": "http://allyoucanleet.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/lodash.sortby",
-    "licenseFile": "node_modules/notebookjs/node_modules/lodash.sortby/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lodash.sortby",
+    "licenseFile": "node_modules/lodash.sortby/LICENSE"
   },
-  "lodash@4.17.10": {
+  "lodash@4.17.15": {
     "licenses": "MIT",
     "repository": "https://github.com/lodash/lodash",
     "publisher": "John-David Dalton",
     "email": "john.david.dalton@gmail.com",
-    "url": "http://allyoucanleet.com/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lodash",
     "licenseFile": "node_modules/lodash/LICENSE"
   },
-  "lodash@4.17.11": {
-    "licenses": "MIT",
-    "repository": "https://github.com/lodash/lodash",
-    "publisher": "John-David Dalton",
-    "email": "john.david.dalton@gmail.com",
-    "url": "http://allyoucanleet.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/types/node_modules/lodash",
-    "licenseFile": "node_modules/@babel/types/node_modules/lodash/LICENSE"
-  },
-  "lodash@4.17.5": {
-    "licenses": "MIT",
-    "repository": "https://github.com/lodash/lodash",
-    "publisher": "John-David Dalton",
-    "email": "john.david.dalton@gmail.com",
-    "url": "http://allyoucanleet.com/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/lodash",
-    "licenseFile": "node_modules/notebookjs/node_modules/lodash/LICENSE"
-  },
-  "loose-envify@1.3.1": {
+  "loose-envify@1.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/zertosh/loose-envify",
     "publisher": "Andres Suarez",
@@ -3234,15 +3092,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/loose-envify",
     "licenseFile": "node_modules/loose-envify/LICENSE"
   },
-  "loose-envify@1.4.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/zertosh/loose-envify",
-    "publisher": "Andres Suarez",
-    "email": "zertosh@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-transition-group/node_modules/loose-envify",
-    "licenseFile": "node_modules/react-transition-group/node_modules/loose-envify/LICENSE"
-  },
-  "lru-cache@4.1.5": {
+  "lru-cache@5.1.1": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/node-lru-cache",
     "publisher": "Isaac Z. Schlueter",
@@ -3250,14 +3100,19 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lru-cache",
     "licenseFile": "node_modules/lru-cache/LICENSE"
   },
-  "make-dir@1.3.0": {
+  "make-dir@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/make-dir",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/make-dir",
-    "licenseFile": "node_modules/make-dir/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/terser-webpack-plugin/node_modules/make-dir",
+    "licenseFile": "node_modules/terser-webpack-plugin/node_modules/make-dir/license"
+  },
+  "mamacro@0.0.3": {
+    "licenses": "MIT",
+    "publisher": "Sven Sauleau",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mamacro"
   },
   "map-age-cleaner@0.1.3": {
     "licenses": "MIT",
@@ -3304,12 +3159,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/markdown-it",
     "licenseFile": "node_modules/markdown-it/LICENSE"
   },
-  "marked@0.3.17": {
+  "marked@0.8.1": {
     "licenses": "MIT",
     "repository": "https://github.com/markedjs/marked",
     "publisher": "Christopher Jeffrey",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/marked",
-    "licenseFile": "node_modules/notebookjs/node_modules/marked/LICENSE.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/marked",
+    "licenseFile": "node_modules/marked/LICENSE.md"
   },
   "match-at@0.1.1": {
     "licenses": "MIT*",
@@ -3332,7 +3187,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mdurl",
     "licenseFile": "node_modules/mdurl/LICENSE"
   },
-  "mem@4.0.0": {
+  "mem@4.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/mem",
     "publisher": "Sindre Sorhus",
@@ -3347,6 +3202,13 @@
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/memory-fs",
     "licenseFile": "node_modules/memory-fs/README.md"
+  },
+  "memory-fs@0.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/webpack/memory-fs",
+    "publisher": "Tobias Koppers @sokra",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack/node_modules/enhanced-resolve/node_modules/memory-fs",
+    "licenseFile": "node_modules/webpack/node_modules/enhanced-resolve/node_modules/memory-fs/LICENSE"
   },
   "micromatch@3.1.10": {
     "licenses": "MIT",
@@ -3364,31 +3226,28 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/miller-rabin",
     "licenseFile": "node_modules/miller-rabin/README.md"
   },
-  "mime-db@1.33.0": {
+  "mime-db@1.43.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-db",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/mime-db",
-    "licenseFile": "node_modules/notebookjs/node_modules/mime-db/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mime-db",
+    "licenseFile": "node_modules/mime-db/LICENSE"
   },
-  "mime-db@1.37.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jshttp/mime-db",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ext-list/node_modules/mime-db",
-    "licenseFile": "node_modules/ext-list/node_modules/mime-db/LICENSE"
-  },
-  "mime-types@2.1.18": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jshttp/mime-types",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/mime-types",
-    "licenseFile": "node_modules/notebookjs/node_modules/mime-types/LICENSE"
-  },
-  "mime-types@2.1.21": {
+  "mime-types@2.1.26": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-types",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mime-types",
     "licenseFile": "node_modules/mime-types/LICENSE"
   },
   "mimic-fn@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/mimic-fn",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/onetime/node_modules/mimic-fn",
+    "licenseFile": "node_modules/onetime/node_modules/mimic-fn/license"
+  },
+  "mimic-fn@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/mimic-fn",
     "publisher": "Sindre Sorhus",
@@ -3420,7 +3279,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/minimatch",
     "licenseFile": "node_modules/minimatch/LICENSE"
   },
-  "minimist@0.0.8": {
+  "minimist@1.2.5": {
     "licenses": "MIT",
     "repository": "https://github.com/substack/minimist",
     "publisher": "James Halliday",
@@ -3429,25 +3288,16 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/minimist",
     "licenseFile": "node_modules/minimist/LICENSE"
   },
-  "minimist@1.2.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/substack/minimist",
-    "publisher": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/rc/node_modules/minimist",
-    "licenseFile": "node_modules/fsevents/node_modules/rc/node_modules/minimist/LICENSE"
-  },
-  "minipass@2.2.4": {
+  "minipass@2.9.0": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/minipass",
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/minipass",
-    "licenseFile": "node_modules/fsevents/node_modules/minipass/README.md"
+    "licenseFile": "node_modules/fsevents/node_modules/minipass/LICENSE"
   },
-  "minizlib@1.1.0": {
+  "minizlib@1.3.3": {
     "licenses": "MIT",
     "repository": "https://github.com/isaacs/minizlib",
     "publisher": "Isaac Z. Schlueter",
@@ -3463,7 +3313,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mississippi",
     "licenseFile": "node_modules/mississippi/license"
   },
-  "mixin-deep@1.3.1": {
+  "mixin-deep@1.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/mixin-deep",
     "publisher": "Jon Schlinkert",
@@ -3471,7 +3321,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mixin-deep",
     "licenseFile": "node_modules/mixin-deep/LICENSE"
   },
-  "mkdirp@0.5.1": {
+  "mkdirp@0.5.3": {
     "licenses": "MIT",
     "repository": "https://github.com/substack/node-mkdirp",
     "publisher": "James Halliday",
@@ -3489,7 +3339,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/modify-filename",
     "licenseFile": "node_modules/modify-filename/license"
   },
-  "moment@2.22.2": {
+  "moment@2.24.0": {
     "licenses": "MIT",
     "repository": "https://github.com/moment/moment",
     "publisher": "Iskren Ivov Chernev",
@@ -3513,7 +3363,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ms",
     "licenseFile": "node_modules/ms/license.md"
   },
-  "ms@2.1.1": {
+  "ms@2.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/zeit/ms",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/traverse/node_modules/ms",
@@ -3528,7 +3378,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mute-stream",
     "licenseFile": "node_modules/mute-stream/LICENSE"
   },
-  "nan@2.11.1": {
+  "nan@2.14.0": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/nan",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nan",
@@ -3558,7 +3408,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf",
     "licenseFile": "node_modules/nconf/LICENSE"
   },
-  "needle@2.2.0": {
+  "needle@2.3.3": {
     "licenses": "MIT",
     "repository": "https://github.com/tomas/needle",
     "publisher": "Tomás Pollak",
@@ -3566,7 +3416,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/needle",
     "licenseFile": "node_modules/fsevents/node_modules/needle/license.txt"
   },
-  "neo-async@2.6.0": {
+  "neo-async@2.6.1": {
     "licenses": "MIT",
     "repository": "https://github.com/suguru03/neo-async",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/neo-async",
@@ -3586,21 +3436,21 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nice-try",
     "licenseFile": "node_modules/nice-try/LICENSE"
   },
-  "node-fetch@1.7.1": {
+  "node-fetch@1.7.3": {
     "licenses": "MIT",
     "repository": "https://github.com/bitinn/node-fetch",
     "publisher": "David Frank",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/node-fetch",
     "licenseFile": "node_modules/node-fetch/LICENSE.md"
   },
-  "node-libs-browser@2.1.0": {
+  "node-libs-browser@2.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/node-libs-browser",
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/node-libs-browser",
     "licenseFile": "node_modules/node-libs-browser/LICENSE"
   },
-  "node-pre-gyp@0.10.0": {
+  "node-pre-gyp@0.14.0": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/mapbox/node-pre-gyp",
     "publisher": "Dane Springmeyer",
@@ -3608,7 +3458,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/node-pre-gyp",
     "licenseFile": "node_modules/fsevents/node_modules/node-pre-gyp/LICENSE"
   },
-  "nopt@4.0.1": {
+  "nopt@4.0.3": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/nopt",
     "publisher": "Isaac Z. Schlueter",
@@ -3618,6 +3468,14 @@
     "licenseFile": "node_modules/fsevents/node_modules/nopt/LICENSE"
   },
   "normalize-path@2.1.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jonschlinkert/normalize-path",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/anymatch/node_modules/normalize-path",
+    "licenseFile": "node_modules/anymatch/node_modules/normalize-path/LICENSE"
+  },
+  "normalize-path@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/normalize-path",
     "publisher": "Jon Schlinkert",
@@ -3633,16 +3491,25 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs",
     "licenseFile": "node_modules/notebookjs/LICENSE.txt"
   },
-  "npm-bundled@1.0.3": {
+  "npm-bundled@1.1.1": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/npm-bundled",
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/npm-bundled",
-    "licenseFile": "node_modules/fsevents/node_modules/npm-bundled/README.md"
+    "licenseFile": "node_modules/fsevents/node_modules/npm-bundled/LICENSE"
   },
-  "npm-packlist@1.1.10": {
+  "npm-normalize-package-bin@1.0.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/npm-normalize-package-bin",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "https://izs.me",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/npm-normalize-package-bin",
+    "licenseFile": "node_modules/fsevents/node_modules/npm-normalize-package-bin/LICENSE"
+  },
+  "npm-packlist@1.4.8": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/npm-packlist",
     "publisher": "Isaac Z. Schlueter",
@@ -3678,23 +3545,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/number-is-nan",
     "licenseFile": "node_modules/number-is-nan/license"
   },
-  "nwmatcher@1.4.3": {
+  "nwsapi@2.2.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/dperini/nwmatcher",
+    "repository": "https://github.com/dperini/nwsapi",
     "publisher": "Diego Perini",
     "email": "diego.perini@gmail.com",
     "url": "http://www.iport.it/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/nwmatcher",
-    "licenseFile": "node_modules/notebookjs/node_modules/nwmatcher/LICENSE"
-  },
-  "oauth-sign@0.8.2": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/mikeal/oauth-sign",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "url": "http://www.futurealoof.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/oauth-sign",
-    "licenseFile": "node_modules/notebookjs/node_modules/oauth-sign/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nwsapi",
+    "licenseFile": "node_modules/nwsapi/LICENSE"
   },
   "oauth-sign@0.9.0": {
     "licenses": "Apache-2.0",
@@ -3756,13 +3614,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/onetime",
     "licenseFile": "node_modules/onetime/license"
   },
-  "optionator@0.8.2": {
+  "optionator@0.8.3": {
     "licenses": "MIT",
     "repository": "https://github.com/gkz/optionator",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/optionator",
-    "licenseFile": "node_modules/notebookjs/node_modules/optionator/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/optionator",
+    "licenseFile": "node_modules/optionator/LICENSE"
   },
   "os-browserify@0.3.0": {
     "licenses": "MIT",
@@ -3787,17 +3645,17 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/os-locale",
-    "licenseFile": "node_modules/nconf/node_modules/os-locale/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/os-locale",
+    "licenseFile": "node_modules/os-locale/license"
   },
-  "os-locale@3.0.1": {
+  "os-locale@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/os-locale",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/os-locale",
-    "licenseFile": "node_modules/os-locale/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/os-locale",
+    "licenseFile": "node_modules/yargs/node_modules/os-locale/license"
   },
   "os-tmpdir@1.0.2": {
     "licenses": "MIT",
@@ -3835,7 +3693,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/p-finally",
     "licenseFile": "node_modules/p-finally/license"
   },
-  "p-is-promise@1.1.0": {
+  "p-is-promise@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/p-is-promise",
     "publisher": "Sindre Sorhus",
@@ -3844,14 +3702,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/p-is-promise",
     "licenseFile": "node_modules/p-is-promise/license"
   },
-  "p-limit@2.0.0": {
+  "p-limit@2.2.2": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/p-limit",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/p-limit",
-    "licenseFile": "node_modules/import-local/node_modules/p-limit/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/p-limit",
+    "licenseFile": "node_modules/p-limit/license"
   },
   "p-locate@3.0.0": {
     "licenses": "MIT",
@@ -3862,16 +3720,16 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/p-locate",
     "licenseFile": "node_modules/import-local/node_modules/p-locate/license"
   },
-  "p-try@2.0.0": {
+  "p-try@2.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/p-try",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/p-try",
-    "licenseFile": "node_modules/import-local/node_modules/p-try/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/p-try",
+    "licenseFile": "node_modules/p-try/license"
   },
-  "pac-proxy-agent@3.0.0": {
+  "pac-proxy-agent@3.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-pac-proxy-agent",
     "publisher": "Nathan Rajlich",
@@ -3889,13 +3747,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/pac-resolver",
     "licenseFile": "node_modules/pac-resolver/README.md"
   },
-  "pako@1.0.7": {
+  "pako@1.0.11": {
     "licenses": "(MIT AND Zlib)",
     "repository": "https://github.com/nodeca/pako",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/pako",
     "licenseFile": "node_modules/pako/LICENSE"
   },
-  "parallel-transform@1.1.0": {
+  "parallel-transform@1.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/parallel-transform",
     "publisher": "Mathias Buus Madsen",
@@ -3903,20 +3761,37 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/parallel-transform",
     "licenseFile": "node_modules/parallel-transform/LICENSE"
   },
-  "parse-asn1@5.1.1": {
+  "parent-module@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/parent-module",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/parent-module",
+    "licenseFile": "node_modules/parent-module/license"
+  },
+  "parse-asn1@5.1.5": {
     "licenses": "ISC",
     "repository": "https://github.com/crypto-browserify/parse-asn1",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/parse-asn1",
     "licenseFile": "node_modules/parse-asn1/LICENSE"
   },
-  "parse5@4.0.0": {
+  "parse-passwd@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/doowb/parse-passwd",
+    "publisher": "Brian Woodward",
+    "url": "https://github.com/doowb",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/parse-passwd",
+    "licenseFile": "node_modules/parse-passwd/LICENSE"
+  },
+  "parse5@5.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/inikulin/parse5",
     "publisher": "Ivan Nikulin",
     "email": "ifaaan@gmail.com",
     "url": "https://github.com/inikulin",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/parse5",
-    "licenseFile": "node_modules/notebookjs/node_modules/parse5/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/parse5",
+    "licenseFile": "node_modules/parse5/LICENSE"
   },
   "pascalcase@0.1.1": {
     "licenses": "MIT",
@@ -3926,7 +3801,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/pascalcase",
     "licenseFile": "node_modules/pascalcase/LICENSE"
   },
-  "path-browserify@0.0.0": {
+  "path-browserify@0.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/substack/path-browserify",
     "publisher": "James Halliday",
@@ -3978,6 +3853,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/path-key",
     "licenseFile": "node_modules/path-key/license"
   },
+  "path-parse@1.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jbgutierrez/path-parse",
+    "publisher": "Javier Blanco",
+    "email": "http://jbgutierrez.info",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/path-parse",
+    "licenseFile": "node_modules/path-parse/LICENSE"
+  },
   "pbkdf2@3.0.17": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/pbkdf2",
@@ -3993,14 +3876,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/performance-now",
     "licenseFile": "node_modules/performance-now/license.txt"
   },
-  "pify@3.0.0": {
+  "pify@4.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/pify",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/make-dir/node_modules/pify",
-    "licenseFile": "node_modules/make-dir/node_modules/pify/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/terser-webpack-plugin/node_modules/pify",
+    "licenseFile": "node_modules/terser-webpack-plugin/node_modules/pify/license"
   },
   "pkg-dir@3.0.0": {
     "licenses": "MIT",
@@ -4010,22 +3893,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/import-local/node_modules/pkg-dir",
     "licenseFile": "node_modules/import-local/node_modules/pkg-dir/license"
-  },
-  "pluralize@7.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/blakeembrey/pluralize",
-    "publisher": "Blake Embrey",
-    "email": "hello@blakeembrey.com",
-    "url": "http://blakeembrey.me",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/pluralize",
-    "licenseFile": "node_modules/pluralize/LICENSE"
-  },
-  "pn@1.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/cscott/node-pn",
-    "publisher": "C. Scott Ananian",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/pn",
-    "licenseFile": "node_modules/notebookjs/node_modules/pn/README.md"
   },
   "posix-character-classes@0.1.1": {
     "licenses": "MIT",
@@ -4040,27 +3907,21 @@
     "repository": "https://github.com/gkz/prelude-ls",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/prelude-ls",
-    "licenseFile": "node_modules/notebookjs/node_modules/prelude-ls/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/prelude-ls",
+    "licenseFile": "node_modules/prelude-ls/LICENSE"
   },
-  "prismjs@1.15.0": {
+  "prismjs@1.19.0": {
     "licenses": "MIT",
     "repository": "https://github.com/LeaVerou/prism",
     "publisher": "Lea Verou",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/prismjs",
     "licenseFile": "node_modules/prismjs/LICENSE"
   },
-  "process-nextick-args@1.0.7": {
+  "process-nextick-args@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/calvinmetcalf/process-nextick-args",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/process-nextick-args",
     "licenseFile": "node_modules/process-nextick-args/license.md"
-  },
-  "process-nextick-args@2.0.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/calvinmetcalf/process-nextick-args",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-uri/node_modules/process-nextick-args",
-    "licenseFile": "node_modules/get-uri/node_modules/process-nextick-args/license.md"
   },
   "process@0.11.10": {
     "licenses": "MIT",
@@ -4094,7 +3955,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/promise",
     "licenseFile": "node_modules/promise/LICENSE"
   },
-  "prop-types-extra@1.1.0": {
+  "prop-types-extra@1.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/react-bootstrap/prop-types-extra",
     "publisher": "Matthew L Smith",
@@ -4102,19 +3963,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/prop-types-extra",
     "licenseFile": "node_modules/prop-types-extra/LICENSE"
   },
-  "prop-types@15.5.10": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/reactjs/prop-types",
+  "prop-types@15.7.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/facebook/prop-types",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/prop-types",
     "licenseFile": "node_modules/prop-types/LICENSE"
   },
-  "prop-types@15.6.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/facebook/prop-types",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react/node_modules/prop-types",
-    "licenseFile": "node_modules/react/node_modules/prop-types/LICENSE"
-  },
-  "proxy-agent@3.0.3": {
+  "proxy-agent@3.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-proxy-agent",
     "publisher": "Nathan Rajlich",
@@ -4123,14 +3978,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/proxy-agent",
     "licenseFile": "node_modules/proxy-agent/README.md"
   },
-  "proxy-from-env@1.0.0": {
+  "proxy-from-env@1.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/Rob--W/proxy-from-env",
     "publisher": "Rob Wu",
     "email": "rob@robwu.nl",
     "url": "https://robwu.nl/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/proxy-from-env",
-    "licenseFile": "node_modules/proxy-from-env/README.md"
+    "licenseFile": "node_modules/proxy-from-env/LICENSE"
   },
   "prr@1.0.1": {
     "licenses": "MIT",
@@ -4141,21 +3996,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/prr",
     "licenseFile": "node_modules/prr/LICENSE.md"
   },
-  "pseudomap@1.0.2": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/pseudomap",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/pseudomap",
-    "licenseFile": "node_modules/pseudomap/LICENSE"
-  },
-  "psl@1.1.29": {
+  "psl@1.7.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/wrangr/psl",
+    "repository": "https://github.com/lupomontero/psl",
     "publisher": "Lupo Montero",
+    "email": "lupomontero@gmail.com",
+    "url": "https://lupomontero.com/",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/psl",
-    "licenseFile": "node_modules/psl/README.md"
+    "licenseFile": "node_modules/psl/LICENSE"
   },
   "public-encrypt@4.0.3": {
     "licenses": "MIT",
@@ -4200,16 +4048,8 @@
     "repository": "https://github.com/bestiejs/punycode.js",
     "publisher": "Mathias Bynens",
     "url": "https://mathiasbynens.be/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/tough-cookie/node_modules/punycode",
-    "licenseFile": "node_modules/tough-cookie/node_modules/punycode/LICENSE-MIT.txt"
-  },
-  "punycode@2.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/bestiejs/punycode.js",
-    "publisher": "Mathias Bynens",
-    "url": "https://mathiasbynens.be/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/tr46/node_modules/punycode",
-    "licenseFile": "node_modules/notebookjs/node_modules/tr46/node_modules/punycode/LICENSE-MIT.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/twitter-text/node_modules/punycode",
+    "licenseFile": "node_modules/twitter-text/node_modules/punycode/LICENSE-MIT.txt"
   },
   "punycode@2.1.1": {
     "licenses": "MIT",
@@ -4227,12 +4067,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/pupa",
     "licenseFile": "node_modules/pupa/license"
-  },
-  "qs@6.5.1": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/ljharb/qs",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/qs",
-    "licenseFile": "node_modules/notebookjs/node_modules/qs/LICENSE"
   },
   "qs@6.5.2": {
     "licenses": "BSD-3-Clause",
@@ -4256,7 +4090,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/querystring",
     "licenseFile": "node_modules/querystring/License.md"
   },
-  "randombytes@2.0.6": {
+  "randombytes@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/randombytes",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/randombytes",
@@ -4268,7 +4102,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/randomfill",
     "licenseFile": "node_modules/randomfill/LICENSE"
   },
-  "raw-body@2.3.3": {
+  "raw-body@2.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/stream-utils/raw-body",
     "publisher": "Jonathan Ong",
@@ -4277,7 +4111,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/raw-body",
     "licenseFile": "node_modules/raw-body/LICENSE"
   },
-  "rc@1.2.7": {
+  "rc@1.2.8": {
     "licenses": "(BSD-2-Clause OR MIT OR Apache-2.0)",
     "repository": "https://github.com/dominictarr/rc",
     "publisher": "Dominic Tarr",
@@ -4308,13 +4142,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-codemirror",
     "licenseFile": "node_modules/react-codemirror/LICENSE"
   },
-  "react-dom@16.6.3": {
+  "react-dom@16.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/facebook/react",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-dom",
     "licenseFile": "node_modules/react-dom/LICENSE"
   },
-  "react-is@16.6.3": {
+  "react-is@16.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/facebook/react",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-is",
@@ -4342,7 +4176,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-prop-types",
     "licenseFile": "node_modules/react-prop-types/LICENSE"
   },
-  "react-redux@5.1.1": {
+  "react-redux@5.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/reduxjs/react-redux",
     "publisher": "Dan Abramov",
@@ -4351,7 +4185,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-redux",
     "licenseFile": "node_modules/react-redux/LICENSE.md"
   },
-  "react-split-pane@0.1.84": {
+  "react-split-pane@0.1.89": {
     "licenses": "MIT",
     "repository": "https://github.com/tomkp/react-split-pane",
     "publisher": "tomkp",
@@ -4367,13 +4201,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-style-proptype",
     "licenseFile": "node_modules/react-style-proptype/LICENSE"
   },
-  "react-transition-group@2.5.0": {
+  "react-transition-group@2.9.0": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/reactjs/react-transition-group",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react-transition-group",
     "licenseFile": "node_modules/react-transition-group/LICENSE"
   },
-  "react@16.6.3": {
+  "react@16.13.1": {
     "licenses": "MIT",
     "repository": "https://github.com/facebook/react",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/react",
@@ -4385,20 +4219,14 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ftp/node_modules/readable-stream",
+    "licenseFile": "node_modules/ftp/node_modules/readable-stream/LICENSE"
+  },
+  "readable-stream@2.3.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodejs/readable-stream",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/readable-stream",
     "licenseFile": "node_modules/readable-stream/LICENSE"
-  },
-  "readable-stream@2.3.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/nodejs/readable-stream",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/concat-stream/node_modules/readable-stream",
-    "licenseFile": "node_modules/concat-stream/node_modules/readable-stream/LICENSE"
-  },
-  "readable-stream@2.3.6": {
-    "licenses": "MIT",
-    "repository": "https://github.com/nodejs/readable-stream",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-uri/node_modules/readable-stream",
-    "licenseFile": "node_modules/get-uri/node_modules/readable-stream/LICENSE"
   },
   "readdirp@2.2.1": {
     "licenses": "MIT",
@@ -4426,7 +4254,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/redux-thunk",
     "licenseFile": "node_modules/redux-thunk/LICENSE.md"
   },
-  "redux@4.0.1": {
+  "redux@4.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/reduxjs/redux",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/redux",
@@ -4437,16 +4265,16 @@
     "repository": "https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime",
     "publisher": "Ben Newman",
     "email": "bn@cs.stanford.edu",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/twitter-text/node_modules/regenerator-runtime",
-    "licenseFile": "node_modules/twitter-text/node_modules/regenerator-runtime/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/babel-runtime/node_modules/regenerator-runtime",
+    "licenseFile": "node_modules/babel-runtime/node_modules/regenerator-runtime/README.md"
   },
-  "regenerator-runtime@0.12.1": {
+  "regenerator-runtime@0.13.5": {
     "licenses": "MIT",
     "repository": "https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime",
     "publisher": "Ben Newman",
     "email": "bn@cs.stanford.edu",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/runtime-corejs2/node_modules/regenerator-runtime",
-    "licenseFile": "node_modules/@babel/runtime-corejs2/node_modules/regenerator-runtime/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/regenerator-runtime",
+    "licenseFile": "node_modules/regenerator-runtime/LICENSE"
   },
   "regex-not@1.0.2": {
     "licenses": "MIT",
@@ -4487,23 +4315,23 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/repeat-string",
     "licenseFile": "node_modules/repeat-string/LICENSE"
   },
-  "request-promise-core@1.1.1": {
+  "request-promise-core@1.1.3": {
     "licenses": "ISC",
     "repository": "https://github.com/request/promise-core",
     "publisher": "Nicolai Kamenzky",
     "url": "https://github.com/analog-nico",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/request-promise-core",
-    "licenseFile": "node_modules/notebookjs/node_modules/request-promise-core/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/request-promise-core",
+    "licenseFile": "node_modules/request-promise-core/LICENSE"
   },
-  "request-promise-native@1.0.5": {
+  "request-promise-native@1.0.8": {
     "licenses": "ISC",
     "repository": "https://github.com/request/request-promise-native",
     "publisher": "Nicolai Kamenzky",
     "url": "https://github.com/analog-nico",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/request-promise-native",
-    "licenseFile": "node_modules/notebookjs/node_modules/request-promise-native/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/request-promise-native",
+    "licenseFile": "node_modules/request-promise-native/LICENSE"
   },
-  "request-promise@4.2.2": {
+  "request-promise@4.2.5": {
     "licenses": "ISC",
     "repository": "https://github.com/request/request-promise",
     "publisher": "Nicolai Kamenzky",
@@ -4511,15 +4339,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/request-promise",
     "licenseFile": "node_modules/request-promise/LICENSE"
   },
-  "request@2.83.0": {
-    "licenses": "Apache-2.0",
-    "repository": "https://github.com/request/request",
-    "publisher": "Mikeal Rogers",
-    "email": "mikeal.rogers@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/request",
-    "licenseFile": "node_modules/notebookjs/node_modules/request/LICENSE"
-  },
-  "request@2.88.0": {
+  "request@2.88.2": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/request/request",
     "publisher": "Mikeal Rogers",
@@ -4536,22 +4356,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/require-directory",
     "licenseFile": "node_modules/require-directory/LICENSE"
   },
-  "require-main-filename@1.0.1": {
+  "require-main-filename@2.0.0": {
     "licenses": "ISC",
     "repository": "https://github.com/yargs/require-main-filename",
     "publisher": "Ben Coe",
     "email": "ben@npmjs.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/require-main-filename",
     "licenseFile": "node_modules/require-main-filename/LICENSE.txt"
-  },
-  "require-uncached@1.0.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/require-uncached",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/require-uncached",
-    "licenseFile": "node_modules/require-uncached/license"
   },
   "resolve-cwd@2.0.0": {
     "licenses": "MIT",
@@ -4562,14 +4373,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-cwd",
     "licenseFile": "node_modules/resolve-cwd/license"
   },
-  "resolve-from@1.0.1": {
+  "resolve-dir@1.0.1": {
     "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/resolve-from",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-from",
-    "licenseFile": "node_modules/resolve-from/license"
+    "repository": "https://github.com/jonschlinkert/resolve-dir",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-dir",
+    "licenseFile": "node_modules/resolve-dir/LICENSE"
   },
   "resolve-from@3.0.0": {
     "licenses": "MIT",
@@ -4580,12 +4390,30 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-cwd/node_modules/resolve-from",
     "licenseFile": "node_modules/resolve-cwd/node_modules/resolve-from/license"
   },
+  "resolve-from@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/resolve-from",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-from",
+    "licenseFile": "node_modules/resolve-from/license"
+  },
   "resolve-url@0.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/lydell/resolve-url",
     "publisher": "Simon Lydell",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve-url",
     "licenseFile": "node_modules/resolve-url/LICENSE"
+  },
+  "resolve@1.15.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/browserify/resolve",
+    "publisher": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/resolve",
+    "licenseFile": "node_modules/resolve/LICENSE"
   },
   "restore-cursor@2.0.0": {
     "licenses": "MIT",
@@ -4604,16 +4432,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ret",
     "licenseFile": "node_modules/ret/LICENSE"
   },
-  "rimraf@2.6.1": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/rimraf",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/rimraf",
-    "licenseFile": "node_modules/rimraf/LICENSE"
-  },
-  "rimraf@2.6.2": {
+  "rimraf@2.6.3": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/rimraf",
     "publisher": "Isaac Z. Schlueter",
@@ -4622,13 +4441,22 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/flat-cache/node_modules/rimraf",
     "licenseFile": "node_modules/flat-cache/node_modules/rimraf/LICENSE"
   },
+  "rimraf@2.7.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/rimraf",
+    "publisher": "Isaac Z. Schlueter",
+    "email": "i@izs.me",
+    "url": "http://blog.izs.me/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/rimraf",
+    "licenseFile": "node_modules/rimraf/LICENSE"
+  },
   "ripemd160@2.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/crypto-browserify/ripemd160",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ripemd160",
     "licenseFile": "node_modules/ripemd160/LICENSE"
   },
-  "run-async@2.3.0": {
+  "run-async@2.4.0": {
     "licenses": "MIT",
     "repository": "https://github.com/SBoudrias/run-async",
     "publisher": "Simon Boudrias",
@@ -4645,7 +4473,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/run-queue",
     "licenseFile": "node_modules/run-queue/README.md"
   },
-  "rxjs@6.3.3": {
+  "rxjs@6.5.4": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/reactivex/rxjs",
     "publisher": "Ben Lesh",
@@ -4653,7 +4481,16 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/rxjs",
     "licenseFile": "node_modules/rxjs/LICENSE.txt"
   },
-  "safe-buffer@5.1.1": {
+  "safe-buffer@5.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/feross/safe-buffer",
+    "publisher": "Feross Aboukhadijeh",
+    "email": "feross@feross.org",
+    "url": "http://feross.org",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/readable-stream/node_modules/safe-buffer",
+    "licenseFile": "node_modules/readable-stream/node_modules/safe-buffer/LICENSE"
+  },
+  "safe-buffer@5.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/feross/safe-buffer",
     "publisher": "Feross Aboukhadijeh",
@@ -4661,15 +4498,6 @@
     "url": "http://feross.org",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/safe-buffer",
     "licenseFile": "node_modules/safe-buffer/LICENSE"
-  },
-  "safe-buffer@5.1.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/feross/safe-buffer",
-    "publisher": "Feross Aboukhadijeh",
-    "email": "feross@feross.org",
-    "url": "http://feross.org",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/request/node_modules/safe-buffer",
-    "licenseFile": "node_modules/request/node_modules/safe-buffer/LICENSE"
   },
   "safe-regex@1.1.0": {
     "licenses": "MIT",
@@ -4698,27 +4526,27 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/sax",
     "licenseFile": "node_modules/sax/LICENSE"
   },
-  "scheduler@0.11.3": {
+  "saxes@5.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/lddubeau/saxes",
+    "publisher": "Louis-Dominique Dubeau",
+    "email": "ldd@lddubeau.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/saxes",
+    "licenseFile": "node_modules/saxes/README.md"
+  },
+  "scheduler@0.19.1": {
     "licenses": "MIT",
     "repository": "https://github.com/facebook/react",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/scheduler",
     "licenseFile": "node_modules/scheduler/LICENSE"
-  },
-  "schema-utils@0.4.5": {
-    "licenses": "MIT",
-    "repository": "https://github.com/webpack-contrib/schema-utils",
-    "publisher": "Webpack Contrib",
-    "url": "https://github.com/webpack-contrib",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/schema-utils",
-    "licenseFile": "node_modules/schema-utils/LICENSE"
   },
   "schema-utils@1.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack-contrib/schema-utils",
     "publisher": "webpack Contrib",
     "url": "https://github.com/webpack-contrib",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/terser-webpack-plugin/node_modules/schema-utils",
-    "licenseFile": "node_modules/terser-webpack-plugin/node_modules/schema-utils/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/schema-utils",
+    "licenseFile": "node_modules/schema-utils/LICENSE"
   },
   "secure-keys@1.0.0": {
     "licenses": "MIT",
@@ -4733,19 +4561,19 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/select",
     "licenseFile": "node_modules/select/readme.md"
   },
-  "semver@5.5.0": {
+  "semver@5.7.1": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/semver",
-    "licenseFile": "node_modules/fsevents/node_modules/semver/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/semver",
+    "licenseFile": "node_modules/semver/LICENSE"
   },
-  "semver@5.6.0": {
+  "semver@7.1.3": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-semver",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/semver",
     "licenseFile": "node_modules/electron-updater/node_modules/semver/LICENSE"
   },
-  "serialize-javascript@1.5.0": {
+  "serialize-javascript@2.1.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/yahoo/serialize-javascript",
     "publisher": "Eric Ferraiuolo",
@@ -4761,15 +4589,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/set-blocking",
     "licenseFile": "node_modules/set-blocking/LICENSE.txt"
   },
-  "set-value@0.4.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/jonschlinkert/set-value",
-    "publisher": "Jon Schlinkert",
-    "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/union-value/node_modules/set-value",
-    "licenseFile": "node_modules/union-value/node_modules/set-value/LICENSE"
-  },
-  "set-value@2.0.0": {
+  "set-value@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/set-value",
     "publisher": "Jon Schlinkert",
@@ -4784,7 +4604,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/setimmediate",
     "licenseFile": "node_modules/setimmediate/LICENSE.txt"
   },
-  "setprototypeof@1.1.0": {
+  "setprototypeof@1.1.1": {
     "licenses": "ISC",
     "repository": "https://github.com/wesleytodd/setprototypeof",
     "publisher": "Wes Todd",
@@ -4826,13 +4646,13 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/signal-exit",
     "licenseFile": "node_modules/signal-exit/LICENSE.txt"
   },
-  "slice-ansi@2.0.0": {
+  "slice-ansi@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/slice-ansi",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/slice-ansi",
     "licenseFile": "node_modules/slice-ansi/license"
   },
-  "smart-buffer@4.0.1": {
+  "smart-buffer@4.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/JoshGlazebrook/smart-buffer",
     "publisher": "Josh Glazebrook",
@@ -4863,16 +4683,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/snapdragon",
     "licenseFile": "node_modules/snapdragon/LICENSE"
   },
-  "sntp@2.1.0": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/hueniverse/sntp",
-    "publisher": "Eran Hammer",
-    "email": "eran@hammer.io",
-    "url": "http://hueniverse.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/sntp",
-    "licenseFile": "node_modules/notebookjs/node_modules/sntp/LICENSE"
-  },
-  "socks-proxy-agent@4.0.1": {
+  "socks-proxy-agent@4.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-socks-proxy-agent",
     "publisher": "Nathan Rajlich",
@@ -4881,7 +4692,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/socks-proxy-agent",
     "licenseFile": "node_modules/socks-proxy-agent/README.md"
   },
-  "socks@2.2.2": {
+  "socks@2.3.3": {
     "licenses": "MIT",
     "repository": "https://github.com/JoshGlazebrook/socks",
     "publisher": "Josh Glazebrook",
@@ -4913,18 +4724,18 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/source-list-map",
     "licenseFile": "node_modules/source-list-map/LICENSE"
   },
-  "source-map-resolve@0.5.2": {
+  "source-map-resolve@0.5.3": {
     "licenses": "MIT",
     "repository": "https://github.com/lydell/source-map-resolve",
     "publisher": "Simon Lydell",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/source-map-resolve",
     "licenseFile": "node_modules/source-map-resolve/LICENSE"
   },
-  "source-map-support@0.5.9": {
+  "source-map-support@0.5.16": {
     "licenses": "MIT",
     "repository": "https://github.com/evanw/node-source-map-support",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/source-map-support",
-    "licenseFile": "node_modules/electron-updater/node_modules/source-map-support/LICENSE.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/source-map-support",
+    "licenseFile": "node_modules/source-map-support/LICENSE.md"
   },
   "source-map-url@0.4.0": {
     "licenses": "MIT",
@@ -4938,16 +4749,16 @@
     "repository": "https://github.com/mozilla/source-map",
     "publisher": "Nick Fitzgerald",
     "email": "nfitzgerald@mozilla.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/source-map",
-    "licenseFile": "node_modules/source-map/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/generator/node_modules/source-map",
+    "licenseFile": "node_modules/@babel/generator/node_modules/source-map/LICENSE"
   },
   "source-map@0.6.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/mozilla/source-map",
     "publisher": "Nick Fitzgerald",
     "email": "nfitzgerald@mozilla.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/source-map",
-    "licenseFile": "node_modules/electron-updater/node_modules/source-map/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/source-map",
+    "licenseFile": "node_modules/source-map/LICENSE"
   },
   "split-string@3.1.0": {
     "licenses": "MIT",
@@ -4966,14 +4777,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/sprintf-js",
     "licenseFile": "node_modules/sprintf-js/LICENSE"
   },
-  "sshpk@1.13.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/arekinath/node-sshpk",
-    "publisher": "Joyent, Inc",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/sshpk",
-    "licenseFile": "node_modules/notebookjs/node_modules/sshpk/LICENSE"
-  },
-  "sshpk@1.15.2": {
+  "sshpk@1.16.1": {
     "licenses": "MIT",
     "repository": "https://github.com/joyent/node-sshpk",
     "publisher": "Joyent, Inc",
@@ -5016,12 +4820,12 @@
     "repository": "https://github.com/analog-nico/stealthy-require",
     "publisher": "Nicolai Kamenzky",
     "url": "https://github.com/analog-nico",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/stealthy-require",
-    "licenseFile": "node_modules/notebookjs/node_modules/stealthy-require/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/stealthy-require",
+    "licenseFile": "node_modules/stealthy-require/LICENSE"
   },
-  "stream-browserify@2.0.1": {
+  "stream-browserify@2.0.2": {
     "licenses": "MIT",
-    "repository": "https://github.com/substack/stream-browserify",
+    "repository": "https://github.com/browserify/stream-browserify",
     "publisher": "James Halliday",
     "email": "mail@substack.net",
     "url": "http://substack.net",
@@ -5043,7 +4847,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/stream-http",
     "licenseFile": "node_modules/stream-http/LICENSE"
   },
-  "stream-shift@1.0.0": {
+  "stream-shift@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/stream-shift",
     "publisher": "Mathias Buus",
@@ -5066,41 +4870,35 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer/node_modules/string-width",
+    "licenseFile": "node_modules/inquirer/node_modules/string-width/license"
+  },
+  "string-width@3.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/string-width",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/string-width",
     "licenseFile": "node_modules/yargs/node_modules/string-width/license"
   },
   "string_decoder@0.10.31": {
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/string_decoder",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/string_decoder",
-    "licenseFile": "node_modules/string_decoder/LICENSE"
-  },
-  "string_decoder@1.0.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/rvagg/string_decoder",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/concat-stream/node_modules/string_decoder",
-    "licenseFile": "node_modules/concat-stream/node_modules/string_decoder/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ftp/node_modules/string_decoder",
+    "licenseFile": "node_modules/ftp/node_modules/string_decoder/LICENSE"
   },
   "string_decoder@1.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/string_decoder",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/get-uri/node_modules/string_decoder",
-    "licenseFile": "node_modules/get-uri/node_modules/string_decoder/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/string_decoder",
+    "licenseFile": "node_modules/string_decoder/LICENSE"
   },
-  "string_decoder@1.2.0": {
+  "string_decoder@1.3.0": {
     "licenses": "MIT",
     "repository": "https://github.com/nodejs/string_decoder",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/node-libs-browser/node_modules/string_decoder",
     "licenseFile": "node_modules/node-libs-browser/node_modules/string_decoder/LICENSE"
-  },
-  "stringstream@0.0.5": {
-    "licenses": "MIT",
-    "repository": "https://github.com/mhart/StringStream",
-    "publisher": "Michael Hart",
-    "email": "michael.hart.au@gmail.com",
-    "url": "http://github.com/mhart",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/stringstream",
-    "licenseFile": "node_modules/notebookjs/node_modules/stringstream/LICENSE.txt"
   },
   "strip-ansi@3.0.1": {
     "licenses": "MIT",
@@ -5117,17 +4915,17 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/strip-ansi",
-    "licenseFile": "node_modules/yargs/node_modules/strip-ansi/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer/node_modules/string-width/node_modules/strip-ansi",
+    "licenseFile": "node_modules/inquirer/node_modules/string-width/node_modules/strip-ansi/license"
   },
-  "strip-ansi@5.0.0": {
+  "strip-ansi@5.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/strip-ansi",
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/inquirer/node_modules/strip-ansi",
-    "licenseFile": "node_modules/inquirer/node_modules/strip-ansi/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/strip-ansi",
+    "licenseFile": "node_modules/yargs/node_modules/strip-ansi/license"
   },
   "strip-eof@1.0.0": {
     "licenses": "MIT",
@@ -5153,8 +4951,17 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@babel/highlight/node_modules/supports-color",
-    "licenseFile": "node_modules/@babel/highlight/node_modules/supports-color/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/chalk/node_modules/supports-color",
+    "licenseFile": "node_modules/chalk/node_modules/supports-color/license"
+  },
+  "supports-color@6.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/supports-color",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/supports-color",
+    "licenseFile": "node_modules/supports-color/license"
   },
   "symbol-observable@1.2.0": {
     "licenses": "MIT",
@@ -5164,15 +4971,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/symbol-observable",
     "licenseFile": "node_modules/symbol-observable/license"
   },
-  "symbol-tree@3.2.2": {
+  "symbol-tree@3.2.4": {
     "licenses": "MIT",
     "repository": "https://github.com/jsdom/js-symbol-tree",
     "publisher": "Joris van der Wel",
     "email": "joris@jorisvanderwel.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/symbol-tree",
-    "licenseFile": "node_modules/notebookjs/node_modules/symbol-tree/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/symbol-tree",
+    "licenseFile": "node_modules/symbol-tree/LICENSE"
   },
-  "table@5.1.1": {
+  "table@5.4.6": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/gajus/table",
     "publisher": "Gajus Kuizinas",
@@ -5181,14 +4988,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/table",
     "licenseFile": "node_modules/table/LICENSE"
   },
-  "tapable@1.1.1": {
+  "tapable@1.1.3": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/tapable",
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/tapable",
     "licenseFile": "node_modules/tapable/LICENSE"
   },
-  "tar@4.4.1": {
+  "tar@4.4.13": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/node-tar",
     "publisher": "Isaac Z. Schlueter",
@@ -5197,16 +5004,16 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/tar",
     "licenseFile": "node_modules/fsevents/node_modules/tar/LICENSE"
   },
-  "terser-webpack-plugin@1.1.0": {
+  "terser-webpack-plugin@1.4.3": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack-contrib/terser-webpack-plugin",
     "publisher": "webpack Contrib Team",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/terser-webpack-plugin",
     "licenseFile": "node_modules/terser-webpack-plugin/LICENSE"
   },
-  "terser@3.11.0": {
+  "terser@4.6.7": {
     "licenses": "BSD-2-Clause",
-    "repository": "https://github.com/fabiosantoscode/terser",
+    "repository": "https://github.com/terser/terser",
     "publisher": "Mihai Bazon",
     "email": "mihai.bazon@gmail.com",
     "url": "http://lisperator.net/",
@@ -5228,8 +5035,8 @@
     "publisher": "Rod Vagg",
     "email": "r@va.gg",
     "url": "https://github.com/rvagg",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/mississippi/node_modules/through2",
-    "licenseFile": "node_modules/mississippi/node_modules/through2/LICENSE.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/through2",
+    "licenseFile": "node_modules/through2/LICENSE.md"
   },
   "through@2.3.8": {
     "licenses": "MIT",
@@ -5246,7 +5053,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/thunkify",
     "licenseFile": "node_modules/thunkify/Readme.md"
   },
-  "timers-browserify@2.0.10": {
+  "timers-browserify@2.0.11": {
     "licenses": "MIT",
     "repository": "https://github.com/jryans/timers-browserify",
     "publisher": "J. Ryan Stinnett",
@@ -5255,7 +5062,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/timers-browserify",
     "licenseFile": "node_modules/timers-browserify/LICENSE.md"
   },
-  "tiny-emitter@2.0.2": {
+  "tiny-emitter@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/scottcorgan/tiny-emitter",
     "publisher": "Scott Corgan",
@@ -5311,15 +5118,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/to-regex",
     "licenseFile": "node_modules/to-regex/LICENSE"
   },
-  "tough-cookie@2.3.4": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/salesforce/tough-cookie",
-    "publisher": "Jeremy Stashewsky",
-    "email": "jstashewsky@salesforce.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/tough-cookie",
-    "licenseFile": "node_modules/notebookjs/node_modules/tough-cookie/LICENSE"
+  "toidentifier@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/component/toidentifier",
+    "publisher": "Douglas Christopher Wilson",
+    "email": "doug@somethingdoug.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/toidentifier",
+    "licenseFile": "node_modules/toidentifier/LICENSE"
   },
-  "tough-cookie@2.4.3": {
+  "tough-cookie@2.5.0": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/salesforce/tough-cookie",
     "publisher": "Jeremy Stashewsky",
@@ -5327,24 +5134,23 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/tough-cookie",
     "licenseFile": "node_modules/tough-cookie/LICENSE"
   },
-  "tr46@1.0.1": {
+  "tough-cookie@3.0.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/salesforce/tough-cookie",
+    "publisher": "Jeremy Stashewsky",
+    "email": "jstash@gmail.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsdom/node_modules/tough-cookie",
+    "licenseFile": "node_modules/jsdom/node_modules/tough-cookie/LICENSE"
+  },
+  "tr46@2.0.2": {
     "licenses": "MIT",
-    "repository": "https://github.com/Sebmaster/tr46.js",
+    "repository": "https://github.com/jsdom/tr46",
     "publisher": "Sebastian Mayr",
     "email": "npm@smayr.name",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/tr46",
-    "licenseFile": "node_modules/notebookjs/node_modules/tr46/LICENSE.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/tr46",
+    "licenseFile": "node_modules/tr46/LICENSE.md"
   },
-  "trim-right@1.0.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/sindresorhus/trim-right",
-    "publisher": "Sindre Sorhus",
-    "email": "sindresorhus@gmail.com",
-    "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/trim-right",
-    "licenseFile": "node_modules/trim-right/license"
-  },
-  "tslib@1.9.3": {
+  "tslib@1.11.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/Microsoft/tslib",
     "publisher": "Microsoft Corp.",
@@ -5381,7 +5187,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/twemoji-parser",
     "licenseFile": "node_modules/twemoji-parser/LICENSE.md"
   },
-  "twitter-text@3.0.0": {
+  "twitter-text@3.0.1": {
     "licenses": "Apache*",
     "repository": "https://github.com/twitter/twitter-text",
     "publisher": "Twitter Inc.",
@@ -5393,8 +5199,8 @@
     "repository": "https://github.com/gkz/type-check",
     "publisher": "George Zahariev",
     "email": "z@georgezahariev.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/type-check",
-    "licenseFile": "node_modules/notebookjs/node_modules/type-check/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/type-check",
+    "licenseFile": "node_modules/type-check/LICENSE"
   },
   "typedarray@0.0.6": {
     "licenses": "MIT",
@@ -5405,16 +5211,16 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/typedarray",
     "licenseFile": "node_modules/typedarray/LICENSE"
   },
-  "ua-parser-js@0.7.13": {
-    "licenses": "(GPL-2.0 OR MIT)",
+  "ua-parser-js@0.7.21": {
+    "licenses": "MIT",
     "repository": "https://github.com/faisalman/ua-parser-js",
     "publisher": "Faisal Salman",
-    "email": "fyzlman@gmail.com",
+    "email": "f@faisalman.com",
     "url": "http://faisalman.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ua-parser-js",
-    "licenseFile": "node_modules/ua-parser-js/readme.md"
+    "licenseFile": "node_modules/ua-parser-js/license.md"
   },
-  "uc.micro@1.0.5": {
+  "uc.micro@1.0.6": {
     "licenses": "MIT",
     "repository": "https://github.com/markdown-it/uc.micro",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/uc.micro",
@@ -5428,7 +5234,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/uncontrollable",
     "licenseFile": "node_modules/uncontrollable/README.md"
   },
-  "union-value@1.0.0": {
+  "union-value@1.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/union-value",
     "publisher": "Jon Schlinkert",
@@ -5445,7 +5251,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/unique-filename",
     "licenseFile": "node_modules/unique-filename/LICENSE"
   },
-  "unique-slug@2.0.1": {
+  "unique-slug@2.0.2": {
     "licenses": "ISC",
     "repository": "https://github.com/iarna/unique-slug",
     "publisher": "Rebecca Turner",
@@ -5487,7 +5293,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/unused-filename",
     "licenseFile": "node_modules/unused-filename/license"
   },
-  "upath@1.1.0": {
+  "upath@1.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/anodynos/upath",
     "publisher": "Angelos Pikoulas",
@@ -5541,7 +5347,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/assert/node_modules/util",
     "licenseFile": "node_modules/assert/node_modules/util/LICENSE"
   },
-  "util@0.10.4": {
+  "util@0.11.1": {
     "licenses": "MIT",
     "repository": "https://github.com/defunctzombie/node-util",
     "publisher": "Joyent",
@@ -5549,24 +5355,19 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/util",
     "licenseFile": "node_modules/util/LICENSE"
   },
-  "uuid@3.2.1": {
+  "uuid@3.4.0": {
     "licenses": "MIT",
-    "repository": "https://github.com/kelektiv/node-uuid",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/uuid",
-    "licenseFile": "node_modules/notebookjs/node_modules/uuid/LICENSE.md"
-  },
-  "uuid@3.3.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/kelektiv/node-uuid",
+    "repository": "https://github.com/uuidjs/uuid",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/uuid",
     "licenseFile": "node_modules/uuid/LICENSE.md"
   },
-  "v8-compile-cache@2.0.2": {
+  "v8-compile-cache@2.0.3": {
     "licenses": "MIT",
+    "repository": "https://github.com/zertosh/v8-compile-cache",
     "publisher": "Andres Suarez",
     "email": "zertosh@gmail.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/v8-compile-cache",
-    "licenseFile": "node_modules/v8-compile-cache/README.md"
+    "licenseFile": "node_modules/v8-compile-cache/LICENSE"
   },
   "valid-filename@2.0.1": {
     "licenses": "MIT",
@@ -5583,7 +5384,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/verror",
     "licenseFile": "node_modules/verror/LICENSE"
   },
-  "vm-browserify@0.0.4": {
+  "vm-browserify@1.1.2": {
     "licenses": "MIT",
     "repository": "https://github.com/substack/vm-browserify",
     "publisher": "James Halliday",
@@ -5592,13 +5393,19 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/vm-browserify",
     "licenseFile": "node_modules/vm-browserify/LICENSE"
   },
-  "w3c-hr-time@1.0.1": {
+  "w3c-hr-time@1.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/jsdom/w3c-hr-time",
     "publisher": "Timothy Gu",
     "email": "timothygu99@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/w3c-hr-time",
-    "licenseFile": "node_modules/notebookjs/node_modules/w3c-hr-time/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/w3c-hr-time",
+    "licenseFile": "node_modules/w3c-hr-time/LICENSE.md"
+  },
+  "w3c-xmlserializer@2.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jsdom/w3c-xmlserializer",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/w3c-xmlserializer",
+    "licenseFile": "node_modules/w3c-xmlserializer/LICENSE.md"
   },
   "warning@3.0.0": {
     "licenses": "BSD-3-Clause",
@@ -5609,6 +5416,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/warning",
     "licenseFile": "node_modules/warning/LICENSE.md"
   },
+  "warning@4.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/BerkeleyTrue/warning",
+    "publisher": "Berkeley Martinez",
+    "email": "berkeley@berkeleytrue.com",
+    "url": "http://www.berkeleytrue.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/prop-types-extra/node_modules/warning",
+    "licenseFile": "node_modules/prop-types-extra/node_modules/warning/LICENSE.md"
+  },
   "watchpack@1.6.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/watchpack",
@@ -5616,57 +5432,66 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/watchpack",
     "licenseFile": "node_modules/watchpack/LICENSE"
   },
-  "webidl-conversions@4.0.2": {
+  "webidl-conversions@5.0.0": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/jsdom/webidl-conversions",
     "publisher": "Domenic Denicola",
     "email": "d@domenic.me",
     "url": "https://domenic.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/webidl-conversions",
-    "licenseFile": "node_modules/notebookjs/node_modules/webidl-conversions/LICENSE.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webidl-conversions",
+    "licenseFile": "node_modules/webidl-conversions/LICENSE.md"
   },
-  "webpack-cli@3.1.2": {
+  "webpack-cli@3.3.11": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/webpack-cli",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-cli",
     "licenseFile": "node_modules/webpack-cli/LICENSE"
   },
-  "webpack-sources@1.3.0": {
+  "webpack-sources@1.4.3": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/webpack-sources",
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack-sources",
     "licenseFile": "node_modules/webpack-sources/LICENSE"
   },
-  "webpack@4.27.1": {
+  "webpack@4.42.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/webpack",
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/webpack",
     "licenseFile": "node_modules/webpack/LICENSE"
   },
-  "whatwg-encoding@1.0.3": {
+  "whatwg-encoding@1.0.5": {
     "licenses": "MIT",
     "repository": "https://github.com/jsdom/whatwg-encoding",
     "publisher": "Domenic Denicola",
     "email": "d@domenic.me",
     "url": "https://domenic.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/whatwg-encoding",
-    "licenseFile": "node_modules/notebookjs/node_modules/whatwg-encoding/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/whatwg-encoding",
+    "licenseFile": "node_modules/whatwg-encoding/LICENSE.txt"
   },
-  "whatwg-fetch@2.0.3": {
+  "whatwg-fetch@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/github/fetch",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/whatwg-fetch",
     "licenseFile": "node_modules/whatwg-fetch/LICENSE"
   },
-  "whatwg-url@6.4.0": {
+  "whatwg-mimetype@2.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jsdom/whatwg-mimetype",
+    "publisher": "Domenic Denicola",
+    "email": "d@domenic.me",
+    "url": "https://domenic.me/",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/whatwg-mimetype",
+    "licenseFile": "node_modules/whatwg-mimetype/LICENSE.txt"
+  },
+  "whatwg-url@8.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/jsdom/whatwg-url",
     "publisher": "Sebastian Mayr",
     "email": "github@smayr.name",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/whatwg-url",
-    "licenseFile": "node_modules/notebookjs/node_modules/whatwg-url/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/whatwg-url",
+    "licenseFile": "node_modules/whatwg-url/LICENSE.txt"
   },
   "which-module@2.0.0": {
     "licenses": "ISC",
@@ -5684,7 +5509,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/which",
     "licenseFile": "node_modules/which/LICENSE"
   },
-  "wide-align@1.1.2": {
+  "wide-align@1.1.3": {
     "licenses": "ISC",
     "repository": "https://github.com/iarna/wide-align",
     "publisher": "Rebecca Turner",
@@ -5698,8 +5523,8 @@
     "repository": "https://github.com/jonschlinkert/window-size",
     "publisher": "Jon Schlinkert",
     "url": "https://github.com/jonschlinkert",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/window-size",
-    "licenseFile": "node_modules/nconf/node_modules/window-size/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/window-size",
+    "licenseFile": "node_modules/window-size/LICENSE"
   },
   "winston@2.4.4": {
     "licenses": "MIT",
@@ -5709,16 +5534,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/winston",
     "licenseFile": "node_modules/winston/LICENSE"
   },
-  "wordwrap@1.0.0": {
+  "word-wrap@1.2.3": {
     "licenses": "MIT",
-    "repository": "https://github.com/substack/node-wordwrap",
-    "publisher": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/wordwrap",
-    "licenseFile": "node_modules/notebookjs/node_modules/wordwrap/LICENSE"
+    "repository": "https://github.com/jonschlinkert/word-wrap",
+    "publisher": "Jon Schlinkert",
+    "url": "https://github.com/jonschlinkert",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/word-wrap",
+    "licenseFile": "node_modules/word-wrap/LICENSE"
   },
-  "worker-farm@1.6.0": {
+  "worker-farm@1.7.0": {
     "licenses": "MIT",
     "repository": "https://github.com/rvagg/node-worker-farm",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/worker-farm",
@@ -5733,6 +5557,15 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/wrap-ansi",
     "licenseFile": "node_modules/wrap-ansi/license"
   },
+  "wrap-ansi@5.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/wrap-ansi",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs/node_modules/wrap-ansi",
+    "licenseFile": "node_modules/yargs/node_modules/wrap-ansi/license"
+  },
   "wrappy@1.0.2": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/wrappy",
@@ -5742,7 +5575,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/wrappy",
     "licenseFile": "node_modules/wrappy/LICENSE"
   },
-  "write@0.2.1": {
+  "write@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/jonschlinkert/write",
     "publisher": "Jon Schlinkert",
@@ -5750,14 +5583,14 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/write",
     "licenseFile": "node_modules/write/LICENSE"
   },
-  "ws@4.1.0": {
+  "ws@7.2.3": {
     "licenses": "MIT",
     "repository": "https://github.com/websockets/ws",
     "publisher": "Einar Otto Stangvik",
     "email": "einaros@gmail.com",
     "url": "http://2x.io",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/ws",
-    "licenseFile": "node_modules/notebookjs/node_modules/ws/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ws",
+    "licenseFile": "node_modules/ws/LICENSE"
   },
   "xml-name-validator@3.0.0": {
     "licenses": "Apache-2.0",
@@ -5765,26 +5598,42 @@
     "publisher": "Domenic Denicola",
     "email": "d@domenic.me",
     "url": "https://domenic.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/notebookjs/node_modules/xml-name-validator",
-    "licenseFile": "node_modules/notebookjs/node_modules/xml-name-validator/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/xml-name-validator",
+    "licenseFile": "node_modules/xml-name-validator/LICENSE.txt"
+  },
+  "xmlchars@2.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lddubeau/xmlchars",
+    "publisher": "Louis-Dominique Dubeau",
+    "email": "ldd@lddubeau.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/xmlchars",
+    "licenseFile": "node_modules/xmlchars/LICENSE"
   },
   "xregexp@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/slevithan/XRegExp",
     "publisher": "Steven Levithan",
     "email": "steves_list@hotmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/xregexp",
-    "licenseFile": "node_modules/xregexp/README.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ftp/node_modules/xregexp",
+    "licenseFile": "node_modules/ftp/node_modules/xregexp/README.md"
   },
-  "xtend@4.0.1": {
+  "xtend@4.0.2": {
     "licenses": "MIT",
     "repository": "https://github.com/Raynos/xtend",
     "publisher": "Raynos",
     "email": "raynos2@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/stream-http/node_modules/xtend",
-    "licenseFile": "node_modules/stream-http/node_modules/xtend/LICENCE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/xtend",
+    "licenseFile": "node_modules/xtend/LICENSE"
   },
   "y18n@3.2.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/yargs/y18n",
+    "publisher": "Ben Coe",
+    "email": "ben@npmjs.com",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/y18n",
+    "licenseFile": "node_modules/nconf/node_modules/y18n/LICENSE"
+  },
+  "y18n@4.0.0": {
     "licenses": "ISC",
     "repository": "https://github.com/yargs/y18n",
     "publisher": "Ben Coe",
@@ -5792,15 +5641,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/y18n",
     "licenseFile": "node_modules/y18n/LICENSE"
   },
-  "y18n@4.0.0": {
-    "licenses": "ISC",
-    "repository": "https://github.com/yargs/y18n",
-    "publisher": "Ben Coe",
-    "email": "ben@npmjs.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cacache/node_modules/y18n",
-    "licenseFile": "node_modules/cacache/node_modules/y18n/LICENSE"
-  },
-  "yallist@2.1.2": {
+  "yallist@3.1.1": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/yallist",
     "publisher": "Isaac Z. Schlueter",
@@ -5809,16 +5650,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yallist",
     "licenseFile": "node_modules/yallist/LICENSE"
   },
-  "yallist@3.0.2": {
-    "licenses": "ISC",
-    "repository": "https://github.com/isaacs/yallist",
-    "publisher": "Isaac Z. Schlueter",
-    "email": "i@izs.me",
-    "url": "http://blog.izs.me/",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fsevents/node_modules/yallist",
-    "licenseFile": "node_modules/fsevents/node_modules/yallist/LICENSE"
-  },
-  "yargs-parser@11.1.1": {
+  "yargs-parser@13.1.2": {
     "licenses": "ISC",
     "repository": "https://github.com/yargs/yargs-parser",
     "publisher": "Ben Coe",
@@ -5826,7 +5658,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs-parser",
     "licenseFile": "node_modules/yargs-parser/LICENSE.txt"
   },
-  "yargs@12.0.5": {
+  "yargs@13.2.4": {
     "licenses": "MIT",
     "repository": "https://github.com/yargs/yargs",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs",
