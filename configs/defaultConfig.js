@@ -1,5 +1,6 @@
 module.exports = {
     "theme": "light",
+    "autoUpdate": false,
     "userPanel": {
         "hideProfilePhoto": false
     },
