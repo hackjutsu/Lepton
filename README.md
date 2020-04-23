@@ -1,3 +1,4 @@
+> **To Lepton users around more than 130 countries:** during this challenging pandemic, we wish you all stay safe, healthy, and strong. Lepton will continue to be free, as always. If you find the app useful, you are encouraged to donate to any funds that fight against the pandemic locally or globally. Together, we can make the world better.
 
 ![](./docs/img/new_logo.png)
 
@@ -6,7 +7,6 @@
 [![Dependency Status](https://david-dm.org/hackjutsu/Lepton.svg?style=flat-square)](https://david-dm.org/hackjutsu/Lepton)
 [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/Lepton)
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
-
 
 **Lepton** is a lean code snippet manager based on *GitHub Gist*. [Check out its latest release.](https://github.com/hackjutsu/Lepton/releases)
 
