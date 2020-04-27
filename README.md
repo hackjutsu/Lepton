@@ -90,7 +90,7 @@ brew cask install lepton
 ### Install dependencies
 
 ```bash
-$ git clone git@github.com:hackjutsu/Lepton.git
+$ git clone https://github.com/hackjutsu/Lepton.git
 $ cd Lepton && yarn install
 ```
 
