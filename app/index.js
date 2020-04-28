@@ -495,12 +495,8 @@ function syncLocalPref (userName) {
 /** End: Local storage management **/
 
 /** Start: Response to main process events **/
-function allDialogsClosed (dialogs) {
-  let status = true
-  dialogs.forEach(dialog => {
-    if (dialog !== 'OFF') status = false
-  })
-  return status
+function allDialogsClosed (dialogsStatus) {
+  return dialogsStatus.every(status => status === 'OFF')
 }
 
 ipcRenderer.on('search-gist', data => {
@@ -638,6 +634,33 @@ ipcRenderer.on('edit-gist', data => {
     logoutModalStatus ]
   if (allDialogsClosed(dialogs)) {
     ipcRenderer.emit('edit-gist-renderer')
+  }
+})
+
+ipcRenderer.on('delete-gist-check', data => {
+  const state = reduxStore.getState()
+  const {
+    gistRawModal,
+    searchWindowStatus,
+    aboutModalStatus,
+    gistNewModalStatus,
+    gistEditModalStatus,
+    gistDeleteModalStatus,
+    dashboardModalStatus,
+    logoutModalStatus } = state
+
+  // FIXME: This should be able to extracted to the allDialogsClosed method.
+  const dialogs = [
+    gistRawModal.status,
+    gistNewModalStatus,
+    gistEditModalStatus,
+    searchWindowStatus,
+    aboutModalStatus,
+    gistDeleteModalStatus,
+    logoutModalStatus,
+    dashboardModalStatus ]
+  if (allDialogsClosed(dialogs)) {
+    ipcRenderer.emit('delete-gist')
   }
 })
 
