@@ -52,6 +52,9 @@ class Snippet extends Component {
     ipcRenderer.on('exit-editor', () => {
       this.closeGistEditorModal()
     })
+    ipcRenderer.on('delete-gist', () => {
+      this.showDeleteModal()
+    })
   }
 
   componentWillUnmount () {

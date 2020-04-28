@@ -187,6 +187,11 @@ function setUpApplicationMenu () {
         click: (item, mainWindow) => mainWindow && mainWindow.send('edit-gist')
       },
       {
+        label: 'Delete Gist',
+        accelerator: shortcuts.keyDeleteGist,
+        click: (item, mainWindow) => mainWindow && mainWindow.send('delete-gist-check')
+      },
+      {
         label: 'Submit Gist',
         accelerator: shortcuts.keySubmitGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('submit-gist')
