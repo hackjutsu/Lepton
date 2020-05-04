@@ -32,7 +32,7 @@ module.exports = {
         "keyShortcutForSearch": "Shift+Space",
         "keyNewGist": "CommandOrControl+N",
         "keyEditGist": "CommandOrControl+E",
-        "keyDeleteGist": "Delete",
+        "keyDeleteGist": "CommandOrControl+Delete",
         "keySubmitGist": "CommandOrControl+S",
         "keyImmersiveMode": "CommandOrControl+I",
         "keyAboutPage": "CommandOrControl+,",
