@@ -44,7 +44,7 @@
 | :------------: |:-------------: |:-----:|
 | New Snippet    | `Cmd/Ctrl + N` | Create a snippet      |
 | Edit Snippet   | `Cmd/Ctrl + E` | Edit a snippet      |
-| Delete Snippet   | `Del` | Delete selected snippet      |
+| Delete Snippet   | `Cmd/Ctrl + Del` | Delete selected snippet      |
 | Submit         | `Cmd/Ctrl + S` | Submit the changes from the editor      |
 | Cancel         | `Cmd/Ctrl + ESC` | Exit the editor without saving   |
 | Sync           | `Cmd/Ctrl + R` | Sync with remote Gist server   |
