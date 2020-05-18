@@ -25,7 +25,6 @@ module.exports = {
         "host": "",
         "token": "",
         "avatarUrl": ""
-
     },
     "disableNotification": false,
     "shortcuts": {
@@ -39,5 +38,6 @@ module.exports = {
         "keyDashboard": "CommandOrControl+D",
         "keyEditorExit": "CommandOrControl+Escape",
         "keySyncGists": "CommandOrControl+R"
-    }
+    },
+    "validateFilename": false
 }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
-import { ipcRenderer } from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 import React, { Component } from 'react'
@@ -12,6 +12,9 @@ import './index.scss'
 
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
+
+const conf = remote.getGlobal('conf')
+const logger = remote.getGlobal('logger')
 
 const descriptionTips = '[title] description #tag1 #tag2'
 
@@ -84,8 +87,12 @@ class GistEditorFormImpl extends Component {
 const valideNotEmptyContent = value => value ? null : 'required'
 
 const validateFilename = value => {
-  if (!value) return 'required'
-  else if (!validFilename(value)) return 'invalid filename'
+  if (conf.get('validateFilename')) {
+    if (!value) return 'required'
+    else if (!validFilename(value)) return 'invalid filename'
+  } else {
+    logger.debug('[Filename Validation] According to the config, filename validation has been skipped')
+  }
 }
 
 const renderTitleInputField = ({ input, placeholder, type, meta: { touched, error, warning } }) => (
