@@ -18,7 +18,8 @@ module.exports = {
         "newSnippetPrivate": false
     },
     "editor": {
-        "tabSize": 4
+        "tabSize": 4,
+        "validateFilename": false
     },
     "enterprise": {
         "enable": false,
@@ -38,6 +39,5 @@ module.exports = {
         "keyDashboard": "CommandOrControl+D",
         "keyEditorExit": "CommandOrControl+Escape",
         "keySyncGists": "CommandOrControl+R"
-    },
-    "validateFilename": false
+    }
 }
