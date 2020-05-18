@@ -19,7 +19,7 @@ module.exports = {
     },
     "editor": {
         "tabSize": 4,
-        "validateFilename": false
+        "validateFilename": true
     },
     "enterprise": {
         "enable": false,
