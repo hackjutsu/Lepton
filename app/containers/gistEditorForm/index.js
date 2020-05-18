@@ -87,7 +87,7 @@ class GistEditorFormImpl extends Component {
 const valideNotEmptyContent = value => value ? null : 'required'
 
 const validateFilename = value => {
-  if (conf.get('validateFilename')) {
+  if (conf.get('editor').validateFilename) {
     if (!value) return 'required'
     else if (!validFilename(value)) return 'invalid filename'
   } else {
