@@ -1,5 +1,5 @@
 import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/githubApi'
-import Notifier from '../utilities/notifier'
+import { notifyFailure } from '../utilities/notifier'
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
 
@@ -232,7 +232,7 @@ export function fetchSingleGist (oldGist, id) {
       })
       .catch((err) => {
         logger.error('The request has failed: ' + err)
-        Notifier('Sync failed', 'Please check your network condition. 01')
+        notifyFailure('Sync failed', 'Please check your network condition. 01')
       })
   }
 }

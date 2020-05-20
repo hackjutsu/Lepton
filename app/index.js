@@ -45,7 +45,7 @@ import {
   updatePinnedTags
 } from './actions/index'
 
-import Notifier from './utilities/notifier'
+import { notifySuccess, notifyFailure } from './utilities/notifier'
 
 const logger = remote.getGlobal('logger')
 
@@ -128,7 +128,7 @@ function launchAuthWindow (token) {
         })
         .catch((err) => {
           logger.error('Failed: ' + JSON.stringify(err.error))
-          Notifier('Sync failed', 'Please check your network condition. 03')
+          notifyFailure('Sync failed', 'Please check your network condition. 03')
         })
     } else if (error) {
       logger.error('Oops! Something went wrong and we couldn\'t' +
@@ -355,12 +355,12 @@ function updateUserGists (userLoginId, token) {
       // clean up the snapshot for the previous state
       clearSyncSnapshot()
 
-      Notifier('Sync succeeds', humanReadableSyncTime)
+      notifySuccess('Sync succeeds', humanReadableSyncTime)
 
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
     })
     .catch(err => {
-      Notifier('Sync failed', 'Please check your network condition. 04')
+      notifyFailure('Sync failed', 'Please check your network condition. 04')
       logger.error('The request has failed: ' + err)
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
       throw err
@@ -411,7 +411,7 @@ function initUserSession (token) {
         logger.info('[Dispatch] updateUserSession INACTIVE')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
       }
-      Notifier('Sync failed', 'Please check your network condition. 00')
+      notifyFailure('Sync failed', 'Please check your network condition. 00')
     })
 }
 /** End: User session management **/

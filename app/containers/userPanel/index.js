@@ -4,7 +4,7 @@ import { default as GistEditorForm, NEW_GIST } from '../gistEditorForm'
 import { Image, Modal, Button, ProgressBar } from 'react-bootstrap'
 import { remote, ipcRenderer } from 'electron'
 import HumanReadableTime from 'human-readable-time'
-import Notifier from '../../utilities/notifier'
+import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
 import {
   addLangPrefix as Prefixed,
@@ -78,7 +78,7 @@ class UserPanel extends Component {
 
     return getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
       .catch((err) => {
-        Notifier('Gist creation failed')
+        notifyFailure('Gist creation failed')
         logger.error(JSON.stringify(err))
       })
       .then((response) => {
@@ -162,7 +162,7 @@ class UserPanel extends Component {
       filename: filenameRecords
     })
 
-    Notifier('Gist created', HumanReadableTime(new Date()))
+    notifySuccess('Gist created', HumanReadableTime(new Date()))
   }
 
   renderGistEditorModalBody () {

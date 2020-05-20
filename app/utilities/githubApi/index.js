@@ -1,6 +1,6 @@
 import { Promise } from 'bluebird'
 import { remote } from 'electron'
-import Notifier from '../notifier'
+import { notifyFailure } from '../notifier'
 import ProxyAgent from 'proxy-agent'
 import ReqPromise from 'request-promise'
 import Request from 'request'
@@ -137,7 +137,7 @@ function getAllGistsV1 (token, userId) {
       .catch(err => {
         if (err !== EMPTY_PAGE_ERROR_MESSAGE) {
           logger.error(err)
-          Notifier('Sync failed', 'Please check your network condition. 05')
+          notifyFailure('Sync failed', 'Please check your network condition. 05')
         }
       })
       .finally(() => {
