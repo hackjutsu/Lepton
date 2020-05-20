@@ -7,7 +7,7 @@ import Autolinker from 'autolinker'
 import CodeArea from '../codeArea'
 import HumanReadableTime from 'human-readable-time'
 import Moment from 'moment'
-import Notifier from '../../utilities/notifier'
+import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
 import {
   addLangPrefix as Prefixed,
@@ -78,11 +78,11 @@ class Snippet extends Component {
       .catch(err => {
         logger.error('Failed to delete the gist ' + activeGist)
         logger.error(JSON.stringify(err))
-        Notifier('Deletion failed', 'Please check your network condition. 02')
+        notifyFailure('Deletion failed', 'Please check your network condition. 02')
       })
       .then(data => {
         logger.info('The gist ' + activeGist + ' has been deleted.')
-        Notifier('The gist has been deleted')
+        notifySuccess('The gist has been deleted')
 
         // For performance purpose, we should perform an internal update, like what
         // we're doing for creating/edit gists. However, since delete is an infrequent
@@ -156,7 +156,7 @@ class Snippet extends Component {
       description,
       processedFiles)
       .catch((err) => {
-        Notifier('Gist update failed')
+        notifyFailure('Gist update failed')
         logger.error(JSON.stringify(err))
       })
       .then((response) => {
@@ -277,7 +277,7 @@ class Snippet extends Component {
       filename: filenameRecords
     })
 
-    Notifier('Gist updated', HumanReadableTime(new Date()))
+    notifySuccess('Gist updated', HumanReadableTime(new Date()))
   }
 
   renderGistEditorModalBody (description, fileArray, isPrivate) {
@@ -328,12 +328,12 @@ class Snippet extends Component {
   handleCopyGistLinkClicked (snippet, file) {
     const link = snippet.details.html_url + '#file-' + file.filename.replace(/\./g, '-').toLowerCase()
     clipboard.writeText(link)
-    Notifier('Copied', 'The link has been copied to the clipboard.')
+    notifySuccess('Copied', 'The link has been copied to the clipboard.')
   }
 
   handleCopyGistFileClicked (gist) {
     clipboard.writeText(gist.content)
-    Notifier('Copied', 'The content has been copied to the clipboard.')
+    notifySuccess('Copied', 'The content has been copied to the clipboard.')
   }
 
   showRawModalModal (gist) {
@@ -375,7 +375,7 @@ class Snippet extends Component {
 
   handleCopyRawLinkClicked (url) {
     clipboard.writeText(url)
-    Notifier('Copied', 'The raw file link has been copied to the clipboard.')
+    notifySuccess('Copied', 'The raw file link has been copied to the clipboard.')
   }
 
   renderPanelHeader (activeSnippet) {
