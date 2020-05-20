@@ -28,6 +28,10 @@ module.exports = {
         "avatarUrl": ""
     },
     "disableNotification": false,
+    "notifications": {
+        "success": true,
+        "failure": true
+    },
     "shortcuts": {
         "keyShortcutForSearch": "Shift+Space",
         "keyNewGist": "CommandOrControl+N",
