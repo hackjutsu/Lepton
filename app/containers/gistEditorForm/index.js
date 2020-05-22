@@ -87,9 +87,9 @@ class GistEditorFormImpl extends Component {
 const valideNotEmptyContent = value => value ? null : 'required'
 
 const validateFilename = value => {
-  if (conf.get('editor').validateFilename) {
-    if (!value) return 'required'
-    else if (!validFilename(value)) return 'invalid filename'
+  if (!value) return 'required'
+  if (conf.get('editor').validateFilename && !validFilename(value)) {
+    return 'invalid filename'
   } else {
     logger.debug('[Filename Validation] According to the config, filename validation has been skipped')
   }
