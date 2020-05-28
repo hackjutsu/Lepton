@@ -27,7 +27,6 @@ module.exports = {
         "token": "",
         "avatarUrl": ""
     },
-    "disableNotification": false,
     "notifications": {
         "success": true,
         "failure": true
