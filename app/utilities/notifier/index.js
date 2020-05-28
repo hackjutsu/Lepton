@@ -1,14 +1,13 @@
 import { remote } from 'electron'
 
 const conf = remote.getGlobal('conf')
-const disableAllNotifications = conf.get('disableNotification')
 
 export function notifySuccess (title, message = '') {
   const showSuccessNotifications = conf.get('notifications:success')
 
   let option = { title: title, body: message, silent: true }
 
-  if (!disableAllNotifications && showSuccessNotifications) {
+  if (showSuccessNotifications) {
     new Notification(option.title, option)
   }
 }
@@ -18,7 +17,7 @@ export function notifyFailure (title, message = '') {
 
   let option = { title: title, body: message, silent: true }
 
-  if (!disableAllNotifications && showFailureNotifications) {
+  if (showFailureNotifications) {
     new Notification(option.title, option)
   }
 }
