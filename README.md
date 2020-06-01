@@ -65,7 +65,7 @@ Lepton's features can be customized by `<home_dir>/.leptonrc`! (Create the file 
 - Enterprise
 - Notifications
 
-Check out the [.leptonrc template](https://gist.github.com/1ad7e4968eb64d881ec9dedd6c0f400b) to explore different customization options.
+Check out the [configuration docs](https://github.com/hackjutsu/Lepton/wiki/Configuration) to explore different customization options.
 
 ## Tech Stack
 ![Based on](./docs/img/erb-logo.png)
