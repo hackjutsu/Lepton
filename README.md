@@ -170,6 +170,11 @@ $ yarn dist
       <td><img src=https://avatars2.githubusercontent.com/u/1998649?v=3><a href="https://github.com/abnersajr">abnersajr</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/5442563?v=3><a href="https://github.com/seancheung">seancheung</a></td>
       <td><img src=https://avatars2.githubusercontent.com/u/32508538?v=3><a href="https://github.com/moia-sven-ole">moia-sven-ole</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/1248101?v=3><a href="https://github.com/GabrielNicolasAvellaneda">GabrielNicolasAvellaneda</a></td>
+      <td><img src=https://avatars2.githubusercontent.com/u/31698606?v=3><a href="https://github.com/sunxyw">sunxyw</a></td>
+   </tr>
+   <tr>
+      <td><img src=https://avatars1.githubusercontent.com/u/497458?v=3><a href="https://github.com/dideler">dideler</a></td>
    </tr>
 </table>
 

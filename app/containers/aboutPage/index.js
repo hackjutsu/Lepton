@@ -72,6 +72,9 @@ class AboutPage extends Component {
           <div className='contributor'><a href='https://github.com/abnersajr'>abnersajr</a></div>
           <div className='contributor'><a href='https://github.com/seancheung'>seancheung</a></div>
           <div className='contributor'><a href='https://github.com/moia-sven-ole'>moia-sven-ole</a></div>
+          <div className='contributor'><a href='https://github.com/GabrielNicolasAvellaneda'>GabrielNicolasAvellaneda</a></div>
+          <div className='contributor'><a href='https://github.com/sunxyw'>sunxyw</a></div>
+          <div className='contributor'><a href='https://github.com/dideler'>dideler</a></div>
         </div>
         <div className='setting-title'>Acknowledgement</div>
         <div className='license-section'>
