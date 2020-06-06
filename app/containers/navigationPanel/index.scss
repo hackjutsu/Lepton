@@ -76,6 +76,9 @@
     display: flex;
     flex-direction: column;
     margin-top: 15px;
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=927066
+    // The item should not have a minimum height
+    min-height: 0;
   }
 
   .tag-section-title {
@@ -106,6 +109,9 @@
   .tag-section-active {
     flex: 1 1 auto;
     max-height: none;
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=927066
+    // The item should not have a minimum height
+    min-height: 0;
   }
 
   .tag-section-hidden {
