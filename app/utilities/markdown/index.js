@@ -9,10 +9,10 @@ const Md = MarkdownIt({
   highlight: (str, lang) => {
     if (lang && HighlightJS.getLanguage(lang)) {
       try {
-        return HighlightJS.highlight(lang, str).value;
+        return HighlightJS.highlight(lang, str).value
       } catch (__) {}
     }
-    return HighlightJS.highlightAuto(str).value;
+    return HighlightJS.highlightAuto(str).value
   }
 })
   .use(MdTaskList)
