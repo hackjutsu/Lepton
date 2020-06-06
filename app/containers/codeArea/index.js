@@ -66,24 +66,46 @@ export default class CodeArea extends Component {
     return `<pre><code><table class='code-table' style='tab-size: ${kTabLength};'>${contentTable}</table></code></pre>`
   }
 
-  //  Adapt the language name for Highlight.js. For example, 'C#' should be
-  //  expressed as 'cs' to be recognized by Highlight.js.
-  adaptedLanguage (lang) {
+  // Find the best language for code highlighting by best effort.
+  adaptedLanguage (filename, lang) {
     let language = lang || 'Other'
 
+    // Adjust the language based on file extensions.
+    const filenameExtension = filename.split('.').pop()
+    switch (filenameExtension) {
+      case 'leptonrc':
+        language = 'json'
+        break
+      case 'zshrc':
+        language = 'bash'
+        break
+      case 'sql':
+        language = 'sql'
+        break
+      case 'solidity':
+      case 'sol':
+        language = 'solidity'
+        break
+      default:
+      // intentionally left blank
+    }
+
+    //  Adapt the language name for Highlight.js. For example, 'C#' should be
+    //  expressed as 'cs' to be recognized by Highlight.js.
     switch (language) {
-      case 'Shell': return 'Bash'
+      case 'Shell': return 'bash'
       case 'C#': return 'cs'
       case 'Objective-C': return 'objectivec'
       case 'Objective-C++': return 'objectivec'
       case 'Visual Basic': return 'vbscript'
       default:
     }
+
     return language
   }
 
-  renderCodeArea (content, lang, kTabLength) {
-    const language = this.adaptedLanguage(lang)
+  renderCodeArea (filename, content, lang, kTabLength) {
+    const language = this.adaptedLanguage(filename, lang)
     let htmlContent = ''
     switch (language) {
       case 'Jupyter Notebook':
@@ -102,7 +124,7 @@ export default class CodeArea extends Component {
   }
 
   render () {
-    const { content, language, kTabLength } = this.props
-    return this.renderCodeArea(content, language, kTabLength)
+    const { filename, content, language, kTabLength } = this.props
+    return this.renderCodeArea(filename, content, language, kTabLength)
   }
 }

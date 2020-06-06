@@ -489,12 +489,6 @@ class Snippet extends Component {
       for (const key in fileList) {
         const gistFile = fileList[key]
 
-        const filename = gistFile.filename
-        if (filename === '.leptonrc') gistFile.language = 'json'
-        else if (filename.endsWith('.sol') || filename.endsWith('.solidity')) {
-          gistFile.language = 'solidity'
-        }
-
         fileArray.push(Object.assign({
           filename: gistFile.filename,
           content: gistFile.content
@@ -541,7 +535,7 @@ class Snippet extends Component {
             </div>
             <Collapse in={ isExpanded }>
               <div className='collapsable-code-area'>
-                <CodeArea content={gistFile.content} language={gistFile.language} kTabLength={kTabLength}/>
+                <CodeArea filename={gistFile.filename} content={gistFile.content} language={gistFile.language} kTabLength={kTabLength}/>
               </div>
             </Collapse>
           </div>
