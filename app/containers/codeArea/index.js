@@ -98,6 +98,7 @@ export default class CodeArea extends Component {
       case 'Objective-C': return 'objectivec'
       case 'Objective-C++': return 'objectivec'
       case 'Visual Basic': return 'vbscript'
+      case 'Batchfile': return 'bat'
       default:
     }
 
