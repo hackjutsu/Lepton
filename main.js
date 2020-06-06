@@ -300,23 +300,26 @@ function initGlobalConfigs () {
   }
   nconf.defaults(defaultConfig)
   global.conf = nconf
+  global.configFilePath = configFilePath
 }
 
 function initGlobalLogger () {
   logger.level = nconf.get('logger:level')
-  let appFolder = app.getPath('userData')
+  const appFolder = app.getPath('userData')
   if (!fs.existsSync(appFolder)) {
     fs.mkdirSync(appFolder)
   }
-  let logFolder = path.join(app.getPath('userData'), 'logs')
+  const logFolder = path.join(app.getPath('userData'), 'logs')
   if (!fs.existsSync(logFolder)) {
     fs.mkdirSync(logFolder)
   }
-  let logFile = new Date().toISOString().replace(/:/g, '.') + '.log'
+  const logFile = new Date().toISOString().replace(/:/g, '.') + '.log'
+  const logFilePath = path.join(logFolder, logFile)
   logger.add(logger.transports.File, {
       json: false,
       exitOnError: false,
-      filename: path.join(logFolder, logFile),
+      filename: logFilePath,
       timestamp: true })
   global.logger = logger
+  global.logFilePath = logFilePath
 }

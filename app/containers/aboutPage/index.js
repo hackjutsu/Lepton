@@ -12,6 +12,8 @@ import React, { Component } from 'react'
 import './index.scss'
 
 const conf = remote.getGlobal('conf')
+const logFilePath = remote.getGlobal('logFilePath')
+const configFilePath = remote.getGlobal('configFilePath')
 
 class AboutPage extends Component {
   renderAboutSection () {
@@ -47,6 +49,14 @@ class AboutPage extends Component {
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton'>GitHub</a>
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/issues'>Feedback</a>
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE'>License</a>
+        </div>
+        <div className='setting-title'>Configs(.leptonrc)</div>
+        <div className='one-line-section'>
+          { configFilePath }
+        </div>
+        <div className='setting-title'>Logs</div>
+        <div className='one-line-section'>
+          { logFilePath }
         </div>
         <div className='setting-title'>Contributors</div>
         <div className='contributor-section'>

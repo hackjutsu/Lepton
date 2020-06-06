@@ -7,7 +7,7 @@
   }
 
   .section-base {
-    height: 75vh;
+    height: 80vh;
   }
 
   .general-section {
@@ -34,7 +34,7 @@
 
   .contributor-section {
     overflow: auto;
-    min-height: 200px;
+    min-height: 150px;
     border-radius: 5px;
     padding: 0 20px;
     border: solid 1px var(--border-color);
@@ -47,6 +47,16 @@
     margin-bottom: 20px;
     border-radius: 5px;
     padding: 0 20px;
+    border: solid 1px var(--border-color);
+    color: var(--text-secondary);
+  }
+
+  .one-line-section {
+    overflow: auto;
+    min-height: 28px;
+    border-radius: 5px;
+    padding: 0 20px;
+    white-space: nowrap;
     border: solid 1px var(--border-color);
     color: var(--text-secondary);
   }
