@@ -87,11 +87,16 @@ class GistEditorFormImpl extends Component {
 const valideNotEmptyContent = value => value ? null : 'required'
 
 const validateFilename = value => {
-  if (!value) return 'required'
-  if (conf.get('editor').validateFilename && !validFilename(value)) {
+  // empty filename is not allowed
+  if (!value) {
+    return 'required'
+  }
+
+  // validate filename according to the .leptonrc configs
+  if (!conf.get('editor').validateFilename) {
+    logger.info('[Filename Validation] According to the config, filename validation has been skipped')
+  } else if (!validFilename(value)) {
     return 'invalid filename'
-  } else {
-    logger.debug('[Filename Validation] According to the config, filename validation has been skipped')
   }
 }
 
