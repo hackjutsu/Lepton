@@ -210,6 +210,15 @@
         "ideas",
         "doc"
       ]
+    },
+    {
+      "login": "anthonyattard",
+      "name": "Anthony Attard",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/8838135?v=4",
+      "profile": "http://AnthonyAttard.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
