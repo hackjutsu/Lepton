@@ -90,6 +90,15 @@
         "ideas",
         "maintenance"
       ]
+    },
+    {
+      "login": "Gisonrg",
+      "name": "Jason Jiang",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/4332224?v=4",
+      "profile": "https://github.com/Gisonrg",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
