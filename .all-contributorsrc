@@ -135,6 +135,15 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "baybatu",
+      "name": "Batuhan Bayrakci",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/965804?v=4",
+      "profile": "http://batuhanbayrakci.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
