@@ -1,6 +1,6 @@
 > **To Lepton users around the world in more than 130 countries**: We hope you all stay **safe, healthy, and strong** as we get through the COVID-19 pandemic. Lepton will continue to be free, as always. If you find this app helpful, we encourage you to make a donation to a local or global charity of your choice to help fight against the pandemic. Together, we can make the world a better place. ❤️
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![](./docs/img/new_logo.png)
@@ -154,6 +154,9 @@ $ yarn dist
     <td align="center"><a href="http://www.linkedin.com/in/liuchenguang"><img src="https://avatars1.githubusercontent.com/u/5697293?v=4" width="100px;" alt=""/><br /><sub><b>lcgforever</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=lcgforever" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/passerbyid"><img src="https://avatars1.githubusercontent.com/u/2075566?v=4" width="100px;" alt=""/><br /><sub><b>Yuer Lee</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=passerbyid" title="Documentation">📖</a> <a href="#platform-passerbyid" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="http://yysu.github.io/About-me"><img src="https://avatars3.githubusercontent.com/u/12994810?v=4" width="100px;" alt=""/><br /><sub><b>Su,Yen-Yun</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=YYSU" title="Documentation">📖</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://cixuuz.github.io/"><img src="https://avatars3.githubusercontent.com/u/26782336?v=4" width="100px;" alt=""/><br /><sub><b>Chen Tong</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=cixuuz" title="Code">💻</a> <a href="#ideas-cixuuz" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-cixuuz" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
