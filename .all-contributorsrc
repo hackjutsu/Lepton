@@ -60,6 +60,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "passerbyid",
+      "name": "Yuer Lee",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/2075566?v=4",
+      "profile": "https://github.com/passerbyid",
+      "contributions": [
+        "doc",
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7,
