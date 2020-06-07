@@ -70,6 +70,15 @@
         "doc",
         "platform"
       ]
+    },
+    {
+      "login": "YYSU",
+      "name": "Su,Yen-Yun",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/12994810?v=4",
+      "profile": "http://yysu.github.io/About-me",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
