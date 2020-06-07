@@ -117,6 +117,15 @@
       "contributions": [
         "platform"
       ]
+    },
+    {
+      "login": "rawrmonstar",
+      "name": "Tegan Churchill",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/13814048?v=4",
+      "profile": "https://tegan.lol",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
