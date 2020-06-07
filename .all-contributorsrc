@@ -171,6 +171,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "seancheung",
+      "name": "Sean",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5442563?v=4",
+      "profile": "http://seanz.me",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
