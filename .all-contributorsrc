@@ -1,0 +1,27 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "hackjutsu",
+      "name": "CosmoX",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7756581?v=4",
+      "profile": "https://airbnb.io/",
+      "contributions": [
+        "code",
+        "design",
+        "test",
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "Lepton",
+  "projectOwner": "hackjutsu",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
