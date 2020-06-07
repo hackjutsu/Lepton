@@ -189,6 +189,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GabrielNicolasAvellaneda",
+      "name": "Gabriel Nicolas Avellaneda",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1248101?v=4",
+      "profile": "https://www.linkedin.com/in/GabrielNicolasAvellaneda/",
+      "contributions": [
+        "code",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
