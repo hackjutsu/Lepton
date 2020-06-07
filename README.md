@@ -1,6 +1,6 @@
 > **To Lepton users around the world in more than 130 countries**: We hope you all stay **safe, healthy, and strong** as we get through the COVID-19 pandemic. Lepton will continue to be free, as always. If you find this app helpful, we encourage you to make a donation to a local or global charity of your choice to help fight against the pandemic. Together, we can make the world a better place. ❤️
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![](./docs/img/new_logo.png)
@@ -151,6 +151,7 @@ $ yarn dist
     <td align="center"><a href="https://loveac.cn"><img src="https://avatars1.githubusercontent.com/u/5550402?v=4" width="100px;" alt=""/><br /><sub><b>Jiaye Wu</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=wujysh" title="Code">💻</a> <a href="#maintenance-wujysh" title="Maintenance">🚧</a> <a href="#ideas-wujysh" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="https://github.com/DNLHC"><img src="https://avatars1.githubusercontent.com/u/14959483?v=4" width="100px;" alt=""/><br /><sub><b>Danila</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=DNLHC" title="Code">💻</a> <a href="#design-DNLHC" title="Design">🎨</a> <a href="#maintenance-DNLHC" title="Maintenance">🚧</a></td>
     <td align="center"><a href="http://www.meilinzhan.com/"><img src="https://avatars2.githubusercontent.com/u/13786673?v=4" width="100px;" alt=""/><br /><sub><b>Meilin Zhan</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=meilinz" title="Code">💻</a> <a href="#ideas-meilinz" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-meilinz" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="http://www.linkedin.com/in/liuchenguang"><img src="https://avatars1.githubusercontent.com/u/5697293?v=4" width="100px;" alt=""/><br /><sub><b>lcgforever</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=lcgforever" title="Code">💻</a></td>
   </tr>
 </table>
 
