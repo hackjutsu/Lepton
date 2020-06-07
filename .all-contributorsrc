@@ -40,6 +40,17 @@
         "design",
         "maintenance"
       ]
+    },
+    {
+      "login": "meilinz",
+      "name": "Meilin Zhan",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13786673?v=4",
+      "profile": "http://www.meilinzhan.com/",
+      "contributions": [
+        "code",
+        "ideas",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
