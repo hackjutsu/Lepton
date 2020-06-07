@@ -29,6 +29,17 @@
         "maintenance",
         "ideas"
       ]
+    },
+    {
+      "login": "DNLHC",
+      "name": "Danila",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/14959483?v=4",
+      "profile": "https://github.com/DNLHC",
+      "contributions": [
+        "code",
+        "design",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
