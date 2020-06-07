@@ -54,9 +54,9 @@
 
   .one-line-section {
     overflow: auto;
-    min-height: 28px;
+    min-height: 30px;
     border-radius: 5px;
-    padding: 4px 10px;
+    padding: 4px 10px 0px 10px;
     white-space: nowrap;
     border: solid 1px var(--border-color);
     color: var(--text-secondary);
