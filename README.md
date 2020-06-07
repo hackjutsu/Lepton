@@ -149,7 +149,7 @@ $ yarn dist
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://airbnb.io/"><img src="https://avatars3.githubusercontent.com/u/7756581?v=4" width="100px;" alt=""/><br /><sub><b>CosmoX</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=hackjutsu" title="Code">💻</a> <a href="#design-hackjutsu" title="Design">🎨</a> <a href="https://github.com/hackjutsu/Lepton/commits?author=hackjutsu" title="Tests">⚠️</a> <a href="#maintenance-hackjutsu" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://airbnb.io/"><img src="https://avatars3.githubusercontent.com/u/7756581?v=4" width="100px;" alt=""/><br /><sub><b>CosmoX</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=hackjutsu" title="Code">💻</a> <a href="#design-hackjutsu" title="Design">🎨</a> <a href="https://github.com/hackjutsu/Lepton/commits?author=hackjutsu" title="Tests">⚠️</a> <a href="#maintenance-hackjutsu" title="Maintenance">🚧</a> <a href="#platform-hackjutsu" title="Packaging/porting to new platform">📦</a> <a href="#ideas-hackjutsu" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
