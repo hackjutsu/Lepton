@@ -51,6 +51,15 @@
         "ideas",
         "maintenance"
       ]
+    },
+    {
+      "login": "lcgforever",
+      "name": "lcgforever",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5697293?v=4",
+      "profile": "http://www.linkedin.com/in/liuchenguang",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
