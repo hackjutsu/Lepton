@@ -156,41 +156,6 @@ $ yarn dist
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-      <td><img src=https://avatars1.githubusercontent.com/u/7756581?v=3><a href="https://github.com/hackjutsu">hackjutsu</a></td>
-      <td><img src=https://avatars1.githubusercontent.com/u/5550402?v=3><a href="https://github.com/wujysh">wujysh</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/14959483?v=3><a href="https://github.com/DNLHC">DNLHC</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/13786673?v=3><a href="https://github.com/meilinz">meilinz</a></td>
-      <td><img src=https://avatars3.githubusercontent.com/u/5697293?v=3><a href="https://github.com/lcgforever">lcgforever</a></td>
-      <td><img src=https://avatars1.githubusercontent.com/u/180032?v=3><a href="https://github.com/Calinou">Calinou</a></td>
-   </tr>
-   <tr>
-      <td><img src=https://avatars0.githubusercontent.com/u/7173984?v=3><a href="https://github.com/rogersachan">rogersachan</a></td>
-      <td><img src=https://avatars3.githubusercontent.com/u/2075566?v=3><a href="https://github.com/passerbyid">passerbyid</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/12994810?v=3><a href="https://github.com/YYSU">YYSU</a></td>
-      <td><img src=https://avatars3.githubusercontent.com/u/26782336?v=3><a href="https://github.com/cixuuz">cixuuz</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/4332224?v=3><a href="https://github.com/Gisonrg">Gisonrg</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/7821318?v=3><a href="https://github.com/ArLEquiN64">ArLEquiN64</a></td>
-   </tr>
-   <tr>
-      <td><img src=https://avatars1.githubusercontent.com/u/1841272?v=3><a href="https://github.com/popey">popey</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/6280136?v=3><a href="https://github.com/tonyxu-io">tonyxu-io</a></td>
-      <td><img src=https://avatars3.githubusercontent.com/u/13814048?v=3><a href="https://github.com/rawrmonstar">rawrmonstar</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/965804?v=3><a href="https://github.com/baybatu">baybatu</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/22477950?v=3><a href="https://github.com/samuelmeuli">samuelmeuli</a></td>
-      <td><img src=https://avatars0.githubusercontent.com/u/8838135?v=3><a href="https://github.com/anthonyattard">anthonyattard</a></td>
-   </tr>
-      <tr>
-      <td><img src=https://avatars1.githubusercontent.com/u/5918765?v=3><a href="https://github.com/alexandreamadocastro">lexandreamadocastro</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/1998649?v=3><a href="https://github.com/abnersajr">abnersajr</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/5442563?v=3><a href="https://github.com/seancheung">seancheung</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/32508538?v=3><a href="https://github.com/moia-sven-ole">moia-sven-ole</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/1248101?v=3><a href="https://github.com/GabrielNicolasAvellaneda">GabrielNicolasAvellaneda</a></td>
-      <td><img src=https://avatars2.githubusercontent.com/u/31698606?v=3><a href="https://github.com/sunxyw">sunxyw</a></td>
-   </tr>
-   <tr>
-      <td><img src=https://avatars1.githubusercontent.com/u/497458?v=3><a href="https://github.com/dideler">dideler</a></td>
-   </tr>
-</table>
 
 ## License
 MIT © [hackjutsu](https://github.com/hackjutsu)
