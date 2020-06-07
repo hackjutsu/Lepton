@@ -108,6 +108,15 @@
       "contributions": [
         "platform"
       ]
+    },
+    {
+      "login": "tonyxu-io",
+      "name": "Tony Xu",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/6280136?v=4",
+      "profile": "https://tonyxu.io",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7,
