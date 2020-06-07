@@ -199,6 +199,17 @@
         "code",
         "doc"
       ]
+    },
+    {
+      "login": "dideler",
+      "name": "Dennis Ideler",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/497458?v=4",
+      "profile": "https://dideler.github.io",
+      "contributions": [
+        "code",
+        "ideas",
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
