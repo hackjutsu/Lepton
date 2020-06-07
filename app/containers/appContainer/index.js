@@ -16,6 +16,7 @@ import SplitPane from 'react-split-pane'
 import ThemeManager from '../../utilities/themeManager'
 
 import './index.scss'
+import './scrollbar.scss'
 
 const conf = remote.getGlobal('conf')
 const themeManager = new ThemeManager()
