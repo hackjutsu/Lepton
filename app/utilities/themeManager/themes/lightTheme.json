@@ -11,5 +11,6 @@
     "accent-warning": "#000",
     "accent-regular": "#2b2b2c",
     "shadow-color": "rgba(55, 55, 55, 0.3)",
-    "modal-close-button": "black"
+    "modal-close-button": "black",
+    "md-inline-code-background": "linen"
 }
