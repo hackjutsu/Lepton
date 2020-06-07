@@ -16,6 +16,6 @@ const Md = MarkdownIt({
   }
 })
   .use(MdTaskList)
-  .use(MdKatex, { 'throwOnError': false, 'errorColor': ' #cc0000' })
+  .use(MdKatex, { throwOnError: false, errorColor: ' #cc0000' })
 
 export default Md

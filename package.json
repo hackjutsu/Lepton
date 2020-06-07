@@ -37,7 +37,7 @@
     "css-loader": "^3.5.0",
     "electron": "^8.0.0",
     "electron-builder": "^22.4.0",
-    "eslint": "^5.0.0",
+    "eslint": "^7.2.0",
     "eslint-config-standard": "^14.0.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^11.0.0",

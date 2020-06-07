@@ -96,7 +96,8 @@ class UserPanel extends Component {
       updateGistTags,
       selectGistTag,
       selectGist,
-      searchIndex } = this.props
+      searchIndex
+    } = this.props
 
     const gistId = gistDetails.id
     const files = gistDetails.files
@@ -112,7 +113,7 @@ class UserPanel extends Component {
       const language = files[filename].language || 'Other'
       langs.add(language)
       const prefixedLang = Prefixed(language)
-      if (gistTags.hasOwnProperty(prefixedLang)) {
+      if (Object.prototype.hasOwnProperty.call(gistTags, prefixedLang)) {
         gistTags[prefixedLang].unshift(gistId)
       } else {
         gistTags[prefixedLang] = []
@@ -123,7 +124,7 @@ class UserPanel extends Component {
     // update the custom tags
     const customTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
     customTags.forEach(tag => {
-      if (gistTags.hasOwnProperty(tag)) {
+      if (Object.prototype.hasOwnProperty.call(gistTags, tag)) {
         gistTags[tag].unshift(gistDetails.id)
       } else {
         gistTags[tag] = []
@@ -171,7 +172,8 @@ class UserPanel extends Component {
       private: kIsPrivate,
       gists: [
         { filename: '', content: '' }
-      ] }
+      ]
+    }
     return (
       <GistEditorForm
         initialData={ initialData }

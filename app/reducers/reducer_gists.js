@@ -5,8 +5,7 @@ export default function (state = {}, action) {
     case UPDATE_GISTS:
       return action.payload
     case UPDATE_SINGLE_GIST:
-      let newState = Object.assign({}, state, action.payload)
-      return newState
+      return Object.assign({}, state, action.payload)
     default:
   }
   return state

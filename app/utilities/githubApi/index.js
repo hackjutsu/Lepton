@@ -32,9 +32,9 @@ function exchangeAccessToken (clientId, clientSecret, authCode) {
     uri: 'https://github.com/login/oauth/access_token',
     agent: proxyAgent,
     form: {
-      'client_id': clientId,
-      'client_secret': clientSecret,
-      'code': authCode,
+      client_id: clientId,
+      client_secret: clientSecret,
+      code: authCode,
     },
     json: true,
     timeout: 2 * kTimeoutUnit
@@ -49,7 +49,7 @@ function getUserProfile (token) {
     agent: proxyAgent,
     headers: {
       'User-Agent': userAgent,
-      'Authorization': 'token ' + token
+      Authorization: 'token ' + token
     },
     method: 'GET',
     json: true, // Automatically parses the JSON string in the response
@@ -80,17 +80,17 @@ function getAllGistsV2 (token, userId) {
   const gistList = []
   return requestGists(token, userId, 1, gistList)
     .then(res => {
-      if (!res.headers['link']) {
+      if (!res.headers.link) {
         logger.debug(TAG + '[V2] The header missing link property')
         logger.debug(TAG + JSON.stringify(res.headers))
         logger.debug(TAG + `The length of gistList is ${gistList.length}`)
 
         // Falling back to getAllGistsV1 to deal with two-factor Authenticated clients
-        logger.debug(TAG + `[V2] Falling back to [V1]...`)
+        logger.debug(TAG + '[V2] Falling back to [V1]...')
         return getAllGistsV1(token, userId)
       }
 
-      const matches = res.headers['link'].match(/page=[0-9]*/g)
+      const matches = res.headers.link.match(/page=[0-9]*/g)
       const maxPage = matches[matches.length - 1].substring('page='.length)
       logger.debug(TAG + `[V2] The max page number for gist is ${maxPage}`)
 
@@ -120,16 +120,16 @@ function requestGists (token, userId, page, gistList) {
 }
 
 function parseBody (res, gistList) {
-  for (let key in res) { if (res.hasOwnProperty(key)) gistList.push(res[key]) }
+  for (const key in res) { if (Object.prototype.hasOwnProperty.call(res, key)) gistList.push(res[key]) }
 }
 
 const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
 function getAllGistsV1 (token, userId) {
   logger.debug(TAG + `[V1] Getting all gists of ${userId} with token ${token}`)
-  let gistList = []
+  const gistList = []
   return new Promise((resolve, reject) => {
     const maxPageNumber = 100
-    let funcs = Promise.resolve(
+    const funcs = Promise.resolve(
       makeRangeArr(1, maxPageNumber).map(
         (n) => makeRequestForGetAllGists(makeOptionForGetAllGists(token, userId, n))))
 
@@ -159,8 +159,8 @@ function getAllGistsV1 (token, userId) {
           } else if (body.length === 0) {
             reject(EMPTY_PAGE_ERROR_MESSAGE)
           } else {
-            for (let key in body) {
-              if (body.hasOwnProperty(key)) {
+            for (const key in body) {
+              if (Object.prototype.hasOwnProperty.call(body, key)) {
                 gistList.push(body[key])
               }
             }
@@ -173,7 +173,7 @@ function getAllGistsV1 (token, userId) {
 }
 
 function makeRangeArr (start, end) {
-  let result = []
+  const result = []
   for (let i = start; i <= end; i++) result.push(i)
   return result
 }

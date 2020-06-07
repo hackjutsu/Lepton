@@ -165,8 +165,10 @@ class Snippet extends Component {
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
-    const { gists, activeGist, gistTags, activeGistTag, updateSingleGist,
-      updateGistTags, selectGistTag, searchIndex } = this.props
+    const {
+      gists, activeGist, gistTags, activeGistTag, updateSingleGist,
+      updateGistTags, selectGistTag, searchIndex
+    } = this.props
 
     const gistId = gistDetails.id
     const files = gistDetails.files
@@ -189,7 +191,7 @@ class Snippet extends Component {
       const language = file.language || 'Other'
       newLangs.add(language)
       const prefixedLang = Prefixed(language)
-      if (gistTags.hasOwnProperty(prefixedLang)) {
+      if (Object.prototype.hasOwnProperty.call(gistTags, prefixedLang)) {
         if (!gistTags[prefixedLang].includes(gistId)) {
           gistTags[prefixedLang].unshift(gistId)
         }
@@ -218,7 +220,7 @@ class Snippet extends Component {
     // We update the custom tags with the similar reasons mentioned above
     const newCustomTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
     newCustomTags.forEach(tag => {
-      if (gistTags.hasOwnProperty(tag)) {
+      if (Object.prototype.hasOwnProperty.call(gistTags, tag)) {
         if (!gistTags[tag].includes(gistId)) {
           gistTags[tag].unshift(gistId)
         }
@@ -433,11 +435,15 @@ class Snippet extends Component {
     }
     htmlForDescriptionSection.push(
       <div className='description-section' key='description'
-        dangerouslySetInnerHTML={ { __html: Autolinker.link(description, { stripPrefix: {
-          scheme: true,
-          www: true
-        },
-        newWindow: false }) } }/>
+        dangerouslySetInnerHTML={ {
+          __html: Autolinker.link(description, {
+            stripPrefix: {
+              scheme: true,
+              www: true
+            },
+            newWindow: false
+          })
+        } }/>
     )
     htmlForDescriptionSection.push(
       <div className='custom-tags-section' key='customTags'>

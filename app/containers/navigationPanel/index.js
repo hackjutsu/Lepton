@@ -305,7 +305,8 @@ class NavigationPanel extends Component {
       updateLocalStorage,
       getLoggedInUserInfo,
       reSyncUserGists,
-      launchAuthWindow } = this.props
+      launchAuthWindow
+    } = this.props
 
     return (
       <div className='menu-panel'>

@@ -222,11 +222,11 @@ export function updateLogoutModalStatus (status) {
 
 export function fetchSingleGist (oldGist, id) {
   return (dispatch, getState) => {
-    let state = getState()
+    const state = getState()
     return getGitHubApi(GET_SINGLE_GIST)(state.accessToken, id)
       .then((details) => {
-        let newGist = Object.assign(oldGist, { details: details })
-        let newGistWithId = {}
+        const newGist = Object.assign(oldGist, { details: details })
+        const newGistWithId = {}
         newGistWithId[id] = newGist
         dispatch(updateSingleGist(newGistWithId))
       })

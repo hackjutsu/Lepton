@@ -89,7 +89,8 @@ class SearchPage extends Component {
       selectGist,
       updateSearchWindowStatus,
       updatescrollRequestStatus,
-      fetchSingleGist } = this.props
+      fetchSingleGist
+    } = this.props
 
     if (!gists[gistId].details) {
       logger.info('[Dispatch] fetchSingleGist ' + gistId)

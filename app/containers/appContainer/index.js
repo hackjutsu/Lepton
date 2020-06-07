@@ -96,7 +96,8 @@ class AppContainer extends Component {
       updateActiveGistAfterClicked,
       reSyncUserGists,
       localPref,
-      searchIndex } = this.props
+      searchIndex
+    } = this.props
 
     return (
       <div>
