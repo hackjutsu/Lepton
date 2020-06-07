@@ -79,6 +79,17 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "cixuuz",
+      "name": "Chen Tong",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/26782336?v=4",
+      "profile": "https://cixuuz.github.io/",
+      "contributions": [
+        "code",
+        "ideas",
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
