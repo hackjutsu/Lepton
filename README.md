@@ -1,6 +1,6 @@
 > **To Lepton users around the world in more than 130 countries**: We hope you all stay **safe, healthy, and strong** as we get through the COVID-19 pandemic. Lepton will continue to be free, as always. If you find this app helpful, we encourage you to make a donation to a local or global charity of your choice to help fight against the pandemic. Together, we can make the world a better place. ❤️
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-14-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![](./docs/img/new_logo.png)
@@ -163,6 +163,9 @@ $ yarn dist
     <td align="center"><a href="https://tegan.lol"><img src="https://avatars0.githubusercontent.com/u/13814048?v=4" width="100px;" alt=""/><br /><sub><b>Tegan Churchill</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=rawrmonstar" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/AngieW0908"><img src="https://avatars3.githubusercontent.com/u/26016229?v=4" width="100px;" alt=""/><br /><sub><b>Angie Wang</b></sub></a><br /><a href="#design-AngieW0908" title="Design">🎨</a></td>
     <td align="center"><a href="http://batuhanbayrakci.com"><img src="https://avatars0.githubusercontent.com/u/965804?v=4" width="100px;" alt=""/><br /><sub><b>Batuhan Bayrakci</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=baybatu" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://samuelmeuli.com"><img src="https://avatars0.githubusercontent.com/u/22477950?v=4" width="100px;" alt=""/><br /><sub><b>Samuel Meuli</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=samuelmeuli" title="Code">💻</a></td>
   </tr>
 </table>
 
