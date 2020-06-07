@@ -14,7 +14,9 @@
         "code",
         "design",
         "test",
-        "maintenance"
+        "maintenance",
+        "platform",
+        "ideas"
       ]
     }
   ],
