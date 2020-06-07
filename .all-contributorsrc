@@ -18,6 +18,17 @@
         "platform",
         "ideas"
       ]
+    },
+    {
+      "login": "wujysh",
+      "name": "Jiaye Wu",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/5550402?v=4",
+      "profile": "https://loveac.cn",
+      "contributions": [
+        "code",
+        "maintenance",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
