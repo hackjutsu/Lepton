@@ -56,7 +56,7 @@
 | Search         | `Shift + Space`|  Toggle the [search bar](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/search_bar.png)    |
 
 ## Customization
-Lepton's features can be customized by `<home_dir>/.leptonrc`! (Create the file if it does not exist.)
+Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact path in the About page by `Command/Ctrl + ,`. Create the file if it does not exist.
 
 - Theme (light/dark)
 - Snippet
