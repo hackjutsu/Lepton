@@ -99,7 +99,7 @@ $ cd Lepton && yarn install
 ```
 
 ### Client ID/Secret
-[Register your application](https://github.com/settings/applications/new), and put your client id and client secret in `./configs/account.js`.
+[Register your application](https://github.com/settings/applications/new), duplicate the `./configs/accountDummy.js` into a `./configs/account.js` file and place your client id and client secret from the GitHub account registration in `./configs/account.js`.
 ```js
 module.exports = {
   client_id: <your_client_id>,
