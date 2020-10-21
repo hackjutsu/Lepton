@@ -6,6 +6,8 @@ const windowStateKeeper = require('electron-window-state')
 const electronLocalshortcut = require('electron-localshortcut')
 const Menu = electron.Menu
 const app = electron.app
+const dialog = electron.dialog
+const Tray = electron.Tray
 const ipcMain = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
 let willQuitApp = false
@@ -35,6 +37,8 @@ for (const key of Object.getOwnPropertyNames(defaultConfig)) {
 }
 
 let mainWindow = null
+let miniWindow = null
+let operationType = 0;
 
 const shortcuts = nconf.get('shortcuts')
 
@@ -122,12 +126,52 @@ function createWindow (autoLogin) {
   })
 
   mainWindow.on('close', (e) => {
-    if (os.platform() === 'darwin' && !willQuitApp) {
-      // Hide the window when users close the window on macOS
+    if (operationType == 0) {
+      const choice = dialog.showMessageBoxSync(mainWindow, {
+        type: 'info',
+        title: 'Quit',
+        defaultId: 0,
+        cancelId: 0,
+        message: 'Are you sure?',
+        buttons: ['Nerver Mind', 'Minimize to disk', 'Quit']
+      })
+      if (choice === 1) {
+        if (miniWindow) {
+          mainWindow.hide() // 调用 最小化实例方法
+        } else {
+          setTray(app, mainWindow)
+        }
+        e.preventDefault()
+        operationType = 1
+      } else if (choice === 2) {
+        if (os.platform() === 'darwin' && !willQuitApp) {
+          // Hide the window when users close the window on macOS
+          e.preventDefault()
+          mainWindow.hide()
+        } else {
+          mainWindow = null
+        }
+        operationType = 2
+      } else {
+        e.preventDefault()
+      }
+    }
+    if (operationType == 1) {
+      if (miniWindow) {
+        mainWindow.hide() // 调用 最小化实例方法
+      } else {
+        setTray(app, mainWindow)
+      }
       e.preventDefault()
-      mainWindow.hide()
-    } else {
-      mainWindow = null
+    }
+    if (operationType == 2) {
+      if (os.platform() === 'darwin' && !willQuitApp) {
+        // Hide the window when users close the window on macOS
+        e.preventDefault()
+        mainWindow.hide()
+      } else {
+        mainWindow = null
+      }
     }
   });
 
@@ -158,16 +202,20 @@ app.on('window-all-closed', () => {
 
 /* 'before-quit' is emitted when Electron receives 
  * the signal to exit and wants to start closing windows */
-app.on('before-quit', () => {
-  willQuitApp = true
-  try {
-    // If we launch the app and close it quickly, we might run into a 
-    // situation where electronLocalshortcut is not initialized.
-    if (mainWindow && electronLocalshortcut) {
-      electronLocalshortcut.unregisterAll(mainWindow)
+app.on('before-quit', (event) => {
+  if (operationType == 2) {
+    willQuitApp = true
+    try {
+      // If we launch the app and close it quickly, we might run into a 
+      // situation where electronLocalshortcut is not initialized.
+      if (mainWindow && electronLocalshortcut) {
+        electronLocalshortcut.unregisterAll(mainWindow)
+      }
+    } catch (e) {
+      logger.error(e)
     }
-  } catch (e) {
-    logger.error(e)
+  }else{
+    event.preventDefault()
   }
 })
 
@@ -327,4 +375,43 @@ function initGlobalLogger () {
       timestamp: true })
   global.logger = logger
   global.logFilePath = logFilePath
+}
+
+function setTray(app, mainWindow) {
+  if (miniWindow) {
+    mainWindow.hide()
+    return
+  }
+  const trayMenuTemplate = [
+    {
+      label: 'Open Window',
+      click: () => {
+        mainWindow.show()
+      }
+    },
+    {
+      label: 'Quit',
+      click: () => {
+        operationType = 2
+        if (process.platform !== 'darwin') app.quit()
+        mainWindow = null
+      }
+    }
+  ]
+  const iconPath = path.join(__dirname, 'build/icon/icon.png')
+
+  miniWindow = new Tray(iconPath)
+
+  const contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
+
+  mainWindow.hide()
+
+  miniWindow.setToolTip('Lepton')
+
+  miniWindow.setContextMenu(contextMenu)
+
+  miniWindow.on('double-click', () => {
+    mainWindow.show()
+  })
+  return miniWindow
 }
