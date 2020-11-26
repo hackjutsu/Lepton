@@ -182,7 +182,7 @@ function updateGistTagsAfterSync (gistTags) {
 }
 /** End: Language tags management **/
 
-/** Start: Acitive language tag management **/
+/** Start: Active language tag management **/
 function getEffectiveActiveGistTagAfterSync (gistTags, newActiveTag) {
   // The active language tag could be invalid if the specific language tag no
   // long exists after synchronization. However, if it is still valid, we should
@@ -203,9 +203,9 @@ function updateActiveGistTagAfterSync (gistTags, newActiveTagCandidate) {
     reduxStore.dispatch(selectGistTag(newActiveTagCandidate))
   }
 }
-/** End: Acitive language tag management **/
+/** End: Active language tag management **/
 
-/** Start: Acitive gist management **/
+/** Start: Active gist management **/
 function updateActiveGistBase (gists, activeGist) {
   if (!gists || !activeGist) {
     // user has no gists
@@ -236,7 +236,7 @@ function updateActiveGistAfterClicked (gists, gistTags, newActiveTag) {
   const activeGist = gistListForActiveGistTag[0] // reset the active gist
   updateActiveGistBase(gists, activeGist)
 }
-/** End: Acitive gist management **/
+/** End: Active gist management **/
 
 /** Start: User gists management **/
 function updateGistStoreAfterSync (gists) {
