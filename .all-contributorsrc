@@ -228,6 +228,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "polnetwork",
+      "name": "Pol Maresma",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/639877?v=4",
+      "profile": "http://www.polnetwork.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
