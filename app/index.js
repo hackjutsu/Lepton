@@ -445,12 +445,12 @@ function downloadImage (imageUrl, filename) {
     return
   }
 
-  const userProfilePath = (remote.app).getPath('userData') + '/profile/'
+  const userProfilePath = path.join(remote.app.getPath('userData'), 'profile')
   if (!fs.existsSync(userProfilePath)) {
     fs.mkdirSync(userProfilePath)
   }
 
-  const imagePath = userProfilePath + filename + '.png'
+  const imagePath = path.join(userProfilePath, filename + '.png')
   ImageDownloader({
     url: imageUrl,
     dest: imagePath,

@@ -27,7 +27,7 @@ initGlobalLogger()
 
 logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} ${os.platform()}-----\n`)
 
-logger.info(`[conf] Looking for .leptonrc at ${ app.getPath('home') + '/.leptonrc' }`)
+logger.info(`[conf] Looking for .leptonrc at ${ path.join(app.getPath('home'), '.leptonrc') }`)
 logger.info('[conf] The resolved configuration is ...')
 for (const key of Object.getOwnPropertyNames(defaultConfig)) {
   logger.info(`"${key}": ${JSON.stringify(nconf.get(key))}`)    
@@ -290,7 +290,7 @@ function setUpTouchBar() {
 }
 
 function initGlobalConfigs () {
-  const configFilePath = app.getPath('home') + '/.leptonrc'
+  const configFilePath = path.join(app.getPath('home'), '.leptonrc')
   logger.info(`[conf] Looking for .leptonrc at ${configFilePath}`)
   nconf.argv().env()
   try {
