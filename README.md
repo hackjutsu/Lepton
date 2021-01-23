@@ -82,7 +82,7 @@ Check out the [configuration docs](https://github.com/hackjutsu/Lepton/wiki/Conf
 - Download released binaries(macOS/Windows/Linux) [here](https://github.com/hackjutsu/Lepton/releases).
 - Install via Homebrew (macOS)
 ```bash
-brew cask install lepton
+brew install --cask lepton
 ```
 - Install via SnapCraft (Linux)
 
