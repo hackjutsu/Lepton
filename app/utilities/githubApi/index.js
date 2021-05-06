@@ -64,12 +64,10 @@ function getSingleGist (token, gistId) {
     uri: SINGLE_GIST_URI + gistId,
     agent: proxyAgent,
     headers: {
-      'User-Agent': userAgent
+      'User-Agent': userAgent,
+      Authorization: 'token ' + token
     },
     method: 'GET',
-    qs: {
-      access_token: token
-    },
     json: true, // Automatically parses the JSON string in the response
     timeout: 2 * kTimeoutUnit
   })
@@ -185,10 +183,10 @@ function makeOptionForGetAllGists (token, userId, page) {
     agent: proxyAgent,
     headers: {
       'User-Agent': userAgent,
+      Authorization: 'token ' + token
     },
     method: 'GET',
     qs: {
-      access_token: token,
       per_page: GISTS_PER_PAGE,
       page: page
     },
@@ -203,13 +201,11 @@ function createSingleGist (token, description, files, isPublic) {
   return ReqPromise({
     headers: {
       'User-Agent': userAgent,
+      Authorization: 'token ' + token
     },
     method: 'POST',
     uri: `https://${gitHubHostApi}/gists`,
     agent: proxyAgent,
-    qs: {
-      access_token: token
-    },
     body: {
       description: description,
       public: isPublic,
@@ -225,13 +221,11 @@ function editSingleGist (token, gistId, updatedDescription, updatedFiles) {
   return ReqPromise({
     headers: {
       'User-Agent': userAgent,
+      Authorization: 'token ' + token
     },
     method: 'PATCH',
     uri: `https://${gitHubHostApi}/gists/${gistId}`,
     agent: proxyAgent,
-    qs: {
-      access_token: token
-    },
     body: {
       description: updatedDescription,
       files: updatedFiles
@@ -246,13 +240,11 @@ function deleteSingleGist (token, gistId) {
   return ReqPromise({
     headers: {
       'User-Agent': userAgent,
+      Authorization: 'token ' + token
     },
     method: 'DELETE',
     uri: `https://${gitHubHostApi}/gists/${gistId}`,
     agent: proxyAgent,
-    qs: {
-      access_token: token
-    },
     json: true,
     timeout: 2 * kTimeoutUnit
   })
