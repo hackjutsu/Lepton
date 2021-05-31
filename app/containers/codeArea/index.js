@@ -1,6 +1,7 @@
 import { remote } from 'electron'
 import HighlightJS from 'highlight.js'
 import hljsDefineSolidity from 'highlightjs-solidity'
+import hljsDefineGraphQL from 'highlightjs-graphql'
 import Markdown from '../../utilities/markdown'
 import nb from '../../utilities/jupyterNotebook'
 import React, { Component } from 'react'
@@ -20,6 +21,7 @@ if (conf.get('theme') === 'dark') {
 }
 
 hljsDefineSolidity(HighlightJS) // register solidity to hightlight.js
+hljsDefineGraphQL(HighlightJS) // register graphql to hightlight.js
 
 export default class CodeArea extends Component {
   createJupyterNotebookCodeBlock (content, language, kTabLength) {
