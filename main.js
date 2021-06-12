@@ -50,7 +50,8 @@ function createWindow (autoLogin) {
   })
 
   const webPreferences = {
-    nodeIntegration: true
+    nodeIntegration: true,
+    enableRemoteModule: true
   }
 
   mainWindow = new BrowserWindow({
