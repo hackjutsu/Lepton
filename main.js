@@ -52,7 +52,10 @@ function createWindow (autoLogin) {
 
   const webPreferences = {
     nodeIntegration: true,
-    enableRemoteModule: true
+    enableRemoteModule: true,
+    // https://github.com/electron/electron/blob/main/docs/tutorial/context-isolation.md
+    // TODO: migrate and enable context isolation
+    contextIsolation: false
   }
 
   mainWindow = new BrowserWindow({
