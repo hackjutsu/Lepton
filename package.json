@@ -58,6 +58,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "@electron/remote": "^1.1.0",
     "autolinker": "^3.14.1",
     "babel-eslint": "^10.0.1",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",

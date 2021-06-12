@@ -1,3 +1,4 @@
+require('@electron/remote/main').initialize()
 const os = require('os')
 const electron = require('electron')
 const nconf = require('nconf')
