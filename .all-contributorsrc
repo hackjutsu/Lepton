@@ -255,6 +255,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sunnysidesounds",
+      "name": "Jason R Alexander",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1030838?v=4",
+      "profile": "http://www.linkedin.com/in/jasonralexander",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
