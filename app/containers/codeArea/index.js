@@ -1,4 +1,3 @@
-import { remote } from 'electron'
 import HighlightJS from 'highlight.js'
 import hljsDefineSolidity from 'highlightjs-solidity'
 import hljsDefineGraphQL from 'highlightjs-graphql'
@@ -9,6 +8,8 @@ import React, { Component } from 'react'
 import '../../utilities/vendor/prism/prism.scss'
 import './jupyterNotebook.scss'
 import './markdown.scss'
+
+const remote = require('@electron/remote')
 
 const logger = remote.getGlobal('logger')
 const conf = remote.getGlobal('conf')
