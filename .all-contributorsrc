@@ -264,6 +264,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "Sebastian-Hojas",
+      "name": "Sebastian Hojas",
+      "avatar_url": "https://avatars.githubusercontent.com/u/279378?v=4",
+      "profile": "http://irrelevant.at",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
