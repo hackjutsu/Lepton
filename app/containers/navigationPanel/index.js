@@ -157,8 +157,10 @@ class NavigationPanel extends Component {
         <div className='tag-section-list'>
           <div
             className={
-              activeSection === 0 ? 'tag-section tag-section-active'
-                : activeSection === -1 ? 'tag-section'
+              activeSection === 0
+                ? 'tag-section tag-section-active'
+                : activeSection === -1
+                  ? 'tag-section'
                   : 'tag-section tag-section-hidden'}>
             <a href='#'
               className='tag-section-title'
@@ -170,8 +172,10 @@ class NavigationPanel extends Component {
           </div>
           <div
             className={
-              activeSection === 1 ? 'tag-section tag-section-active'
-                : activeSection === -1 ? 'tag-section'
+              activeSection === 1
+                ? 'tag-section tag-section-active'
+                : activeSection === -1
+                  ? 'tag-section'
                   : 'tag-section tag-section-hidden'}>
             <div className='pinned-tag-header'>
               <a href='#'
@@ -188,8 +192,10 @@ class NavigationPanel extends Component {
             </div>
           </div>
           <div className={
-            activeSection === 2 ? 'tag-section tag-section-active'
-              : activeSection === -1 ? 'tag-section'
+            activeSection === 2
+              ? 'tag-section tag-section-active'
+              : activeSection === -1
+                ? 'tag-section'
                 : 'tag-section tag-section-hidden'}>
             <a href='#'
               onClick={this.handleSectionClick.bind(this, 2)}

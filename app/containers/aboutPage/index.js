@@ -17,7 +17,6 @@ const logFilePath = remote.getGlobal('logFilePath')
 const configFilePath = remote.getGlobal('configFilePath')
 
 class AboutPage extends Component {
-
   openFileInEditor (filePath) {
     launch(
       filePath,

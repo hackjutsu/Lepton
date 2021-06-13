@@ -173,7 +173,8 @@ class SearchPage extends Component {
       resultsJSXGroup.push(
         <li
           className={ index === selectedIndex
-            ? 'search-result-item-selected' : 'search-result-item' }
+            ? 'search-result-item-selected'
+            : 'search-result-item' }
           key={ gist.id }
           ref={ index }
           onClick={ this.handleSnippetClicked.bind(this, gist.id) }>
