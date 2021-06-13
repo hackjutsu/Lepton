@@ -84,6 +84,12 @@
     margin-left: 5px;
     margin-bottom: 5px;
   }
+  .setting-title-clickable {
+    @extend .setting-title;
+  }
+  .setting-title-clickable:hover {
+    cursor: pointer;
+  }
 
   .modal-sm {
     width: 375px;

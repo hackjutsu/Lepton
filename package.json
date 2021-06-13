@@ -79,6 +79,7 @@
     "highlightjs-solidity": "^1.0.6",
     "human-readable-time": "^0.3.0",
     "image-downloader": "^4.0.0",
+    "launch-editor": "^2.2.1",
     "markdown-it": "^12.0.0",
     "markdown-it-katex": "^2.0.3",
     "markdown-it-task-lists": "^2.1.1",

@@ -8,6 +8,7 @@ import LicenseInfo from '../../../license.json'
 import logoDarkImage from './logo-dark.png'
 import logoLightImage from './logo-light.png'
 import React, { Component } from 'react'
+import launch from 'launch-editor'
 
 import './index.scss'
 
@@ -16,6 +17,16 @@ const logFilePath = remote.getGlobal('logFilePath')
 const configFilePath = remote.getGlobal('configFilePath')
 
 class AboutPage extends Component {
+
+  openFileInEditor (filePath) {
+    launch(
+      filePath,
+      (filePath, errorMsg) => {
+        console.log(errorMsg)
+      }
+    )
+  }
+
   renderAboutSection () {
     const licenseList = []
     /* Add Evil icons license as an exception */
@@ -50,14 +61,12 @@ class AboutPage extends Component {
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/issues'>Feedback</a>
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE'>License</a>
         </div>
-        <div className='setting-title'>Configs(.leptonrc)</div>
-        <div className='one-line-section'>
-          { configFilePath }
+        <div className='setting-title-clickable' onClick={ this.openFileInEditor.bind(this, configFilePath) }>
+            Configurations
         </div>
-        <div className='setting-title'>Logs</div>
-        <div className='one-line-section'>
-          { logFilePath }
-        </div>
+        <div className='one-line-section'>{ configFilePath }</div>
+        <div className='setting-title-clickable' onClick={ this.openFileInEditor.bind(this, logFilePath) }>Logs</div>
+        <div className='one-line-section'>{ logFilePath }</div>
         <div className='setting-title'>Contributors</div>
         <div className='contributor-section'>
           <div className='contributor'><a href='https://github.com/hackjutsu'>hackjutsu</a></div>
