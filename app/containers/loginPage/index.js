@@ -121,6 +121,9 @@ class LoginPage extends Component {
     if (conf.get('enterprise:enable')) {
       return (
         <div className='button-group-modal'>
+          <div className="login-page-text-link">
+            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
+          </div>
           <Button
             autoFocus
             className='modal-button'
@@ -128,9 +131,6 @@ class LoginPage extends Component {
             onClick={ this.handleContinueButtonClicked.bind(this) }>
             { loggedInUserName ? `Continue as ${loggedInUserName}` : 'HAPPY CODING' }
           </Button>
-          <div className="login-page-footer">
-            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
-          </div>
         </div>
       )
     }
