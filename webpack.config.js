@@ -51,6 +51,9 @@ module.exports = {
     }, {
       test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
       loader: 'raw-loader'
+    }, {
+      test: /\.all-contributorsrc$/,
+      loader: 'json-loader'
     }]
   },
   externals: [nodeExternals({
