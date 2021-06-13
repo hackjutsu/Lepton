@@ -105,14 +105,14 @@ class LoginPage extends Component {
     const { authWindowStatus, loggedInUserInfo, userSessionStatus } = this.props
     const { loginMode } = this.state
     const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
-    const welcomeMessage = 'Lepton is FREE. Like us in GitHub!'
+    const welcomeMessage = 'Lepton is FREE. Like us on GitHub! ⭐'
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
         <div className='button-group-modal'>
           <ProgressBar active now={ 100 }/>
           <div className="login-page-text-link">
-            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
+            <a href="https://github.com/hackjutsu/Lepton"><strong>{ welcomeMessage }</strong></a>
           </div>
         </div>
       )
@@ -139,13 +139,13 @@ class LoginPage extends Component {
       loggedInUserName === null || loggedInUserName === 'null') {
       return (
         <div className='button-group-modal'>
+          <div className="login-page-text-link">
+            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
+          </div>
           { loginMode === LoginModeEnum.CREDENTIALS
             ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus)
             : this.renderTokenLoginSection(userSessionStatus)
           }
-          <div className="login-page-text-link">
-            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
-          </div>
         </div>
       )
     }
@@ -182,9 +182,6 @@ class LoginPage extends Component {
   renderCredentialLoginSection (authWindowStatus, userSessionStatus) {
     return (
       <div>
-        <div className="login-page-text-link">
-          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Use GitHub token?</a>
-        </div>
         { userSessionStatus === 'EXPIRED'
           ? <Alert bsStyle="warning" className="login-alert">Token invalid</Alert>
           : null
@@ -195,6 +192,9 @@ class LoginPage extends Component {
           onClick={ this.handleLoginClicked.bind(this) }>
             GitHub Login
         </Button>
+        <div className="login-page-text-link">
+          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Switch to token?</a>
+        </div>
       </div>
     )
   }
@@ -202,9 +202,6 @@ class LoginPage extends Component {
   renderTokenLoginSection (userSessionStatus) {
     return (
       <form>
-        <div className="login-page-text-link">
-          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Use GitHub credentials?</a>
-        </div>
         { userSessionStatus === 'EXPIRED'
           ? <Alert bsStyle="warning" className="login-alert">Token invalid</Alert>
           : null
@@ -220,6 +217,9 @@ class LoginPage extends Component {
           onClick={ this.handleTokenLoginButtonClicked.bind(this, this.state.inputTokenValue) }>
             Token Login
         </Button>
+        <div className="login-page-text-link">
+          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Switch to credentials?</a>
+        </div>
       </form>
     )
   }
