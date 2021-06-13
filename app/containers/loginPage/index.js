@@ -112,7 +112,7 @@ class LoginPage extends Component {
         <div className='button-group-modal'>
           <ProgressBar active now={ 100 }/>
           <div className="login-page-text-link">
-            <a href="https://github.com/hackjutsu/Lepton"><strong>{ welcomeMessage }</strong></a>
+            <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
           </div>
         </div>
       )
