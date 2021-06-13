@@ -1,3 +1,4 @@
+import fs from 'fs'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
@@ -13,15 +14,19 @@ import launch from 'launch-editor'
 import './index.scss'
 
 const conf = remote.getGlobal('conf')
+const logger = remote.getGlobal('logger')
 const logFilePath = remote.getGlobal('logFilePath')
 const configFilePath = remote.getGlobal('configFilePath')
 
 class AboutPage extends Component {
   openFileInEditor (filePath) {
+    if (!fs.existsSync(filePath)) {
+      fs.closeSync(fs.openSync(filePath, 'w'))
+    }
     launch(
       filePath,
-      (filePath, errorMsg) => {
-        console.log(errorMsg)
+      (filePath, error) => {
+        logger.error(`Failed to open ${filePath} with error ${error}`)
       }
     )
   }
