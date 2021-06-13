@@ -44,11 +44,16 @@
     cursor: not-allowed;
   }
 
-  .login-page-footer {
+  .login-page-text-link {
     font-size: 10px;
     font-style: italic;
     color: gray;
     margin-top: 10px;
+    margin-bottom: 10px;
     text-decoration: underline;
+  }
+
+  .login-alert {
+    margin-bottom: 5px !important;
   }
 }

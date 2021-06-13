@@ -11,6 +11,8 @@ import './index.scss'
 const conf = remote.getGlobal('conf')
 const logger = remote.getGlobal('logger')
 
+const LoginModeEnum = { CREDENTIALS: 1, TOKEN: 2 }
+
 let defaultImage = dojocatImage
 if (conf.get('enterprise:enable')) {
   defaultImage = privateinvestocatImage
@@ -20,6 +22,14 @@ if (conf.get('enterprise:enable')) {
 }
 
 class LoginPage extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      inputTokenValue: '',
+      loginMode: LoginModeEnum.CREDENTIALS
+    }
+  }
+
   componentWillMount () {
     const { loggedInUserInfo } = this.props
     logger.debug('-----> Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
@@ -31,7 +41,7 @@ class LoginPage extends Component {
     logger.debug('-----> Registering listener for auto-login signal')
     ipcRenderer.on('auto-login', () => {
       logger.debug('-----> Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
-      loggedInUserInfo && this.handleContinueButtonClicked()
+      loggedInUserInfo && loggedInUserInfo.token && this.handleContinueButtonClicked()
     })
 
     logger.debug('-----> sending login-page-ready signal')
@@ -73,8 +83,27 @@ class LoginPage extends Component {
     }
   }
 
+  handleTokenLoginButtonClicked (token) {
+    if (token && this.props.authWindowStatus === 'OFF') {
+      this.props.launchAuthWindow(token)
+    }
+  }
+
+  handleLoginModeSwitched () {
+    if (this.state.loginMode === LoginModeEnum.CREDENTIALS) {
+      this.setState({
+        loginMode: LoginModeEnum.TOKEN
+      })
+    } else {
+      this.setState({
+        loginMode: LoginModeEnum.CREDENTIALS
+      })
+    }
+  }
+
   renderControlSection () {
     const { authWindowStatus, loggedInUserInfo, userSessionStatus } = this.props
+    const { loginMode } = this.state
     const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
     const welcomeMessage = 'Lepton is FREE. Like us in GitHub!'
 
@@ -82,7 +111,7 @@ class LoginPage extends Component {
       return (
         <div className='button-group-modal'>
           <ProgressBar active now={ 100 }/>
-          <div className="login-page-footer">
+          <div className="login-page-text-link">
             <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
           </div>
         </div>
@@ -110,18 +139,11 @@ class LoginPage extends Component {
       loggedInUserName === null || loggedInUserName === 'null') {
       return (
         <div className='button-group-modal'>
-          { userSessionStatus === 'EXPIRED'
-            ? <Alert bsStyle="warning">
-              <strong>Token expired.</strong> Please login again.
-            </Alert>
-            : null }
-          <Button
-            autoFocus
-            className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
-            onClick={ this.handleLoginClicked.bind(this) }>
-            GitHub Login
-          </Button>
-          <div className="login-page-footer">
+          { loginMode === LoginModeEnum.CREDENTIALS
+            ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus)
+            : this.renderTokenLoginSection(userSessionStatus)
+          }
+          <div className="login-page-text-link">
             <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
           </div>
         </div>
@@ -149,6 +171,57 @@ class LoginPage extends Component {
     //     </Button>
     //   </div>
     // )
+  }
+
+  updateInputValue (evt) {
+    this.setState({
+      inputTokenValue: evt.target.value
+    })
+  }
+
+  renderCredentialLoginSection (authWindowStatus, userSessionStatus) {
+    return (
+      <div>
+        <div className="login-page-text-link">
+          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Use GitHub token?</a>
+        </div>
+        { userSessionStatus === 'EXPIRED'
+          ? <Alert bsStyle="warning" className="login-alert">Token invalid</Alert>
+          : null
+        }
+        <Button
+          autoFocus
+          className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
+          onClick={ this.handleLoginClicked.bind(this) }>
+            GitHub Login
+        </Button>
+      </div>
+    )
+  }
+
+  renderTokenLoginSection (userSessionStatus) {
+    return (
+      <form>
+        <div className="login-page-text-link">
+          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Use GitHub credentials?</a>
+        </div>
+        { userSessionStatus === 'EXPIRED'
+          ? <Alert bsStyle="warning" className="login-alert">Token invalid</Alert>
+          : null
+        }
+        <input
+          className="form-control"
+          value={ this.state.inputTokenValue }
+          onChange={ this.updateInputValue.bind(this) }
+        />
+        <Button
+          autoFocus
+          className='modal-button'
+          onClick={ this.handleTokenLoginButtonClicked.bind(this, this.state.inputTokenValue) }>
+            Token Login
+        </Button>
+      </form>
+    )
   }
 
   renderLoginModalBody () {
