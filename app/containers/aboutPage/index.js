@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
 import { remote } from 'electron'
 import { updateAboutModalStatus } from '../../actions'
+import defaultConfig from '../../../configs/defaultConfig'
 import appInfo from '../../../package.json'
 import LicenseInfo from '../../../license.json'
 import ContributorInfo from '../../../.all-contributorsrc'
@@ -22,7 +23,7 @@ const configFilePath = remote.getGlobal('configFilePath')
 class AboutPage extends Component {
   openFileInEditor (filePath) {
     if (!fs.existsSync(filePath)) {
-      fs.closeSync(fs.openSync(filePath, 'w'))
+      fs.closeSync(fs.writeFileSync(filePath, JSON.stringify(defaultConfig, null, 2)))
     }
     launch(
       filePath,
