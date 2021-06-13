@@ -1,5 +1,6 @@
 import fs from 'fs'
-import { remote, ipcRenderer } from 'electron'
+import path from 'path'
+import { ipcRenderer } from 'electron'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
@@ -49,6 +50,7 @@ import {
 
 import { notifySuccess, notifyFailure } from './utilities/notifier'
 
+const remote = require('@electron/remote')
 const logger = remote.getGlobal('logger')
 
 let Account = null
