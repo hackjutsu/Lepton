@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import { ipcRenderer } from 'electron'
 import React from 'react'
 import ReactDom from 'react-dom'
@@ -11,7 +9,6 @@ import electronLocalStorage from 'electron-json-storage-sync'
 import './utilities/vendor/bootstrap/css/bootstrap.css'
 import AppContainer from './containers/appContainer'
 import HumanReadableTime from 'human-readable-time'
-import ImageDownloader from 'image-downloader'
 import SearchIndex from './utilities/search'
 import Store from './utilities/store'
 import {
@@ -389,8 +386,7 @@ function initUserSession (token) {
       logger.debug('-----> before updateLocalStorage')
       updateLocalStorage({
         token: token,
-        profile: newProfile.login,
-        image: newProfile.avatar_url
+        profile: newProfile.login
       })
       logger.debug('-----> after updateLocalStorage')
 
@@ -432,40 +428,10 @@ function updateLocalStorage (data) {
     rst = electronLocalStorage.set('profile', data.profile)
     logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
 
-    logger.debug(`-----> Caching image ${data.image}`)
-    downloadImage(data.image, data.profile)
-
     logger.debug('-----> User info is cached.')
   } catch (e) {
     logger.error(`-----> Failed to cache user info. ${JSON.stringify(e)}`)
   }
-}
-
-function downloadImage (imageUrl, filename) {
-  if (!imageUrl) {
-    logger.debug('-----> imageUrl is null')
-    return
-  }
-
-  const userProfilePath = path.join(remote.app.getPath('userData'), 'profile')
-  if (!fs.existsSync(userProfilePath)) {
-    fs.mkdirSync(userProfilePath)
-  }
-
-  const imagePath = path.join(userProfilePath, filename + '.png')
-  ImageDownloader({
-    url: imageUrl,
-    dest: imagePath,
-    done: (err, filename, image) => {
-      if (err) {
-        logger.error(err)
-        return
-      }
-
-      const rst = electronLocalStorage.set('image', imagePath)
-      logger.debug(`-----> [${rst.status}] Cached image ${imagePath}`)
-    },
-  })
 }
 
 function getCachedUserInfo () {
@@ -478,8 +444,7 @@ function getCachedUserInfo () {
   if (cachedProfile.status && cachedToken.status) {
     return {
       token: cachedToken.data,
-      profile: cachedProfile.data,
-      image: electronLocalStorage.get('image').data
+      profile: cachedProfile.data
     }
   }
 

@@ -13,14 +13,6 @@ const logger = remote.getGlobal('logger')
 
 const LoginModeEnum = { CREDENTIALS: 1, TOKEN: 2 }
 
-let defaultImage = dojocatImage
-if (conf.get('enterprise:enable')) {
-  defaultImage = privateinvestocatImage
-  if (conf.get('enterprise:avatarUrl')) {
-    defaultImage = conf.get('enterprise:avatarUrl')
-  }
-}
-
 class LoginPage extends Component {
   constructor (props) {
     super(props)
@@ -33,10 +25,6 @@ class LoginPage extends Component {
   componentWillMount () {
     const { loggedInUserInfo } = this.props
     logger.debug('-----> Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
-
-    this.setState({
-      cachedImage: this.resolveCachedImage(loggedInUserInfo),
-    })
 
     logger.debug('-----> Registering listener for auto-login signal')
     ipcRenderer.on('auto-login', () => {
@@ -53,16 +41,8 @@ class LoginPage extends Component {
     ipcRenderer.removeAllListeners('auto-login')
   }
 
-  resolveCachedImage (info) {
-    if (info && info.image && info.image !== 'null') return info.image
-    return null
-  }
-
   handleLoginClicked () {
     if (this.props.authWindowStatus === 'OFF') {
-      this.setState({
-        cachedImage: defaultImage
-      })
       this.props.launchAuthWindow()
     }
   }
@@ -208,6 +188,7 @@ class LoginPage extends Component {
         }
         <input
           className="form-control"
+          placeholder="scope: gist"
           value={ this.state.inputTokenValue }
           onChange={ this.updateInputValue.bind(this) }
         />
@@ -225,13 +206,12 @@ class LoginPage extends Component {
   }
 
   renderLoginModalBody () {
-    const { cachedImage } = this.state
-    const { loggedInUserInfo } = this.props
-    const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
-
-    let profileImage = cachedImage || defaultImage
-    if (loggedInUserName === null || loggedInUserName === 'null' || conf.get('enterprise:enable')) {
-      profileImage = defaultImage
+    let profileImage = dojocatImage
+    if (conf.get('enterprise:enable')) {
+      profileImage = privateinvestocatImage
+      if (conf.get('enterprise:avatarUrl')) {
+        profileImage = conf.get('enterprise:avatarUrl')
+      }
     }
 
     return (

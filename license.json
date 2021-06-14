@@ -1703,13 +1703,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/ignore",
     "licenseFile": "node_modules/ignore/LICENSE-MIT"
   },
-  "image-downloader@4.0.2": {
-    "licenses": "MIT",
-    "repository": "git+https://gitlab.com/demsking/image-downloader",
-    "publisher": "Sébastien Demanou",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/image-downloader",
-    "licenseFile": "node_modules/image-downloader/LICENSE"
-  },
   "import-fresh@3.2.1": {
     "licenses": "MIT",
     "repository": "https://github.com/sindresorhus/import-fresh",

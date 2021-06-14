@@ -264,8 +264,7 @@ class UserPanel extends Component {
     this.props.logoutUserSession()
     this.props.updateLocalStorage({
       token: null,
-      profile: null,
-      image: null
+      profile: null
     })
     removeAccessToken()
     remote.getCurrentWindow().setTitle('Lepton') // update the app title
