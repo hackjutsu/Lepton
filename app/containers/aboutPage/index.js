@@ -50,6 +50,10 @@ class AboutPage extends Component {
     const licenseList = []
     // Add Evil icons license as an exception
     licenseList.push(
+      <div key ='Octodex Images' className='license-item'>
+        <div className='license-project'>Octodex Images</div>
+        <div className='license-type'>octodex.github.com</div>
+      </div>,
       <div key ='Evil icons@1.9.0' className='license-item'>
         <div className='license-project'>Evil icons@1.9.0</div>
         <div className='license-type'>License: MIT</div>
