@@ -194,7 +194,9 @@ class LoginPage extends Component {
     return (
       <center>
         <div>
-          <Image className='profile-image-modal' src={ profileImage } rounded/>
+          <a href="https://github.com/hackjutsu/Lepton">
+            <Image className='profile-image-modal' src={ profileImage } rounded/>
+          </a>
         </div>
         { this.renderControlSection() }
       </center>

@@ -202,7 +202,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@types/semver",
     "licenseFile": "node_modules/@types/semver/LICENSE"
   },
-  "Lepton@1.9.3-alpha.5": {
+  "Lepton@1.9.3-alpha.6": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",

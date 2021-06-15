@@ -85,7 +85,8 @@ function launchAuthWindow (token) {
   }
 
   const webPreferences = {
-    nodeIntegration: false
+    nodeIntegration: false,
+    spellcheck: false
   }
 
   let authWindow = new remote.BrowserWindow({
