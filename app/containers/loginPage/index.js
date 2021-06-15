@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
+import saritocatImage from '../../utilities/octodex/saritocat.png'
 
 import './index.scss'
 
@@ -47,16 +48,9 @@ class LoginPage extends Component {
     }
   }
 
-  handleContinueButtonClicked () {
+  handleContinueButtonClicked (token) {
     const { loggedInUserInfo } = this.props
     logger.debug('-----> Inside LoginPage handleContinueButtonClicked with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
-
-    let token = null
-    if (conf.get('enterprise:enable')) {
-      token = conf.get('enterprise:token')
-    } else if (loggedInUserInfo) {
-      token = loggedInUserInfo.token
-    }
 
     if (this.props.authWindowStatus === 'OFF') {
       this.props.launchAuthWindow(token)
@@ -99,18 +93,21 @@ class LoginPage extends Component {
     }
 
     if (conf.get('enterprise:enable')) {
+      const token = conf.get('enterprise:token')
       return (
         <div className='button-group-modal'>
           <div className="login-page-text-link">
             <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
           </div>
-          <Button
-            autoFocus
-            className='modal-button'
-            bsStyle="default"
-            onClick={ this.handleContinueButtonClicked.bind(this) }>
-            { loggedInUserName ? `Continue as ${loggedInUserName}` : 'HAPPY CODING' }
-          </Button>
+          { token
+            ? <Button
+              autoFocus
+              className='modal-button'
+              bsStyle="default"
+              onClick={ this.handleContinueButtonClicked.bind(this) }>
+              { loggedInUserName ? `Continue as ${loggedInUserName}` : 'HAPPY CODING' }
+            </Button>
+            : this.renderTokenLoginSection(false, userSessionStatus)}
         </div>
       )
     }
@@ -124,7 +121,7 @@ class LoginPage extends Component {
           </div>
           { loginMode === LoginModeEnum.CREDENTIALS
             ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus)
-            : this.renderTokenLoginSection(userSessionStatus)
+            : this.renderTokenLoginSection(true, userSessionStatus)
           }
         </div>
       )
@@ -179,7 +176,7 @@ class LoginPage extends Component {
     )
   }
 
-  renderTokenLoginSection (userSessionStatus) {
+  renderTokenLoginSection (showLoginSwitch, userSessionStatus) {
     return (
       <form>
         { userSessionStatus === 'EXPIRED'
@@ -198,20 +195,25 @@ class LoginPage extends Component {
           onClick={ this.handleTokenLoginButtonClicked.bind(this, this.state.inputTokenValue) }>
             Token Login
         </Button>
-        <div className="login-page-text-link">
-          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Switch to credentials?</a>
-        </div>
+        { showLoginSwitch
+          ? <div className="login-page-text-link">
+            <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Switch to credentials?</a>
+          </div>
+          : null}
       </form>
     )
   }
 
   renderLoginModalBody () {
+    const { loginMode } = this.state
+
     let profileImage = dojocatImage
     if (conf.get('enterprise:enable')) {
-      profileImage = privateinvestocatImage
-      if (conf.get('enterprise:avatarUrl')) {
-        profileImage = conf.get('enterprise:avatarUrl')
-      }
+      profileImage = conf.get('enterprise:avatarUrl')
+        ? conf.get('enterprise:avatarUrl')
+        : privateinvestocatImage
+    } else if (loginMode === LoginModeEnum.TOKEN) {
+      profileImage = saritocatImage
     }
 
     return (
