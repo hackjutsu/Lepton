@@ -54,9 +54,9 @@
     "style-loader": "^2.0.0",
     "text-loader": "0.0.1",
     "url-loader": "^4.1.0",
-    "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.1",
-    "webpack-node-externals": "^1.7.2"
+    "webpack": "^5.39.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@electron/remote": "^1.1.0",
