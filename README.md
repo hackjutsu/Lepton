@@ -10,7 +10,7 @@
 [![Dependency Status](https://david-dm.org/hackjutsu/Lepton.svg?style=flat-square)](https://david-dm.org/hackjutsu/Lepton)
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 
-**Lepton** is a lean code snippet manager based on *GitHub Gist*. [Check out its latest release.](https://github.com/hackjutsu/Lepton/releases)
+**Lepton** is a lean code snippet manager based on *GitHub Gist*. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
 
 - Unlimited public/private snippets
 - Unlimited tags

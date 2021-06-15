@@ -49,7 +49,7 @@ class LoginPage extends Component {
   }
 
   handleContinueButtonClicked (token) {
-    handleTokenLoginButtonClicked(token)
+    this.handleTokenLoginButtonClicked(token)
   }
 
   handleTokenLoginButtonClicked (token) {
