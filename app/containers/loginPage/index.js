@@ -30,7 +30,7 @@ class LoginPage extends Component {
     logger.debug('-----> Registering listener for auto-login signal')
     ipcRenderer.on('auto-login', () => {
       logger.debug('-----> Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
-      loggedInUserInfo && loggedInUserInfo.token && this.handleContinueButtonClicked()
+      loggedInUserInfo && loggedInUserInfo.token && this.handleContinueButtonClicked(loggedInUserInfo.token)
     })
 
     logger.debug('-----> sending login-page-ready signal')
@@ -49,12 +49,7 @@ class LoginPage extends Component {
   }
 
   handleContinueButtonClicked (token) {
-    const { loggedInUserInfo } = this.props
-    logger.debug('-----> Inside LoginPage handleContinueButtonClicked with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
-
-    if (this.props.authWindowStatus === 'OFF') {
-      this.props.launchAuthWindow(token)
-    }
+    handleTokenLoginButtonClicked(token)
   }
 
   handleTokenLoginButtonClicked (token) {
@@ -104,7 +99,7 @@ class LoginPage extends Component {
               autoFocus
               className='modal-button'
               bsStyle="default"
-              onClick={ this.handleContinueButtonClicked.bind(this) }>
+              onClick={ this.handleContinueButtonClicked.bind(this, token) }>
               { loggedInUserName ? `Continue as ${loggedInUserName}` : 'HAPPY CODING' }
             </Button>
             : this.renderTokenLoginSection(false, userSessionStatus)}
@@ -128,26 +123,6 @@ class LoginPage extends Component {
     }
 
     return null
-
-    // Uncomment this block if we want the "Continue as { loggedInUserName }" button shown up
-    // Other than logging in automatically.
-    // return (
-    //   <div className='button-group-modal'>
-    //     <Button
-    //       autoFocus
-    //       className='modal-button'
-    //       bsStyle="success"
-    //       onClick={ this.handleContinueButtonClicked.bind(this) }>
-    //       Continue as { loggedInUserName }
-    //     </Button>
-    //     <br/>
-    //     <Button
-    //       className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
-    //       onClick={ this.handleLoginClicked.bind(this) }>
-    //       Switch Account
-    //     </Button>
-    //   </div>
-    // )
   }
 
   updateInputValue (evt) {
