@@ -2,7 +2,7 @@ import fs from 'fs'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
-import { remote } from 'electron'
+import { remote, shell } from 'electron'
 import { updateAboutModalStatus } from '../../actions'
 import defaultConfig from '../../../configs/defaultConfig'
 import appInfo from '../../../package.json'
@@ -11,7 +11,6 @@ import ContributorInfo from '../../../.all-contributorsrc'
 import logoDarkImage from './logo-dark.png'
 import logoLightImage from './logo-light.png'
 import React, { Component } from 'react'
-import launch from 'launch-editor'
 
 import './index.scss'
 
@@ -25,13 +24,7 @@ class AboutPage extends Component {
     if (!fs.existsSync(filePath)) {
       fs.closeSync(fs.writeFileSync(filePath, JSON.stringify(defaultConfig, null, 2)))
     }
-    launch(
-      filePath,
-      'code',
-      (filePath, error) => {
-        logger.error(`Failed to open ${filePath} with error ${error}`)
-      }
-    )
+    shell.openPath(filePath)
   }
 
   renderAboutSection () {

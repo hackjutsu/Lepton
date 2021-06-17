@@ -2037,12 +2037,6 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/keyv",
     "licenseFile": "node_modules/keyv/LICENSE"
   },
-  "launch-editor@2.2.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/yyx990803/launch-editor",
-    "publisher": "Evan You",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/launch-editor"
-  },
   "lazy-val@1.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/develar/lazy-val",
@@ -3041,15 +3035,6 @@
     "url": "sindresorhus.com",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/shebang-regex",
     "licenseFile": "node_modules/eslint/node_modules/shebang-regex/license"
-  },
-  "shell-quote@1.7.2": {
-    "licenses": "MIT",
-    "repository": "https://github.com/substack/node-shell-quote",
-    "publisher": "James Halliday",
-    "email": "mail@substack.net",
-    "url": "http://substack.net",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/shell-quote",
-    "licenseFile": "node_modules/shell-quote/LICENSE"
   },
   "slice-ansi@3.0.0": {
     "licenses": "MIT",
