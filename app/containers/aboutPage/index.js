@@ -27,6 +27,7 @@ class AboutPage extends Component {
     }
     launch(
       filePath,
+      'code',
       (filePath, error) => {
         logger.error(`Failed to open ${filePath} with error ${error}`)
       }
