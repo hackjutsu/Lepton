@@ -12,11 +12,12 @@
 
 **Lepton** is a lean code snippet manager based on *GitHub Gist*. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
 
-- Unlimited public/private snippets
+- Unlimited public/secret snippets
 - Unlimited tags
 - Language groups
-- Markdown/JupyterNotebook support
-- GitHub Enterprise support
+- Markdown/JupyterNotebook
+- GitHub Enterprise
+- GitHub token
 - Immersive mode
 - Customizable
 - Light/Dark theme
@@ -32,9 +33,9 @@
 | :-------------:| :-----:|
 |![Screenshot](./docs/img/portfolio/lepton-light.png)|![Screenshot](./docs/img/portfolio/lepton-dark.png)|
 
-|      Organize         |  Markdown | Jupyter Notebook |
+|      Organize         |  Markdown | Jupyter Notebook | 
 | :-------------:| :-----:| :-----: |
-| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/jupyterNotebook.png)
+| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/jupyterNotebook.png) | 
 
 |      Search (*⇧ + Space*)         |    Immersive Mode *(⌘/Ctrl + i)*    | Dashboard *(⌘/Ctrl + d)* |
 | :-------------:| :-----:| :-----: |
@@ -117,21 +118,21 @@ $ yarn build && yarn start
 
 Build apps for macOS.
 ```bash
-$ yarn dist -- -m
+$ yarn dist -m
 ```
 Build apps for Windows.
 ```bash
-$ yarn dist -- -w
+$ yarn dist -w
 ```
 Build apps for Linux. 
 
 >Need a running [Docker](https://www.docker.com/) daemon to build a `snap` package.
 ```bash
-$ yarn dist -- -l
+$ yarn dist -l
 ```
 Build apps for macOS, Windows and Linux.
 ```bash
-$ yarn dist -- -wml
+$ yarn dist -wml
 ```
 Build apps for the current OS with the current arch.
 ```bash
