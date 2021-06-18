@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "1.9.3-alpha.7",
+  "version": "1.10.0",
   "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
