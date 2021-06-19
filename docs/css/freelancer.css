@@ -65,6 +65,7 @@ hr.star-primary:after {
   color: black;
 }
 .img-centered {
+  width: 75%;
   margin: 0 auto;
 }
 header {
