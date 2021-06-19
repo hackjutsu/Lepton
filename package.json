@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "1.10.0",
+  "version": "1.10.1-alpha.1",
   "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
@@ -64,6 +64,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "bluebird": "^3.5.3",
+    "boring-avatars": "^1.5.8",
     "chart.js": "^1.1.1",
     "codemirror": "^5.42.0",
     "codemirror-one-dark-theme": "^1.1.1",

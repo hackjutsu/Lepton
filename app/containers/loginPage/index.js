@@ -1,4 +1,5 @@
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
+import Avatar from 'boring-avatars'
 import { connect } from 'react-redux'
 import { remote, ipcRenderer } from 'electron'
 import React, { Component } from 'react'
@@ -180,27 +181,41 @@ class LoginPage extends Component {
   }
 
   renderLoginModalBody () {
-    const { loginMode } = this.state
-
-    let profileImage = dojocatImage
-    if (conf.get('enterprise:enable')) {
-      profileImage = conf.get('enterprise:avatarUrl')
-        ? conf.get('enterprise:avatarUrl')
-        : privateinvestocatImage
-    } else if (loginMode === LoginModeEnum.TOKEN) {
-      profileImage = saritocatImage
-    }
-
     return (
       <center>
-        <div>
-          <a href="https://github.com/hackjutsu/Lepton">
-            <Image className='profile-image-modal' src={ profileImage } rounded/>
-          </a>
-        </div>
+        { this.renderAvatar() }
         { this.renderControlSection() }
       </center>
     )
+  }
+
+  renderAvatar () {
+    const { loginMode } = this.state
+
+    if (conf.get('avatar:type') === 'boring') {
+      return <a href="https://github.com/hackjutsu/Lepton">
+        <Avatar
+          size={ 200 }
+          name={ Math.random().toString(36).substr(2, 5) }
+          square={ false }
+          variant={ conf.get('avatar:boringAvatarVariant') }
+          colors={ ['#4D3B36', '#EB613B', '#F98F6F', '#C1D9CD', '#F7EADC'] }
+        />
+      </a>
+    } else {
+      let profileImage = dojocatImage
+      if (conf.get('enterprise:enable')) {
+        profileImage = conf.get('enterprise:avatarUrl')
+          ? conf.get('enterprise:avatarUrl')
+          : privateinvestocatImage
+      } else if (loginMode === LoginModeEnum.TOKEN) {
+        profileImage = saritocatImage
+      }
+
+      return <a href="https://github.com/hackjutsu/Lepton">
+        <Image className='profile-image-modal' src={ profileImage } rounded/>
+      </a>
+    }
   }
 
   render () {

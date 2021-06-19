@@ -15,7 +15,6 @@ import React, { Component } from 'react'
 import './index.scss'
 
 const conf = remote.getGlobal('conf')
-const logger = remote.getGlobal('logger')
 const logFilePath = remote.getGlobal('logFilePath')
 const configFilePath = remote.getGlobal('configFilePath')
 

@@ -202,7 +202,7 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/@types/semver",
     "licenseFile": "node_modules/@types/semver/LICENSE"
   },
-  "Lepton@1.10.0": {
+  "Lepton@1.10.1-alpha.1": {
     "licenses": "MIT",
     "repository": "https://github.com/hackjutsu/Lepton",
     "publisher": "CosmoX",
@@ -485,6 +485,12 @@
     "repository": "https://github.com/thenativeweb/boolean",
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/boolean",
     "licenseFile": "node_modules/boolean/LICENSE.txt"
+  },
+  "boring-avatars@1.5.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/boringdesigners/boring-avatars",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/boring-avatars",
+    "licenseFile": "node_modules/boring-avatars/LICENSE"
   },
   "brace-expansion@1.1.11": {
     "licenses": "MIT",

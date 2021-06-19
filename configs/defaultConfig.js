@@ -1,6 +1,10 @@
 module.exports = {
     "theme": "light",
     "autoUpdate": false,
+    "avatar": {
+        "type": "github",
+        "boringAvatarVariant": "beam"
+    },
     "userPanel": {
         "hideProfilePhoto": false
     },
