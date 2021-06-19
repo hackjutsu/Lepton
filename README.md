@@ -80,14 +80,16 @@ Check out the [configuration docs](https://github.com/hackjutsu/Lepton/wiki/Conf
 5. Lint: [ESLint](http://eslint.org/)
 
 ## Installation
-- Download released binaries(macOS/Windows/Linux) [here](https://github.com/hackjutsu/Lepton/releases).
-- Install via Homebrew (macOS)
+- macOS/Windows/Linux: Download [the released packages](https://github.com/hackjutsu/Lepton/releases)
+- macOS: Install via Homebrew
 ```bash
 brew install --cask lepton
 ```
-- Install via SnapCraft (Linux)
-
-[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/lepton)
+- Linux: Install via [Snap Store](https://snapcraft.io/lepton)
+```bash
+snap install lepton
+```
+![Based on](./docs/img/lepton-ubuntu-tweet2.png)
 
 ## Development
 
