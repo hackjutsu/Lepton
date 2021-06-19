@@ -5,10 +5,10 @@
 
 ![](./docs/img/new_logo.png)
 
-[![Build Status](https://travis-ci.org/hackjutsu/Lepton.svg?branch=master)](https://travis-ci.org/hackjutsu/Lepton)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)
+[![Build Status](https://travis-ci.com/hackjutsu/Lepton.svg?branch=master)](https://travis-ci.com/hackjutsu/Lepton)
 [![Dependency Status](https://david-dm.org/hackjutsu/Lepton.svg?style=flat-square)](https://david-dm.org/hackjutsu/Lepton)
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
+[![lepton](https://snapcraft.io/lepton/badge.svg)](https://snapcraft.io/lepton)
 
 **Lepton** is a lean code snippet manager based on *GitHub Gist*. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
 
