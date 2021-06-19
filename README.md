@@ -10,8 +10,9 @@
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 [![lepton](https://snapcraft.io/lepton/badge.svg)](https://snapcraft.io/lepton)
 
-**Lepton** is a lean code snippet manager based on *GitHub Gist*. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
+**Lepton** is a lean code snippet manager powered by GitHub Gist. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
 
+## Features
 - Unlimited public/secret snippets
 - Unlimited tags
 - Language groups
@@ -33,9 +34,9 @@
 | :-------------:| :-----:|
 |![Screenshot](./docs/img/portfolio/lepton-light.png)|![Screenshot](./docs/img/portfolio/lepton-dark.png)|
 
-|      Organize         |  Markdown | Jupyter Notebook | 
+|      Organize         |  Markdown | Jupyter Notebook |
 | :-------------:| :-----:| :-----: |
-| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/jupyterNotebook.png) | 
+| ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/jupyterNotebook.png) |
 
 |      Search (*⇧ + Space*)         |    Immersive Mode *(⌘/Ctrl + i)*    | Dashboard *(⌘/Ctrl + d)* |
 | :-------------:| :-----:| :-----: |
@@ -126,7 +127,7 @@ Build apps for Windows.
 ```bash
 $ yarn dist -w
 ```
-Build apps for Linux. 
+Build apps for Linux.
 
 >Need a running [Docker](https://www.docker.com/) daemon to build a `snap` package.
 ```bash
