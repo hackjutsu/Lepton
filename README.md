@@ -17,15 +17,15 @@
 - Unlimited tags
 - Language groups
 - Markdown/JupyterNotebook
-- GitHub Enterprise
+- [GitHub Enterprise](https://github.com/hackjutsu/Lepton/wiki/FAQ#enable-github-enterprise)
 - GitHub token
 - Immersive mode
-- Customizable
+- [Customizable](https://github.com/hackjutsu/Lepton/wiki/Configuration)
 - Light/Dark theme
 - macOS/Win/Linux
 - Dashboard
-- Search
-- Proxy
+- [Search](https://github.com/hackjutsu/Lepton/wiki/FAQ#search)
+- [Proxy](https://github.com/hackjutsu/Lepton/wiki/FAQ#proxy)
 - Free
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
