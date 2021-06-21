@@ -1,4 +1,4 @@
-*:not(:hover)::-webkit-scrollbar {
+*:not(.modal):not(:hover)::-webkit-scrollbar {
   display: none;
 }
   
