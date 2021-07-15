@@ -107,6 +107,22 @@
     "appId": "com.cosmox.lepton",
     "mac": {
       "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "7z",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "publish": [
         "github"
       ],
