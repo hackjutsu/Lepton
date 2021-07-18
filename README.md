@@ -1,6 +1,6 @@
 > **To Lepton users around the world in more than 130 countries**: We hope you all stay **safe, healthy, and strong** as we get through the COVID-19 pandemic. Lepton will continue to be free, as always. If you find this app helpful, we encourage you to make a donation to a local or global charity of your choice to help fight against the pandemic. Together, we can make the world a better place. ❤️
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-29-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-30-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![](./docs/img/new_logo.png)
@@ -188,6 +188,7 @@ $ yarn dist
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/yuhang-dong"><img src="https://avatars.githubusercontent.com/u/20642641?v=4?s=100" width="100px;" alt=""/><br /><sub><b>董雨航</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=yuhang-dong" title="Code">💻</a></td>
+    <td align="center"><a href="https://sxyz.blog"><img src="https://avatars.githubusercontent.com/u/17523360?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sxyazi</b></sub></a><br /><a href="#platform-sxyazi" title="Packaging/porting to new platform">📦</a></td>
   </tr>
 </table>
 
