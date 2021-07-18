@@ -338,8 +338,8 @@
   "argparse@1.0.10": {
     "licenses": "MIT",
     "repository": "https://github.com/nodeca/argparse",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/js-yaml/node_modules/argparse",
-    "licenseFile": "node_modules/js-yaml/node_modules/argparse/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/argparse",
+    "licenseFile": "node_modules/electron-updater/node_modules/argparse/LICENSE"
   },
   "argparse@2.0.1": {
     "licenses": "Python-2.0",
@@ -595,8 +595,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cli-truncate",
-    "licenseFile": "node_modules/cli-truncate/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-context-menu/node_modules/cli-truncate",
+    "licenseFile": "node_modules/electron-context-menu/node_modules/cli-truncate/license"
   },
   "clipboard@2.0.6": {
     "licenses": "MIT",
@@ -609,8 +609,8 @@
     "repository": "https://github.com/yargs/cliui",
     "publisher": "Ben Coe",
     "email": "ben@npmjs.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/cliui",
-    "licenseFile": "node_modules/nconf/node_modules/cliui/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cliui",
+    "licenseFile": "node_modules/cliui/LICENSE.txt"
   },
   "clone-response@1.0.2": {
     "licenses": "MIT",
@@ -756,8 +756,8 @@
     "repository": "https://github.com/moxystudio/node-cross-spawn",
     "publisher": "André Cruz",
     "email": "andre@moxy.studio",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/cross-spawn",
-    "licenseFile": "node_modules/eslint/node_modules/cross-spawn/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cross-spawn",
+    "licenseFile": "node_modules/cross-spawn/LICENSE"
   },
   "cssom@0.3.8": {
     "licenses": "MIT",
@@ -1413,8 +1413,8 @@
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fs-extra",
-    "licenseFile": "node_modules/fs-extra/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/fs-extra",
+    "licenseFile": "node_modules/electron-updater/node_modules/fs-extra/LICENSE"
   },
   "fs.realpath@1.0.0": {
     "licenses": "ISC",
@@ -1799,8 +1799,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/is-fullwidth-code-point",
-    "licenseFile": "node_modules/is-fullwidth-code-point/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-context-menu/node_modules/is-fullwidth-code-point",
+    "licenseFile": "node_modules/electron-context-menu/node_modules/is-fullwidth-code-point/license"
   },
   "is-glob@4.0.1": {
     "licenses": "MIT",
@@ -1907,8 +1907,8 @@
     "repository": "https://github.com/nodeca/js-yaml",
     "publisher": "Vladimir Zapparov",
     "email": "dervus.grim@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/js-yaml",
-    "licenseFile": "node_modules/js-yaml/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/js-yaml",
+    "licenseFile": "node_modules/electron-updater/node_modules/js-yaml/LICENSE"
   },
   "jsbn@0.1.1": {
     "licenses": "MIT",
@@ -1987,16 +1987,16 @@
     "repository": "https://github.com/jprichardson/node-jsonfile",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsonfile",
-    "licenseFile": "node_modules/jsonfile/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-window-state/node_modules/jsonfile",
+    "licenseFile": "node_modules/electron-window-state/node_modules/jsonfile/LICENSE"
   },
   "jsonfile@6.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-jsonfile",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fs-extra/node_modules/jsonfile",
-    "licenseFile": "node_modules/fs-extra/node_modules/jsonfile/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsonfile",
+    "licenseFile": "node_modules/jsonfile/LICENSE"
   },
   "jsprim@1.4.1": {
     "licenses": "MIT",
@@ -2047,8 +2047,8 @@
     "licenses": "MIT",
     "repository": "https://github.com/develar/lazy-val",
     "publisher": "Vladimir Krivosheev",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/lazy-val",
-    "licenseFile": "node_modules/lazy-val/readme.md"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-updater/node_modules/lazy-val",
+    "licenseFile": "node_modules/electron-updater/node_modules/lazy-val/readme.md"
   },
   "levn@0.3.0": {
     "licenses": "MIT",
@@ -2488,8 +2488,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/path-key",
-    "licenseFile": "node_modules/eslint/node_modules/path-key/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/path-key",
+    "licenseFile": "node_modules/path-key/license"
   },
   "path-parse@1.0.6": {
     "licenses": "MIT",
@@ -3030,8 +3030,8 @@
     "publisher": "Kevin Mårtensson",
     "email": "kevinmartensson@gmail.com",
     "url": "github.com/kevva",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/shebang-command",
-    "licenseFile": "node_modules/eslint/node_modules/shebang-command/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/shebang-command",
+    "licenseFile": "node_modules/shebang-command/license"
   },
   "shebang-regex@3.0.0": {
     "licenses": "MIT",
@@ -3039,14 +3039,14 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/shebang-regex",
-    "licenseFile": "node_modules/eslint/node_modules/shebang-regex/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/shebang-regex",
+    "licenseFile": "node_modules/shebang-regex/license"
   },
   "slice-ansi@3.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/chalk/slice-ansi",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/slice-ansi",
-    "licenseFile": "node_modules/slice-ansi/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/electron-context-menu/node_modules/slice-ansi",
+    "licenseFile": "node_modules/electron-context-menu/node_modules/slice-ansi/license"
   },
   "slice-ansi@4.0.0": {
     "licenses": "MIT",
@@ -3467,8 +3467,8 @@
     "repository": "https://github.com/RyanZim/universalify",
     "publisher": "Ryan Zimmerman",
     "email": "opensrc@ryanzim.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/fs-extra/node_modules/universalify",
-    "licenseFile": "node_modules/fs-extra/node_modules/universalify/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/jsonfile/node_modules/universalify",
+    "licenseFile": "node_modules/jsonfile/node_modules/universalify/LICENSE"
   },
   "unpipe@1.0.0": {
     "licenses": "MIT",
@@ -3646,8 +3646,8 @@
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "http://blog.izs.me",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/eslint/node_modules/which",
-    "licenseFile": "node_modules/eslint/node_modules/which/LICENSE"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/cross-spawn/node_modules/which",
+    "licenseFile": "node_modules/cross-spawn/node_modules/which/LICENSE"
   },
   "winston@2.4.4": {
     "licenses": "MIT",
@@ -3671,8 +3671,8 @@
     "publisher": "Sindre Sorhus",
     "email": "sindresorhus@gmail.com",
     "url": "https://sindresorhus.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/wrap-ansi",
-    "licenseFile": "node_modules/nconf/node_modules/wrap-ansi/license"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/wrap-ansi",
+    "licenseFile": "node_modules/wrap-ansi/license"
   },
   "wrappy@1.0.2": {
     "licenses": "ISC",
@@ -3739,8 +3739,8 @@
     "repository": "https://github.com/yargs/yargs-parser",
     "publisher": "Ben Coe",
     "email": "ben@npmjs.com",
-    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/nconf/node_modules/yargs-parser",
-    "licenseFile": "node_modules/nconf/node_modules/yargs-parser/LICENSE.txt"
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/yargs-parser",
+    "licenseFile": "node_modules/yargs-parser/LICENSE.txt"
   },
   "yargs@16.2.0": {
     "licenses": "MIT",

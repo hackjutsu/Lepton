@@ -36,7 +36,7 @@
     "babel-preset-react": "^6.16.0",
     "css-loader": "^5.0.0",
     "electron": "^13.0.0",
-    "electron-builder": "^22.4.0",
+    "electron-builder": "^22.11.0",
     "eslint": "^7.11.0",
     "eslint-config-standard": "^16.0.0",
     "eslint-plugin-import": "^2.14.0",
