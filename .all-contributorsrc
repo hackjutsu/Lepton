@@ -282,6 +282,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sxyazi",
+      "name": "sxyazi",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17523360?v=4",
+      "profile": "https://sxyz.blog",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7,
