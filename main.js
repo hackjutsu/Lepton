@@ -30,7 +30,7 @@ initGlobalLogger()
 
 logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} ${os.platform()}-----\n`)
 
-logger.info(`[conf] Looking for .leptonrc at ${ path.join(app.getPath('home'), '.leptonrc') }`)
+logger.info(`[conf] Looking for .leptonrc at ${getConfigPath()}`)
 logger.info('[conf] The resolved configuration is ...')
 for (const key of Object.getOwnPropertyNames(defaultConfig)) {
   logger.info(`"${key}": ${JSON.stringify(nconf.get(key))}`)    
@@ -41,6 +41,14 @@ let miniWindow = null
 let operationType = 0;
 
 const shortcuts = nconf.get('shortcuts')
+
+function getConfigPath() {
+  if (process && process.env && process.env.XDG_CONFIG_HOME) {
+    return path.join(process.env.XDG_CONFIG_HOME, '.leptonrc'
+  } else {
+    return path.join(app.getPath('home'), '.leptonrc')
+  }       
+}
 
 function createWindowAndAutoLogin () {
   createWindow(true)
@@ -343,7 +351,7 @@ function setUpTouchBar() {
 }
 
 function initGlobalConfigs () {
-  const configFilePath = path.join(app.getPath('home'), '.leptonrc')
+  const configFilePath = getConfigPath()
   logger.info(`[conf] Looking for .leptonrc at ${configFilePath}`)
   nconf.argv().env()
   try {
