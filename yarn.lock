@@ -1867,6 +1867,11 @@ chart.js@^1.1.1:
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-1.1.1.tgz#a9b17054220bd45cbdb176fd6bcb8783ef871a7d"
   integrity sha1-qbFwVCIL1Fy9sXb9a8uHg++HGn0=
 
+check-outdated@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/check-outdated/-/check-outdated-2.11.0.tgz#f4af68089c229095b2f350b818119f377ba39807"
+  integrity sha512-YZmbRlpWCi2plPRpKLNPJLeel+86qvHMK1Tt9Dpt/APjtSCDrI9YpMvXr4lGrsx8aH0QJev7VJUyfcfwKQ/CCg==
+
 chokidar@^2.1.8:
   version "2.1.8"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.1.8.tgz#804b3a7b6a99358c3c5c61e71d8728f041cff917"
