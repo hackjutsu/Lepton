@@ -291,6 +291,15 @@
       "contributions": [
         "platform"
       ]
+    },
+    {
+      "login": "ProfessorManhattan",
+      "name": "Brian Zalewski",
+      "avatar_url": "https://avatars.githubusercontent.com/u/59970525?v=4",
+      "profile": "https://megabyte.space",
+      "contributions": [
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7,
@@ -298,5 +307,7 @@
   "projectOwner": "hackjutsu",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs",
+  "commitConvention": "angular"
 }
