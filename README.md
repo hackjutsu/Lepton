@@ -101,6 +101,11 @@ $ git clone https://github.com/hackjutsu/Lepton.git
 $ cd Lepton && yarn install
 ```
 
+```bash
+# inspect stale dependencies
+$ yarn check-outdated
+```
+
 ### Client ID/Secret
 [Register your application](https://github.com/settings/applications/new), and put your client id and client secret in `./configs/account.js`.
 ```js
