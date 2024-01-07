@@ -5,7 +5,7 @@
   "productName": "Lepton",
   "main": "main.js",
   "scripts": {
-    "lint": "eslint app",
+    "lint": "eslint app --fix",
     "start": "electron ./main.js",
     "build": "npm run license && npm run webpack-dev",
     "license": "license-checker --production --relativeLicensePath --json > license.json",
