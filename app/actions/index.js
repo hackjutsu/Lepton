@@ -1,4 +1,4 @@
-import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/githubApi'
+import { getCloudProviderApi, GET_SINGLE_GIST } from '../utilities/cloudProviderApi'
 import { notifyFailure } from '../utilities/notifier'
 import { remote } from 'electron'
 const logger = remote.getGlobal('logger')
@@ -223,7 +223,7 @@ export function updateLogoutModalStatus (status) {
 export function fetchSingleGist (oldGist, id) {
   return (dispatch, getState) => {
     const state = getState()
-    return getGitHubApi(GET_SINGLE_GIST)(state.accessToken, id)
+    return getCloudProviderApi(GET_SINGLE_GIST)(state.accessToken, id)
       .then((details) => {
         const newGist = Object.assign(oldGist, { details: details })
         const newGistWithId = {}

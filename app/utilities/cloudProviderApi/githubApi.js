@@ -259,7 +259,7 @@ export const CREATE_SINGLE_GIST = 'CREATE_SINGLE_GIST'
 export const EDIT_SINGLE_GIST = 'EDIT_SINGLE_GIST'
 export const DELETE_SINGLE_GIST = 'DELETE_SINGLE_GIST'
 
-export function getGitHubApi (selection) {
+export function getCloudProviderApi (selection) {
   switch (selection) {
     case EXCHANGE_ACCESS_TOKEN:
       return exchangeAccessToken

@@ -26,8 +26,8 @@ import {
 import {
   DELETE_SINGLE_GIST,
   EDIT_SINGLE_GIST,
-  getGitHubApi,
-} from '../../utilities/githubApi'
+  getCloudProviderApi,
+} from '../../utilities/cloudProviderApi'
 
 import './index.scss'
 
@@ -72,7 +72,7 @@ class Snippet extends Component {
 
   handleDeleteClicked () {
     const { accessToken, activeGist } = this.props
-    getGitHubApi(DELETE_SINGLE_GIST)(
+    getCloudProviderApi(DELETE_SINGLE_GIST)(
       accessToken,
       activeGist)
       .catch(err => {
@@ -150,7 +150,7 @@ class Snippet extends Component {
     // response, which provides better user experience.
     this.closeGistEditorModal()
 
-    return getGitHubApi(EDIT_SINGLE_GIST)(
+    return getCloudProviderApi(EDIT_SINGLE_GIST)(
       accessToken,
       activeGist,
       description,

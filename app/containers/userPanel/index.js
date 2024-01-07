@@ -23,8 +23,8 @@ import {
 } from '../../actions/index'
 import {
   CREATE_SINGLE_GIST,
-  getGitHubApi,
-} from '../../utilities/githubApi'
+  getCloudProviderApi,
+} from '../../utilities/cloudProviderApi'
 
 import './index.scss'
 
@@ -76,7 +76,7 @@ class UserPanel extends Component {
       }
     })
 
-    return getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
+    return getCloudProviderApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
       .catch((err) => {
         notifyFailure('Gist creation failed')
         logger.error(JSON.stringify(err))

@@ -18,11 +18,11 @@ import {
 } from './utilities/parser'
 
 import {
-  getGitHubApi,
+  getCloudProviderApi,
   GET_ALL_GISTS,
   GET_USER_PROFILE,
   EXCHANGE_ACCESS_TOKEN
-} from './utilities/githubApi'
+} from './utilities/cloudProviderApi'
 
 import RootReducer from './reducers'
 import {
@@ -123,7 +123,7 @@ function launchAuthWindow (token) {
       logger.info('[Dispatch] updateUserSession IN_PROGRESS')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
 
-      getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
+      getCloudProviderApi(EXCHANGE_ACCESS_TOKEN)(
         CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
         .then((payload) => {
           logger.debug('-----> calling initUserSession with new token ' + payload.access_token)
@@ -266,7 +266,7 @@ function reSyncUserGists () {
 
 function updateUserGists (userLoginId, token) {
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
-  return getGitHubApi(GET_ALL_GISTS)(token, userLoginId)
+  return getCloudProviderApi(GET_ALL_GISTS)(token, userLoginId)
     .then((gistList) => {
       const preGists = reduxStore.getState().gists
       const gists = {}
@@ -377,7 +377,7 @@ function initUserSession (token) {
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(token)
   let newProfile = null
-  getGitHubApi(GET_USER_PROFILE)(token)
+  getCloudProviderApi(GET_USER_PROFILE)(token)
     .then((profile) => {
       logger.debug('-----> from GET_USER_PROFILE with profile ' + JSON.stringify(profile))
       newProfile = profile
