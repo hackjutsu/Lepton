@@ -79,6 +79,8 @@ Check out the [configuration docs](https://github.com/hackjutsu/Lepton/wiki/Conf
 4. Library: [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [Redux Thunk](https://github.com/gaearon/redux-thunk), [Redux Form](http://redux-form.com/)
 5. Lint: [ESLint](http://eslint.org/)
 
+Now you can learn about Lepton project's code structure in [DeepWiki](https://deepwiki.com/hackjutsu/Lepton)!
+
 ## Installation
 - macOS/Windows/Linux: Download [the released packages](https://github.com/hackjutsu/Lepton/releases)
 - macOS: Install via Homebrew
