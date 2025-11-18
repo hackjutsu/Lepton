@@ -4,8 +4,6 @@
 
 ![](./docs/img/new_logo.png)
 
-[![Build Status](https://travis-ci.com/hackjutsu/Lepton.svg?branch=master)](https://travis-ci.com/hackjutsu/Lepton)
-[![Dependency Status](https://david-dm.org/hackjutsu/Lepton.svg?style=flat-square)](https://david-dm.org/hackjutsu/Lepton)
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 [![lepton](https://snapcraft.io/lepton/badge.svg)](https://snapcraft.io/lepton)
 
