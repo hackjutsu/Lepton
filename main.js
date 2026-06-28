@@ -44,7 +44,7 @@ const shortcuts = nconf.get('shortcuts')
 
 function getConfigPath() {
   if (process && process.env && process.env.XDG_CONFIG_HOME) {
-    return path.join(process.env.XDG_CONFIG_HOME, '.leptonrc'
+    return path.join(process.env.XDG_CONFIG_HOME, '.leptonrc')
   } else {
     return path.join(app.getPath('home'), '.leptonrc')
   }       
