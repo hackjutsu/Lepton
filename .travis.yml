@@ -1,3 +1,10 @@
 language: node_js
 node_js:
   - "14"
+install:
+  - npm ci
+script:
+  - npm test
+cache:
+  directories:
+    - "$HOME/.npm"

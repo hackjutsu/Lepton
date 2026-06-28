@@ -95,14 +95,14 @@ snap install lepton
 
 ### Runtime requirements
 
-Lepton's current development toolchain is known to work with Node.js 14 and Yarn 1.x.
+Lepton's current development toolchain is known to work with Node.js 14 and npm 6.x.
 The last recorded CI runtime is Node 14, and newer Node versions can break the legacy
 Webpack 4 and `node-sass` build chain.
 
 Recommended:
 
 - Node.js 14.21.3
-- Yarn 1.x
+- npm 6.14.x
 
 If you use `nvm`, the repository includes an `.nvmrc`:
 
@@ -115,21 +115,21 @@ On Apple Silicon, use an x64 Node 14 runtime under Rosetta if native dependency
 installation fails:
 
 ```bash
-$ arch -x86_64 yarn install --frozen-lockfile
-$ arch -x86_64 yarn build
-$ arch -x86_64 yarn start
+$ arch -x86_64 npm ci
+$ arch -x86_64 npm run build
+$ arch -x86_64 npm start
 ```
 
 ### Install dependencies
 
 ```bash
 $ git clone https://github.com/hackjutsu/Lepton.git
-$ cd Lepton && yarn install
+$ cd Lepton && npm ci
 ```
 
 ```bash
 # inspect stale dependencies
-$ yarn check-outdated
+$ npm run check-outdated
 ```
 
 ### Client ID/Secret
@@ -143,7 +143,7 @@ module.exports = {
 
 ### Run
 ```bash
-$ yarn build && yarn start
+$ npm run build && npm start
 ```
 
 ## Build Installer App
@@ -151,25 +151,25 @@ $ yarn build && yarn start
 
 Build apps for macOS.
 ```bash
-$ yarn dist -m
+$ npm run dist -- -m
 ```
 Build apps for Windows.
 ```bash
-$ yarn dist -w
+$ npm run dist -- -w
 ```
 Build apps for Linux.
 
 >Need a running [Docker](https://www.docker.com/) daemon to build a `snap` package.
 ```bash
-$ yarn dist -l
+$ npm run dist -- -l
 ```
 Build apps for macOS, Windows and Linux.
 ```bash
-$ yarn dist -wml
+$ npm run dist -- -wml
 ```
 Build apps for the current OS with the current arch.
 ```bash
-$ yarn dist
+$ npm run dist
 ```
 
 ## FAQ
