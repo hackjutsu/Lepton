@@ -14,7 +14,7 @@ Lepton is a lean code snippet manager powered by GitHub Gist, built with Electro
 - **Styling**: Sass/SCSS
 - **Code Editor**: CodeMirror (via react-codemirror)
 - **Linting**: ESLint with Standard config
-- **Dependencies**: Uses yarn package manager
+- **Dependencies**: Uses npm package manager
 
 ## Key Commands
 
@@ -26,58 +26,58 @@ nvm install
 nvm use
 ```
 
-The project uses Yarn 1.x. Avoid running install/build commands with modern Node
+The project uses npm 6.x. Avoid running install/build commands with modern Node
 versions unless the task is specifically to modernize the build toolchain.
 
 On Apple Silicon, the legacy dependency stack may need an x64 Node 14 runtime under
 Rosetta:
 ```bash
-arch -x86_64 yarn install --frozen-lockfile
-arch -x86_64 yarn build
-arch -x86_64 yarn start
+arch -x86_64 npm ci
+arch -x86_64 npm run build
+arch -x86_64 npm start
 ```
 
 ### Development
 ```bash
 # Install dependencies
-yarn install --frozen-lockfile
+npm ci
 
 # Development build and run
-yarn build && yarn start
+npm run build && npm start
 
 # Watch mode for development
-yarn webpack-watch
+npm run webpack-watch
 
 # Production build
-yarn webpack-prod
+npm run webpack-prod
 ```
 
 ### Building & Distribution
 ```bash
 # Create installer for current platform
-yarn dist
+npm run dist
 
 # Platform-specific builds
-yarn dist -m    # macOS
-yarn dist -w    # Windows
-yarn dist -l    # Linux (requires Docker for snap)
-yarn dist -wml  # All platforms
+npm run dist -- -m    # macOS
+npm run dist -- -w    # Windows
+npm run dist -- -l    # Linux (requires Docker for snap)
+npm run dist -- -wml  # All platforms
 ```
 
 ### Code Quality
 ```bash
 # Lint code
-yarn lint
+npm run lint
 
 # Check for outdated dependencies
-yarn check-outdated
+npm run check-outdated
 
 # Pre-version checks (runs lint + test + outdated check)
-yarn preversion
+npm run preversion
 ```
 
 ### Testing
-The `yarn test` command runs webpack in development mode (essentially a build verification). There are no formal unit tests configured - the project relies on build-time checks and manual testing.
+The `npm test` command runs webpack in development mode (essentially a build verification). There are no formal unit tests configured - the project relies on build-time checks and manual testing.
 
 ## Architecture
 
@@ -113,7 +113,7 @@ Register your application at https://github.com/settings/applications/new
 - **Electron Version**: Uses Electron 13.x with @electron/remote for main-renderer communication
 - **Node Version**: Use Node.js 14.x. The last recorded CI runtime is Node 14.
 - **ES6 Support**: Babel transpiles ES6+ to support older Electron versions
-- **Hot Reloading**: Use `yarn webpack-watch` for auto-rebuilding during development
+- **Hot Reloading**: Use `npm run webpack-watch` for auto-rebuilding during development
 - **Styling**: Uses Sass with component-level SCSS files
 - **State Management**: Redux store handles application state, actions use Redux Thunk for async operations
 - **Shortcuts**: Customizable keyboard shortcuts defined in config, registered via electron-localshortcut
@@ -131,9 +131,9 @@ Key configuration areas include theme, shortcuts, proxy settings, editor prefere
 
 When working with this codebase:
 - **NEVER modify `node_modules/`** - this directory contains installed dependencies and should not be edited
-- **DO NOT commit `yarn.lock`** unless specifically updating dependencies - this file locks dependency versions
+- **DO NOT commit `package-lock.json` churn** unless specifically updating dependencies - this file locks dependency versions
 - **DO NOT change LICENSE files** unless told
-- **DO NOT commit `license.json` path-only churn** - `yarn build` regenerates local absolute paths
+- **DO NOT commit `license.json` path-only churn** - `npm run build` regenerates local absolute paths
 - Focus code changes on the `/app` directory, `/configs`, `main.js`, and configuration files
 - Avoid searching or reading files in `node_modules/`, `/bundle`, `/build`, `/dist` directories unless absolutely necessary
 - Avoid printing or preserving GitHub tokens from logs; current debug logs can include cached token values
