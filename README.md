@@ -93,6 +93,32 @@ snap install lepton
 
 ## Development
 
+### Runtime requirements
+
+Lepton's current development toolchain is known to work with Node.js 14 and Yarn 1.x.
+The last recorded CI runtime is Node 14, and newer Node versions can break the legacy
+Webpack 4 and `node-sass` build chain.
+
+Recommended:
+
+- Node.js 14.21.3
+- Yarn 1.x
+
+If you use `nvm`, the repository includes an `.nvmrc`:
+
+```bash
+$ nvm install
+$ nvm use
+```
+
+On Apple Silicon, use an x64 Node 14 runtime under Rosetta if native dependency
+installation fails:
+
+```bash
+$ arch -x86_64 yarn install --frozen-lockfile
+$ arch -x86_64 yarn build
+$ arch -x86_64 yarn start
+```
 
 ### Install dependencies
 
