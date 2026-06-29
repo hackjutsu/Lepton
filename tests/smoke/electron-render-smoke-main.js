@@ -36,8 +36,16 @@ async function waitForRendererLoad (window) {
 }
 
 function attachRendererDiagnostics (window) {
-  window.webContents.on('console-message', (event, level, message, line, sourceId) => {
-    rendererEvents.push(`console:${level}:${sourceId}:${line}: ${message}`)
+  window.webContents.on('console-message', function (event) {
+    const details = typeof event.message !== 'undefined'
+      ? event
+      : {
+          level: arguments[1],
+          lineNumber: arguments[3],
+          message: arguments[2],
+          sourceId: arguments[4]
+        }
+    rendererEvents.push(`console:${details.level}:${details.sourceId}:${details.lineNumber}: ${details.message}`)
   })
   window.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL) => {
     rendererEvents.push(`did-fail-load:${errorCode}:${validatedURL}: ${errorDescription}`)
@@ -116,6 +124,12 @@ async function captureScreenshot (window, fileName, log = console.log) {
   if (!artifactDir) return
 
   const screenshotPath = path.join(artifactDir, fileName)
+  await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      requestAnimationFrame(() => requestAnimationFrame(resolve))
+    })
+  `, true)
+  await wait(250)
   const image = await window.capturePage()
   fs.writeFileSync(screenshotPath, image.toPNG())
   log(`Saved smoke-test screenshot to ${screenshotPath}`)
