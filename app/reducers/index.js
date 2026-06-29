@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import { reducer as form } from 'redux-form'
 import aboutModalStatus from './reducer_about_modal'
 import accessToken from './reducer_token'
 import activeGist from './reducer_active_gist'
@@ -33,7 +32,6 @@ const rootReducer = combineReducers({
   authWindowStatus,
   dashboardModalStatus,
   fileExpandStatus,
-  form,
   gistDeleteModalStatus,
   gistEditModalStatus,
   gistNewModalStatus,

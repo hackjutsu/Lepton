@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import { Promise } from 'bluebird'
-import thunk from 'redux-thunk'
+import { thunk } from 'redux-thunk'
 import electronBridge from './utilities/electronBridge'
 
 import './utilities/vendor/bootstrap/css/bootstrap.css'
