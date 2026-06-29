@@ -9,7 +9,7 @@ module.exports = {
         "hideProfilePhoto": false
     },
     "logger": {
-        "level": "debug"
+        "level": "info"
     },
     "proxy": {
         "enable": false,
