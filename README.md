@@ -59,6 +59,7 @@ Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact pat
 
 - Theme (light/dark)
 - Snippet
+- Gist
 - Editor
 - Logger
 - Proxy

@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
+import { Promise } from 'bluebird'
 import thunk from 'redux-thunk'
 import electronLocalStorage from 'electron-json-storage-sync'
 import electronBridge from './utilities/electronBridge'
@@ -20,6 +21,7 @@ import {
 import {
   getGitHubApi,
   GET_ALL_GISTS,
+  GET_SINGLE_GIST,
   GET_USER_PROFILE,
   EXCHANGE_ACCESS_TOKEN
 } from './utilities/githubApi'
@@ -52,6 +54,7 @@ const { createRequire } = require('module')
 const remote = require('@electron/remote')
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
+const conf = electronBridge.config
 const appRequire = createRequire(path.join(electronBridge.app.getAppPath(), 'app/index.js'))
 
 let Account = null
@@ -74,6 +77,7 @@ const CONFIG_OPTIONS = {
   client_secret: Account.client_secret,
   scopes: ['gist']
 }
+const GIST_DETAIL_SYNC_CONCURRENCY = 5
 
 let preSyncSnapshot = {
   activeGistTag: null,
@@ -268,10 +272,43 @@ function reSyncUserGists () {
   updateUserGists(userSession.profile.login, accessToken)
 }
 
+function downloadGistDetailsAfterListSync (gistList, token) {
+  if (!conf.get('gist:downloadAll')) {
+    return Promise.resolve({})
+  }
+
+  logger.info(`[sync] Downloading details for ${gistList.length} gists`)
+  return Promise.map(gistList, gist => {
+    return getGitHubApi(GET_SINGLE_GIST)(token, gist.id)
+      .then(details => {
+        return {
+          id: gist.id,
+          details: details
+        }
+      })
+  }, { concurrency: GIST_DETAIL_SYNC_CONCURRENCY })
+    .then((downloadedGists) => {
+      const detailsById = {}
+      downloadedGists.forEach(gist => {
+        detailsById[gist.id] = gist.details
+      })
+      return detailsById
+    })
+}
+
 function updateUserGists (userLoginId, token) {
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   return getGitHubApi(GET_ALL_GISTS)(token, userLoginId)
     .then((gistList) => {
+      return downloadGistDetailsAfterListSync(gistList, token)
+        .then(downloadedGistDetails => {
+          return {
+            downloadedGistDetails: downloadedGistDetails,
+            gistList: gistList
+          }
+        })
+    })
+    .then(({ gistList, downloadedGistDetails }) => {
       const preGists = reduxStore.getState().gists
       const gists = {}
       const rawGistTags = {}
@@ -316,13 +353,13 @@ function updateUserGists (userLoginId, token) {
         gists[gist.id] = {
           langs: langs,
           brief: gist,
-          details: null
+          details: downloadedGistDetails[gist.id] || null
         }
 
         // Keep the date for the unchanged gist, so that user doesn't need
         // to resync.
         const preGist = preGists[gist.id]
-        if (preGist && preGist.details && preGist.details.updated_at === gist.updated_at) {
+        if (!gists[gist.id].details && preGist && preGist.details && preGist.details.updated_at === gist.updated_at) {
           gists[gist.id] = Object.assign(gists[gist.id], { details: preGist.details })
         }
 

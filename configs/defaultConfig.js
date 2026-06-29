@@ -26,6 +26,9 @@ module.exports = {
         "showInSnippetList": false,
         "colored": false
     },
+    "gist": {
+        "downloadAll": false
+    },
     "editor": {
         "tabSize": 4,
         "validateFilename": true
