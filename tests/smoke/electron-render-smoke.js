@@ -31,10 +31,16 @@ function createTempHome () {
 
 function runSmokeProcess (tempHome) {
   return new Promise((resolve, reject) => {
-    const child = spawn(electronPath, [
+    const electronArgs = [
       `--user-data-dir=${tempHome.userData}`,
       smokeMainPath
-    ], {
+    ]
+
+    if (process.env.LEPTON_SMOKE_NO_SANDBOX === '1') {
+      electronArgs.unshift('--no-sandbox')
+    }
+
+    const child = spawn(electronPath, electronArgs, {
       cwd: repoRoot,
       env: Object.assign({}, process.env, {
         ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
