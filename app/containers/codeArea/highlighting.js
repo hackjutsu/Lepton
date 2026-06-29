@@ -24,6 +24,10 @@ export function adaptedLanguage (filename, lang) {
   // Adjust the language based on file extensions.
   const filenameExtension = filename && filename.split('.').pop().toLowerCase()
   switch (filenameExtension) {
+    case 'adoc':
+    case 'asciidoc':
+      language = 'AsciiDoc'
+      break
     case 'c':
     case 'h':
       if (!lang) language = 'c'

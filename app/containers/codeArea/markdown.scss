@@ -394,3 +394,67 @@
      margin: 0 auto;
    }
  }
+
+.markdown-section.asciidoc-section {
+  .sect1 {
+    margin: 20px 0;
+  }
+
+  .sect1 + .sect1 {
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+  }
+
+  .sectionbody > :last-child,
+  .paragraph > :last-child,
+  .ulist > :last-child,
+  .olist > :last-child,
+  .listingblock > :last-child,
+  .admonitionblock > :last-child {
+    margin-bottom: 0;
+  }
+
+  .listingblock {
+    margin: 15px 0;
+
+    .content {
+      margin: 0;
+    }
+
+    pre {
+      overflow: auto;
+      word-break: normal;
+    }
+
+    code {
+      display: block;
+      white-space: pre;
+    }
+  }
+
+  .admonitionblock {
+    margin: 15px 0;
+
+    table {
+      border: 0;
+      margin: 0;
+    }
+
+    td {
+      border: 0;
+      vertical-align: top;
+    }
+
+    .icon {
+      color: var(--text-secondary);
+      font-weight: bold;
+      text-transform: uppercase;
+      width: 90px;
+    }
+
+    .content {
+      border-left: 4px solid #dddddd;
+      color: #777777;
+    }
+  }
+}
