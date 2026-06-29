@@ -5,7 +5,8 @@ import {
   addLangPrefix,
   descriptionParser,
   parseCustomTags,
-  parseLangName
+  parseLangName,
+  resolveTwitterTextApi
 } from '../../app/utilities/parser'
 
 describe('parser utilities', () => {
@@ -51,5 +52,14 @@ describe('parser utilities', () => {
       'delta'
     ])
     expect(parseCustomTags('alpha, beta')).toEqual([])
+  })
+
+  it('resolves twitter-text default exports from bundled ESM interop', () => {
+    const twitterTextApi = {
+      extractHashtags: () => ['js']
+    }
+
+    expect(resolveTwitterTextApi(twitterTextApi)).toBe(twitterTextApi)
+    expect(resolveTwitterTextApi({ default: twitterTextApi })).toBe(twitterTextApi)
   })
 })

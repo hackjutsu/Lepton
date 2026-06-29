@@ -1,4 +1,4 @@
-const twitter = require('twitter-text')
+const twitter = resolveTwitterTextApi(require('twitter-text'))
 
 /* Old(Legacy) Style:  [my_title] my_description #tags: tag1, tag2, tag3
    New(Twitter) Style: [my_title] my_description #tag1 #tag2 #tag3
@@ -76,4 +76,10 @@ function parseCustomTagsTwitter (payload) {
   const prefix = '#tags:'
   const customTags = prefix + rawCustomTags.reduce((acc, cur) => acc + ', ' + cur)
   return customTags
+}
+
+export function resolveTwitterTextApi (twitterTextModule) {
+  return twitterTextModule && twitterTextModule.default
+    ? twitterTextModule.default
+    : twitterTextModule
 }
