@@ -58,4 +58,6 @@ jobs:
         run: npm ci
 
       - name: Electron render smoke test
+        env:
+          LEPTON_SMOKE_NO_SANDBOX: '1'
         run: xvfb-run --auto-servernum npm run test:smoke
