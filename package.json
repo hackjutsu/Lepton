@@ -73,7 +73,6 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
-    "@electron/remote": "^1.1.0",
     "autolinker": "^3.14.1",
     "bluebird": "^3.5.3",
     "boring-avatars": "^1.5.8",

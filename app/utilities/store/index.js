@@ -6,14 +6,12 @@ function getUserDataPath () {
     return window.lepton.app.getPath('userData')
   }
 
-  const electron = require('electron')
-  const remote = electron.remote || require('@electron/remote')
-  return (electron.app || remote.app).getPath('userData')
+  throw new Error('Store requires the preload bridge to resolve the userData path.')
 }
 
 class Store {
   constructor (opts) {
-    // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
+    // Renderer process gets the app data path through the preload bridge.
     // app.getPath('userData') will return a string of the user's app data directory path.
     const userDataPath = getUserDataPath()
     // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
