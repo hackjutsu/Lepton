@@ -24,6 +24,7 @@ describe('CodeArea syntax highlighting', () => {
     expect(adaptedLanguage('shell.sh', 'Shell')).toBe('bash')
     expect(adaptedLanguage('pSolution1.py', 'Python')).toBe('python')
     expect(adaptedLanguage('form.vb', 'Visual Basic')).toBe('vbscript')
+    expect(adaptedLanguage('index.php', 'PHP')).toBe('php')
   })
 
   it('falls back to C highlighting for C source and header file extensions', () => {
@@ -62,6 +63,30 @@ describe('CodeArea syntax highlighting', () => {
     expect(html).toContain('<span class="hljs-keyword">def</span>')
     expect(html).toContain('<span class="hljs-title function_">totalFruit</span>')
     expect(html).toContain('<span class="hljs-keyword">return</span>')
+  })
+
+  it('highlights PHP snippets with embedded HTML using the mixed template grammar', () => {
+    const content = `<html>
+<body>
+<?php echo $message; if ($visible) { ?>
+<div class="notice">Ready</div>
+<?php } ?>
+</body>
+</html>`
+    const html = highlightContent(content, adaptedLanguage('index.php', 'PHP'))
+
+    expect(html).toContain('language-php')
+    expect(html).toContain('language-xml')
+    expect(html).toContain('hljs-tag')
+    expect(html).toContain('hljs-attr')
+    expect(html).toContain('hljs-keyword')
+  })
+
+  it('keeps bare PHP snippets in PHP mode when no PHP opening tag is present', () => {
+    const html = highlightContent('echo $message;', adaptedLanguage('snippet.php', 'PHP'))
+
+    expect(html).toContain('hljs-keyword')
+    expect(html).not.toContain('language-xml')
   })
 
   it('falls back to automatic highlighting for unknown language names', () => {

@@ -82,6 +82,11 @@ const RENDER_FIXTURES = [
     name: 'immersive',
     selector: '.snippet-panel-immersive .snippet-box',
     text: 'React 19 render fixture'
+  },
+  {
+    name: 'php-html',
+    selector: '.code-area .language-php',
+    text: 'PHP template|index.php|Ready'
   }
 ]
 
