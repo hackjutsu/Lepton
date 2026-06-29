@@ -9,6 +9,7 @@ import HumanReadableTime from 'human-readable-time'
 import Moment from 'moment'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 import TagBadges from '../tagBadges'
 import {
   getRegularTagsForGist,
@@ -85,11 +86,11 @@ class Snippet extends Component {
       .catch(err => {
         logger.error('Failed to delete the gist ' + activeGist)
         logger.error(JSON.stringify(err))
-        notifyFailure('Deletion failed', 'Please check your network condition. 02')
+        notifyFailure(t('notification.deletionFailed'), t('notification.networkFailure', { code: '02' }))
       })
       .then(data => {
         logger.info('The gist ' + activeGist + ' has been deleted.')
-        notifySuccess('The gist has been deleted')
+        notifySuccess(t('notification.gistDeleted'))
 
         // For performance purpose, we should perform an internal update, like what
         // we're doing for creating/edit gists. However, since delete is an infrequent
@@ -107,13 +108,13 @@ class Snippet extends Component {
       <div className='static-modal'>
         <Modal show={ this.props.gistDeleteModalStatus === 'ON' } bsSize='small' keyboard={ true }>
           <Modal.Header>
-            <Modal.Title>Delete the gist?</Modal.Title>
+            <Modal.Title>{ t('snippet.deleteConfirmTitle') }</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
-            <Button onClick={ this.closeDeleteModal.bind(this) }>cancel</Button>
+            <Button onClick={ this.closeDeleteModal.bind(this) }>{ t('editor.cancel') }</Button>
             <Button
               bsStyle='danger'
-              onClick={ this.handleDeleteClicked.bind(this) }>delete</Button>
+              onClick={ this.handleDeleteClicked.bind(this) }>{ t('snippet.deleteAction') }</Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -163,7 +164,7 @@ class Snippet extends Component {
       description,
       processedFiles)
       .catch((err) => {
-        notifyFailure('Gist update failed')
+        notifyFailure(t('notification.gistUpdateFailed'))
         logger.error(JSON.stringify(err))
       })
       .then((response) => {
@@ -286,7 +287,7 @@ class Snippet extends Component {
       filename: filenameRecords
     })
 
-    notifySuccess('Gist updated', HumanReadableTime(new Date()))
+    notifySuccess(t('notification.gistUpdated'), HumanReadableTime(new Date()))
   }
 
   renderGistEditorModalBody (description, fileArray, isPrivate) {
@@ -316,7 +317,7 @@ class Snippet extends Component {
         show={ this.props.gistEditModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit</Modal.Title>
+          <Modal.Title>{ t('snippet.edit') }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           { this.renderGistEditorModalBody(description, fileArray, isPrivate) }
@@ -337,12 +338,12 @@ class Snippet extends Component {
   handleCopyGistLinkClicked (snippet, file) {
     const link = snippet.details.html_url + '#file-' + file.filename.replace(/\./g, '-').toLowerCase()
     clipboard.writeText(link)
-    notifySuccess('Copied', 'The link has been copied to the clipboard.')
+    notifySuccess(t('notification.copied'), t('notification.linkCopied'))
   }
 
   handleCopyGistFileClicked (gist) {
     clipboard.writeText(gist.content)
-    notifySuccess('Copied', 'The content has been copied to the clipboard.')
+    notifySuccess(t('notification.copied'), t('notification.contentCopied'))
   }
 
   showRawModalModal (gist) {
@@ -364,7 +365,7 @@ class Snippet extends Component {
         <Modal.Header closeButton>
           <Modal.Title>
             { gistRawModal.file }
-            <a className='copy-raw-link' href='#' onClick={ this.handleCopyRawLinkClicked.bind(this, gistRawModal.link) }>LINK</a>
+            <a className='copy-raw-link' href='#' onClick={ this.handleCopyRawLinkClicked.bind(this, gistRawModal.link) }>{ t('snippet.link') }</a>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -384,7 +385,7 @@ class Snippet extends Component {
 
   handleCopyRawLinkClicked (url) {
     clipboard.writeText(url)
-    notifySuccess('Copied', 'The raw file link has been copied to the clipboard.')
+    notifySuccess(t('notification.copied'), t('notification.rawLinkCopied'))
   }
 
   renderPanelHeader (activeSnippet) {
@@ -393,34 +394,34 @@ class Snippet extends Component {
         <div className='line'>
           <div className='header-title'>
             { activeSnippet.brief.public
-              ? 'public gist'
+              ? t('snippet.publicGist')
               : [
                 <div key='icon'className='secret-icon' dangerouslySetInnerHTML={{ __html: secretIcon }} />,
-                <span key='description' >secret gist</span>
+                <span key='description' >{ t('snippet.secretGist') }</span>
               ]
             }
           </div>
           <div className='header-controls'>
             <a className='snippet-control'
-              title='Edit'
+              title={ t('snippet.edit') }
               href='#'
               onClick={ this.showGistEditorModal.bind(this) }>
               <div dangerouslySetInnerHTML={{ __html: editIcon }} />
             </a>
             <a className='snippet-control'
-              title='Open in Web'
+              title={ t('snippet.openInWeb') }
               href={ activeSnippet.brief.html_url }>
               <div dangerouslySetInnerHTML={{ __html: openInWebIcon }} />
             </a>
             <a className='snippet-control'
-              title='Revisions'
+              title={ t('snippet.revisions') }
               href={ activeSnippet.brief.html_url + '/revisions' }>
               <div dangerouslySetInnerHTML={{ __html: eyeIcon }} />
             </a>
             {
               this.props.immersiveMode === 'OFF'
                 ? <a className='snippet-control'
-                  title='Delete'
+                  title={ t('snippet.delete') }
                   href='#'
                   onClick={ this.showDeleteModal.bind(this) }>
                   <div dangerouslySetInnerHTML={{ __html: trashIcon }} />
@@ -470,7 +471,7 @@ class Snippet extends Component {
           </div>
           : null }
         <span className='update-date'>
-          { 'Last active ' + Moment(gist.brief.updated_at).fromNow() }
+          { t('snippet.lastActive', { time: Moment(gist.brief.updated_at).fromNow() }) }
         </span>
       </div>)
 
@@ -537,19 +538,19 @@ class Snippet extends Component {
                   href='#'
                   className='file-header-control'
                   onClick={ this.handleCopyGistLinkClicked.bind(this, activeSnippet, gistFile) }>
-                  SHARE
+                  { t('snippet.share') }
                 </a>
                 <a
                   href='#'
                   className='file-header-control'
                   onClick={ this.showRawModalModal.bind(this, gistFile) }>
-                  RAW
+                  { t('snippet.raw') }
                 </a>
                 <a
                   href='#'
                   className='file-header-control'
                   onClick={ this.handleCopyGistFileClicked.bind(this, gistFile) }>
-                  COPY
+                  { t('snippet.copy') }
                 </a>
               </div>
             </div>

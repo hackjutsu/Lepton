@@ -34,7 +34,11 @@ function createFallbackBridge () {
     },
     clipboard: electron.clipboard || { writeText: () => {} },
     config: {
-      get: (key) => conf.get(key)
+      get: (key) => conf.get(key),
+      set: (key, value) => {
+        conf.set(key, value)
+        return Promise.resolve(value)
+      }
     },
     globals: {
       getPaths: () => ({

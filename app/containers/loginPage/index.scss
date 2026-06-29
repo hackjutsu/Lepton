@@ -13,8 +13,53 @@
   }
 
   .modal-content {
+    animation: login-modal-fade-in 180ms ease-out;
     margin-top: 100px;
     min-height: 400px;
+    opacity: 1;
+    transition: opacity 180ms ease-in;
+  }
+
+  &.login-modal-language-changing .modal-content {
+    opacity: 0;
+  }
+
+  .modal-header {
+    position: relative;
+  }
+
+  .login-language-selector {
+    -webkit-app-region: no-drag;
+    display: block;
+    height: 24px;
+    position: absolute;
+    right: 18px;
+    top: 20px;
+    width: 24px;
+  }
+
+  .login-language-selector span {
+    align-items: center;
+    color: #555;
+    display: flex;
+    filter: grayscale(1);
+    font-size: 16px;
+    height: 24px;
+    justify-content: center;
+    line-height: 1;
+    opacity: .72;
+    width: 24px;
+  }
+
+  .login-language-selector select {
+    cursor: pointer;
+    height: 24px;
+    left: 0;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    width: 24px;
   }
 
   .profile-image-modal {
@@ -55,5 +100,15 @@
 
   .login-alert {
     margin-bottom: 5px !important;
+  }
+}
+
+@keyframes login-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

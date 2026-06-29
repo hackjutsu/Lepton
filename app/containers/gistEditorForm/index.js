@@ -4,6 +4,7 @@ import electronBridge from '../../utilities/electronBridge'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 import validFilename from 'valid-filename'
 
 import tipsIcon from './ei-question.svg'
@@ -17,11 +18,7 @@ const conf = electronBridge.config
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 
-const descriptionTips = '[title] description #tag1 #tag2'
-
-const tooltip = (
-  <Tooltip id='tooltip'>{ descriptionTips }</Tooltip>
-)
+const getDescriptionTips = () => t('editor.descriptionPlaceholder')
 
 class GistEditorFormImpl extends Component {
   componentWillMount () {
@@ -70,14 +67,14 @@ class GistEditorFormImpl extends Component {
             type='submit'
             bsStyle='default'
             disabled={ submitting }>
-            Submit
+            { t('editor.submit') }
           </Button>
           <Button
             className='gist-editor-control-button'
             onClick={ handleCancel }
             bsStyle='default'
             disabled={ submitting }>
-              Cancel
+            { t('editor.cancel') }
           </Button>
         </div>
       </form>
@@ -85,19 +82,19 @@ class GistEditorFormImpl extends Component {
   }
 }
 
-const valideNotEmptyContent = value => value ? null : 'required'
+const valideNotEmptyContent = value => value ? null : t('editor.required')
 
 const validateFilename = value => {
   // empty filename is not allowed
   if (!value) {
-    return 'required'
+    return t('editor.required')
   }
 
   // validate filename according to the .leptonrc configs
   if (!conf.get('editor').validateFilename) {
     logger.info('[Filename Validation] According to the config, filename validation has been skipped')
   } else if (!validFilename(value)) {
-    return 'invalid filename'
+    return t('editor.invalidFilename')
   }
 }
 
@@ -115,15 +112,15 @@ const renderDescriptionField = ({ input, type, meta: { touched, error, warning }
       className='gist-editor-input-area'
       { ...input }
       type={ type }
-      placeholder={ descriptionTips }/>
+      placeholder={ getDescriptionTips() }/>
     { touched && ((error && <span className='error-msg'>{ error }</span>) ||
         (warning && <span className='error-msg'>{ warning }</span>)) }
-    <OverlayTrigger placement="top" overlay={ tooltip }>
+    <OverlayTrigger placement="top" overlay={ <Tooltip id='tooltip'>{ getDescriptionTips() }</Tooltip> }>
       <a className='tips' href='#'>
         <div
           className='tips-icon'
           dangerouslySetInnerHTML={{ __html: tipsIcon }} />
-        <span>tips</span>
+        <span>{ t('editor.tips') }</span>
       </a>
     </OverlayTrigger>
   </div>
@@ -147,11 +144,11 @@ function renderGistFileHeader (member, fields, index) {
         name={ `${member}.filename` }
         type='text'
         component={ renderTitleInputField }
-        placeholder='file name... (e.g. snippet.js)'
+        placeholder={ t('editor.filenamePlaceholder') }
         validate={ validateFilename }/>
       <a href='#'
         className={ fields.length === 1 ? 'gist-editor-customized-tag-hidden' : 'gist-editor-customized-tag' }
-        onClick={ () => fields.remove(index) }>#remove</a>
+        onClick={ () => fields.remove(index) }>{ t('editor.removeFile') }</a>
     </div>
   )
 }
@@ -176,11 +173,11 @@ const renderGistFiles = ({ fields, formStyle, filenameList }) => (
       <a href='#'
         className='gist-editor-customized-tag'
         onClick={ () => fields.push({}) }>
-        #add file
+        { t('editor.addFile') }
       </a>
       <div className='gist-editor-privacy-checkbox'>
         <Field name='private' id='private' component='input' type='checkbox' disabled={ formStyle === UPDATE_GIST }/>
-         &nbsp;secret
+         &nbsp;{ t('editor.secret') }
       </div>
     </div>
   </ListGroup>

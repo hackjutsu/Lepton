@@ -6,6 +6,7 @@ import electronBridge from '../../utilities/electronBridge'
 import HumanReadableTime from 'human-readable-time'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -79,7 +80,7 @@ class UserPanel extends Component {
 
     return getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
       .catch((err) => {
-        notifyFailure('Gist creation failed')
+        notifyFailure(t('notification.gistCreationFailed'))
         logger.error(JSON.stringify(err))
       })
       .then((response) => {
@@ -164,7 +165,7 @@ class UserPanel extends Component {
       filename: filenameRecords
     })
 
-    notifySuccess('Gist created', HumanReadableTime(new Date()))
+    notifySuccess(t('notification.gistCreated'), HumanReadableTime(new Date()))
   }
 
   renderGistEditorModalBody () {
@@ -195,7 +196,7 @@ class UserPanel extends Component {
         show={ this.props.gistNewModalStatus === 'ON' }
         onHide={ this.closeGistEditorModal.bind(this)}>
         <Modal.Header closeButton>
-          <Modal.Title>New</Modal.Title>
+          <Modal.Title>{ t('userPanel.new') }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           { this.renderGistEditorModalBody.bind(this)() }
@@ -214,7 +215,7 @@ class UserPanel extends Component {
           <div
             className='user-panel-icon'
             dangerouslySetInnerHTML={{ __html: logoutIcon }} />
-          <span>Logout</span>
+          <span>{ t('userPanel.logout') }</span>
         </a>
         <br/>
         <a href='#'
@@ -223,7 +224,7 @@ class UserPanel extends Component {
           <div
             className='user-panel-icon'
             dangerouslySetInnerHTML={{ __html: newIcon }} />
-          <span>New</span>
+          <span>{ t('userPanel.new') }</span>
         </a>
         <br/>
         <a href='#'
@@ -232,7 +233,7 @@ class UserPanel extends Component {
           <div
             className='user-panel-icon'
             dangerouslySetInnerHTML={{ __html: syncIcon }} />
-          <span>Sync</span>
+          <span>{ t('userPanel.sync') }</span>
         </a>
         <div className='customized-tag-small'>{ this.props.syncTime }</div>
       </div>
@@ -306,13 +307,13 @@ class UserPanel extends Component {
       <div className='static-modal'>
         <Modal show={ this.props.logoutModalStatus === 'ON' } bsSize='small'>
           <Modal.Header>
-            <Modal.Title>Confirm logout?</Modal.Title>
+            <Modal.Title>{ t('userPanel.confirmLogout') }</Modal.Title>
           </Modal.Header>
           <Modal.Footer>
-            <Button onClick={ this.handleLogoutModalCancelClicked.bind(this) }>cancel</Button>
+            <Button onClick={ this.handleLogoutModalCancelClicked.bind(this) }>{ t('editor.cancel') }</Button>
             <Button
               bsStyle='danger'
-              onClick={ this.handleLogoutModalConfirmClicked.bind(this) }>logout</Button>
+              onClick={ this.handleLogoutModalConfirmClicked.bind(this) }>{ t('userPanel.logoutAction') }</Button>
           </Modal.Footer>
         </Modal>
       </div>

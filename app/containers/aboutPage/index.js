@@ -11,6 +11,7 @@ import ContributorInfo from '../../../.all-contributorsrc'
 import logoDarkImage from './logo-dark.png'
 import logoLightImage from './logo-light.png'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 
 import './index.scss'
 
@@ -48,7 +49,7 @@ class AboutPage extends Component {
       </div>,
       <div key ='Evil icons@1.9.0' className='license-item'>
         <div className='license-project'>Evil icons@1.9.0</div>
-        <div className='license-type'>License: MIT</div>
+        <div className='license-type'>{ t('about.licenseType', { license: 'MIT' }) }</div>
       </div>
     )
     Object.keys(LicenseInfo).forEach(item => {
@@ -60,7 +61,7 @@ class AboutPage extends Component {
           <div className='license-project'>
             { item }
           </div>
-          <div className='license-type'>License: { LicenseInfo[item].licenses }</div>
+          <div className='license-type'>{ t('about.licenseType', { license: LicenseInfo[item].licenses }) }</div>
         </div>
       )
     })
@@ -73,20 +74,20 @@ class AboutPage extends Component {
           <Image className='logo' src={ logoImage } rounded/>
           <div>{ appInfo.name + ' v' + appInfo.version }</div>
           <a className='logo-sub' href='https://github.com/hackjutsu/Lepton'>GitHub</a>
-          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/issues'>Feedback</a>
-          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE'>License</a>
+          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/issues'>{ t('about.feedback') }</a>
+          <a className='logo-sub' href='https://github.com/hackjutsu/Lepton/blob/master/LICENSE'>{ t('about.license') }</a>
         </div>
         <div className='setting-title-clickable' onClick={ this.openFileInEditor.bind(this, configFilePath) }>
-            Configurations
+          { t('about.configurations') }
         </div>
         <div className='one-line-section'>{ configFilePath }</div>
-        <div className='setting-title-clickable' onClick={ this.openFileInEditor.bind(this, logFilePath) }>Logs</div>
+        <div className='setting-title-clickable' onClick={ this.openFileInEditor.bind(this, logFilePath) }>{ t('about.logs') }</div>
         <div className='one-line-section'>{ logFilePath }</div>
-        <div className='setting-title'>Contributors</div>
+        <div className='setting-title'>{ t('about.contributors') }</div>
         <div className='contributor-section'>
           { contributorList }
         </div>
-        <div className='setting-title'>Acknowledgement</div>
+        <div className='setting-title'>{ t('about.acknowledgement') }</div>
         <div className='license-section'>
           { licenseList }
         </div>
@@ -115,7 +116,7 @@ class AboutPage extends Component {
         show={ this.props.aboutModalStatus === 'ON' }
         onHide={ this.handleCloseButtonClicked.bind(this) }>
         <Modal.Header closeButton>
-          <Modal.Title>About</Modal.Title>
+          <Modal.Title>{ t('about.title') }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           { this.renderSettingModalBody() }

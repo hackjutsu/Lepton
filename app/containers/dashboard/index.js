@@ -4,6 +4,7 @@ import { Modal, Image } from 'react-bootstrap'
 import { Radar } from 'react-chartjs'
 import { updateDashboardModalStatus } from '../../actions'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 
 import robotocatImage from '../../utilities/octodex/robotocat.png'
 
@@ -28,7 +29,7 @@ class Dashboard extends Component {
       <div className='dashboard-section'>
         <Image className='octocat' src={ robotocatImage } rounded/>
         <div className='greeting'>
-          Not enough data. Try creating gists of more than two languages. Happy Coding!
+          { t('dashboard.notEnoughData') }
         </div>
       </div>
     )
@@ -41,7 +42,7 @@ class Dashboard extends Component {
       labels: labels,
       datasets: [
         {
-          label: 'My Language Stats',
+          label: t('dashboard.statsLabel'),
           fillColor: 'rgba(81,192,191,0.2)',
           strokeColor: 'rgba(81,192,191,1)',
           pointColor: 'rgba(81,192,191,1)',
@@ -67,11 +68,11 @@ class Dashboard extends Component {
   }
 
   renderCompliments (lang) {
-    if (lang === 'Other') return 'Hmm... Looks like you are learning a mysterious language.'
+    if (lang === 'Other') return t('dashboard.mysteriousLanguage')
     return (
       <div>
-        <div className='compliment-word'> Well done! You are on the road to </div>
-        <div className='compliment-word'><b> { `${lang}  Master!` } </b></div>
+        <div className='compliment-word'> { t('dashboard.complimentPrefix') } </div>
+        <div className='compliment-word'><b> { t('dashboard.complimentMaster', { language: lang }) } </b></div>
       </div>
     )
   }
@@ -97,7 +98,7 @@ class Dashboard extends Component {
         show={ this.props.dashboardModalStatus === 'ON' }
         onHide={ this.handleCloseButtonClicked.bind(this) }>
         <Modal.Header closeButton>
-          <Modal.Title>Dashboard</Modal.Title>
+          <Modal.Title>{ t('dashboard.title') }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           { this.renderSettingModalBody() }

@@ -22,12 +22,14 @@ const defaultConfig = require('./configs/defaultConfig')
 const appInfo = require('./package.json')
 const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
+const { configureI18n, t } = require('./app/utilities/i18n')
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
-autoUpdater.autoDownload = nconf.get('autoUpdate')
 
 initGlobalConfigs()
+configureI18n(nconf.get('i18n:locale'))
+autoUpdater.autoDownload = nconf.get('autoUpdate')
 initGlobalLogger()
 setUpBridgeIpcHandlers()
 
@@ -141,11 +143,11 @@ function createWindow (autoLogin) {
     if (operationType == 0) {
       const choice = dialog.showMessageBoxSync(mainWindow, {
         type: 'info',
-        title: 'Quit',
+        title: t('dialog.quitTitle'),
         defaultId: 0,
         cancelId: 0,
-        message: 'Are you sure?',
-        buttons: ['Nerver Mind', 'Minimize to disk', 'Quit']
+        message: t('dialog.quitConfirm'),
+        buttons: [t('dialog.neverMind'), t('dialog.minimizeToTray'), t('dialog.quit')]
       })
       if (choice === 1) {
         if (miniWindow) {
@@ -242,68 +244,68 @@ app.on('activate', () => mainWindow && mainWindow.show())
 
 function setUpApplicationMenu () {
   // Create the Application's main menu
-  let { mainMenuTemplate } = require('./app/utilities/menu/mainMenu')
+  let { buildMainMenuTemplate } = require('./app/utilities/menu/mainMenu')
   let gistMenu = {
-    label: 'Gist',
+    label: t('menu.gist'),
     submenu: [
       {
-        label: 'New Gist',
+        label: t('menu.newGist'),
         accelerator: shortcuts.keyNewGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('new-gist')
       },
       {
-        label: 'Edit Gist',
+        label: t('menu.editGist'),
         accelerator: shortcuts.keyEditGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('edit-gist')
       },
       {
-        label: 'Delete Gist',
+        label: t('menu.deleteGist'),
         accelerator: shortcuts.keyDeleteGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('delete-gist-check')
       },
       {
-        label: 'Submit Gist',
+        label: t('menu.submitGist'),
         accelerator: shortcuts.keySubmitGist,
         click: (item, mainWindow) => mainWindow && mainWindow.send('submit-gist')
       },
       {
-        label: 'Sync Gist',
+        label: t('menu.syncGist'),
         accelerator: shortcuts.keySyncGists,
         click: (item, mainWindow) => mainWindow && mainWindow.send('sync-gists')
       },
       {
-        label: 'Exit Editor',
+        label: t('menu.exitEditor'),
         accelerator: shortcuts.keyEditorExit,
         click: (item, mainWindow) => mainWindow && mainWindow.send('exit-editor')
       },
       {
-        label: 'Immersive Mode',
+        label: t('menu.immersiveMode'),
         accelerator: shortcuts.keyImmersiveMode,
         click: (item, mainWindow) => mainWindow && mainWindow.send('immersive-mode')
       },
       {
-        label: 'Back to Normal Mode',
+        label: t('menu.backToNormalMode'),
         accelerator: 'Escape',
         click: (item, mainWindow) => mainWindow && mainWindow.send('back-to-normal-mode')
       },
       {
-        label: 'Dashboard',
+        label: t('menu.dashboard'),
         accelerator: shortcuts.keyDashboard,
         click: (item, mainWindow) => mainWindow && mainWindow.send('dashboard')
       },
       {
-        label: 'About',
+        label: t('menu.about'),
         accelerator: shortcuts.keyAboutPage,
         click: (item, mainWindow) => mainWindow && mainWindow.send('about-page')
       },
       {    
-        label: 'Search',
+        label: t('menu.search'),
         accelerator: shortcuts.keyShortcutForSearch,
         click: (item, mainWindow) => mainWindow && mainWindow.send('search-gist')
       }
     ]
   }
-  let template = [...mainMenuTemplate, gistMenu]
+  let template = [...buildMainMenuTemplate(t), gistMenu]
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
 }
@@ -311,6 +313,7 @@ function setUpApplicationMenu () {
 function setUpBridgeIpcHandlers () {
   const loggerMethods = new Set(['debug', 'error', 'info', 'warn'])
   const appPathNames = new Set(['appData', 'home', 'temp', 'userData'])
+  const writableConfigKeys = new Set(['i18n:locale'])
 
   function isAllowedConfigKey (key) {
     if (typeof key !== 'string' || key.length === 0) return false
@@ -322,6 +325,27 @@ function setUpBridgeIpcHandlers () {
     return mainWindow && !mainWindow.isDestroyed() && event.sender === mainWindow.webContents
   }
 
+  function writeConfigValue (key, value) {
+    const parts = key.split(':')
+    let config = {}
+    try {
+      config = JSON.parse(fs.readFileSync(global.configFilePath))
+    } catch (error) {
+      config = {}
+    }
+
+    let cursor = config
+    parts.slice(0, -1).forEach(part => {
+      if (!cursor[part] || typeof cursor[part] !== 'object' || Array.isArray(cursor[part])) {
+        cursor[part] = {}
+      }
+      cursor = cursor[part]
+    })
+    cursor[parts[parts.length - 1]] = value
+
+    fs.writeFileSync(global.configFilePath, JSON.stringify(config, null, 2))
+  }
+
   ipcMain.on('lepton:config:get', (event, key) => {
     if (!isAllowedConfigKey(key)) {
       logger.warn(`[bridge] Rejected config read for "${key}"`)
@@ -329,6 +353,22 @@ function setUpBridgeIpcHandlers () {
       return
     }
     event.returnValue = nconf.get(key)
+  })
+
+  ipcMain.handle('lepton:config:set', (event, key, value) => {
+    if (!isMainWindowSender(event) || !writableConfigKeys.has(key)) {
+      logger.warn(`[bridge] Rejected config write for "${key}"`)
+      return undefined
+    }
+
+    const persistedValue = key === 'i18n:locale' ? configureI18n(value) : value
+    nconf.set(key, persistedValue)
+    writeConfigValue(key, persistedValue)
+    setUpApplicationMenu()
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.reload()
+    }
+    return persistedValue
   })
 
   ipcMain.on('lepton:app:get-app-path', (event) => {
@@ -395,19 +435,19 @@ function setUpTouchBar() {
   const touchBar = new TouchBar({
     items: [
       new TouchBarButton({
-        label: "Immersive",
+        label: t('touchBar.immersive'),
         icon: makeIcon("immersive"),
         iconPosition: "left",
         click: () => mainWindow.send("immersive-mode")
       }),
       new TouchBarButton({
-        label: "Sync",
+        label: t('touchBar.sync'),
         icon: makeIcon("sync"),
         iconPosition: "left",
         click: () => mainWindow.send("sync-gists")
       }),
       new TouchBarButton({
-        label: "Search",
+        label: t('touchBar.search'),
         icon: makeIcon("search"),
         iconPosition: "left",
         click: () => mainWindow.send("search-gist")
@@ -416,13 +456,13 @@ function setUpTouchBar() {
         size: "flexible"
       }),
       new TouchBarButton({
-        label: "New",
+        label: t('touchBar.new'),
         icon: makeIcon("new"),
         iconPosition: "left",
         click: () => mainWindow.send("new-gist")
       }),
       new TouchBarButton({
-        label: "Edit",
+        label: t('touchBar.edit'),
         icon: makeIcon("edit"),
         iconPosition: "left",
         click: () => mainWindow.send("edit-gist")
@@ -475,13 +515,13 @@ function setTray(app, mainWindow) {
   }
   const trayMenuTemplate = [
     {
-      label: 'Open Window',
+      label: t('menu.openWindow'),
       click: () => {
         mainWindow.show()
       }
     },
     {
-      label: 'Quit',
+      label: t('menu.quit'),
       click: () => {
         operationType = 2
         if (process.platform !== 'darwin') app.quit()

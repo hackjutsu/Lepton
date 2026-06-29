@@ -2,6 +2,9 @@ module.exports = {
     "theme": "light",
     "autoUpdate": false,
     "startAtLogin": false,
+    "i18n": {
+        "locale": "en"
+    },
     "avatar": {
         "type": "github",
         "boringAvatarVariant": "beam"
