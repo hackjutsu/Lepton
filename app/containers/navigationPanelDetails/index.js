@@ -4,6 +4,8 @@ import { descriptionParser } from '../../utilities/parser'
 import electronBridge from '../../utilities/electronBridge'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
 import React, { Component } from 'react'
+import TagBadges from '../tagBadges'
+import { getRegularTagsForGist } from '../tagBadges/tags'
 
 import './index.scss'
 
@@ -43,6 +45,16 @@ class NavigationPanelDetails extends Component {
       }
     }
     return 'snippet-thumnail'
+  }
+
+  renderSnippetTags (gistId, customTags) {
+    if (!conf.get('snippet:showTagsInSnippetList')) {
+      return null
+    }
+
+    const { gistTags } = this.props
+    const tags = getRegularTagsForGist(gistId, customTags, gistTags)
+    return <TagBadges tags={ tags } className='snippet-thumnail-tags' />
   }
 
   renderSnippetThumbnails () {
@@ -88,7 +100,7 @@ class NavigationPanelDetails extends Component {
       // for null, '' and undefined
       const rawDescription = gist.brief.description || firstFilename
 
-      const { title, description } = descriptionParser(rawDescription)
+      const { title, description, customTags } = descriptionParser(rawDescription)
       const thumbnailTitle = title.length > 0 ? title : description
       const gistId = gist.brief.id
       snippetThumbnails.push(
@@ -96,6 +108,7 @@ class NavigationPanelDetails extends Component {
           <div className={ this.decideSnippetListItemClass(gistId) }
             onClick={ this.handleClicked.bind(this, gistId) }>
             <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
+            { this.renderSnippetTags(gistId, customTags) }
           </div>
         </li>
       )

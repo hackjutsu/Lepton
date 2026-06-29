@@ -19,7 +19,8 @@ module.exports = {
         "sorting": "updated_at",
         "sortingReverse": true,
         "expanded": true,
-        "newSnippetPrivate": false
+        "newSnippetPrivate": false,
+        "showTagsInSnippetList": false
     },
     "editor": {
         "tabSize": 4,

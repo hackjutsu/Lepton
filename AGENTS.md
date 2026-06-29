@@ -79,6 +79,18 @@ npm run preversion
 ### Testing
 The `npm test` command runs webpack in development mode (essentially a build verification). There are no formal unit tests configured - the project relies on build-time checks and manual testing.
 
+### Rendering Verification
+For any Electron, React, layout, CSS, webpack, or dependency change that could affect the UI, always verify actual rendering before considering the work complete:
+
+```bash
+npm run build
+npm start
+```
+
+Confirm more than process startup. The app must visibly render the Lepton UI, not just log `updateUserSession ACTIVE`. Always capture a screenshot of the running app and show that screenshot in the chat when reporting rendering verification. If the window is blank or suspicious, inspect the renderer with Electron DevTools or a remote debugging port and verify DOM layout, visible text, and the renderer screenshot. Before relaunching, check for and stop duplicate Lepton/Electron instances so stale blank windows do not mask the current result.
+
+Document rendering verification in PR descriptions, including whether the app was launched locally and what was observed.
+
 ## Architecture
 
 ### Application Structure

@@ -5,6 +5,7 @@ import { parseLangName as Resolved } from '../../utilities/parser'
 import electronBridge from '../../utilities/electronBridge'
 import React, { Component } from 'react'
 import UserPanel from '../userPanel'
+import { getNextActiveGistTag } from './tags'
 import {
   fetchSingleGist,
   selectGist,
@@ -42,9 +43,10 @@ class NavigationPanel extends Component {
   }
 
   handleClicked (key) {
-    const { selectGistTag, updateActiveGistAfterClicked, gists, gistTags } = this.props
-    selectGistTag(key)
-    updateActiveGistAfterClicked(gists, gistTags, key)
+    const { selectGistTag, updateActiveGistAfterClicked, gists, gistTags, activeGistTag } = this.props
+    const nextTag = getNextActiveGistTag(key, activeGistTag)
+    selectGistTag(nextTag)
+    updateActiveGistAfterClicked(gists, gistTags, nextTag)
   }
 
   renderPinnedTags () {
@@ -240,32 +242,22 @@ class NavigationPanel extends Component {
     })
     const orderedGistTags = [...customTags, ...langTags]
 
-    const tagsForPinRows = []
-    let i = 1
-    let row = []
+    const tagsForPin = []
     orderedGistTags.forEach(tag => {
-      row.push(
-        <td key={ tag }>
+      tagsForPin.push(
+        <div className='pin-tag-item' key={ tag }>
           <a
             onClick={ this.handleTagInPinnedTagsModalClicked.bind(this, tag) }
             className={ tmpPinnedTags.has(tag) ? 'gist-tag-pinned' : 'gist-tag-not-pinned' }>
               #{ tag.startsWith('lang@') ? Resolved(tag) : tag }
           </a>
-        </td>)
-      if (i++ % 5 === 0) {
-        tagsForPinRows.push(<tr key={ i }>{ row }</tr>)
-        row = []
-      }
+        </div>)
     })
 
-    row && tagsForPinRows.push(<tr key={ i }>{ row }</tr>)
-
     return (
-      <table className='pin-tag-table'>
-        <tbody>
-          { tagsForPinRows }
-        </tbody>
-      </table>
+      <div className='pin-tag-list'>
+        { tagsForPin }
+      </div>
     )
   }
 

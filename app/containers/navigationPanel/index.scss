@@ -153,8 +153,24 @@
 }
 
 .pinned-tags-modal {
-  .pin-tag-table {
-    width: 100%;
+  .modal-dialog {
+    max-width: calc(100vw - 40px);
+  }
+
+  .modal-body {
+    max-height: calc(100vh - 180px);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .pin-tag-list {
+    display: grid;
+    gap: 6px 14px;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  }
+
+  .pin-tag-item {
+    min-width: 0;
   }
 
   .font-style-base {
@@ -164,15 +180,19 @@
 
   .gist-tag-not-pinned {
     @extend .font-style-base;
-    margin: 5px;
     cursor: pointer;
+    display: block;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
   }
 
   .gist-tag-pinned {
     @extend .font-style-base;
-    margin: 5px;
     color: rgb(3, 123, 183);
+    display: block;
     font-weight: bold;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
     cursor: pointer;
   }
 }
