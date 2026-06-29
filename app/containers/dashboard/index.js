@@ -1,8 +1,8 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import Chart from 'chart.js'
 import { Image } from 'react-bootstrap'
 import Modal from '../compatModal'
-import { Radar } from 'react-chartjs'
 import { updateDashboardModalStatus } from '../../actions'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
@@ -10,6 +10,49 @@ import { t } from '../../utilities/i18n'
 import robotocatImage from '../../utilities/octodex/robotocat.png'
 
 import './index.scss'
+
+class RadarChart extends Component {
+  componentDidMount () {
+    this.renderChart()
+  }
+
+  componentDidUpdate () {
+    this.destroyChart()
+    this.renderChart()
+  }
+
+  componentWillUnmount () {
+    this.destroyChart()
+  }
+
+  setCanvasNode (node) {
+    this.canvasNode = node
+  }
+
+  destroyChart () {
+    if (this.chart) {
+      this.chart.destroy()
+      this.chart = null
+    }
+  }
+
+  renderChart () {
+    if (!this.canvasNode) return
+
+    const context = this.canvasNode.getContext('2d')
+    this.chart = new Chart(context).Radar(this.props.data, this.props.options || {})
+  }
+
+  render () {
+    const { width, height } = this.props
+    return (
+      <canvas
+        ref={ this.setCanvasNode.bind(this) }
+        width={ width }
+        height={ height } />
+    )
+  }
+}
 
 class Dashboard extends Component {
   renderDashboardSection () {
@@ -60,7 +103,7 @@ class Dashboard extends Component {
 
     return (
       <div className='dashboard-section'>
-        <Radar data={ chartData } options={ chartOptions } width="350" height="300"/>
+        <RadarChart data={ chartData } options={ chartOptions } width="350" height="300"/>
         <div className='compliment'>
           { this.renderCompliments(labels[0]) }
         </div>

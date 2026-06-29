@@ -31,7 +31,7 @@ class SearchPage extends Component {
     this.resultNodes = {}
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { searchIndex } = this.props
     searchIndex.initFuseSearch()
   }

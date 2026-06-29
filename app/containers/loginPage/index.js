@@ -29,9 +29,9 @@ class LoginPage extends Component {
     }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     const { loggedInUserInfo } = this.props
-    logger.debug('-----> Inside LoginPage componentWillMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
+    logger.debug('-----> Inside LoginPage componentDidMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
 
     logger.debug('-----> Registering listener for auto-login signal')
     ipcRenderer.on('auto-login', () => {
