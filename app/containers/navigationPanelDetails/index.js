@@ -7,7 +7,8 @@ import React, { Component } from 'react'
 import TagBadges from '../tagBadges'
 import {
   getRegularTagsForGist,
-  shouldUseColoredTags
+  shouldColorTags,
+  shouldShowTagsInSnippetList
 } from '../tagBadges/tags'
 
 import './index.scss'
@@ -51,7 +52,7 @@ class NavigationPanelDetails extends Component {
   }
 
   renderSnippetTags (gistId, customTags) {
-    if (!conf.get('snippet:showTagsInSnippetList')) {
+    if (!shouldShowTagsInSnippetList(conf)) {
       return null
     }
 
@@ -61,7 +62,7 @@ class NavigationPanelDetails extends Component {
       <TagBadges
         tags={ tags }
         className='snippet-thumnail-tags'
-        colored={ shouldUseColoredTags(conf.get('snippet:coloredTags')) } />
+        colored={ shouldColorTags(conf) } />
     )
   }
 

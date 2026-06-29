@@ -5,6 +5,8 @@ import {
   getRegularTagsForGist,
   getTagBadgeClassName,
   getTagBadgeLabel,
+  shouldColorTags,
+  shouldShowTagsInSnippetList,
   shouldUseColoredTags,
   getTagColorClass
 } from '../../app/containers/tagBadges/tags'
@@ -17,6 +19,12 @@ const tagBadgeStyles = readFileSync(
 function getStyleRule (selector) {
   const match = tagBadgeStyles.match(new RegExp(`${selector}\\s*\\{[^}]+\\}`))
   return match ? match[0] : ''
+}
+
+function fakeConf (values) {
+  return {
+    get: key => values[key]
+  }
 }
 
 describe('tag badge helpers', () => {
@@ -81,5 +89,33 @@ describe('tag badge helpers', () => {
     expect(plainTagRule).toContain('color: var(--text-secondary);')
     expect(plainTagRule).toContain('font-size: 12px;')
     expect(plainTagRule).toContain('font-style: italic;')
+  })
+
+  it('reads tag display settings from the tag config section', () => {
+    expect(shouldShowTagsInSnippetList(fakeConf({
+      'tag:showInSnippetList': true
+    }))).toBe(true)
+    expect(shouldShowTagsInSnippetList(fakeConf({
+      'tag:showInSnippetList': false,
+      'snippet:showTagsInSnippetList': true
+    }))).toBe(false)
+    expect(shouldShowTagsInSnippetList(fakeConf({
+      'snippet:showTagsInSnippetList': true
+    }))).toBe(true)
+    expect(shouldShowTagsInSnippetList(fakeConf({}))).toBe(false)
+  })
+
+  it('reads tag color settings from the tag config section', () => {
+    expect(shouldColorTags(fakeConf({}))).toBe(true)
+    expect(shouldColorTags(fakeConf({
+      'tag:colored': false
+    }))).toBe(false)
+    expect(shouldColorTags(fakeConf({
+      'tag:colored': true,
+      'snippet:coloredTags': false
+    }))).toBe(true)
+    expect(shouldColorTags(fakeConf({
+      'snippet:coloredTags': false
+    }))).toBe(false)
   })
 })
