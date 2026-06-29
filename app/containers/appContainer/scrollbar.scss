@@ -1,23 +1,4 @@
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 2px;
-  background: transparent;
-  -webkit-box-shadow: none;
-}
-
-*:hover::-webkit-scrollbar-thumb,
-*:focus::-webkit-scrollbar-thumb,
-*:focus-within::-webkit-scrollbar-thumb,
-.modal::-webkit-scrollbar-thumb,
-.modal *::-webkit-scrollbar-thumb {
-  background: rgba(245, 245, 245, 0.85);
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.45);
-}
+// Avoid global WebKit scrollbar customization. Setting scrollbar dimensions
+// forces classic scrollbars in Chromium and creates blank layout gutters between
+// panes. Native overlay scrollbars avoid both hover-time resize and persistent
+// gaps on macOS.
