@@ -47,7 +47,6 @@
 | Edit Snippet   | `Cmd/Ctrl + E` | Edit a snippet      |
 | Delete Snippet   | `Cmd/Ctrl + Del` | Delete selected snippet      |
 | Submit         | `Cmd/Ctrl + S` | Submit the changes from the editor      |
-| Cancel         | `Cmd/Ctrl + ESC` | Exit the editor without saving   |
 | Sync           | `Cmd/Ctrl + R` | Sync with remote Gist server   |
 | Immersive Mode | `Cmd/Ctrl + I` |  Toggle the [Immersive mode](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/immersive.png)    |
 | Dashboard      | `Cmd/Ctrl + D` |  Toggle the [dashboard](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/dashboard.png)     |

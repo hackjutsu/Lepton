@@ -55,7 +55,6 @@ module.exports = {
         "keyImmersiveMode": "CommandOrControl+I",
         "keyAboutPage": "CommandOrControl+,",
         "keyDashboard": "CommandOrControl+D",
-        "keyEditorExit": "CommandOrControl+Escape",
         "keySyncGists": "CommandOrControl+R"
     }
 }

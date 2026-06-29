@@ -11,6 +11,7 @@ import Modal from '../compatModal'
 import Moment from 'moment'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
+import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 import TagBadges from '../tagBadges'
 import {
@@ -56,20 +57,20 @@ const kTabLength = conf.get('editor:tabSize')
 
 class Snippet extends Component {
   componentDidMount () {
-    ipcRenderer.on('edit-gist-renderer', () => {
+    this.ipcSubscriptions = []
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'edit-gist-renderer', () => {
       this.showGistEditorModal()
     })
-    ipcRenderer.on('exit-editor', () => {
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'exit-editor', () => {
       this.closeGistEditorModal()
     })
-    ipcRenderer.on('delete-gist', () => {
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'delete-gist', () => {
       this.showDeleteModal()
     })
   }
 
   componentWillUnmount () {
-    ipcRenderer.removeAllListeners('edit-gist-renderer')
-    ipcRenderer.removeAllListeners('exit-editor')
+    unsubscribeIpc(this.ipcSubscriptions)
   }
 
   showDeleteModal () {

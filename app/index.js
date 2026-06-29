@@ -42,6 +42,8 @@ import {
   updateUpdateAvailableBarStatus,
   updateNewVersionInfo,
   updateImmersiveModeStatus,
+  updateGistEditModeStatus,
+  updateGistNewModeStatus,
   updateAboutModalStatus,
   updateDashboardModalStatus,
   updatePinnedTags
@@ -479,6 +481,23 @@ function allDialogsClosed (dialogsStatus) {
   return dialogsStatus.every(status => status === 'OFF')
 }
 
+function closeGistEditorIfOpen () {
+  const { gistEditModalStatus, gistNewModalStatus } = reduxStore.getState()
+  let didClose = false
+
+  if (gistEditModalStatus === 'ON') {
+    reduxStore.dispatch(updateGistEditModeStatus('OFF'))
+    didClose = true
+  }
+
+  if (gistNewModalStatus === 'ON') {
+    reduxStore.dispatch(updateGistNewModeStatus('OFF'))
+    didClose = true
+  }
+
+  return didClose
+}
+
 ipcRenderer.on('search-gist', data => {
   const state = reduxStore.getState()
   const {
@@ -687,6 +706,10 @@ ipcRenderer.on('back-to-normal-mode', data => {
     reduxStore.dispatch(updateImmersiveModeStatus('OFF'))
   }
   reduxStore.dispatch(updateAboutModalStatus('OFF'))
+})
+
+ipcRenderer.on('exit-editor', () => {
+  closeGistEditorIfOpen()
 })
 
 ipcRenderer.on('update-available', payload => {

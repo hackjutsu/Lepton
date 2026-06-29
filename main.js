@@ -2,7 +2,6 @@ const os = require('os')
 const electron = require('electron')
 const nconf = require('nconf')
 const windowStateKeeper = require('electron-window-state')
-const electronLocalshortcut = require('electron-localshortcut')
 const Menu = electron.Menu
 const app = electron.app
 const dialog = electron.dialog
@@ -136,11 +135,9 @@ function createWindow (autoLogin) {
 
   if (autoLogin) {
     logger.debug('-----> registering login-page-ready listener')
-    // Set up a one-time listener for 'login-page-ready'
-    ipcMain.on('login-page-ready', () => {
+    ipcMain.once('login-page-ready', () => {
       logger.info('[signal] sending auto-login signal')        
       mainWindow.webContents.send('auto-login')
-      ipcMain.removeAllListeners('login-page-ready')
     })
   }
 
@@ -272,15 +269,6 @@ app.on('window-all-closed', () => {
 app.on('before-quit', (event) => {
   if (operationType == 2) {
     willQuitApp = true
-    try {
-      // If we launch the app and close it quickly, we might run into a 
-      // situation where electronLocalshortcut is not initialized.
-      if (mainWindow && electronLocalshortcut) {
-        electronLocalshortcut.unregisterAll(mainWindow)
-      }
-    } catch (e) {
-      logger.error(e)
-    }
   }else{
     event.preventDefault()
   }
@@ -323,7 +311,6 @@ function setUpApplicationMenu () {
       },
       {
         label: t('menu.exitEditor'),
-        accelerator: shortcuts.keyEditorExit,
         click: (item, mainWindow) => mainWindow && mainWindow.send('exit-editor')
       },
       {

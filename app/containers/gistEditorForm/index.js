@@ -12,6 +12,7 @@ import {
   shouldShowError,
   touchAllFields
 } from './formState'
+import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 import validFilename from 'valid-filename'
 
@@ -45,7 +46,8 @@ class GistEditorForm extends Component {
 
   componentDidMount () {
     this.isMountedFlag = true
-    ipcRenderer.on('submit-gist', () => {
+    this.ipcSubscriptions = []
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'submit-gist', () => {
       this.shortcutSubmit()
     })
   }
@@ -60,7 +62,7 @@ class GistEditorForm extends Component {
 
   componentWillUnmount () {
     this.isMountedFlag = false
-    ipcRenderer.removeAllListeners('submit-gist')
+    unsubscribeIpc(this.ipcSubscriptions)
   }
 
   shortcutSubmit () {

@@ -7,6 +7,7 @@ import HumanReadableTime from 'human-readable-time'
 import Modal from '../compatModal'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
+import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 import {
   addLangPrefix as Prefixed,
@@ -53,19 +54,20 @@ const hideProfilePhoto = conf.get('userPanel:hideProfilePhoto')
 
 class UserPanel extends Component {
   componentDidMount () {
-    ipcRenderer.on('new-gist-renderer', () => {
+    this.ipcSubscriptions = []
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'new-gist-renderer', () => {
       this.handleNewGistClicked()
     })
-    ipcRenderer.on('exit-editor', () => {
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'exit-editor', () => {
       this.closeGistEditorModal()
     })
-    ipcRenderer.on('sync-gists', () => {
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'sync-gists', () => {
       this.handleSyncClicked()
     })
   }
 
   componentWillUnmount () {
-    ipcRenderer.removeAllListeners('new-gist-renderer')
+    unsubscribeIpc(this.ipcSubscriptions)
   }
 
   handleCreateSingleGist (data) {
