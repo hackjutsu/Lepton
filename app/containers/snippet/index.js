@@ -12,7 +12,7 @@ import React, { Component } from 'react'
 import TagBadges from '../tagBadges'
 import {
   getRegularTagsForGist,
-  shouldUseColoredTags
+  shouldColorTags
 } from '../tagBadges/tags'
 import {
   addLangPrefix as Prefixed,
@@ -436,7 +436,7 @@ class Snippet extends Component {
   renderSnippetDescription (gist) {
     const { title, description, customTags } = descriptionParser(gist.brief.description)
     const tags = getRegularTagsForGist(gist.brief.id, customTags, this.props.gistTags)
-    const useColoredTags = shouldUseColoredTags(conf.get('snippet:coloredTags'))
+    const useColoredTags = shouldColorTags(conf)
 
     const htmlForDescriptionSection = []
     if (title.length > 0) {
