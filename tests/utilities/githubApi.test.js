@@ -153,10 +153,10 @@ describe('GitHub API utility', () => {
     expect(result.map(gist => gist.id)).toEqual(['new', 'old'])
   })
 
-  it('falls back to the sequential gist request path when pagination headers are missing', async () => {
-    const { api, request } = await loadGitHubApi({
+  it('treats a missing pagination header as a complete single-page gist response', async () => {
+    const { api, request, requestPromise } = await loadGitHubApi({
       requestPromiseImpl: () => Promise.resolve({
-        body: [],
+        body: [{ id: 'single-page', updated_at: '2022-01-01T00:00:00Z' }],
         headers: {}
       }),
       requestImpl: (options, callback) => {
@@ -169,11 +169,35 @@ describe('GitHub API utility', () => {
 
     const result = await api.getGitHubApi(api.GET_ALL_GISTS)('token-1', 'octo')
 
-    expect(request).toHaveBeenCalledTimes(2)
-    expect(request).toHaveBeenNthCalledWith(1, expect.objectContaining({
+    expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
       uri: 'https://api.github.com/users/octo/gists',
       qs: { per_page: 100, page: 1 }
-    }), expect.any(Function))
-    expect(result).toEqual([{ id: 'fallback', updated_at: '2022-01-01T00:00:00Z' }])
+    }))
+    expect(request).not.toHaveBeenCalled()
+    expect(result).toEqual([{ id: 'single-page', updated_at: '2022-01-01T00:00:00Z' }])
+  })
+
+  it('uses the authenticated gists endpoint when downloadAll is enabled', async () => {
+    const { api, requestPromise } = await loadGitHubApi({
+      confValues: {
+        'gist:downloadAll': true
+      },
+      requestPromiseImpl: () => Promise.resolve({
+        body: [],
+        headers: {}
+      })
+    })
+
+    await api.getGitHubApi(api.GET_ALL_GISTS)('token-1', 'octo')
+
+    expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
+      uri: 'https://api.github.com/gists',
+      headers: {
+        'User-Agent': 'hackjutsu-lepton-app',
+        Authorization: 'token token-1'
+      },
+      qs: { per_page: 100, page: 1 },
+      resolveWithFullResponse: true
+    }))
   })
 })

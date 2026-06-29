@@ -82,10 +82,7 @@ function getAllGistsV2 (token, userId) {
         logger.debug(TAG + '[V2] The header missing link property')
         logger.debug(TAG + JSON.stringify(res.headers))
         logger.debug(TAG + `The length of gistList is ${gistList.length}`)
-
-        // Falling back to getAllGistsV1 to deal with two-factor Authenticated clients
-        logger.debug(TAG + '[V2] Falling back to [V1]...')
-        return getAllGistsV1(token, userId)
+        return sortGistsByUpdatedAt(gistList)
       }
 
       const matches = res.headers.link.match(/page=[0-9]*/g)
@@ -96,7 +93,7 @@ function getAllGistsV2 (token, userId) {
       for (let i = 2; i <= maxPage; ++i) { requests.push(requestGists(token, userId, i, gistList)) }
       return Promise.all(requests)
         .then(() => {
-          return gistList.sort((g1, g2) => g2.updated_at.localeCompare(g1.updated_at))
+          return sortGistsByUpdatedAt(gistList)
         })
     })
     .catch(err => {
@@ -119,6 +116,10 @@ function requestGists (token, userId, page, gistList) {
 
 function parseBody (res, gistList) {
   for (const key in res) { if (Object.prototype.hasOwnProperty.call(res, key)) gistList.push(res[key]) }
+}
+
+function sortGistsByUpdatedAt (gistList) {
+  return gistList.sort((g1, g2) => g2.updated_at.localeCompare(g1.updated_at))
 }
 
 const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
@@ -178,8 +179,13 @@ function makeRangeArr (start, end) {
 
 const GISTS_PER_PAGE = 100
 function makeOptionForGetAllGists (token, userId, page) {
+  const shouldDownloadAllGists = conf && conf.get('gist:downloadAll')
+  const uri = shouldDownloadAllGists
+    ? `https://${gitHubHostApi}/gists`
+    : `https://${gitHubHostApi}/users/${userId}/gists`
+
   return {
-    uri: `https://${gitHubHostApi}/users/${userId}/gists`,
+    uri: uri,
     agent: proxyAgent,
     headers: {
       'User-Agent': userAgent,
