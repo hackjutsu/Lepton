@@ -92,6 +92,11 @@ const RENDER_FIXTURES = [
     name: 'jupyter-notebook',
     selector: '.jupyterNotebook-section .nb-notebook',
     text: 'Notebook Fixture|hello from notebook|42'
+  },
+  {
+    name: 'exit',
+    selector: '.logout-modal .modal-footer .btn-danger',
+    text: 'Confirm logout?|logout'
   }
 ]
 

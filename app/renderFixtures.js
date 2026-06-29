@@ -298,6 +298,8 @@ function getFixtureOverrides (name) {
       return { gistEditModalStatus: 'ON' }
     case 'immersive':
       return { immersiveMode: 'ON' }
+    case 'exit':
+      return { logoutModalStatus: 'ON' }
     case 'new':
       return { gistNewModalStatus: 'ON' }
     case 'pinned-tags':
