@@ -1,7 +1,7 @@
 import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import Avatar from 'boring-avatars'
 import { connect } from 'react-redux'
-import { remote, ipcRenderer } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import React, { Component } from 'react'
 
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
@@ -10,8 +10,9 @@ import saritocatImage from '../../utilities/octodex/saritocat.png'
 
 import './index.scss'
 
-const conf = remote.getGlobal('conf')
-const logger = remote.getGlobal('logger')
+const conf = electronBridge.config
+const ipcRenderer = electronBridge.ipc
+const logger = electronBridge.logger
 
 const LoginModeEnum = { CREDENTIALS: 1, TOKEN: 2 }
 

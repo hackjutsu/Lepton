@@ -2,7 +2,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { default as GistEditorForm, NEW_GIST } from '../gistEditorForm'
 import { Image, Modal, Button, ProgressBar } from 'react-bootstrap'
-import { remote, ipcRenderer } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import HumanReadableTime from 'human-readable-time'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
@@ -34,8 +34,9 @@ import newIcon from './new.svg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
 import syncIcon from './sync.svg'
 
-const conf = remote.getGlobal('conf')
-const logger = remote.getGlobal('logger')
+const conf = electronBridge.config
+const ipcRenderer = electronBridge.ipc
+const logger = electronBridge.logger
 
 let defaultImage = dojocatImage
 if (conf.get('enterprise:enable')) {
@@ -267,7 +268,7 @@ class UserPanel extends Component {
       profile: null
     })
     removeAccessToken()
-    remote.getCurrentWindow().setTitle('Lepton') // update the app title
+    electronBridge.window.setTitle('Lepton') // update the app title
     ipcRenderer.send('session-destroyed')
   }
 

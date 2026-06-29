@@ -2,7 +2,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Button } from 'react-bootstrap'
 import { parseLangName as Resolved } from '../../utilities/parser'
-import { remote } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import React, { Component } from 'react'
 import UserPanel from '../userPanel'
 import {
@@ -17,8 +17,8 @@ import plusIcon from './plus.svg'
 
 import './index.scss'
 
-const conf = remote.getGlobal('conf')
-const logger = remote.getGlobal('logger')
+const conf = electronBridge.config
+const logger = electronBridge.logger
 
 class NavigationPanel extends Component {
   constructor (props) {

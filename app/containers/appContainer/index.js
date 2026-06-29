@@ -1,7 +1,7 @@
 import { Alert } from 'react-bootstrap'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { remote, shell } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
 import AboutPage from '../aboutPage'
 import Dashboard from '../dashboard'
@@ -18,7 +18,7 @@ import ThemeManager from '../../utilities/themeManager'
 import './index.scss'
 import './scrollbar.scss'
 
-const conf = remote.getGlobal('conf')
+const conf = electronBridge.config
 const themeManager = new ThemeManager()
 themeManager.setTheme(conf.get('theme'))
 
@@ -93,12 +93,12 @@ class AppContainer extends Component {
 
   handleDownloadClicked () {
     const { newVersionInfo } = this.props
-    shell.openExternal(newVersionInfo.url)
+    electronBridge.shell.openExternal(newVersionInfo.url)
     this.dismissUpdateAlert()
   }
 
   handleReleaseNotesClicked () {
-    shell.openExternal('https://github.com/hackjutsu/Lepton/releases')
+    electronBridge.shell.openExternal('https://github.com/hackjutsu/Lepton/releases')
     this.dismissUpdateAlert()
   }
 

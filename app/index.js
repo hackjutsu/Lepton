@@ -1,10 +1,10 @@
-import { ipcRenderer } from 'electron'
 import React from 'react'
 import ReactDom from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import electronLocalStorage from 'electron-json-storage-sync'
+import electronBridge from './utilities/electronBridge'
 
 import './utilities/vendor/bootstrap/css/bootstrap.css'
 import AppContainer from './containers/appContainer'
@@ -50,8 +50,9 @@ import { notifySuccess, notifyFailure } from './utilities/notifier'
 const path = require('path')
 const { createRequire } = require('module')
 const remote = require('@electron/remote')
-const logger = remote.getGlobal('logger')
-const appRequire = createRequire(path.join(remote.app.getAppPath(), 'app/index.js'))
+const ipcRenderer = electronBridge.ipc
+const logger = electronBridge.logger
+const appRequire = createRequire(path.join(electronBridge.app.getAppPath(), 'app/index.js'))
 
 let Account = null
 try {
@@ -398,7 +399,7 @@ function initUserSession (token) {
       syncLocalPref(newProfile.login)
       logger.debug('-----> after syncLocalPref')
 
-      remote.getCurrentWindow().setTitle(`${newProfile.login} | Lepton`) // update the app title
+      electronBridge.window.setTitle(`${newProfile.login} | Lepton`) // update the app title
 
       logger.info('[Dispatch] updateUserSession ACTIVE')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
@@ -684,7 +685,7 @@ ipcRenderer.on('back-to-normal-mode', data => {
 })
 
 ipcRenderer.on('update-available', payload => {
-  const newVersionInfo = remote.getGlobal('newVersionInfo')
+  const newVersionInfo = electronBridge.globals.getUpdateInfo()
   if (electronLocalStorage.get('skipped-version').data === newVersionInfo.version) return
 
   reduxStore.dispatch(updateNewVersionInfo(newVersionInfo))

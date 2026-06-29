@@ -2,7 +2,7 @@ import fs from 'fs'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
-import { remote, shell } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import { updateAboutModalStatus } from '../../actions'
 import defaultConfig from '../../../configs/defaultConfig'
 import appInfo from '../../../package.json'
@@ -14,16 +14,15 @@ import React, { Component } from 'react'
 
 import './index.scss'
 
-const conf = remote.getGlobal('conf')
-const logFilePath = remote.getGlobal('logFilePath')
-const configFilePath = remote.getGlobal('configFilePath')
+const conf = electronBridge.config
+const { configFilePath, logFilePath } = electronBridge.globals.getPaths()
 
 class AboutPage extends Component {
   openFileInEditor (filePath) {
     if (!fs.existsSync(filePath)) {
       fs.closeSync(fs.writeFileSync(filePath, JSON.stringify(defaultConfig, null, 2)))
     }
-    shell.openPath(filePath)
+    electronBridge.shell.openPath(filePath)
   }
 
   renderAboutSection () {

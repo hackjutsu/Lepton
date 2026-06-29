@@ -27,9 +27,10 @@ async function loadGitHubApi ({
     proxyAgentInstances.push(this)
   })
 
-  vi.doMock('electron', () => ({
-    remote: {
-      getGlobal: (key) => key === 'logger' ? logger : createConf(confValues)
+  vi.doMock('../../app/utilities/electronBridge', () => ({
+    default: {
+      config: createConf(confValues),
+      logger
     }
   }))
   vi.doMock('proxy-agent', () => ({
@@ -54,7 +55,7 @@ async function loadGitHubApi ({
 }
 
 afterEach(() => {
-  vi.doUnmock('electron')
+  vi.doUnmock('../../app/utilities/electronBridge')
   vi.doUnmock('proxy-agent')
   vi.doUnmock('request')
   vi.doUnmock('request-promise')

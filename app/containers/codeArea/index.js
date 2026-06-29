@@ -4,15 +4,14 @@ import hljsDefineGraphQL from 'highlightjs-graphql'
 import Markdown from '../../utilities/markdown'
 import nb from '../../utilities/jupyterNotebook'
 import React, { Component } from 'react'
+import electronBridge from '../../utilities/electronBridge'
 
 import '../../utilities/vendor/prism/prism.scss'
 import './jupyterNotebook.scss'
 import './markdown.scss'
 
-const remote = require('@electron/remote')
-
-const logger = remote.getGlobal('logger')
-const conf = remote.getGlobal('conf')
+const logger = electronBridge.logger
+const conf = electronBridge.config
 
 // resolve syntax highlight style based on app theme
 if (conf.get('theme') === 'dark') {
