@@ -23,6 +23,7 @@ const appInfo = require('./package.json')
 const { createMainLogger } = require('./app/utilities/logging/mainLogger')
 const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
+const { applyElectronProxy } = require('./app/utilities/electronProxy')
 const { configureI18n, t } = require('./app/utilities/i18n')
 const electronLocalStorage = require('electron-json-storage-sync')
 const {
@@ -243,14 +244,20 @@ function createWindow (autoLogin) {
 }
 
 app.on('ready', () => {
-    applyStartAtLoginSetting({
-      app,
-      enabled: nconf.get('startAtLogin'),
-      logger
-    })
-    // createWindow()
+  applyStartAtLoginSetting({
+    app,
+    enabled: nconf.get('startAtLogin'),
+    logger
+  })
+  // createWindow()
+  applyElectronProxy({
+    session: electron.session,
+    conf: nconf,
+    logger
+  }).then(() => {
     checkForAppUpdates({ notify: true })
     createWindowAndAutoLogin()
+  })
 })
 
 app.on('window-all-closed', () => {
