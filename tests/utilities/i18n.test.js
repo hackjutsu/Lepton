@@ -11,6 +11,7 @@ import es from '../../app/utilities/i18n/locales/es'
 import fr from '../../app/utilities/i18n/locales/fr'
 import ja from '../../app/utilities/i18n/locales/ja'
 import ko from '../../app/utilities/i18n/locales/ko'
+import tr from '../../app/utilities/i18n/locales/tr'
 import zhHans from '../../app/utilities/i18n/locales/zh-Hans'
 import zhHant from '../../app/utilities/i18n/locales/zh-Hant'
 
@@ -19,6 +20,7 @@ const catalogs = {
   fr,
   ja,
   ko,
+  tr,
   'zh-Hans': zhHans,
   'zh-Hant': zhHant
 }
@@ -81,6 +83,12 @@ describe('i18n utilities', () => {
     expect(t('login.title')).toBe('로그인')
   })
 
+  it('supports Turkish locale', () => {
+    expect(configureI18n('tr')).toBe('tr')
+    expect(t('login.title')).toBe('Giriş')
+    expect(t('login.continueAs', { username: 'octocat' })).toBe('octocat olarak devam et')
+  })
+
   it('interpolates named values', () => {
     configureI18n('en')
     expect(t('login.continueAs', { username: 'octocat' })).toBe('Continue as octocat')
@@ -104,6 +112,7 @@ describe('i18n utilities', () => {
       { code: 'fr', name: 'Français' },
       { code: 'ja', name: '日本語' },
       { code: 'ko', name: '한국어' },
+      { code: 'tr', name: 'Türkçe' },
       { code: 'zh-Hans', name: '简体中文' },
       { code: 'zh-Hant', name: '繁體中文' }
     ])

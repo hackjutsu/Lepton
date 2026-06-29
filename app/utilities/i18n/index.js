@@ -3,6 +3,7 @@ const es = require('./locales/es')
 const fr = require('./locales/fr')
 const ja = require('./locales/ja')
 const ko = require('./locales/ko')
+const tr = require('./locales/tr')
 const zhHans = require('./locales/zh-Hans')
 const zhHant = require('./locales/zh-Hant')
 
@@ -13,6 +14,7 @@ const catalogs = {
   fr,
   ja,
   ko,
+  tr,
   'zh-Hans': zhHans,
   'zh-Hant': zhHant
 }
@@ -23,6 +25,7 @@ const supportedLocales = [
   { code: 'fr', name: 'Français' },
   { code: 'ja', name: '日本語' },
   { code: 'ko', name: '한국어' },
+  { code: 'tr', name: 'Türkçe' },
   { code: 'zh-Hans', name: '简体中文' },
   { code: 'zh-Hant', name: '繁體中文' }
 ]
