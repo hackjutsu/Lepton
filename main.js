@@ -13,12 +13,13 @@ let willQuitApp = false
 
 // http://electron.rocks/sharing-between-main-and-renderer-process/
 // Set up the logger
-const logger = require('winston')
+const winston = require('winston')
 const path = require('path')
 const fs = require('fs')
 const isDev = require('electron-is-dev')
 const defaultConfig = require('./configs/defaultConfig')
 const appInfo = require('./package.json')
+const { createMainLogger } = require('./app/utilities/logging/mainLogger')
 const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
 const { configureI18n, t } = require('./app/utilities/i18n')
@@ -27,8 +28,8 @@ const {
   buildGitHubOAuthUrl,
   parseGitHubOAuthCallback
 } = require('./app/utilities/auth/githubOAuth')
-const { createGitHubApi } = require('./app/utilities/githubApi/core')
-const { renderNotebookContent } = require('./app/utilities/jupyterNotebook/core')
+
+const logger = createMainLogger()
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
@@ -393,6 +394,7 @@ function setUpBridgeIpcHandlers () {
 
   function getGitHubApiBridge () {
     if (!githubApi) {
+      const { createGitHubApi } = require('./app/utilities/githubApi/core')
       githubApi = createGitHubApi({
         conf: nconf,
         logger
@@ -547,6 +549,7 @@ function setUpBridgeIpcHandlers () {
     }
 
     try {
+      const { renderNotebookContent } = require('./app/utilities/jupyterNotebook/core')
       event.returnValue = {
         status: true,
         html: renderNotebookContent(content)
@@ -792,11 +795,9 @@ function initGlobalLogger () {
   }
   const logFile = new Date().toISOString().replace(/:/g, '.') + '.log'
   const logFilePath = path.join(logFolder, logFile)
-  logger.add(logger.transports.File, {
-      json: false,
-      exitOnError: false,
-      filename: logFilePath,
-      timestamp: true })
+  logger.add(new winston.transports.File({
+    filename: logFilePath
+  }))
   global.logger = logger
   global.logFilePath = logFilePath
 }
