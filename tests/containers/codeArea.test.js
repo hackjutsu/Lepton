@@ -6,6 +6,11 @@ import {
 } from '../../app/containers/codeArea/highlighting'
 
 const cSource = '#include<stdio.h>\n\nint main(void) {\n    printf("Hello World\\n");\n    return 0;\n}'
+const typedReturnPythonSource = [
+  'class Solution:',
+  '    def totalFruit(self, fruits: List[int]) -> int:',
+  '        return len(fruits)'
+].join('\n')
 
 describe('CodeArea syntax highlighting', () => {
   it('normalizes GitHub language names for Highlight.js', () => {
@@ -17,6 +22,7 @@ describe('CodeArea syntax highlighting', () => {
     expect(adaptedLanguage('script.bat', 'Batchfile')).toBe('dos')
     expect(adaptedLanguage('App.vue', 'Vue')).toBe('xml')
     expect(adaptedLanguage('shell.sh', 'Shell')).toBe('bash')
+    expect(adaptedLanguage('pSolution1.py', 'Python')).toBe('python')
     expect(adaptedLanguage('form.vb', 'Visual Basic')).toBe('vbscript')
   })
 
@@ -29,6 +35,8 @@ describe('CodeArea syntax highlighting', () => {
     expect(adaptedLanguage('.leptonrc')).toBe('json')
     expect(adaptedLanguage('setup.CMD')).toBe('dos')
     expect(adaptedLanguage('.zshrc')).toBe('bash')
+    expect(adaptedLanguage('pSolution1.py')).toBe('python')
+    expect(adaptedLanguage('script.PYW')).toBe('python')
     expect(adaptedLanguage('query.SQL')).toBe('sql')
     expect(adaptedLanguage('Contract.sol')).toBe('solidity')
     expect(adaptedLanguage('Contract.solidity')).toBe('solidity')
@@ -46,6 +54,14 @@ describe('CodeArea syntax highlighting', () => {
     expect(html).toContain('hljs-keyword')
     expect(html).toContain('hljs-string')
     expect(html).toContain('&lt;stdio.h&gt;')
+  })
+
+  it('renders Python functions with return annotations using Python highlighting', () => {
+    const html = highlightContent(typedReturnPythonSource, adaptedLanguage('pSolution1.py'))
+
+    expect(html).toContain('<span class="hljs-keyword">def</span>')
+    expect(html).toContain('<span class="hljs-title function_">totalFruit</span>')
+    expect(html).toContain('<span class="hljs-keyword">return</span>')
   })
 
   it('falls back to automatic highlighting for unknown language names', () => {
