@@ -1,6 +1,8 @@
 .app-container {
   margin: 0px;
+  height: 100vh;
   max-height: 100vh;
+  overflow: hidden;
 }
 
 .app-container {
@@ -23,8 +25,28 @@
     cursor: pointer;
   }
 
-  .SplitPane {
+  .active-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    width: 100vw;
+  }
+
+  .active-layout .menu-panel {
+    float: none;
+    flex: 0 0 140px;
+  }
+
+  .content-split-pane {
+    flex: 1 1 auto;
+    height: 100vh;
+    min-width: 0;
     position: relative !important;
+    width: auto;
+  }
+
+  .split-pane-pane {
+    overflow: hidden;
   }
 
   .alert {
@@ -42,7 +64,7 @@ div > div.modal-header > button {
 /**/
 
 /*For the resizer handle*/
-.Resizer {
+.split-pane-divider {
   background: #000;
   opacity: .2;
   z-index: 1;
@@ -54,12 +76,12 @@ div > div.modal-header > button {
   background-clip: padding-box;
 }
 
- .Resizer:hover {
+ .split-pane-divider:hover {
   -webkit-transition: all 1s ease;
   transition: all 1s ease;
 }
 
- .Resizer.horizontal {
+ .split-pane-divider.vertical {
   height: 11px;
   margin: -2px 0;
   border-top: 2px solid rgba(0, 0, 0, 0);
@@ -68,12 +90,12 @@ div > div.modal-header > button {
   width: 100%;
 }
 
-.Resizer.horizontal:hover {
+.split-pane-divider.vertical:hover {
   border-top: 2px solid rgba(0, 0, 0, 0.0);
   border-bottom: 2px solid rgba(0, 0, 0, 0.0);
 }
 
-.Resizer.vertical {
+.split-pane-divider.horizontal {
   width: 2px;
   margin: 0 -2px;
   border-left: 2px solid rgba(0, 0, 0, 0);
@@ -81,16 +103,16 @@ div > div.modal-header > button {
   cursor: col-resize;
 }
 
-.Resizer.vertical:hover {
+.split-pane-divider.horizontal:hover {
     border-left: 2px solid rgba(0, 0, 0, 0.0);
     border-right: 2px solid rgba(0, 0, 0, 0.0);
 }
 
-.Resizer.disabled {
+.split-pane-divider.disabled {
   cursor: not-allowed;
 }
 
-.Resizer.disabled:hover {
+.split-pane-divider.disabled:hover {
   border-color: transparent;
 }
 

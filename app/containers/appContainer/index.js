@@ -12,7 +12,7 @@ import NavigationPanelDetails from '../navigationPanelDetails'
 import React, { Component } from 'react'
 import SearchPage from '../searchPage'
 import SnippetPanel from '../snippetPanel'
-import SplitPane from 'react-split-pane'
+import { Pane, SplitPane } from 'react-split-pane'
 import ThemeManager from '../../utilities/themeManager'
 
 import './index.scss'
@@ -21,6 +21,48 @@ import './scrollbar.scss'
 const conf = remote.getGlobal('conf')
 const themeManager = new ThemeManager()
 themeManager.setTheme(conf.get('theme'))
+
+function SplitPaneDivider (props) {
+  const {
+    className,
+    currentSize,
+    direction,
+    disabled,
+    index,
+    isDragging,
+    maxSize,
+    minSize,
+    onKeyDown,
+    onMouseDown,
+    onPointerDown,
+    onTouchEnd,
+    onTouchStart,
+    style
+  } = props
+  const orientation = direction === 'horizontal' ? 'vertical' : 'horizontal'
+  const dividerStyle = Object.assign({}, direction === 'horizontal'
+    ? { width: '1px', cursor: disabled ? 'default' : 'col-resize' }
+    : { height: '1px', cursor: disabled ? 'default' : 'row-resize' }, style)
+
+  return (
+    <div
+      aria-label={ `${orientation} divider ${index + 1}` }
+      aria-orientation={ orientation }
+      aria-valuemax={ maxSize === Infinity ? undefined : maxSize }
+      aria-valuemin={ minSize }
+      aria-valuenow={ currentSize }
+      className={ `split-pane-divider ${direction}${isDragging ? ' dragging' : ''}${className ? ` ${className}` : ''}` }
+      data-divider-index={ index }
+      onKeyDown={ disabled ? undefined : onKeyDown }
+      onMouseDown={ disabled ? undefined : onMouseDown }
+      onPointerDown={ disabled ? undefined : onPointerDown }
+      onTouchEnd={ disabled ? undefined : onTouchEnd }
+      onTouchStart={ disabled ? undefined : onTouchStart }
+      role='separator'
+      style={ dividerStyle }
+      tabIndex={ disabled ? -1 : 0 } />
+  )
+}
 
 class AppContainer extends Component {
   renderAboutPage () {
@@ -39,13 +81,9 @@ class AppContainer extends Component {
 
   renderSearchPage () {
     const { searchWindowStatus, searchIndex } = this.props
-    return (
-      <div>
-        { searchWindowStatus === 'OFF'
-          ? null
-          : <SearchPage searchIndex = { searchIndex } /> }
-      </div>
-    )
+    return searchWindowStatus === 'OFF'
+      ? null
+      : <SearchPage searchIndex = { searchIndex } />
   }
 
   dismissUpdateAlert () {
@@ -100,7 +138,7 @@ class AppContainer extends Component {
     } = this.props
 
     return (
-      <div>
+      <div className='active-layout'>
         { this.renderAboutPage() }
         { this.renderDashboard() }
         { this.renderSearchPage() }
@@ -111,11 +149,15 @@ class AppContainer extends Component {
           updateLocalStorage = { updateLocalStorage }
           updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
           reSyncUserGists = { reSyncUserGists } />
-        <SplitPane split='vertical' minSize={180} maxSize={300} defaultSize={230}>
-          <NavigationPanelDetails />
-          <SnippetPanel
-            searchIndex = { searchIndex }
-            reSyncUserGists = { reSyncUserGists } />
+        <SplitPane className='content-split-pane' direction='horizontal' divider={ SplitPaneDivider } dividerClassName='minimal'>
+          <Pane minSize={180} maxSize={300} defaultSize={230}>
+            <NavigationPanelDetails />
+          </Pane>
+          <Pane>
+            <SnippetPanel
+              searchIndex = { searchIndex }
+              reSyncUserGists = { reSyncUserGists } />
+          </Pane>
         </SplitPane>
       </div>
     )
