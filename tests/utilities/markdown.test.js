@@ -17,4 +17,13 @@ describe('markdown utility', () => {
 
     expect(html).toContain('<code>:tada:</code>')
   })
+
+  it('renders task list checkboxes as clickable inputs', () => {
+    const html = Markdown.render('- [ ] open\n- [x] done')
+
+    expect(html).toContain('class="task-list-item enabled"')
+    expect(html).toContain('class="task-list-item-checkbox"type="checkbox"')
+    expect(html).toContain('class="task-list-item-checkbox" checked=""type="checkbox"')
+    expect(html).not.toContain('disabled')
+  })
 })

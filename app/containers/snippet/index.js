@@ -14,6 +14,7 @@ import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 import TagBadges from '../tagBadges'
+import { toggleMarkdownTaskListItem } from '../../utilities/markdown/taskList'
 import {
   getRegularTagsForGist,
   shouldColorTags
@@ -169,6 +170,33 @@ class Snippet extends Component {
       .catch((err) => {
         notifyFailure(t('notification.gistUpdateFailed'))
         logger.error(JSON.stringify(err))
+      })
+      .then((response) => {
+        this.updateGistsStoreWithUpdatedGist(response)
+      })
+  }
+
+  handleMarkdownTaskListItemToggle (activeSnippet, gistFile, taskIndex, checked) {
+    const { accessToken, activeGist } = this.props
+    const updatedContent = toggleMarkdownTaskListItem(gistFile.content, taskIndex, checked)
+
+    if (updatedContent === gistFile.content) {
+      return Promise.resolve()
+    }
+
+    return getGitHubApi(EDIT_SINGLE_GIST)(
+      accessToken,
+      activeGist,
+      activeSnippet.details.description,
+      {
+        [gistFile.filename]: {
+          content: updatedContent
+        }
+      })
+      .catch((err) => {
+        notifyFailure(t('notification.gistUpdateFailed'))
+        logger.error(JSON.stringify(err))
+        throw err
       })
       .then((response) => {
         this.updateGistsStoreWithUpdatedGist(response)
@@ -565,7 +593,12 @@ class Snippet extends Component {
             </div>
             <Collapse in={ isExpanded }>
               <div className='collapsable-code-area'>
-                <CodeArea filename={gistFile.filename} content={gistFile.content} language={gistFile.language} kTabLength={kTabLength}/>
+                <CodeArea
+                  filename={gistFile.filename}
+                  content={gistFile.content}
+                  language={gistFile.language}
+                  kTabLength={kTabLength}
+                  onMarkdownTaskListItemToggle={ this.handleMarkdownTaskListItemToggle.bind(this, activeSnippet, gistFile) }/>
               </div>
             </Collapse>
           </div>

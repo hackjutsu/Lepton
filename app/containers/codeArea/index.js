@@ -32,6 +32,34 @@ resolveHighlightLanguage(hljsDefineSolidity)(HighlightJS) // register solidity t
 resolveHighlightLanguage(hljsDefineGraphQL)(HighlightJS) // register graphql to hightlight.js
 
 export default class CodeArea extends Component {
+  handleMarkdownTaskListItemClicked (event) {
+    const { onMarkdownTaskListItemToggle } = this.props
+    const target = event.target
+    if (
+      !onMarkdownTaskListItemToggle ||
+      !target ||
+      !target.classList ||
+      !target.classList.contains('task-list-item-checkbox')
+    ) {
+      return
+    }
+
+    const checkboxes = Array.from(event.currentTarget.querySelectorAll('.task-list-item-checkbox'))
+    const taskIndex = checkboxes.indexOf(target)
+    if (taskIndex < 0) return
+
+    const previousChecked = !target.checked
+    target.disabled = true
+
+    Promise.resolve(onMarkdownTaskListItemToggle(taskIndex, target.checked))
+      .catch(() => {
+        target.checked = previousChecked
+      })
+      .finally(() => {
+        target.disabled = false
+      })
+  }
+
   createJupyterNotebookCodeBlock (content, language, kTabLength) {
     try {
       const result = electronBridge.notebook.render(content)
@@ -105,6 +133,7 @@ export default class CodeArea extends Component {
     }
     return (
       <div className='code-area'
+        onClick={ this.handleMarkdownTaskListItemClicked.bind(this) }
         dangerouslySetInnerHTML={ { __html: htmlContent } }/>
     )
   }
