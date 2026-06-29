@@ -5,6 +5,43 @@ import MdTaskList from 'markdown-it-task-lists'
 import MdKatex from 'markdown-it-katex'
 import sanitizeHtml, { sanitizeInlineHtml } from './sanitizeHtml'
 
+const htmlTagPattern = /<[!/a-z].*?>/ig
+const punctuationPattern = /[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~]/g
+
+function getHeadingText (token) {
+  if (!token) return ''
+  if (!token.children) return token.content
+
+  return token.children.map(child => {
+    return child.type === 'html_inline'
+      ? child.content.replace(htmlTagPattern, '')
+      : child.content
+  }).join('')
+}
+
+function createHeadingId (text) {
+  const id = text
+    .trim()
+    .toLowerCase()
+    .replace(htmlTagPattern, '')
+    .replace(punctuationPattern, '')
+    .replace(/\s+/g, '-')
+
+  return id || 'heading'
+}
+
+function createUniqueHeadingId (id, env) {
+  const renderEnv = env || {}
+
+  if (!renderEnv.headingIds) {
+    renderEnv.headingIds = Object.create(null)
+  }
+
+  const count = renderEnv.headingIds[id] || 0
+  renderEnv.headingIds[id] = count + 1
+  return count === 0 ? id : `${id}-${count}`
+}
+
 // Configure markdown-it
 const Md = MarkdownIt({
   html: true,
@@ -24,5 +61,13 @@ const Md = MarkdownIt({
 
 Md.renderer.rules.html_block = (tokens, idx) => sanitizeHtml(tokens[idx].content)
 Md.renderer.rules.html_inline = (tokens, idx) => sanitizeInlineHtml(tokens[idx].content)
+
+Md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
+  const headingText = getHeadingText(tokens[idx + 1])
+  const headingId = createUniqueHeadingId(createHeadingId(headingText), env)
+
+  tokens[idx].attrSet('id', headingId)
+  return self.renderToken(tokens, idx, options)
+}
 
 export default Md
