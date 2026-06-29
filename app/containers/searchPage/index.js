@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
 import electronBridge from '../../utilities/electronBridge'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -151,7 +152,7 @@ class SearchPage extends Component {
     if (inputValue.length > 0 && searchResults.length === 0) {
       return (
         <div className='not-found-msg'>
-          No result found...
+          { t('search.noResults') }
         </div>
       )
     }
@@ -192,7 +193,7 @@ class SearchPage extends Component {
         <input
           type="text"
           className='search-box'
-          placeholder='Search for description, tags, file names...'
+          placeholder={ t('search.placeholder') }
           autoFocus
           value={ this.state.inputValue }
           onChange={ this.updateInputValue.bind(this) }

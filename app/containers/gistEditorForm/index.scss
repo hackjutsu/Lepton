@@ -43,7 +43,8 @@
 
   .gist-editor-input-area {
     @extend .font-style-base;
-    flex: 1 1 95%;
+    flex: 1 1 auto;
+    min-width: 0;
     padding: 5px 10px;
     border: solid 1px;
     border-color: var(--border-color);
@@ -112,6 +113,12 @@
     font-size: 12px;
     font-weight: bold;
     color: #B0580E;
+  }
+
+  .gist-editor-name .error-msg {
+    flex: 0 0 40px;
+    margin-right: 8px;
+    white-space: nowrap;
   }
 
   .tips {

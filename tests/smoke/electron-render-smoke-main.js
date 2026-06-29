@@ -85,6 +85,7 @@ async function getRendererState (window) {
       const appContainer = document.querySelector('.app-container')
       const loginModal = document.querySelector('.login-modal')
       const appBounds = appContainer ? appContainer.getBoundingClientRect() : null
+      const languageSelector = document.querySelector('[data-role="language-selector"]')
       return {
         bodyText: document.body ? document.body.innerText : '',
         bodyHtml: document.body ? document.body.innerHTML : '',
@@ -92,6 +93,9 @@ async function getRendererState (window) {
         readyState: document.readyState,
         hasAppContainer: Boolean(appContainer),
         hasLoginModal: Boolean(loginModal),
+        languageOptions: languageSelector
+          ? Array.from(languageSelector.options).map(option => option.value)
+          : [],
         appBounds: appBounds ? {
           width: appBounds.width,
           height: appBounds.height
@@ -118,12 +122,19 @@ function assertRendererState (state) {
     throw new Error(`Expected app container and login modal to exist: ${JSON.stringify(state)}`)
   }
 
-  if (!state.bodyText.includes('Login') || !state.bodyText.includes('GitHub Login')) {
-    throw new Error(`Expected login UI text was not visible. Body text: ${state.bodyText}`)
+  const expectedTexts = (process.env.LEPTON_SMOKE_EXPECTED_TEXT || 'Login|GitHub Login').split('|')
+  const missingText = expectedTexts.find(text => !state.bodyText.includes(text))
+  if (missingText) {
+    throw new Error(`Expected login UI text "${missingText}" was not visible. Body text: ${state.bodyText}`)
   }
 
   if (!state.appBounds || state.appBounds.width <= 0 || state.appBounds.height <= 0) {
     throw new Error(`App container did not render with visible dimensions: ${JSON.stringify(state.appBounds)}`)
+  }
+
+  const expectedLocales = ['en', 'es', 'fr', 'ja', 'ko', 'zh-Hans', 'zh-Hant']
+  if (expectedLocales.some(locale => !state.languageOptions.includes(locale))) {
+    throw new Error(`Expected language selector options were not visible: ${JSON.stringify(state.languageOptions)}`)
   }
 }
 

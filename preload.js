@@ -30,7 +30,8 @@ const leptonApi = {
     writeText: (value) => ipcRenderer.send('lepton:clipboard:write-text', value)
   },
   config: {
-    get: (key) => ipcRenderer.sendSync('lepton:config:get', key)
+    get: (key) => ipcRenderer.sendSync('lepton:config:get', key),
+    set: (key, value) => ipcRenderer.invoke('lepton:config:set', key, value)
   },
   globals: {
     getUpdateInfo: () => ipcRenderer.sendSync('lepton:update-info:get'),

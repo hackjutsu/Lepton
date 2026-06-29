@@ -14,6 +14,7 @@ import SearchPage from '../searchPage'
 import SnippetPanel from '../snippetPanel'
 import { Pane, SplitPane } from 'react-split-pane'
 import ThemeManager from '../../utilities/themeManager'
+import { t } from '../../utilities/i18n'
 
 import './index.scss'
 import './scrollbar.scss'
@@ -114,13 +115,13 @@ class AppContainer extends Component {
       <div>
         { updateAvailableBarStatus === 'ON'
           ? <Alert bsStyle='warning' onDismiss={ this.dismissUpdateAlert.bind(this) }>
-            { `New version ${newVersionInfo.version} is available!  ` }
-            <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>#skip</a>
+            { t('update.available', { version: newVersionInfo.version }) + '  ' }
+            <a className='customized-button' onClick={ this.handleSkipClicked.bind(this) }>{ t('update.skip') }</a>
             { newVersionInfo.url
-              ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#release</a>
-              : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>#download</a> }
+              ? <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>{ t('update.release') }</a>
+              : <a className='customized-button' onClick={ this.handleReleaseNotesClicked.bind(this) }>{ t('update.download') }</a> }
             { newVersionInfo.url
-              ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>#download</a>
+              ? <a className='customized-button' onClick={ this.handleDownloadClicked.bind(this) }>{ t('update.download') }</a>
               : null }
           </Alert>
           : null }

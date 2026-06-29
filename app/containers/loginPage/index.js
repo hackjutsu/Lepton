@@ -2,7 +2,9 @@ import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
 import Avatar from 'boring-avatars'
 import { connect } from 'react-redux'
 import electronBridge from '../../utilities/electronBridge'
+import LanguageSelector from '../languageSelector'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
@@ -21,7 +23,8 @@ class LoginPage extends Component {
     super(props)
     this.state = {
       inputTokenValue: '',
-      loginMode: LoginModeEnum.CREDENTIALS
+      loginMode: LoginModeEnum.CREDENTIALS,
+      languageChanging: false
     }
   }
 
@@ -42,6 +45,7 @@ class LoginPage extends Component {
   componentWillUnmount () {
     logger.debug('-----> Removing listener for auto-login signal')
     ipcRenderer.removeAllListeners('auto-login')
+    clearTimeout(this.languageChangeTimer)
   }
 
   handleLoginClicked () {
@@ -76,7 +80,7 @@ class LoginPage extends Component {
     const { authWindowStatus, loggedInUserInfo, userSessionStatus } = this.props
     const { loginMode } = this.state
     const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
-    const welcomeMessage = 'Lepton is FREE. Like us on GitHub! ⭐'
+    const welcomeMessage = t('login.welcome')
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
@@ -102,7 +106,7 @@ class LoginPage extends Component {
               className='modal-button'
               bsStyle="default"
               onClick={ this.handleContinueButtonClicked.bind(this, token) }>
-              { loggedInUserName ? `Continue as ${loggedInUserName}` : 'HAPPY CODING' }
+              { loggedInUserName ? t('login.continueAs', { username: loggedInUserName }) : t('login.happyCoding') }
             </Button>
             : this.renderTokenLoginSection(false, userSessionStatus)}
         </div>
@@ -127,6 +131,28 @@ class LoginPage extends Component {
     return null
   }
 
+  renderLanguageSelector () {
+    return (
+      <LanguageSelector
+        className='login-language-selector'
+        compact
+        onBeforeChange={ this.handleLanguageChanging.bind(this) }
+        onChangeFailed={ this.handleLanguageChangeFailed.bind(this) }
+      />
+    )
+  }
+
+  handleLanguageChanging () {
+    this.setState({ languageChanging: true })
+    return new Promise(resolve => {
+      this.languageChangeTimer = setTimeout(resolve, 180)
+    })
+  }
+
+  handleLanguageChangeFailed () {
+    this.setState({ languageChanging: false })
+  }
+
   updateInputValue (evt) {
     this.setState({
       inputTokenValue: evt.target.value
@@ -137,17 +163,17 @@ class LoginPage extends Component {
     return (
       <div>
         { userSessionStatus === 'EXPIRED'
-          ? <Alert bsStyle="warning" className="login-alert">Token invalid</Alert>
+          ? <Alert bsStyle="warning" className="login-alert">{ t('login.tokenInvalid') }</Alert>
           : null
         }
         <Button
           autoFocus
           className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
           onClick={ this.handleLoginClicked.bind(this) }>
-            GitHub Login
+          { t('login.githubLogin') }
         </Button>
         <div className="login-page-text-link">
-          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Switch to token?</a>
+          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>{ t('login.switchToToken') }</a>
         </div>
       </div>
     )
@@ -157,12 +183,12 @@ class LoginPage extends Component {
     return (
       <form>
         { userSessionStatus === 'EXPIRED'
-          ? <Alert bsStyle="warning" className="login-alert">Token invalid</Alert>
+          ? <Alert bsStyle="warning" className="login-alert">{ t('login.tokenInvalid') }</Alert>
           : null
         }
         <input
           className="form-control"
-          placeholder="scope: gist"
+          placeholder={ t('login.tokenPlaceholder') }
           value={ this.state.inputTokenValue }
           onChange={ this.updateInputValue.bind(this) }
         />
@@ -170,11 +196,11 @@ class LoginPage extends Component {
           autoFocus
           className='modal-button'
           onClick={ this.handleTokenLoginButtonClicked.bind(this, this.state.inputTokenValue) }>
-            Token Login
+          { t('login.tokenLogin') }
         </Button>
         { showLoginSwitch
           ? <div className="login-page-text-link">
-            <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>Switch to credentials?</a>
+            <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>{ t('login.switchToCredentials') }</a>
           </div>
           : null}
       </form>
@@ -220,11 +246,16 @@ class LoginPage extends Component {
   }
 
   render () {
+    const className = this.state.languageChanging
+      ? 'login-modal login-modal-language-changing'
+      : 'login-modal'
+
     return (
-      <div className='login-modal'>
+      <div className={ className }>
         <Modal.Dialog bsSize='small'>
           <Modal.Header>
-            <Modal.Title>Login</Modal.Title>
+            <Modal.Title>{ t('login.title') }</Modal.Title>
+            { this.renderLanguageSelector() }
           </Modal.Header>
           <Modal.Body>
             { this.renderLoginModalBody() }

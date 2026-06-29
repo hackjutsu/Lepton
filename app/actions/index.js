@@ -1,6 +1,7 @@
 import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/githubApi'
 import { notifyFailure } from '../utilities/notifier'
 import electronBridge from '../utilities/electronBridge'
+import { t } from '../utilities/i18n'
 
 const logger = electronBridge.logger
 
@@ -233,7 +234,7 @@ export function fetchSingleGist (oldGist, id) {
       })
       .catch((err) => {
         logger.error('The request has failed: ' + err)
-        notifyFailure('Sync failed', 'Please check your network condition. 01')
+        notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '01' }))
       })
   }
 }

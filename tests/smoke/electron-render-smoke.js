@@ -14,7 +14,7 @@ function assertBuiltBundleExists () {
   }
 }
 
-function createTempHome () {
+function createTempHome (locale = 'en') {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-smoke-'))
   const configHome = path.join(root, 'config')
   const userData = path.join(root, 'user-data')
@@ -22,6 +22,9 @@ function createTempHome () {
   fs.mkdirSync(userData, { recursive: true })
   fs.writeFileSync(path.join(configHome, '.leptonrc'), JSON.stringify({
     autoUpdate: false,
+    i18n: {
+      locale
+    },
     logger: {
       level: 'error'
     }
@@ -29,7 +32,7 @@ function createTempHome () {
   return { configHome, root, userData }
 }
 
-function runSmokeProcess (tempHome) {
+function runSmokeProcess (tempHome, expectedText) {
   return new Promise((resolve, reject) => {
     const electronArgs = [
       `--user-data-dir=${tempHome.userData}`,
@@ -45,6 +48,7 @@ function runSmokeProcess (tempHome) {
       env: Object.assign({}, process.env, {
         ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
         LEPTON_SMOKE_ARTIFACT_DIR: tempHome.root,
+        LEPTON_SMOKE_EXPECTED_TEXT: expectedText,
         XDG_CONFIG_HOME: tempHome.configHome
       }),
       stdio: ['ignore', 'pipe', 'pipe']
@@ -83,7 +87,8 @@ function runSmokeProcess (tempHome) {
 
 async function main () {
   assertBuiltBundleExists()
-  await runSmokeProcess(createTempHome())
+  await runSmokeProcess(createTempHome('en'), 'Login|GitHub Login')
+  await runSmokeProcess(createTempHome('ja'), 'ログイン|GitHubでログイン')
 }
 
 main().catch(err => {

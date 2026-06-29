@@ -4,6 +4,7 @@ import { Modal, Button } from 'react-bootstrap'
 import { parseLangName as Resolved } from '../../utilities/parser'
 import electronBridge from '../../utilities/electronBridge'
 import React, { Component } from 'react'
+import { t } from '../../utilities/i18n'
 import UserPanel from '../userPanel'
 import { getNextActiveGistTag } from './tags'
 import {
@@ -153,7 +154,7 @@ class NavigationPanel extends Component {
       <div className='gist-tag-section'>
         <div className='starred-tag-section'>
           <div className='tag-section-content'>
-            <a className='gist-tag' href={ `https://gist.${gitHubHost}/${userSession.profile.login}/starred` }>#starred</a>
+            <a className='gist-tag' href={ `https://gist.${gitHubHost}/${userSession.profile.login}/starred` }>{ t('navigation.starred') }</a>
           </div>
         </div>
         <div className='tag-section-list'>
@@ -167,7 +168,7 @@ class NavigationPanel extends Component {
             <a href='#'
               className='tag-section-title'
               onClick={this.handleSectionClick.bind(this, 0)}>
-              Languages</a>
+              { t('navigation.languages') }</a>
             <div className='tag-section-content'>
               { this.renderLangTags() }
             </div>
@@ -183,7 +184,7 @@ class NavigationPanel extends Component {
               <a href='#'
                 onClick={this.handleSectionClick.bind(this, 1)}
                 className='tag-section-title'>
-                Pinned
+                { t('navigation.pinned') }
               </a>
               <a className='configure-tag' onClick={ this.handleConfigurePinnedTagClicked.bind(this) }>
                 <div dangerouslySetInnerHTML={{ __html: plusIcon }} />
@@ -201,7 +202,7 @@ class NavigationPanel extends Component {
                 : 'tag-section tag-section-hidden'}>
             <a href='#'
               onClick={this.handleSectionClick.bind(this, 2)}
-              className='tag-section-title'>Tags</a>
+              className='tag-section-title'>{ t('navigation.tags') }</a>
             <div className='tag-section-content'>
               { this.renderCustomTags() }
             </div>
@@ -284,14 +285,14 @@ class NavigationPanel extends Component {
         show={ pinnedTagsModalStatus === 'ON' }
         onHide={ this.closePinnedTagsModal.bind(this) }>
         <Modal.Header closeButton>
-          <Modal.Title>Shortcuts</Modal.Title>
+          <Modal.Title>{ t('navigation.shortcuts') }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           { this.renderAllTagsForPin() }
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={ this.closePinnedTagsModal.bind(this) }>Cancel</Button>
-          <Button bsStyle="default" onClick={ this.handlePinnedTagSaved.bind(this) }>Save</Button>
+          <Button onClick={ this.closePinnedTagsModal.bind(this) }>{ t('navigation.cancel') }</Button>
+          <Button bsStyle="default" onClick={ this.handlePinnedTagSaved.bind(this) }>{ t('navigation.save') }</Button>
         </Modal.Footer>
       </Modal>
     )

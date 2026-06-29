@@ -48,6 +48,7 @@ import {
 } from './actions/index'
 
 import { notifySuccess, notifyFailure } from './utilities/notifier'
+import { configureI18n, t } from './utilities/i18n'
 
 const path = require('path')
 const { createRequire } = require('module')
@@ -56,6 +57,7 @@ const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 const conf = electronBridge.config
 const appRequire = createRequire(path.join(electronBridge.app.getAppPath(), 'app/index.js'))
+configureI18n(electronBridge.config.get('i18n:locale'))
 
 let Account = null
 try {
@@ -139,7 +141,7 @@ function launchAuthWindow (token) {
         })
         .catch((err) => {
           logger.error('Failed: ' + JSON.stringify(err.error))
-          notifyFailure('Sync failed', 'Please check your network condition. 03')
+          notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
         })
     } else if (error) {
       logger.error('Oops! Something went wrong and we couldn\'t' +
@@ -399,12 +401,12 @@ function updateUserGists (userLoginId, token) {
       // clean up the snapshot for the previous state
       clearSyncSnapshot()
 
-      notifySuccess('Sync succeeds', humanReadableSyncTime)
+      notifySuccess(t('notification.syncSucceeds'), humanReadableSyncTime)
 
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
     })
     .catch(err => {
-      notifyFailure('Sync failed', 'Please check your network condition. 04')
+      notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '04' }))
       logger.error('The request has failed: ' + err)
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
       throw err
@@ -454,7 +456,7 @@ function initUserSession (token) {
         logger.info('[Dispatch] updateUserSession INACTIVE')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
       }
-      notifyFailure('Sync failed', 'Please check your network condition. 00')
+      notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '00' }))
     })
 }
 /** End: User session management **/
