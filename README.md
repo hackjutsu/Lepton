@@ -95,14 +95,15 @@ snap install lepton
 
 ### Runtime requirements
 
-Lepton's current development toolchain is known to work with Node.js 14 and npm 6.x.
-The last recorded CI runtime is Node 14, and newer Node versions can break the legacy
-Webpack 4 and `node-sass` build chain.
+Lepton's current development toolchain is known to work with Node.js 24 LTS and
+npm 11.x. This is the host runtime used to install dependencies and run the
+webpack build; the bundled Electron app runtime is managed by the Electron
+version in `package.json`.
 
 Recommended:
 
-- Node.js 14.21.3
-- npm 6.14.x
+- Node.js 24.18.0
+- npm 11.16.x
 
 If you use `nvm`, the repository includes an `.nvmrc`:
 
@@ -111,14 +112,7 @@ $ nvm install
 $ nvm use
 ```
 
-On Apple Silicon, use an x64 Node 14 runtime under Rosetta if native dependency
-installation fails:
-
-```bash
-$ arch -x86_64 npm ci
-$ arch -x86_64 npm run build
-$ arch -x86_64 npm start
-```
+Apple Silicon development should use the native arm64 Node.js runtime.
 
 ### Install dependencies
 
