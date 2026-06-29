@@ -268,11 +268,10 @@
 
   .custom-tags {
     float: left;
-
-    span {
-      display: inline-block;
-      vertical-align: middle;
-    }
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 70%;
   }
 
   .custom-tags-icon {
@@ -282,6 +281,11 @@
     width: 16px;
     margin-right: 2px;
     position: relative;
+  }
+
+  .snippet-detail-tags {
+    display: inline-flex;
+    min-width: 0;
   }
 
   .update-date {

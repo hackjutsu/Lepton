@@ -9,6 +9,8 @@ import HumanReadableTime from 'human-readable-time'
 import Moment from 'moment'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
+import TagBadges from '../tagBadges'
+import { getRegularTagsForGist } from '../tagBadges/tags'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -430,6 +432,7 @@ class Snippet extends Component {
 
   renderSnippetDescription (gist) {
     const { title, description, customTags } = descriptionParser(gist.brief.description)
+    const tags = getRegularTagsForGist(gist.brief.id, customTags, this.props.gistTags)
 
     const htmlForDescriptionSection = []
     if (title.length > 0) {
@@ -449,13 +452,13 @@ class Snippet extends Component {
     )
     htmlForDescriptionSection.push(
       <div className='custom-tags-section' key='customTags'>
-        { customTags.length > 0
-          ? <span className='custom-tags'>
+        { tags.length > 0
+          ? <div className='custom-tags'>
             <div
               className='custom-tags-icon'
               dangerouslySetInnerHTML={{ __html: tagsIcon }} />
-            <span>{ customTags.substring('#tags:'.length) }</span>
-          </span>
+            <TagBadges tags={ tags } className='snippet-detail-tags' />
+          </div>
           : null }
         <span className='update-date'>
           { 'Last active ' + Moment(gist.brief.updated_at).fromNow() }

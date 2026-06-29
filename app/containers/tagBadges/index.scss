@@ -1,0 +1,43 @@
+.tag-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.tag-badge {
+  border-radius: 3px;
+  color: #fff;
+  display: inline-block;
+  font-size: 11px;
+  line-height: 1.3;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2px 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tag-badge-color-0 {
+  background-color: #2f80ed;
+}
+
+.tag-badge-color-1 {
+  background-color: #219653;
+}
+
+.tag-badge-color-2 {
+  background-color: #9b51e0;
+}
+
+.tag-badge-color-3 {
+  background-color: #f2994a;
+}
+
+.tag-badge-color-4 {
+  background-color: #eb5757;
+}
+
+.tag-badge-color-5 {
+  background-color: #00a3a3;
+}
