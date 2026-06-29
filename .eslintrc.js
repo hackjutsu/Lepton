@@ -21,7 +21,16 @@ module.exports = {
       "consistent-return": 0,
       "import/no-named-default": 0,
     },
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
+    "parserOptions": {
+      "requireConfigFile": false,
+      "babelOptions": {
+        "presets": [
+          "@babel/preset-env",
+          "@babel/preset-react"
+        ]
+      }
+    },
     "plugins": [
         "standard",
         "react"
