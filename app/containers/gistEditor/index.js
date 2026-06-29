@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import CodeMirror from 'react-codemirror'
+import CodeMirror from 'codemirror'
 import 'codemirror/mode/meta'
 
 // When Webpack imports these AMD modules for modes, the first one will be set as
@@ -163,6 +163,70 @@ const defaultOptions = Object.assign({}, {
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
 }, conf.get('editor'))
 
+class CodeMirrorEditor extends Component {
+  constructor (props) {
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
+    this.setEditorNode = this.setEditorNode.bind(this)
+  }
+
+  componentDidMount () {
+    const { options, value } = this.props
+
+    this.codeMirror = CodeMirror(this.editorNode, Object.assign({}, options, {
+      value: value || ''
+    }))
+    this.codeMirror.on('change', this.handleChange)
+  }
+
+  componentDidUpdate (prevProps) {
+    const { options, value } = this.props
+
+    if (value !== prevProps.value && value !== this.codeMirror.getValue()) {
+      this.codeMirror.setValue(value || '')
+    }
+
+    Object.keys(options).forEach(key => {
+      if (options[key] !== prevProps.options[key]) {
+        this.codeMirror.setOption(key, options[key])
+      }
+    })
+  }
+
+  componentWillUnmount () {
+    if (!this.codeMirror) return
+
+    this.codeMirror.off('change', this.handleChange)
+    const wrapper = this.codeMirror.getWrapperElement()
+    if (wrapper && wrapper.parentNode) {
+      wrapper.parentNode.removeChild(wrapper)
+    }
+    this.codeMirror = null
+  }
+
+  setEditorNode (node) {
+    this.editorNode = node
+  }
+
+  handleChange () {
+    if (this.props.onChange) {
+      this.props.onChange(this.codeMirror.getValue())
+    }
+  }
+
+  getCodeMirror () {
+    return this.codeMirror
+  }
+
+  getCodeMirrorInstance () {
+    return CodeMirror
+  }
+
+  render () {
+    return <div ref={ this.setEditorNode } />
+  }
+}
+
 class GistEditor extends Component {
   componentDidMount () {
     const { filename } = this.props
@@ -191,7 +255,7 @@ class GistEditor extends Component {
     const options = Object.assign({}, defaultOptions, { placeholder })
 
     return (
-      <CodeMirror
+      <CodeMirrorEditor
         ref='editor'
         value={ value }
         options={ options }
