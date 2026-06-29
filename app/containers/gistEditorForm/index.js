@@ -6,7 +6,9 @@ import React, { Component } from 'react'
 import {
   copyValues,
   createFormState,
+  getGistFileEditorKey,
   getInitialValuesKey,
+  getSubmitValues,
   hasValidationErrors,
   normalizeGistFile,
   shouldShowError,
@@ -154,7 +156,7 @@ class GistEditorForm extends Component {
       submitting: true
     })
 
-    const submittedValues = copyValues(this.state.values)
+    const submittedValues = getSubmitValues(this.state.values)
 
     return Promise.resolve()
       .then(() => this.props.onSubmit(submittedValues))
@@ -330,7 +332,7 @@ const renderGistFiles = ({
       const contentFieldName = `gistFiles.${index}.content`
 
       return (
-        <ListGroupItem className='gist-editor-gist-file' key={index}>
+        <ListGroupItem className='gist-editor-gist-file' key={ getGistFileEditorKey(file, index) }>
           <Panel>
             <Panel.Heading>{ renderGistFileHeader({
               file,
