@@ -5,6 +5,7 @@ import electronBridge from '../../utilities/electronBridge'
 import LanguageSelector from '../languageSelector'
 import Modal from '../compatModal'
 import React, { Component } from 'react'
+import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 
 import dojocatImage from '../../utilities/octodex/dojocat.jpg'
@@ -34,7 +35,8 @@ class LoginPage extends Component {
     logger.debug('-----> Inside LoginPage componentDidMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
 
     logger.debug('-----> Registering listener for auto-login signal')
-    ipcRenderer.on('auto-login', () => {
+    this.ipcSubscriptions = []
+    subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'auto-login', () => {
       logger.debug('-----> Received "auto-login" signal with loggedInUserInfo ' + JSON.stringify(loggedInUserInfo))
       loggedInUserInfo && loggedInUserInfo.token && this.handleContinueButtonClicked(loggedInUserInfo.token)
     })
@@ -45,7 +47,7 @@ class LoginPage extends Component {
 
   componentWillUnmount () {
     logger.debug('-----> Removing listener for auto-login signal')
-    ipcRenderer.removeAllListeners('auto-login')
+    unsubscribeIpc(this.ipcSubscriptions)
     clearTimeout(this.languageChangeTimer)
   }
 
