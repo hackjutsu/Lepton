@@ -41,7 +41,7 @@ export default class CodeArea extends Component {
 
   createHighlightedCodeBlock (content, language, kTabLength) {
     let lineNumber = 0
-    const highlightedContent = HighlightJS.highlightAuto(content, [language]).value
+    const highlightedContent = this.highlightContent(content, language)
 
     /*
       Highlight.js wraps comment blocks inside <span class='hljs-comment'></span>.
@@ -68,13 +68,27 @@ export default class CodeArea extends Component {
     return `<pre><code><table class='code-table' style='tab-size: ${kTabLength};'>${contentTable}</table></code></pre>`
   }
 
+  highlightContent (content, language) {
+    if (language && HighlightJS.getLanguage(language)) {
+      try {
+        return HighlightJS.highlight(content, { language, ignoreIllegals: true }).value
+      } catch (__) {}
+    }
+
+    return HighlightJS.highlightAuto(content, language ? [language] : undefined).value
+  }
+
   // Find the best language for code highlighting by best effort.
   adaptedLanguage (filename, lang) {
     let language = lang || 'Other'
 
     // Adjust the language based on file extensions.
-    const filenameExtension = filename.split('.').pop().toLowerCase()
+    const filenameExtension = filename && filename.split('.').pop().toLowerCase()
     switch (filenameExtension) {
+      case 'c':
+      case 'h':
+        if (!lang) language = 'c'
+        break
       case 'leptonrc':
         language = 'json'
         break
@@ -103,6 +117,8 @@ export default class CodeArea extends Component {
     //  expressed as 'cs' to be recognized by Highlight.js.
     switch (language) {
       case 'Shell': return 'bash'
+      case 'C': return 'c'
+      case 'C++': return 'cpp'
       case 'C#': return 'cs'
       case 'Objective-C': return 'objectivec'
       case 'Objective-C++': return 'objectivec'
