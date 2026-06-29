@@ -63,6 +63,32 @@ function getConfigPath() {
   }       
 }
 
+function shouldCheckForUpdates () {
+  return !isDev && !appInfo.version.includes('alpha') && nconf.get('autoUpdate')
+}
+
+function checkForAppUpdates ({ notify = false } = {}) {
+  if (!shouldCheckForUpdates()) {
+    logger.debug('[autoUpdater] update check skipped')
+    return
+  }
+
+  const updateCheck = notify
+    ? autoUpdater.checkForUpdatesAndNotify()
+    : autoUpdater.checkForUpdates()
+
+  if (updateCheck && typeof updateCheck.catch === 'function') {
+    updateCheck.catch(err => {
+      const message = err && err.stack
+        ? err.stack
+        : err && err.message
+          ? err.message
+          : JSON.stringify(err)
+      logger.debug('[autoUpdater] update check failed ' + message)
+    })
+  }
+}
+
 function createWindowAndAutoLogin () {
   createWindow(true)
 }
@@ -141,9 +167,7 @@ function createWindow (autoLogin) {
     })
 
     //Only run auto update checker in production.
-    if (!isDev && !appInfo.version.includes('alpha')) {
-        autoUpdater.checkForUpdates()
-    }
+    checkForAppUpdates()
   })
 
   mainWindow.on('close', (e) => {
@@ -215,7 +239,7 @@ app.on('ready', () => {
       logger
     })
     // createWindow()
-    autoUpdater.checkForUpdatesAndNotify()
+    checkForAppUpdates({ notify: true })
     createWindowAndAutoLogin()
 })
 
