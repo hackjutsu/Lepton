@@ -1,8 +1,9 @@
-import { Alert, Button, Image, Modal, ProgressBar } from 'react-bootstrap'
+import { Alert, Button, Image, ProgressBar } from 'react-bootstrap'
 import Avatar from 'boring-avatars'
 import { connect } from 'react-redux'
 import electronBridge from '../../utilities/electronBridge'
 import LanguageSelector from '../languageSelector'
+import Modal from '../compatModal'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
 

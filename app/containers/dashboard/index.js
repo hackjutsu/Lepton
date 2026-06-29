@@ -1,6 +1,7 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Modal, Image } from 'react-bootstrap'
+import { Image } from 'react-bootstrap'
+import Modal from '../compatModal'
 import { Radar } from 'react-chartjs'
 import { updateDashboardModalStatus } from '../../actions'
 import React, { Component } from 'react'

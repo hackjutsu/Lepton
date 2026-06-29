@@ -232,7 +232,6 @@ class GistEditor extends Component {
   componentDidMount () {
     const { filename } = this.props
 
-    this.editor = this.refs.editor
     this.CodeMirror = this.editor.getCodeMirrorInstance()
     this.CodeMirror.modeURL = '../../../node_modules/codemirror/mode/%N/%N.js'
     this.setMode(filename)
@@ -251,13 +250,17 @@ class GistEditor extends Component {
     modeInfo && this.editor.getCodeMirror().setOption('mode', modeInfo.mime)
   }
 
+  setEditorRef (editor) {
+    this.editor = editor
+  }
+
   render () {
     const { value, placeholder } = this.props
     const options = Object.assign({}, defaultOptions, { placeholder })
 
     return (
       <CodeMirrorEditor
-        ref='editor'
+        ref={ this.setEditorRef.bind(this) }
         value={ value }
         options={ options }
         onChange={ value => this.props.onChange(value) }

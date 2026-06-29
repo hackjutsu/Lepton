@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Modal } from 'react-bootstrap'
 import electronBridge from '../../utilities/electronBridge'
+import Modal from '../compatModal'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
 import {
@@ -28,6 +28,7 @@ class SearchPage extends Component {
       selectedIndex: 0,
       searchResults: []
     }
+    this.resultNodes = {}
   }
 
   componentWillMount () {
@@ -42,9 +43,8 @@ class SearchPage extends Component {
       newSelectedIndex = searchResults.length - 1
     }
     this.setState({
-      selectedIndex: newSelectedIndex,
-    })
-    this.refs[newSelectedIndex].scrollIntoView(false)
+      selectedIndex: newSelectedIndex
+    }, () => this.scrollResultIntoView(newSelectedIndex))
   }
 
   selectNextGist () {
@@ -54,9 +54,22 @@ class SearchPage extends Component {
       newSelectedIndex = 0
     }
     this.setState({
-      selectedIndex: newSelectedIndex,
-    })
-    this.refs[newSelectedIndex].scrollIntoView(false)
+      selectedIndex: newSelectedIndex
+    }, () => this.scrollResultIntoView(newSelectedIndex))
+  }
+
+  setResultNode (index, node) {
+    if (node) {
+      this.resultNodes[index] = node
+    } else {
+      delete this.resultNodes[index]
+    }
+  }
+
+  scrollResultIntoView (index) {
+    if (this.resultNodes[index]) {
+      this.resultNodes[index].scrollIntoView(false)
+    }
   }
 
   selectCurrentGist () {
@@ -177,7 +190,7 @@ class SearchPage extends Component {
             ? 'search-result-item-selected'
             : 'search-result-item' }
           key={ gist.id }
-          ref={ index }
+          ref={ node => this.setResultNode(index, node) }
           onClick={ this.handleSnippetClicked.bind(this, gist.id) }>
           <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
           <div className='gist-tag-group'>{ filenames }</div>
