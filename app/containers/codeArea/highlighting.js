@@ -30,6 +30,10 @@ export function adaptedLanguage (filename, lang) {
     case 'zshrc':
       language = 'bash'
       break
+    case 'py':
+    case 'pyw':
+      language = 'python'
+      break
     case 'sql':
       language = 'sql'
       break
@@ -48,6 +52,7 @@ export function adaptedLanguage (filename, lang) {
   //  expressed as 'cs' to be recognized by Highlight.js.
   switch (language) {
     case 'Shell': return 'bash'
+    case 'Python': return 'python'
     case 'C': return 'c'
     case 'C++': return 'cpp'
     case 'C#': return 'cs'
