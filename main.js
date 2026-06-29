@@ -75,8 +75,7 @@ function createWindow (autoLogin) {
     nodeIntegration: true,
     enableRemoteModule: false,
     preload: path.join(__dirname, 'preload.js'),
-    // https://github.com/electron/electron/blob/main/docs/tutorial/context-isolation.md
-    // TODO: migrate and enable context isolation
+    // TODO: enable context isolation once the renderer bundle no longer depends on runtime require.
     contextIsolation: false
   }
 

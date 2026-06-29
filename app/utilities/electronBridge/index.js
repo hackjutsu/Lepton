@@ -1,72 +1,55 @@
-function createIpcBridge (ipcRenderer) {
-  if (!ipcRenderer) {
-    return {
-      emit: () => {},
-      on: () => () => {},
-      removeAllListeners: () => {},
-      send: () => {}
-    }
-  }
-
+function createIpcBridge () {
   return {
-    emit: (channel, ...args) => ipcRenderer.emit(channel, ...args),
-    on: (channel, listener) => {
-      const wrapped = (event, ...args) => listener(...args)
-      ipcRenderer.on(channel, wrapped)
-      return () => ipcRenderer.removeListener(channel, wrapped)
-    },
-    removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel),
-    send: (channel, ...args) => ipcRenderer.send(channel, ...args)
+    emit: () => {},
+    on: () => () => {},
+    removeAllListeners: () => {},
+    send: () => {}
   }
 }
 
-function createFallbackBridge () {
-  const electron = require('electron')
-  const remote = electron.remote || require('@electron/remote')
-  const conf = remote.getGlobal('conf')
-  const logger = remote.getGlobal('logger')
-  const app = electron.app || remote.app
+function unavailableBridgeMethod () {
+  throw new Error('Electron bridge is unavailable. Renderer code must use the preload bridge.')
+}
 
+function createUnavailableBridge () {
   return {
     app: {
-      getAppPath: () => app.getAppPath(),
-      getPath: (name) => app.getPath(name)
+      getAppPath: unavailableBridgeMethod,
+      getPath: unavailableBridgeMethod
     },
     auth: {
-      startGitHubLogin: () => Promise.resolve({
-        status: 'error',
-        error: 'auth-bridge-unavailable'
-      })
+      startGitHubLogin: unavailableBridgeMethod
     },
-    clipboard: electron.clipboard || { writeText: () => {} },
+    clipboard: {
+      writeText: unavailableBridgeMethod
+    },
     config: {
-      get: (key) => conf.get(key),
-      set: (key, value) => {
-        conf.set(key, value)
-        return Promise.resolve(value)
-      }
+      get: unavailableBridgeMethod,
+      set: unavailableBridgeMethod
     },
     globals: {
-      getPaths: () => ({
-        configFilePath: remote.getGlobal('configFilePath'),
-        logFilePath: remote.getGlobal('logFilePath')
-      }),
-      getUpdateInfo: () => remote.getGlobal('newVersionInfo')
+      getPaths: unavailableBridgeMethod,
+      getUpdateInfo: unavailableBridgeMethod
     },
-    ipc: createIpcBridge(electron.ipcRenderer),
-    logger,
-    shell: electron.shell || {
-      openExternal: () => {},
-      openPath: () => {}
+    ipc: createIpcBridge(),
+    logger: {
+      debug: () => {},
+      error: () => {},
+      info: () => {},
+      warn: () => {}
+    },
+    shell: {
+      openExternal: unavailableBridgeMethod,
+      openPath: unavailableBridgeMethod
     },
     window: {
-      setTitle: (title) => remote.getCurrentWindow().setTitle(title)
+      setTitle: unavailableBridgeMethod
     }
   }
 }
 
 const bridge = typeof window !== 'undefined' && window.lepton
   ? window.lepton
-  : createFallbackBridge()
+  : createUnavailableBridge()
 
 export default bridge
