@@ -1,6 +1,7 @@
 module.exports = {
     "theme": "light",
     "autoUpdate": false,
+    "startAtLogin": false,
     "avatar": {
         "type": "github",
         "boringAvatarVariant": "beam"

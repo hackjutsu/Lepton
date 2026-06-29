@@ -21,6 +21,7 @@ const isDev = require('electron-is-dev')
 const defaultConfig = require('./configs/defaultConfig')
 const appInfo = require('./package.json')
 const { installLoggerRedaction } = require('./app/utilities/logging/redact')
+const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
@@ -199,6 +200,11 @@ function createWindow (autoLogin) {
 }
 
 app.on('ready', () => {
+    applyStartAtLoginSetting({
+      app,
+      enabled: nconf.get('startAtLogin'),
+      logger
+    })
     // createWindow()
     autoUpdater.checkForUpdatesAndNotify()
     createWindowAndAutoLogin()
