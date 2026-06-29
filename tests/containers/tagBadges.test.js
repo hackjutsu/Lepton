@@ -105,7 +105,7 @@ describe('tag badge helpers', () => {
   })
 
   it('reads tag color settings from the tag config section', () => {
-    expect(shouldColorTags(fakeConf({}))).toBe(true)
+    expect(shouldColorTags(fakeConf({}))).toBe(false)
     expect(shouldColorTags(fakeConf({
       'tag:colored': false
     }))).toBe(false)
@@ -113,7 +113,7 @@ describe('tag badge helpers', () => {
       'tag:colored': true
     }))).toBe(true)
     expect(shouldColorTags(fakeConf({
-      'snippet:coloredTags': false
-    }))).toBe(true)
+      'snippet:coloredTags': true
+    }))).toBe(false)
   })
 })

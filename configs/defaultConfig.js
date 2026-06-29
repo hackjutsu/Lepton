@@ -23,7 +23,7 @@ module.exports = {
     },
     "tag": {
         "showInSnippetList": false,
-        "colored": true
+        "colored": false
     },
     "editor": {
         "tabSize": 4,

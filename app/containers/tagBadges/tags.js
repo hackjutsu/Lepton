@@ -35,7 +35,7 @@ export function shouldShowTagsInSnippetList (conf) {
 }
 
 export function shouldColorTags (conf) {
-  return shouldUseColoredTags(getConfigValue(conf, 'tag:colored', true))
+  return shouldUseColoredTags(getConfigValue(conf, 'tag:colored', false))
 }
 
 export function getTagBadgeClassName (tag, colored = true) {
