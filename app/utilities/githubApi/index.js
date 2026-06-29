@@ -1,5 +1,5 @@
 import { Promise } from 'bluebird'
-import { remote } from 'electron'
+import electronBridge from '../electronBridge'
 import { notifyFailure } from '../notifier'
 import ProxyAgent from 'proxy-agent'
 import ReqPromise from 'request-promise'
@@ -7,8 +7,8 @@ import Request from 'request'
 
 const TAG = '[REST] '
 const kTimeoutUnit = 10 * 1000 // ms
-const logger = remote.getGlobal('logger')
-const conf = remote.getGlobal('conf')
+const logger = electronBridge.logger
+const conf = electronBridge.config
 const userAgent = 'hackjutsu-lepton-app'
 let gitHubHostApi = 'api.github.com'
 

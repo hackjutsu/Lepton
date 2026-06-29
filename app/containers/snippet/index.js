@@ -2,7 +2,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { default as GistEditorForm, UPDATE_GIST } from '../gistEditorForm'
 import { Panel, Modal, Button, ProgressBar, Collapse } from 'react-bootstrap'
-import { remote, clipboard, ipcRenderer } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import Autolinker from 'autolinker'
 import CodeArea from '../codeArea'
 import HumanReadableTime from 'human-readable-time'
@@ -38,8 +38,10 @@ import secretIcon from './lock.svg'
 import tagsIcon from './tags.svg'
 import trashIcon from './ei-trash.svg'
 
-const conf = remote.getGlobal('conf')
-const logger = remote.getGlobal('logger')
+const clipboard = electronBridge.clipboard
+const conf = electronBridge.config
+const ipcRenderer = electronBridge.ipc
+const logger = electronBridge.logger
 
 const kIsExpanded = conf.get('snippet:expanded')
 const kTabLength = conf.get('editor:tabSize')

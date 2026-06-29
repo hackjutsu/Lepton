@@ -1,7 +1,7 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal } from 'react-bootstrap'
-import { remote } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import React, { Component } from 'react'
 import {
   addLangPrefix as Prefixed,
@@ -17,7 +17,7 @@ import {
 
 import './index.scss'
 
-const logger = remote.getGlobal('logger')
+const logger = electronBridge.logger
 
 class SearchPage extends Component {
   constructor (props) {

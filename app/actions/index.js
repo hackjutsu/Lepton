@@ -1,7 +1,8 @@
 import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/githubApi'
 import { notifyFailure } from '../utilities/notifier'
-import { remote } from 'electron'
-const logger = remote.getGlobal('logger')
+import electronBridge from '../utilities/electronBridge'
+
+const logger = electronBridge.logger
 
 export const UPDATE_USER_SESSION = 'UPDATE_USER_SESSION'
 export const LOGOUT_USER_SESSION = 'LOGOUT_USER_SESSION'

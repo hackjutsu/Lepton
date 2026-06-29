@@ -1,21 +1,17 @@
 import { describe, expect, it, vi } from 'vitest'
 
-vi.mock('electron', () => {
-  const logger = {
-    debug: () => {},
-    error: () => {},
-    info: () => {}
-  }
-  const conf = {
-    get: () => false
-  }
-
-  return {
-    remote: {
-      getGlobal: (key) => key === 'logger' ? logger : conf
+vi.mock('../../app/utilities/electronBridge', () => ({
+  default: {
+    config: {
+      get: () => false
+    },
+    logger: {
+      debug: () => {},
+      error: () => {},
+      info: () => {}
     }
   }
-})
+}))
 
 import {
   logoutUserSession,

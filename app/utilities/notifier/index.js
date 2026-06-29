@@ -1,6 +1,6 @@
-import { remote } from 'electron'
+import electronBridge from '../electronBridge'
 
-const conf = remote.getGlobal('conf')
+const conf = electronBridge.config
 
 export function notifySuccess (title, message = '') {
   const showSuccessNotifications = conf.get('notifications:success')

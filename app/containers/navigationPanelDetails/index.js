@@ -1,14 +1,14 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { descriptionParser } from '../../utilities/parser'
-import { remote } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
 import React, { Component } from 'react'
 
 import './index.scss'
 
-const logger = remote.getGlobal('logger')
-const conf = remote.getGlobal('conf')
+const logger = electronBridge.logger
+const conf = electronBridge.config
 
 class NavigationPanelDetails extends Component {
   componentDidUpdate () {

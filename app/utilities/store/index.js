@@ -1,12 +1,21 @@
-const electron = require('electron')
 const path = require('path')
 const fs = require('fs')
+
+function getUserDataPath () {
+  if (typeof window !== 'undefined' && window.lepton) {
+    return window.lepton.app.getPath('userData')
+  }
+
+  const electron = require('electron')
+  const remote = electron.remote || require('@electron/remote')
+  return (electron.app || remote.app).getPath('userData')
+}
 
 class Store {
   constructor (opts) {
     // Renderer process has to get `app` module via `remote`, whereas the main process can get it directly
     // app.getPath('userData') will return a string of the user's app data directory path.
-    const userDataPath = (electron.app || electron.remote.app).getPath('userData')
+    const userDataPath = getUserDataPath()
     // We'll use the `configName` property to set the file name and path.join to bring it all together as a string
     this.path = path.join(userDataPath, opts.configName + '.json')
 

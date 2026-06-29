@@ -28,6 +28,7 @@ autoUpdater.autoDownload = nconf.get('autoUpdate')
 
 initGlobalConfigs()
 initGlobalLogger()
+setUpBridgeIpcHandlers()
 
 logger.info(`\n\n----- ${appInfo.name} v${appInfo.version} ${os.platform()}-----\n`)
 
@@ -66,6 +67,7 @@ function createWindow (autoLogin) {
   const webPreferences = {
     nodeIntegration: true,
     enableRemoteModule: true,
+    preload: path.join(__dirname, 'preload.js'),
     // https://github.com/electron/electron/blob/main/docs/tutorial/context-isolation.md
     // TODO: migrate and enable context isolation
     contextIsolation: false
@@ -298,6 +300,79 @@ function setUpApplicationMenu () {
   let template = [...mainMenuTemplate, gistMenu]
   const menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
+}
+
+function setUpBridgeIpcHandlers () {
+  const loggerMethods = new Set(['debug', 'error', 'info', 'warn'])
+  const appPathNames = new Set(['appData', 'home', 'temp', 'userData'])
+
+  function isAllowedConfigKey (key) {
+    if (typeof key !== 'string' || key.length === 0) return false
+    const rootKey = key.split(':')[0]
+    return Object.prototype.hasOwnProperty.call(defaultConfig, rootKey)
+  }
+
+  function isMainWindowSender (event) {
+    return mainWindow && !mainWindow.isDestroyed() && event.sender === mainWindow.webContents
+  }
+
+  ipcMain.on('lepton:config:get', (event, key) => {
+    if (!isAllowedConfigKey(key)) {
+      logger.warn(`[bridge] Rejected config read for "${key}"`)
+      event.returnValue = undefined
+      return
+    }
+    event.returnValue = nconf.get(key)
+  })
+
+  ipcMain.on('lepton:app:get-app-path', (event) => {
+    event.returnValue = app.getAppPath()
+  })
+
+  ipcMain.on('lepton:app:get-path', (event, name) => {
+    if (!appPathNames.has(name)) {
+      logger.warn(`[bridge] Rejected app path read for "${name}"`)
+      event.returnValue = undefined
+      return
+    }
+    event.returnValue = app.getPath(name)
+  })
+
+  ipcMain.on('lepton:paths:get', (event) => {
+    event.returnValue = {
+      configFilePath: global.configFilePath,
+      logFilePath: global.logFilePath
+    }
+  })
+
+  ipcMain.on('lepton:update-info:get', (event) => {
+    event.returnValue = global.newVersionInfo
+  })
+
+  ipcMain.on('lepton:logger:log', (event, method, args = []) => {
+    if (!loggerMethods.has(method) || typeof logger[method] !== 'function') return
+    logger[method](...args)
+  })
+
+  ipcMain.on('lepton:shell:open-external', (event, url) => {
+    if (!isMainWindowSender(event) || typeof url !== 'string') return
+    electron.shell.openExternal(url)
+  })
+
+  ipcMain.handle('lepton:shell:open-path', (event, filePath) => {
+    if (!isMainWindowSender(event) || typeof filePath !== 'string') return ''
+    return electron.shell.openPath(filePath)
+  })
+
+  ipcMain.on('lepton:window:set-title', (event, title) => {
+    if (!isMainWindowSender(event) || typeof title !== 'string') return
+    mainWindow.setTitle(title)
+  })
+
+  ipcMain.on('lepton:clipboard:write-text', (event, value) => {
+    if (!isMainWindowSender(event) || typeof value !== 'string') return
+    electron.clipboard.writeText(value)
+  })
 }
 
 function setUpTouchBar() {

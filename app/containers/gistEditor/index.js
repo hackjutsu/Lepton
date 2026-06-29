@@ -148,8 +148,9 @@ import 'codemirror/addon/display/placeholder'
 
 import './index.scss'
 
-import { remote } from 'electron'
-const conf = remote.getGlobal('conf')
+import electronBridge from '../../utilities/electronBridge'
+
+const conf = electronBridge.config
 
 const highlightTheme = conf.get('theme') === 'dark' ? 'one-dark' : 'github'
 const defaultOptions = Object.assign({}, {

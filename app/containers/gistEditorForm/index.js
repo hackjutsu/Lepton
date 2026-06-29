@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { Field, FieldArray, reduxForm, formValueSelector } from 'redux-form'
-import { remote, ipcRenderer } from 'electron'
+import electronBridge from '../../utilities/electronBridge'
 import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 import React, { Component } from 'react'
@@ -13,8 +13,9 @@ import './index.scss'
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
 
-const conf = remote.getGlobal('conf')
-const logger = remote.getGlobal('logger')
+const conf = electronBridge.config
+const ipcRenderer = electronBridge.ipc
+const logger = electronBridge.logger
 
 const descriptionTips = '[title] description #tag1 #tag2'
 
