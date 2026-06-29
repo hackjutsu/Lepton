@@ -112,7 +112,7 @@
     "request-promise": "^4.2.2",
     "twitter-text": "^3.0.0",
     "valid-filename": "^3.1.0",
-    "winston": "^2.4.4"
+    "winston": "^3.19.0"
   },
   "build": {
     "appId": "com.cosmox.lepton",
