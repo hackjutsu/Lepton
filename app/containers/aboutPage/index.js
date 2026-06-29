@@ -1,4 +1,3 @@
-import fs from 'fs'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Modal, Image } from 'react-bootstrap'
@@ -20,8 +19,10 @@ const { configFilePath, logFilePath } = electronBridge.globals.getPaths()
 
 class AboutPage extends Component {
   openFileInEditor (filePath) {
-    if (!fs.existsSync(filePath)) {
-      fs.closeSync(fs.writeFileSync(filePath, JSON.stringify(defaultConfig, null, 2)))
+    if (filePath === configFilePath) {
+      electronBridge.files.ensureConfigFile(defaultConfig)
+        .then(() => electronBridge.shell.openPath(filePath))
+      return
     }
     electronBridge.shell.openPath(filePath)
   }

@@ -2,20 +2,28 @@
 
 const path = require('path')
 const webpack = require('webpack')
-const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: [
     './app/index.js'
   ],
-  target: 'electron-renderer',
+  target: 'web',
   output: {
     path: path.resolve(__dirname, 'bundle'),
     publicPath: '/bundle/',
     filename: 'app.bundle.js'
   },
+  resolve: {
+    alias: {
+      'punycode$': require.resolve('punycode/'),
+      'react/jsx-runtime': require.resolve('react/jsx-runtime.js')
+    }
+  },
   module: {
     rules: [{
+      test: /highlightjs-solidity[\\/]solidity\.js$/,
+      loader: path.resolve(__dirname, 'configs/loaders/stripSolidityModuleShim.js')
+    }, {
       test: /\.js$/,
       include: [path.resolve(__dirname, 'app')],
       exclude: /node_modules/,
@@ -71,9 +79,5 @@ module.exports = {
       test: /\.all-contributorsrc$/,
       loader: 'json-loader'
     }]
-  },
-  externals: [nodeExternals({
-    // this WILL include `jquery` and `webpack/hot/dev-server` in the bundle, as well as `lodash/*`
-    // whitelist: ['jquery', 'webpack/hot/dev-server', /^lodash/]
-  })]
+  }
 }

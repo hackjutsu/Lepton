@@ -22,6 +22,9 @@ function sendLog (method, args) {
 }
 
 const leptonApi = {
+  account: {
+    get: () => ipcRenderer.sendSync('lepton:account:get')
+  },
   app: {
     getAppPath: () => ipcRenderer.sendSync('lepton:app:get-app-path'),
     getPath: (name) => ipcRenderer.sendSync('lepton:app:get-path', name)
@@ -36,9 +39,15 @@ const leptonApi = {
     get: (key) => ipcRenderer.sendSync('lepton:config:get', key),
     set: (key, value) => ipcRenderer.invoke('lepton:config:set', key, value)
   },
+  files: {
+    ensureConfigFile: (defaults) => ipcRenderer.invoke('lepton:files:ensure-config', defaults)
+  },
   globals: {
     getUpdateInfo: () => ipcRenderer.sendSync('lepton:update-info:get'),
     getPaths: () => ipcRenderer.sendSync('lepton:paths:get')
+  },
+  github: {
+    request: (selection, args) => ipcRenderer.invoke('lepton:github-api:request', selection, args)
   },
   ipc: {
     emit: (channel, ...args) => ipcRenderer.emit(channel, ...args),
@@ -54,9 +63,20 @@ const leptonApi = {
     api[method] = (...args) => sendLog(method, args)
     return api
   }, {}),
+  localStorage: {
+    get: (key) => ipcRenderer.sendSync('lepton:local-storage:get', key),
+    set: (key, value) => ipcRenderer.sendSync('lepton:local-storage:set', key, value)
+  },
+  notebook: {
+    render: (content) => ipcRenderer.sendSync('lepton:notebook:render', content)
+  },
   shell: {
     openExternal: (url) => ipcRenderer.send('lepton:shell:open-external', url),
     openPath: (filePath) => ipcRenderer.invoke('lepton:shell:open-path', filePath)
+  },
+  store: {
+    get: (configName, defaults) => ipcRenderer.sendSync('lepton:renderer-store:get', configName, defaults),
+    set: (configName, data) => ipcRenderer.sendSync('lepton:renderer-store:set', configName, data)
   },
   window: {
     setTitle: (title) => ipcRenderer.send('lepton:window:set-title', title)

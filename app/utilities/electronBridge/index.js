@@ -13,6 +13,9 @@ function unavailableBridgeMethod () {
 
 function createUnavailableBridge () {
   return {
+    account: {
+      get: unavailableBridgeMethod
+    },
     app: {
       getAppPath: unavailableBridgeMethod,
       getPath: unavailableBridgeMethod
@@ -27,9 +30,15 @@ function createUnavailableBridge () {
       get: unavailableBridgeMethod,
       set: unavailableBridgeMethod
     },
+    files: {
+      ensureConfigFile: unavailableBridgeMethod
+    },
     globals: {
       getPaths: unavailableBridgeMethod,
       getUpdateInfo: unavailableBridgeMethod
+    },
+    github: {
+      request: unavailableBridgeMethod
     },
     ipc: createIpcBridge(),
     logger: {
@@ -38,9 +47,20 @@ function createUnavailableBridge () {
       info: () => {},
       warn: () => {}
     },
+    localStorage: {
+      get: unavailableBridgeMethod,
+      set: unavailableBridgeMethod
+    },
+    notebook: {
+      render: unavailableBridgeMethod
+    },
     shell: {
       openExternal: unavailableBridgeMethod,
       openPath: unavailableBridgeMethod
+    },
+    store: {
+      get: unavailableBridgeMethod,
+      set: unavailableBridgeMethod
     },
     window: {
       setTitle: unavailableBridgeMethod

@@ -2,7 +2,6 @@ import HighlightJS from 'highlight.js'
 import hljsDefineSolidity from 'highlightjs-solidity'
 import hljsDefineGraphQL from 'highlightjs-graphql'
 import Markdown from '../../utilities/markdown'
-import nb from '../../utilities/jupyterNotebook'
 import React, { Component } from 'react'
 import electronBridge from '../../utilities/electronBridge'
 import { adaptedLanguage, highlightContent } from './highlighting'
@@ -14,6 +13,13 @@ import './markdown.scss'
 const logger = electronBridge.logger
 const conf = electronBridge.config
 
+function resolveHighlightLanguage (languageModule) {
+  if (typeof languageModule === 'function') return languageModule
+  if (languageModule && typeof languageModule.default === 'function') return languageModule.default
+  if (languageModule && typeof languageModule.definer === 'function') return languageModule.definer
+  throw new TypeError('Invalid highlight.js language module')
+}
+
 // resolve syntax highlight style based on app theme
 if (conf.get('theme') === 'dark') {
   require('../../utilities/vendor/highlightJS/styles/atom-one-dark.css')
@@ -21,15 +27,17 @@ if (conf.get('theme') === 'dark') {
   require('../../utilities/vendor/highlightJS/styles/github-gist.css')
 }
 
-hljsDefineSolidity(HighlightJS) // register solidity to hightlight.js
-hljsDefineGraphQL(HighlightJS) // register graphql to hightlight.js
+resolveHighlightLanguage(hljsDefineSolidity)(HighlightJS) // register solidity to hightlight.js
+resolveHighlightLanguage(hljsDefineGraphQL)(HighlightJS) // register graphql to hightlight.js
 
 export default class CodeArea extends Component {
   createJupyterNotebookCodeBlock (content, language, kTabLength) {
     try {
-      const notebook = nb.parse(JSON.parse(content))
-      const notebookHtml = notebook.render().outerHTML
-      return `<div class='jupyterNotebook-section'>${notebookHtml}</div>`
+      const result = electronBridge.notebook.render(content)
+      if (!result.status) {
+        throw new Error(result.error)
+      }
+      return `<div class='jupyterNotebook-section'>${result.html}</div>`
     } catch (err) {
       logger.error(`Failed to render Jupyter Notebook content with err ${err}`)
       return this.createHighlightedCodeBlock(content, language, kTabLength)

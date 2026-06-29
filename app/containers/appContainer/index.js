@@ -5,7 +5,6 @@ import electronBridge from '../../utilities/electronBridge'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
 import AboutPage from '../aboutPage'
 import Dashboard from '../dashboard'
-import electronLocalStorage from 'electron-json-storage-sync'
 import LoginPage from '../loginPage'
 import NavigationPanel from '../navigationPanel'
 import NavigationPanelDetails from '../navigationPanelDetails'
@@ -105,7 +104,7 @@ class AppContainer extends Component {
 
   handleSkipClicked () {
     const { newVersionInfo } = this.props
-    electronLocalStorage.set('skipped-version', newVersionInfo.version)
+    electronBridge.localStorage.set('skipped-version', newVersionInfo.version)
     this.dismissUpdateAlert()
   }
 

@@ -1,4 +1,13 @@
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+import githubApiCore from '../../app/utilities/githubApi/core'
+
+const {
+  EXCHANGE_ACCESS_TOKEN,
+  GET_ALL_GISTS,
+  GET_SINGLE_GIST,
+  GET_USER_PROFILE,
+  createGitHubApi
+} = githubApiCore
 
 const logger = {
   debug: () => {},
@@ -12,13 +21,11 @@ function createConf (values = {}) {
   }
 }
 
-async function loadGitHubApi ({
+function loadGitHubApi ({
   confValues = {},
   requestImpl,
   requestPromiseImpl
 } = {}) {
-  vi.resetModules()
-
   const requestPromise = vi.fn(requestPromiseImpl || (() => Promise.resolve({})))
   const request = vi.fn(requestImpl || (() => {}))
   const proxyAgentInstances = []
@@ -27,23 +34,13 @@ async function loadGitHubApi ({
     proxyAgentInstances.push(this)
   })
 
-  vi.doMock('../../app/utilities/electronBridge', () => ({
-    default: {
-      config: createConf(confValues),
-      logger
-    }
-  }))
-  vi.doMock('proxy-agent', () => ({
-    default: ProxyAgent
-  }))
-  vi.doMock('request-promise', () => ({
-    default: requestPromise
-  }))
-  vi.doMock('request', () => ({
-    default: request
-  }))
-
-  const api = await import('../../app/utilities/githubApi')
+  const api = createGitHubApi({
+    conf: createConf(confValues),
+    logger,
+    ProxyAgentImpl: ProxyAgent,
+    requestImpl: request,
+    requestPromiseImpl: requestPromise
+  })
 
   return {
     api,
@@ -54,18 +51,11 @@ async function loadGitHubApi ({
   }
 }
 
-afterEach(() => {
-  vi.doUnmock('../../app/utilities/electronBridge')
-  vi.doUnmock('proxy-agent')
-  vi.doUnmock('request')
-  vi.doUnmock('request-promise')
-})
-
 describe('GitHub API utility', () => {
   it('builds the OAuth access-token exchange request', async () => {
-    const { api, requestPromise } = await loadGitHubApi()
+    const { api, requestPromise } = loadGitHubApi()
 
-    await api.getGitHubApi(api.EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
+    await api.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
 
     expect(requestPromise).toHaveBeenCalledWith({
       method: 'POST',
@@ -82,14 +72,14 @@ describe('GitHub API utility', () => {
   })
 
   it('uses GitHub Enterprise API host when configured', async () => {
-    const { api, requestPromise } = await loadGitHubApi({
+    const { api, requestPromise } = loadGitHubApi({
       confValues: {
         'enterprise:enable': true,
         'enterprise:host': 'ghe.example.test'
       }
     })
 
-    await api.getGitHubApi(api.GET_USER_PROFILE)('token-1')
+    await api.getGitHubApi(GET_USER_PROFILE)('token-1')
 
     expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
       uri: 'https://ghe.example.test/api/v3/user',
@@ -104,14 +94,14 @@ describe('GitHub API utility', () => {
   })
 
   it('wires proxy configuration into requests', async () => {
-    const { api, ProxyAgent, proxyAgentInstances, requestPromise } = await loadGitHubApi({
+    const { api, ProxyAgent, proxyAgentInstances, requestPromise } = loadGitHubApi({
       confValues: {
         'proxy:enable': true,
         'proxy:address': 'socks://localhost:1080'
       }
     })
 
-    await api.getGitHubApi(api.GET_SINGLE_GIST)('token-1', 'gist-1')
+    await api.getGitHubApi(GET_SINGLE_GIST)('token-1', 'gist-1')
 
     expect(ProxyAgent).toHaveBeenCalledWith('socks://localhost:1080')
     expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
@@ -135,11 +125,11 @@ describe('GitHub API utility', () => {
         }
       }
     }
-    const { api, requestPromise } = await loadGitHubApi({
+    const { api, requestPromise } = loadGitHubApi({
       requestPromiseImpl: (options) => Promise.resolve(pages[options.qs.page])
     })
 
-    const result = await api.getGitHubApi(api.GET_ALL_GISTS)('token-1', 'octo')
+    const result = await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
 
     expect(requestPromise).toHaveBeenCalledTimes(2)
     expect(requestPromise).toHaveBeenNthCalledWith(1, expect.objectContaining({
@@ -154,7 +144,7 @@ describe('GitHub API utility', () => {
   })
 
   it('treats a missing pagination header as a complete single-page gist response', async () => {
-    const { api, request, requestPromise } = await loadGitHubApi({
+    const { api, request, requestPromise } = loadGitHubApi({
       requestPromiseImpl: () => Promise.resolve({
         body: [{ id: 'single-page', updated_at: '2022-01-01T00:00:00Z' }],
         headers: {}
@@ -167,7 +157,7 @@ describe('GitHub API utility', () => {
       }
     })
 
-    const result = await api.getGitHubApi(api.GET_ALL_GISTS)('token-1', 'octo')
+    const result = await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
 
     expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
       uri: 'https://api.github.com/users/octo/gists',
@@ -178,7 +168,7 @@ describe('GitHub API utility', () => {
   })
 
   it('uses the authenticated gists endpoint when downloadAll is enabled', async () => {
-    const { api, requestPromise } = await loadGitHubApi({
+    const { api, requestPromise } = loadGitHubApi({
       confValues: {
         'gist:downloadAll': true
       },
@@ -188,7 +178,7 @@ describe('GitHub API utility', () => {
       })
     })
 
-    await api.getGitHubApi(api.GET_ALL_GISTS)('token-1', 'octo')
+    await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
 
     expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
       uri: 'https://api.github.com/gists',

@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import { Promise } from 'bluebird'
 import thunk from 'redux-thunk'
-import electronLocalStorage from 'electron-json-storage-sync'
 import electronBridge from './utilities/electronBridge'
 
 import './utilities/vendor/bootstrap/css/bootstrap.css'
@@ -50,21 +49,12 @@ import {
 import { notifySuccess, notifyFailure } from './utilities/notifier'
 import { configureI18n, t } from './utilities/i18n'
 
-const path = require('path')
-const { createRequire } = require('module')
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 const conf = electronBridge.config
-const appRequire = createRequire(path.join(electronBridge.app.getAppPath(), 'app/index.js'))
 configureI18n(electronBridge.config.get('i18n:locale'))
 
-let Account = null
-try {
-  Account = appRequire('../configs/account')
-} catch (e) {
-  if (e.code !== 'MODULE_NOT_FOUND') throw e
-  Account = appRequire('../configs/accountDummy')
-}
+const Account = electronBridge.account.get()
 
 // First instantiate the class
 const localPref = new Store({
@@ -435,11 +425,11 @@ function initUserSession (token) {
 function updateLocalStorage (data) {
   try {
     logger.debug(`-----> Caching token ${data.token}`)
-    let rst = electronLocalStorage.set('token', data.token)
+    let rst = electronBridge.localStorage.set('token', data.token)
     logger.debug(`-----> [${rst.status}] Cached token ${data.token}`)
 
     logger.debug(`-----> Caching profile ${data.profile}`)
-    rst = electronLocalStorage.set('profile', data.profile)
+    rst = electronBridge.localStorage.set('profile', data.profile)
     logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
 
     logger.debug('-----> User info is cached.')
@@ -450,9 +440,9 @@ function updateLocalStorage (data) {
 
 function getCachedUserInfo () {
   logger.debug('-----> Inside getCachedUserInfo')
-  const cachedProfile = electronLocalStorage.get('profile')
+  const cachedProfile = electronBridge.localStorage.get('profile')
   logger.debug(`-----> [${cachedProfile.status}] cachedProfile is ${cachedProfile.data}`)
-  const cachedToken = electronLocalStorage.get('token')
+  const cachedToken = electronBridge.localStorage.get('token')
   logger.debug(`-----> [${cachedToken.status}] cachedToken is ${cachedToken.data}`)
 
   if (cachedProfile.status && cachedToken.status) {
@@ -695,7 +685,7 @@ ipcRenderer.on('back-to-normal-mode', data => {
 
 ipcRenderer.on('update-available', payload => {
   const newVersionInfo = electronBridge.globals.getUpdateInfo()
-  if (electronLocalStorage.get('skipped-version').data === newVersionInfo.version) return
+  if (electronBridge.localStorage.get('skipped-version').data === newVersionInfo.version) return
 
   reduxStore.dispatch(updateNewVersionInfo(newVersionInfo))
   reduxStore.dispatch(updateUpdateAvailableBarStatus('ON'))
