@@ -1,5 +1,6 @@
 import HighlightJS from 'highlight.js'
 import MarkdownIt from 'markdown-it'
+import { full as MdEmoji } from 'markdown-it-emoji'
 import MdTaskList from 'markdown-it-task-lists'
 import MdKatex from 'markdown-it-katex'
 
@@ -15,6 +16,7 @@ const Md = MarkdownIt({
     return HighlightJS.highlightAuto(str).value
   }
 })
+  .use(MdEmoji)
   .use(MdTaskList)
   .use(MdKatex, { throwOnError: false, errorColor: ' #cc0000' })
 
