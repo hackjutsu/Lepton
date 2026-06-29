@@ -47,15 +47,18 @@ import {
 
 import { notifySuccess, notifyFailure } from './utilities/notifier'
 
+const path = require('path')
+const { createRequire } = require('module')
 const remote = require('@electron/remote')
 const logger = remote.getGlobal('logger')
+const appRequire = createRequire(path.join(remote.app.getAppPath(), 'app/index.js'))
 
 let Account = null
 try {
-  Account = require('../configs/account')
+  Account = appRequire('../configs/account')
 } catch (e) {
   if (e.code !== 'MODULE_NOT_FOUND') throw e
-  Account = require('../configs/accountDummy')
+  Account = appRequire('../configs/accountDummy')
 }
 
 // First instantiate the class
