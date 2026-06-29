@@ -21,26 +21,21 @@ export function shouldUseColoredTags (value) {
   return value !== false
 }
 
-function getConfigValue (conf, preferredKey, fallbackKey, defaultValue) {
+function getConfigValue (conf, key, defaultValue) {
   if (!conf || typeof conf.get !== 'function') {
     return defaultValue
   }
 
-  const preferredValue = conf.get(preferredKey)
-  if (preferredValue !== undefined) {
-    return preferredValue
-  }
-
-  const fallbackValue = conf.get(fallbackKey)
-  return fallbackValue !== undefined ? fallbackValue : defaultValue
+  const value = conf.get(key)
+  return value !== undefined ? value : defaultValue
 }
 
 export function shouldShowTagsInSnippetList (conf) {
-  return getConfigValue(conf, 'tag:showInSnippetList', 'snippet:showTagsInSnippetList', false) === true
+  return getConfigValue(conf, 'tag:showInSnippetList', false) === true
 }
 
 export function shouldColorTags (conf) {
-  return shouldUseColoredTags(getConfigValue(conf, 'tag:colored', 'snippet:coloredTags', true))
+  return shouldUseColoredTags(getConfigValue(conf, 'tag:colored', true))
 }
 
 export function getTagBadgeClassName (tag, colored = true) {
