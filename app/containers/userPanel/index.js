@@ -295,7 +295,7 @@ class UserPanel extends Component {
   renderLogoutConfirmationModal () {
     return (
       <div className='static-modal'>
-        <Modal show={ this.props.logoutModalStatus === 'ON' } bsSize='small'>
+        <Modal className='logout-modal' show={ this.props.logoutModalStatus === 'ON' } bsSize='small'>
           <Modal.Header>
             <Modal.Title>{ t('userPanel.confirmLogout') }</Modal.Title>
           </Modal.Header>

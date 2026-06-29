@@ -8,7 +8,7 @@ const dialog = electron.dialog
 const Tray = electron.Tray
 const ipcMain = electron.ipcMain
 const BrowserWindow = electron.BrowserWindow
-let willQuitApp = false
+let isQuitting = false
 
 // http://electron.rocks/sharing-between-main-and-renderer-process/
 // Set up the logger
@@ -72,10 +72,10 @@ for (const key of Object.getOwnPropertyNames(defaultConfig)) {
 }
 
 let mainWindow = null
-let miniWindow = null
+let tray = null
 let authFlow = null
 let githubApi = null
-let operationType = 0;
+let operationType = 0
 
 const shortcuts = nconf.get('shortcuts')
 
@@ -224,55 +224,39 @@ function createWindow (autoLogin) {
     checkForAppUpdates()
   })
 
-  mainWindow.on('close', (e) => {
-    if (operationType == 0) {
-      const choice = dialog.showMessageBoxSync(mainWindow, {
-        type: 'info',
-        title: t('dialog.quitTitle'),
-        defaultId: 0,
-        cancelId: 0,
-        message: t('dialog.quitConfirm'),
-        buttons: [t('dialog.neverMind'), t('dialog.minimizeToTray'), t('dialog.quit')]
-      })
-      if (choice === 1) {
-        if (miniWindow) {
-          mainWindow.hide() // 调用 最小化实例方法
-        } else {
-          setTray(app, mainWindow)
-        }
-        e.preventDefault()
-        operationType = 1
-      } else if (choice === 2) {
-        if (os.platform() === 'darwin' && !willQuitApp) {
-          // Hide the window when users close the window on macOS
-          e.preventDefault()
-          mainWindow.hide()
-        } else {
-          mainWindow = null
-        }
-        operationType = 2
-      } else {
-        e.preventDefault()
-      }
-    }
-    if (operationType == 1) {
-      if (miniWindow) {
-        mainWindow.hide() // 调用 最小化实例方法
-      } else {
-        setTray(app, mainWindow)
-      }
+  mainWindow.on('minimize', (e) => {
+    if (process.platform === 'darwin' && nconf.get('window:minimizeToTray')) {
       e.preventDefault()
+      hideWindowToTray(mainWindow)
     }
-    if (operationType == 2) {
-      if (os.platform() === 'darwin' && !willQuitApp) {
-        // Hide the window when users close the window on macOS
-        e.preventDefault()
-        mainWindow.hide()
-      } else {
-        mainWindow = null
-      }
+  })
+
+  mainWindow.on('close', (e) => {
+    if (process.platform !== 'darwin') {
+      handleNonMacWindowClose(e, mainWindow)
+      return
     }
-  });
+
+    if (isQuitting) {
+      mainWindow = null
+      return
+    }
+
+    if (nconf.get('window:closeToTray')) {
+      e.preventDefault()
+      hideWindowToTray(mainWindow)
+      return
+    }
+
+    if (os.platform() === 'darwin') {
+      // Hide the window when users close the window on macOS.
+      e.preventDefault()
+      mainWindow.hide()
+      return
+    }
+
+    mainWindow = null
+  })
 
   const ContextMenu = require('electron-context-menu')
   ContextMenu({
@@ -313,16 +297,49 @@ app.on('window-all-closed', () => {
 /* 'before-quit' is emitted when Electron receives 
  * the signal to exit and wants to start closing windows */
 app.on('before-quit', (event) => {
-  if (operationType == 2) {
-    willQuitApp = true
-  }else{
-    event.preventDefault()
+  if (process.platform !== 'darwin') {
+    if (operationType !== 2) {
+      event.preventDefault()
+      return
+    }
   }
+
+  isQuitting = true
 })
 
 // 'activate' is emitted when the user clicks the Dock icon (OS X).
 // It is a macOS specific signal mapped to 'applicationShouldHandleReopen' event
 app.on('activate', () => mainWindow && mainWindow.show())
+
+function handleNonMacWindowClose (e, win) {
+  if (operationType === 0) {
+    const choice = dialog.showMessageBoxSync(win, {
+      type: 'info',
+      title: t('dialog.quitTitle'),
+      defaultId: 0,
+      cancelId: 0,
+      message: t('dialog.quitConfirm'),
+      buttons: [t('dialog.neverMind'), t('dialog.minimizeToTray'), t('dialog.quit')]
+    })
+    if (choice === 1) {
+      hideWindowToTray(win)
+      e.preventDefault()
+      operationType = 1
+    } else if (choice === 2) {
+      mainWindow = null
+      operationType = 2
+    } else {
+      e.preventDefault()
+    }
+  }
+  if (operationType === 1) {
+    hideWindowToTray(win)
+    e.preventDefault()
+  }
+  if (operationType === 2) {
+    mainWindow = null
+  }
+}
 
 function setUpApplicationMenu () {
   // Create the Application's main menu
@@ -947,41 +964,84 @@ function initGlobalLogger () {
   global.logFilePath = logFilePath
 }
 
-function setTray(app, mainWindow) {
-  if (miniWindow) {
-    mainWindow.hide()
-    return
+function getTrayIcon () {
+  const iconPath = path.join(__dirname, 'build/icon/icon.png')
+  if (process.platform !== 'darwin') return iconPath
+
+  // macOS menu bar items need a transparent template image; the full app icon
+  // becomes an unreadable blob at status-item size.
+  const svg = [
+    '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">',
+    '<g fill="none" stroke="black" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">',
+    '<ellipse cx="9" cy="9" rx="6.25" ry="2.75"/>',
+    '<ellipse cx="9" cy="9" rx="6.25" ry="2.75" transform="rotate(60 9 9)"/>',
+    '<ellipse cx="9" cy="9" rx="6.25" ry="2.75" transform="rotate(-60 9 9)"/>',
+    '</g>',
+    '<circle cx="9" cy="9" r="1.4" fill="black"/>',
+    '</svg>'
+  ].join('')
+  const image = electron.nativeImage.createFromDataURL(
+    `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
+  )
+  if (image.isEmpty()) {
+    const fallbackImage = electron.nativeImage.createFromPath(iconPath).resize({
+      width: 16,
+      height: 16
+    })
+    fallbackImage.setTemplateImage(true)
+    return fallbackImage
   }
+  image.setTemplateImage(true)
+  return image
+}
+
+function showMainWindow (mainWindow) {
+  if (!mainWindow || mainWindow.isDestroyed()) return
+  if (mainWindow.isMinimized()) {
+    mainWindow.restore()
+  }
+  mainWindow.show()
+  mainWindow.focus()
+}
+
+function hideWindowToTray (mainWindow) {
+  ensureTray(mainWindow)
+  mainWindow.hide()
+}
+
+function ensureTray (win) {
+  if (tray) return tray
+
   const trayMenuTemplate = [
     {
       label: t('menu.openWindow'),
       click: () => {
-        mainWindow.show()
+        showMainWindow(win)
       }
     },
     {
       label: t('menu.quit'),
       click: () => {
         operationType = 2
-        if (process.platform !== 'darwin') app.quit()
-        mainWindow = null
+        app.quit()
+        if (process.platform !== 'darwin') {
+          mainWindow = null
+        }
       }
     }
   ]
-  const iconPath = path.join(__dirname, 'build/icon/icon.png')
 
-  miniWindow = new Tray(iconPath)
+  tray = new Tray(getTrayIcon())
 
   const contextMenu = Menu.buildFromTemplate(trayMenuTemplate)
 
-  mainWindow.hide()
+  tray.setToolTip('Lepton')
 
-  miniWindow.setToolTip('Lepton')
+  tray.setContextMenu(contextMenu)
 
-  miniWindow.setContextMenu(contextMenu)
-
-  miniWindow.on('double-click', () => {
-    mainWindow.show()
+  tray.on('double-click', () => {
+    showMainWindow(win)
   })
-  return miniWindow
+
+  return tray
 }

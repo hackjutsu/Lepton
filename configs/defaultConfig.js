@@ -5,6 +5,10 @@ module.exports = {
     "i18n": {
         "locale": "en"
     },
+    "window": {
+        "closeToTray": false,
+        "minimizeToTray": false
+    },
     "avatar": {
         "type": "github",
         "boringAvatarVariant": "beam"
