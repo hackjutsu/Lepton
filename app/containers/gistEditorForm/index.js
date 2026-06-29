@@ -1,5 +1,5 @@
 import electronBridge from '../../utilities/electronBridge'
-import { OverlayTrigger, Tooltip, Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
+import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
 import React, { Component } from 'react'
 import {
@@ -252,14 +252,16 @@ const renderDescriptionField = ({ value, type, touched, error, warning, onChange
       onBlur={ onBlur }/>
     { touched && ((error && <span className='error-msg'>{ error }</span>) ||
         (warning && <span className='error-msg'>{ warning }</span>)) }
-    <OverlayTrigger placement="top" overlay={ <Tooltip id='tooltip'>{ getDescriptionTips() }</Tooltip> }>
-      <a className='tips' href='#'>
-        <div
-          className='tips-icon'
-          dangerouslySetInnerHTML={{ __html: tipsIcon }} />
-        <span>{ t('editor.tips') }</span>
-      </a>
-    </OverlayTrigger>
+    <a
+      className='tips'
+      href='#'
+      title={ getDescriptionTips() }
+      onClick={ event => event.preventDefault() }>
+      <div
+        className='tips-icon'
+        dangerouslySetInnerHTML={{ __html: tipsIcon }} />
+      <span>{ t('editor.tips') }</span>
+    </a>
   </div>
 )
 

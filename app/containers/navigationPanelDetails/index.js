@@ -17,14 +17,29 @@ const logger = electronBridge.logger
 const conf = electronBridge.config
 
 class NavigationPanelDetails extends Component {
+  constructor (props) {
+    super(props)
+    this.snippetNodes = {}
+  }
+
   componentDidUpdate () {
     const { updatescrollRequestStatus, scrollRequestStatus, activeGist } = this.props
 
     if (scrollRequestStatus === 'ON') {
-      this.refs[activeGist].scrollIntoView(true)
+      if (this.snippetNodes[activeGist]) {
+        this.snippetNodes[activeGist].scrollIntoView(true)
+      }
 
       logger.info('[Dispatch] update scroll request to OFF')
       updatescrollRequestStatus('OFF')
+    }
+  }
+
+  setSnippetNode (gistId, node) {
+    if (node) {
+      this.snippetNodes[gistId] = node
+    } else {
+      delete this.snippetNodes[gistId]
     }
   }
 
@@ -113,7 +128,10 @@ class NavigationPanelDetails extends Component {
       const thumbnailTitle = title.length > 0 ? title : description
       const gistId = gist.brief.id
       snippetThumbnails.push(
-        <li className='snippet-thumnail-list-item' key={ gistId } ref={ gistId }>
+        <li
+          className='snippet-thumnail-list-item'
+          key={ gistId }
+          ref={ node => this.setSnippetNode(gistId, node) }>
           <div className={ this.decideSnippetListItemClass(gistId) }
             onClick={ this.handleClicked.bind(this, gistId) }>
             <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>

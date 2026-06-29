@@ -1,11 +1,12 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { default as GistEditorForm, UPDATE_GIST } from '../gistEditorForm'
-import { Panel, Modal, Button, ProgressBar, Collapse } from 'react-bootstrap'
+import { Panel, Button, ProgressBar, Collapse } from 'react-bootstrap'
 import electronBridge from '../../utilities/electronBridge'
 import Autolinker from 'autolinker'
 import CodeArea from '../codeArea'
 import HumanReadableTime from 'human-readable-time'
+import Modal from '../compatModal'
 import Moment from 'moment'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
@@ -370,7 +371,7 @@ class Snippet extends Component {
         </Modal.Header>
         <Modal.Body>
           <textarea
-            ref='rawModalText'
+            ref={ this.setRawModalTextNode.bind(this) }
             className='code-area-raw'
             defaultValue={ gistRawModal.content }
             onDoubleClick={ this.selectText.bind(this) } />
@@ -379,8 +380,14 @@ class Snippet extends Component {
     )
   }
 
+  setRawModalTextNode (node) {
+    this.rawModalText = node
+  }
+
   selectText () {
-    this.refs.rawModalText.select()
+    if (this.rawModalText) {
+      this.rawModalText.select()
+    }
   }
 
   handleCopyRawLinkClicked (url) {
