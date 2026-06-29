@@ -20,6 +20,7 @@ const fs = require('fs')
 const isDev = require('electron-is-dev')
 const defaultConfig = require('./configs/defaultConfig')
 const appInfo = require('./package.json')
+const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
@@ -366,6 +367,7 @@ function initGlobalConfigs () {
 
 function initGlobalLogger () {
   logger.level = nconf.get('logger:level')
+  installLoggerRedaction(logger)
   const appFolder = app.getPath('userData')
   if (!fs.existsSync(appFolder)) {
     fs.mkdirSync(appFolder)

@@ -136,4 +136,4 @@ When working with this codebase:
 - **DO NOT commit `license.json` path-only churn** - `npm run build` regenerates local absolute paths
 - Focus code changes on the `/app` directory, `/configs`, `main.js`, and configuration files
 - Avoid searching or reading files in `node_modules/`, `/bundle`, `/build`, `/dist` directories unless absolutely necessary
-- Avoid printing or preserving GitHub tokens from logs; current debug logs can include cached token values
+- Avoid bypassing the global logger for auth-related values; logger methods automatically redact known token and secret patterns
