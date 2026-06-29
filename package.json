@@ -102,7 +102,6 @@
     "proxy-agent": "^4.0.0",
     "react": "^19.2.7",
     "react-bootstrap": "^0.32.4",
-    "react-chartjs": "^1.2.0",
     "react-dom": "^19.2.7",
     "react-redux": "^9.3.0",
     "react-split-pane": "^3.2.0",

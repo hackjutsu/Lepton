@@ -1,6 +1,7 @@
 import electronBridge from '../../utilities/electronBridge'
-import { Button, ListGroup, ListGroupItem, Panel } from 'react-bootstrap'
+import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
+import Panel from '../compatPanel'
 import React, { Component } from 'react'
 import {
   copyValues,
