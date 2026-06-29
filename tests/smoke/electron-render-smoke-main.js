@@ -105,16 +105,16 @@ async function getRendererState (window) {
   `, true)
 }
 
-async function captureFailureScreenshot (window) {
+async function captureScreenshot (window, fileName, log = console.log) {
   if (!window || window.isDestroyed()) return
 
   const artifactDir = process.env.LEPTON_SMOKE_ARTIFACT_DIR
   if (!artifactDir) return
 
-  const screenshotPath = path.join(artifactDir, 'electron-render-smoke-failure.png')
+  const screenshotPath = path.join(artifactDir, fileName)
   const image = await window.capturePage()
   fs.writeFileSync(screenshotPath, image.toPNG())
-  console.error(`Saved smoke-test screenshot to ${screenshotPath}`)
+  log(`Saved smoke-test screenshot to ${screenshotPath}`)
 }
 
 function assertRendererState (state) {
@@ -147,10 +147,11 @@ async function main () {
     await waitForRendererLoad(window)
     await waitForLoginUi(window)
     assertRendererState(await getRendererState(window))
+    await captureScreenshot(window, 'electron-render-smoke-success.png')
     console.log('electron render smoke test passed')
     app.exit(0)
   } catch (err) {
-    await captureFailureScreenshot(window)
+    await captureScreenshot(window, 'electron-render-smoke-failure.png', console.error)
     console.error(err)
     app.exit(1)
   }

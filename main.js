@@ -1,4 +1,3 @@
-require('@electron/remote/main').initialize()
 const os = require('os')
 const electron = require('electron')
 const nconf = require('nconf')
@@ -23,6 +22,10 @@ const appInfo = require('./package.json')
 const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
 const { configureI18n, t } = require('./app/utilities/i18n')
+const {
+  buildGitHubOAuthUrl,
+  parseGitHubOAuthCallback
+} = require('./app/utilities/auth/githubOAuth')
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
@@ -43,6 +46,7 @@ for (const key of Object.getOwnPropertyNames(defaultConfig)) {
 
 let mainWindow = null
 let miniWindow = null
+let authFlow = null
 let operationType = 0;
 
 const shortcuts = nconf.get('shortcuts')
@@ -69,7 +73,7 @@ function createWindow (autoLogin) {
 
   const webPreferences = {
     nodeIntegration: true,
-    enableRemoteModule: true,
+    enableRemoteModule: false,
     preload: path.join(__dirname, 'preload.js'),
     // https://github.com/electron/electron/blob/main/docs/tutorial/context-isolation.md
     // TODO: migrate and enable context isolation
@@ -419,6 +423,139 @@ function setUpBridgeIpcHandlers () {
     if (!isMainWindowSender(event) || typeof value !== 'string') return
     electron.clipboard.writeText(value)
   })
+
+  ipcMain.handle('lepton:auth:start-github-login', (event, authOptions = {}) => {
+    if (!isMainWindowSender(event)) {
+      return {
+        status: 'error',
+        error: 'invalid-sender'
+      }
+    }
+
+    return startGitHubAuthFlow(authOptions)
+  })
+}
+
+function startGitHubAuthFlow ({ clientId, scopes } = {}) {
+  if (authFlow) {
+    if (authFlow.authWindow && !authFlow.authWindow.isDestroyed()) {
+      authFlow.authWindow.focus()
+    }
+    return authFlow.promise
+  }
+
+  if (typeof clientId !== 'string' || clientId.length === 0) {
+    return Promise.resolve({
+      status: 'error',
+      error: 'missing-client-id'
+    })
+  }
+
+  const authWindow = new BrowserWindow({
+    parent: mainWindow,
+    width: 400,
+    height: 600,
+    show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      enableRemoteModule: false,
+      contextIsolation: true,
+      spellcheck: false
+    }
+  })
+
+  let resolveAuthFlow
+  const promise = new Promise(resolve => {
+    resolveAuthFlow = resolve
+  })
+  authFlow = {
+    authWindow,
+    promise,
+    resolve: resolveAuthFlow
+  }
+
+  const authUrl = buildGitHubOAuthUrl({ clientId, scopes })
+  const options = { extraHeaders: 'pragma: no-cache\n' }
+
+  function handleAuthNavigation (event, callbackUrl) {
+    const result = parseGitHubOAuthCallback(callbackUrl)
+    if (!result) return
+
+    if (event && typeof event.preventDefault === 'function') {
+      event.preventDefault()
+    }
+
+    finishGitHubAuthFlow(result)
+  }
+
+  authWindow.webContents.on('will-navigate', (event, callbackUrl) => {
+    handleAuthNavigation(event, callbackUrl)
+  })
+
+  authWindow.webContents.on('will-redirect', (event, callbackUrl) => {
+    handleAuthNavigation(event, callbackUrl)
+  })
+
+  authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
+    handleAuthNavigation(event, newUrl)
+  })
+
+  authWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    if (errorCode === -3) return
+    logger.error('[auth] OAuth window failed to load: ' + errorDescription)
+    finishGitHubAuthFlow({
+      status: 'error',
+      error: 'load-failed',
+      errorDescription
+    })
+  })
+
+  authWindow.once('closed', () => {
+    if (authFlow && authFlow.authWindow === authWindow) {
+      finishGitHubAuthFlow({
+        status: 'closed'
+      }, {
+        destroyWindow: false
+      })
+    }
+  })
+
+  logger.debug('loading authUrl ' + authUrl)
+  authWindow.loadURL(authUrl, options)
+    .catch(err => {
+      logger.error('[auth] OAuth window failed to load: ' + err.message)
+      finishGitHubAuthFlow({
+        status: 'error',
+        error: 'load-failed',
+        errorDescription: err.message
+      })
+    })
+  authWindow.show()
+
+  return promise
+}
+
+function finishGitHubAuthFlow (result, options = {}) {
+  if (!authFlow) return
+
+  const { authWindow, resolve } = authFlow
+  authFlow = null
+  resolve(result)
+
+  if (options.destroyWindow === false || !authWindow || authWindow.isDestroyed()) return
+
+  try {
+    authWindow.webContents.session.clearStorageData({}, () => {
+      if (!authWindow.isDestroyed()) {
+        authWindow.destroy()
+      }
+    })
+  } catch (err) {
+    logger.warn('[auth] Failed to clear OAuth session data: ' + err.message)
+    if (!authWindow.isDestroyed()) {
+      authWindow.destroy()
+    }
+  }
 }
 
 function setUpTouchBar() {

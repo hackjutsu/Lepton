@@ -52,7 +52,6 @@ import { configureI18n, t } from './utilities/i18n'
 
 const path = require('path')
 const { createRequire } = require('module')
-const remote = require('@electron/remote')
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 const conf = electronBridge.config
@@ -94,75 +93,46 @@ function launchAuthWindow (token) {
     return
   }
 
-  const webPreferences = {
-    nodeIntegration: false,
-    spellcheck: false
-  }
-
-  let authWindow = new remote.BrowserWindow({
-    parent: remote.getGlobal('mainWindow'),
-    width: 400,
-    height: 600,
-    show: false,
-    webPreferences
-  })
-  const githubUrl = 'https://github.com/login/oauth/authorize?'
-  const authUrl = githubUrl + 'client_id=' + CONFIG_OPTIONS.client_id + '&scope=' + CONFIG_OPTIONS.scopes
-  const options = { extraHeaders: 'pragma: no-cache\n' }
-
-  logger.debug('loading authUrl ' + authUrl)
-  authWindow.loadURL(authUrl, options)
-  authWindow.show()
-
   updateAuthWindowStatusOn()
 
-  function handleCallback (url) {
-    const rawCode = /code=([^&]*)/.exec(url) || null
-    const code = (rawCode && rawCode.length > 1) ? rawCode[1] : null
-    const error = /\?error=(.+)$/.exec(url)
-
-    if (code || error) {
-      // Close the browser if code found or error
-      authWindow.webContents.session.clearStorageData([], () => {})
-      authWindow.destroy()
+  electronBridge.auth.startGitHubLogin({
+    clientId: CONFIG_OPTIONS.client_id,
+    scopes: CONFIG_OPTIONS.scopes
+  })
+    .then(handleAuthResult)
+    .catch((err) => {
       updateAuthWindowStatusOff()
-    }
+      logger.error('Failed to launch GitHub auth window: ' + err.message)
+      notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
+    })
+}
 
-    // If there is a code, proceed to get token from github
-    if (code) {
-      logger.info('[Dispatch] updateUserSession IN_PROGRESS')
-      reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
+function handleAuthResult (result) {
+  updateAuthWindowStatusOff()
 
-      getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
-        CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, code)
-        .then((payload) => {
-          logger.debug('-----> calling initUserSession with new token ' + payload.access_token)
-          return initUserSession(payload.access_token)
-        })
-        .catch((err) => {
-          logger.error('Failed: ' + JSON.stringify(err.error))
-          notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
-        })
-    } else if (error) {
-      logger.error('Oops! Something went wrong and we couldn\'t' +
-        'log you in using Github. Please try again.')
-    }
+  if (!result || result.status === 'closed') {
+    return
   }
 
-  // Handle the response from GitHub - See Update from 4/12/2015
-  authWindow.webContents.on('will-navigate', (event, url) => {
-    handleCallback(url)
-  })
+  if (result.status === 'success' && result.code) {
+    logger.info('[Dispatch] updateUserSession IN_PROGRESS')
+    reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
 
-  authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
-    handleCallback(newUrl)
-  })
+    getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
+      CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, result.code)
+      .then((payload) => {
+        logger.debug('-----> calling initUserSession with new token ' + payload.access_token)
+        return initUserSession(payload.access_token)
+      })
+      .catch((err) => {
+        logger.error('Failed: ' + JSON.stringify(err.error))
+        notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
+      })
+    return
+  }
 
-  // Reset the authWindow on close
-  authWindow.on('close', () => {
-    updateAuthWindowStatusOff()
-    authWindow = null
-  }, false)
+  logger.error('Oops! Something went wrong and we couldn\'t' +
+    'log you in using Github. Please try again.')
 }
 
 function setSyncTime (time) {

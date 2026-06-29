@@ -26,6 +26,9 @@ const leptonApi = {
     getAppPath: () => ipcRenderer.sendSync('lepton:app:get-app-path'),
     getPath: (name) => ipcRenderer.sendSync('lepton:app:get-path', name)
   },
+  auth: {
+    startGitHubLogin: (options) => ipcRenderer.invoke('lepton:auth:start-github-login', options)
+  },
   clipboard: {
     writeText: (value) => ipcRenderer.send('lepton:clipboard:write-text', value)
   },

@@ -32,6 +32,12 @@ function createFallbackBridge () {
       getAppPath: () => app.getAppPath(),
       getPath: (name) => app.getPath(name)
     },
+    auth: {
+      startGitHubLogin: () => Promise.resolve({
+        status: 'error',
+        error: 'auth-bridge-unavailable'
+      })
+    },
     clipboard: electron.clipboard || { writeText: () => {} },
     config: {
       get: (key) => conf.get(key),
