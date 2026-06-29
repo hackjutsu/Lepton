@@ -96,12 +96,11 @@ describe('tag badge helpers', () => {
       'tag:showInSnippetList': true
     }))).toBe(true)
     expect(shouldShowTagsInSnippetList(fakeConf({
-      'tag:showInSnippetList': false,
-      'snippet:showTagsInSnippetList': true
+      'tag:showInSnippetList': false
     }))).toBe(false)
     expect(shouldShowTagsInSnippetList(fakeConf({
       'snippet:showTagsInSnippetList': true
-    }))).toBe(true)
+    }))).toBe(false)
     expect(shouldShowTagsInSnippetList(fakeConf({}))).toBe(false)
   })
 
@@ -111,11 +110,10 @@ describe('tag badge helpers', () => {
       'tag:colored': false
     }))).toBe(false)
     expect(shouldColorTags(fakeConf({
-      'tag:colored': true,
-      'snippet:coloredTags': false
+      'tag:colored': true
     }))).toBe(true)
     expect(shouldColorTags(fakeConf({
       'snippet:coloredTags': false
-    }))).toBe(false)
+    }))).toBe(true)
   })
 })
