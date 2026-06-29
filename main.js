@@ -17,6 +17,7 @@ const winston = require('winston')
 const path = require('path')
 const fs = require('fs')
 const isDev = require('electron-is-dev')
+const { pathToFileURL } = require('url')
 const defaultConfig = require('./configs/defaultConfig')
 const appInfo = require('./package.json')
 const { createMainLogger } = require('./app/utilities/logging/mainLogger')
@@ -66,6 +67,14 @@ function getConfigPath() {
 
 function shouldCheckForUpdates () {
   return !isDev && !appInfo.version.includes('alpha') && nconf.get('autoUpdate')
+}
+
+function getRendererUrl () {
+  const rendererUrl = pathToFileURL(path.join(__dirname, 'index.html'))
+  if (process.env.LEPTON_RENDER_FIXTURE) {
+    rendererUrl.searchParams.set('renderFixture', process.env.LEPTON_RENDER_FIXTURE)
+  }
+  return rendererUrl.toString()
 }
 
 function checkForAppUpdates ({ notify = false } = {}) {
@@ -226,7 +235,7 @@ function createWindow (autoLogin) {
     prepend: (params, mainWindow) => []
   })
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`)
+  mainWindow.loadURL(getRendererUrl())
   setUpApplicationMenu()
   // mainWindow.webContents.openDevTools()
 
