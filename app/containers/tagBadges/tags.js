@@ -17,6 +17,20 @@ export function getTagColorClass (tag) {
   return tagColorClasses[index]
 }
 
+export function shouldUseColoredTags (value) {
+  return value !== false
+}
+
+export function getTagBadgeClassName (tag, colored = true) {
+  const classNames = ['tag-badge']
+  if (colored) {
+    classNames.push(getTagColorClass(tag))
+  } else {
+    classNames.push('tag-badge-plain')
+  }
+  return classNames.join(' ')
+}
+
 export function getRegularTagsForGist (gistId, customTags, gistTags) {
   const seenTags = new Set()
   const tags = []

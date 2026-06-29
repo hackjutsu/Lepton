@@ -10,7 +10,10 @@ import Moment from 'moment'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
 import TagBadges from '../tagBadges'
-import { getRegularTagsForGist } from '../tagBadges/tags'
+import {
+  getRegularTagsForGist,
+  shouldUseColoredTags
+} from '../tagBadges/tags'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -433,6 +436,7 @@ class Snippet extends Component {
   renderSnippetDescription (gist) {
     const { title, description, customTags } = descriptionParser(gist.brief.description)
     const tags = getRegularTagsForGist(gist.brief.id, customTags, this.props.gistTags)
+    const useColoredTags = shouldUseColoredTags(conf.get('snippet:coloredTags'))
 
     const htmlForDescriptionSection = []
     if (title.length > 0) {
@@ -457,7 +461,12 @@ class Snippet extends Component {
             <div
               className='custom-tags-icon'
               dangerouslySetInnerHTML={{ __html: tagsIcon }} />
-            <TagBadges tags={ tags } className='snippet-detail-tags' />
+            { useColoredTags
+              ? <TagBadges
+                tags={ tags }
+                className='snippet-detail-tags'
+                colored={ useColoredTags } />
+              : <span className='custom-tags-text'>{ tags.join(', ') }</span> }
           </div>
           : null }
         <span className='update-date'>

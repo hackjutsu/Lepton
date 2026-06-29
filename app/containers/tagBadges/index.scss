@@ -10,12 +10,32 @@
   color: #fff;
   display: inline-block;
   font-size: 11px;
+  font-style: normal;
   line-height: 1.3;
   max-width: 100%;
   overflow: hidden;
   padding: 2px 5px;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tag-badges-plain {
+  gap: 0;
+}
+
+.tag-badge-plain {
+  background-color: transparent;
+  border-radius: 0;
+  color: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  padding: 0;
+}
+
+.tag-badge-plain:not(:last-child)::after {
+  content: ', ';
+  white-space: pre;
 }
 
 .tag-badge-color-0 {
