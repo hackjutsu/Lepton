@@ -22,10 +22,13 @@ const appInfo = require('./package.json')
 const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
 const { configureI18n, t } = require('./app/utilities/i18n')
+const electronLocalStorage = require('electron-json-storage-sync')
 const {
   buildGitHubOAuthUrl,
   parseGitHubOAuthCallback
 } = require('./app/utilities/auth/githubOAuth')
+const { createGitHubApi } = require('./app/utilities/githubApi/core')
+const { renderNotebookContent } = require('./app/utilities/jupyterNotebook/core')
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
@@ -47,6 +50,7 @@ for (const key of Object.getOwnPropertyNames(defaultConfig)) {
 let mainWindow = null
 let miniWindow = null
 let authFlow = null
+let githubApi = null
 let operationType = 0;
 
 const shortcuts = nconf.get('shortcuts')
@@ -75,8 +79,7 @@ function createWindow (autoLogin) {
     nodeIntegration: true,
     enableRemoteModule: false,
     preload: path.join(__dirname, 'preload.js'),
-    // TODO: enable context isolation once the renderer bundle no longer depends on runtime require.
-    contextIsolation: false
+    contextIsolation: true
   }
 
   mainWindow = new BrowserWindow({
@@ -328,6 +331,51 @@ function setUpBridgeIpcHandlers () {
     return mainWindow && !mainWindow.isDestroyed() && event.sender === mainWindow.webContents
   }
 
+  function loadAccountConfig () {
+    try {
+      return require('./configs/account')
+    } catch (error) {
+      if (error.code !== 'MODULE_NOT_FOUND') throw error
+      return require('./configs/accountDummy')
+    }
+  }
+
+  function getRendererStorePath (configName) {
+    if (typeof configName !== 'string' || !/^[a-zA-Z0-9._-]+$/.test(configName)) {
+      return null
+    }
+    return path.join(app.getPath('userData'), configName + '.json')
+  }
+
+  function readRendererStore (configName, defaults = {}) {
+    const storePath = getRendererStorePath(configName)
+    if (!storePath) return defaults
+
+    try {
+      return JSON.parse(fs.readFileSync(storePath))
+    } catch (error) {
+      return defaults
+    }
+  }
+
+  function writeRendererStore (configName, data) {
+    const storePath = getRendererStorePath(configName)
+    if (!storePath) return false
+
+    fs.writeFileSync(storePath, JSON.stringify(data))
+    return true
+  }
+
+  function getGitHubApiBridge () {
+    if (!githubApi) {
+      githubApi = createGitHubApi({
+        conf: nconf,
+        logger
+      })
+    }
+    return githubApi
+  }
+
   function writeConfigValue (key, value) {
     const parts = key.split(':')
     let config = {}
@@ -374,6 +422,14 @@ function setUpBridgeIpcHandlers () {
     return persistedValue
   })
 
+  ipcMain.on('lepton:account:get', (event) => {
+    if (!isMainWindowSender(event)) {
+      event.returnValue = {}
+      return
+    }
+    event.returnValue = loadAccountConfig()
+  })
+
   ipcMain.on('lepton:app:get-app-path', (event) => {
     event.returnValue = app.getAppPath()
   })
@@ -398,9 +454,84 @@ function setUpBridgeIpcHandlers () {
     event.returnValue = global.newVersionInfo
   })
 
+  ipcMain.handle('lepton:files:ensure-config', (event, defaults = {}) => {
+    if (!isMainWindowSender(event)) return false
+    if (!fs.existsSync(global.configFilePath)) {
+      fs.writeFileSync(global.configFilePath, JSON.stringify(defaults, null, 2))
+    }
+    return true
+  })
+
+  ipcMain.on('lepton:local-storage:get', (event, key) => {
+    if (!isMainWindowSender(event) || typeof key !== 'string') {
+      event.returnValue = { status: false, data: null }
+      return
+    }
+    event.returnValue = electronLocalStorage.get(key)
+  })
+
+  ipcMain.on('lepton:local-storage:set', (event, key, value) => {
+    if (!isMainWindowSender(event) || typeof key !== 'string') {
+      event.returnValue = { status: false }
+      return
+    }
+    event.returnValue = electronLocalStorage.set(key, value)
+  })
+
+  ipcMain.on('lepton:renderer-store:get', (event, configName, defaults) => {
+    if (!isMainWindowSender(event)) {
+      event.returnValue = defaults || {}
+      return
+    }
+    event.returnValue = readRendererStore(configName, defaults)
+  })
+
+  ipcMain.on('lepton:renderer-store:set', (event, configName, data) => {
+    if (!isMainWindowSender(event)) {
+      event.returnValue = false
+      return
+    }
+    event.returnValue = writeRendererStore(configName, data)
+  })
+
   ipcMain.on('lepton:logger:log', (event, method, args = []) => {
     if (!loggerMethods.has(method) || typeof logger[method] !== 'function') return
     logger[method](...args)
+  })
+
+  ipcMain.handle('lepton:github-api:request', (event, selection, args = []) => {
+    if (!isMainWindowSender(event) || typeof selection !== 'string' || !Array.isArray(args)) {
+      throw new Error('Invalid GitHub API bridge request')
+    }
+
+    const request = getGitHubApiBridge().getGitHubApi(selection)
+    if (typeof request !== 'function') {
+      throw new Error(`Unsupported GitHub API selection: ${selection}`)
+    }
+
+    return request(...args)
+  })
+
+  ipcMain.on('lepton:notebook:render', (event, content) => {
+    if (!isMainWindowSender(event) || typeof content !== 'string') {
+      event.returnValue = {
+        status: false,
+        error: 'Invalid notebook render request'
+      }
+      return
+    }
+
+    try {
+      event.returnValue = {
+        status: true,
+        html: renderNotebookContent(content)
+      }
+    } catch (error) {
+      event.returnValue = {
+        status: false,
+        error: error.message
+      }
+    }
   })
 
   ipcMain.on('lepton:shell:open-external', (event, url) => {
