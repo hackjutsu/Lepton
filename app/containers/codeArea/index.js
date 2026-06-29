@@ -1,6 +1,7 @@
 import HighlightJS from 'highlight.js'
 import hljsDefineSolidity from 'highlightjs-solidity'
 import hljsDefineGraphQL from 'highlightjs-graphql'
+import AsciiDoc from '../../utilities/asciidoc'
 import Markdown from '../../utilities/markdown'
 import React, { Component } from 'react'
 import electronBridge from '../../utilities/electronBridge'
@@ -48,6 +49,15 @@ export default class CodeArea extends Component {
     return `<div class='markdown-section'>${Markdown.render(content)}</div>`
   }
 
+  createAsciiDocCodeBlock (content, language, kTabLength) {
+    try {
+      return `<div class='markdown-section asciidoc-section'>${AsciiDoc.render(content)}</div>`
+    } catch (err) {
+      logger.error(`Failed to render AsciiDoc content with err ${err}`)
+      return this.createHighlightedCodeBlock(content, language, kTabLength)
+    }
+  }
+
   createHighlightedCodeBlock (content, language, kTabLength) {
     let lineNumber = 0
     const highlightedContent = highlightContent(content, language)
@@ -86,6 +96,9 @@ export default class CodeArea extends Component {
         break
       case 'Markdown':
         htmlContent = this.createMarkdownCodeBlock(content)
+        break
+      case 'AsciiDoc':
+        htmlContent = this.createAsciiDocCodeBlock(content, language, kTabLength)
         break
       default:
         htmlContent = this.createHighlightedCodeBlock(content, language, kTabLength)
