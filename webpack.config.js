@@ -16,7 +16,7 @@ module.exports = {
   resolve: {
     alias: {
       'punycode$': require.resolve('punycode/'),
-      'react/jsx-runtime': require.resolve('react/jsx-runtime.js')
+      'react/jsx-runtime': require.resolve('react/jsx-runtime')
     }
   },
   module: {

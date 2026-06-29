@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDom from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import { Promise } from 'bluebird'
@@ -698,7 +698,7 @@ const reduxStore = createStore(
   applyMiddleware(thunk)
 )
 
-ReactDom.render(
+createRoot(document.getElementById('container')).render(
   <Provider store = { reduxStore }>
     <AppContainer
       searchIndex = { SearchIndex }
@@ -710,6 +710,5 @@ ReactDom.render(
       updateAboutModalStatus = { updateAboutModalStatus }
       updateDashboardModalStatus = { updateDashboardModalStatus }
       updateActiveGistAfterClicked = { updateActiveGistAfterClicked } />
-  </Provider>,
-  document.getElementById('container')
+  </Provider>
 )
