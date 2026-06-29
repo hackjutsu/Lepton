@@ -56,7 +56,7 @@ const Md = MarkdownIt({
   }
 })
   .use(MdEmoji)
-  .use(MdTaskList)
+  .use(MdTaskList, { enabled: true })
   .use(MdKatex, { throwOnError: false, errorColor: ' #cc0000' })
 
 Md.renderer.rules.html_block = (tokens, idx) => sanitizeHtml(tokens[idx].content)
