@@ -10,6 +10,7 @@ import {
   shouldColorTags,
   shouldShowTagsInSnippetList
 } from '../tagBadges/tags'
+import { compareGists } from './sorting'
 
 import './index.scss'
 
@@ -112,11 +113,7 @@ class NavigationPanelDetails extends Component {
 
     const sortingKey = conf.get('snippet:sorting')
     const sortingReverse = conf.get('snippet:sortingReverse')
-    if (sortingReverse) {
-      rawGists.sort((g1, g2) => g2.brief[sortingKey].localeCompare(g1.brief[sortingKey]))
-    } else {
-      rawGists.sort((g1, g2) => g1.brief[sortingKey].localeCompare(g2.brief[sortingKey]))
-    }
+    rawGists.sort(compareGists(sortingKey, sortingReverse))
 
     rawGists.forEach((gist) => {
       const firstFilename = Object.keys(gist.brief.files)[0]
