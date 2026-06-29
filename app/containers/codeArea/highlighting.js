@@ -7,7 +7,7 @@ export function highlightContent (content, language) {
     } catch (__) {}
   }
 
-  return HighlightJS.highlightAuto(content, language ? [language] : undefined).value
+  return HighlightJS.highlightAuto(content).value
 }
 
 export function adaptedLanguage (filename, lang) {
