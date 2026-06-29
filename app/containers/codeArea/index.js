@@ -74,10 +74,14 @@ export default class CodeArea extends Component {
     let language = lang || 'Other'
 
     // Adjust the language based on file extensions.
-    const filenameExtension = filename.split('.').pop()
+    const filenameExtension = filename.split('.').pop().toLowerCase()
     switch (filenameExtension) {
       case 'leptonrc':
         language = 'json'
+        break
+      case 'bat':
+      case 'cmd':
+        language = 'dos'
         break
       case 'zshrc':
         language = 'bash'
@@ -88,6 +92,9 @@ export default class CodeArea extends Component {
       case 'solidity':
       case 'sol':
         language = 'solidity'
+        break
+      case 'vue':
+        language = 'xml'
         break
       default:
       // intentionally left blank
@@ -101,7 +108,8 @@ export default class CodeArea extends Component {
       case 'Objective-C': return 'objectivec'
       case 'Objective-C++': return 'objectivec'
       case 'Visual Basic': return 'vbscript'
-      case 'Batchfile': return 'bat'
+      case 'Batchfile': return 'dos'
+      case 'Vue': return 'xml'
       default:
     }
 
