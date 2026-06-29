@@ -43,6 +43,25 @@ const FILES = {
   }
 }
 
+const PHP_HTML_FILE = {
+  filename: 'index.php',
+  language: 'PHP',
+  raw_url: 'https://gist.githubusercontent.com/lepton-fixture/mock/raw/index.php',
+  content: [
+    '<!doctype html>',
+    '<html>',
+    '<body>',
+    '<?php if ($isVisible) { ?>',
+    '  <section class="notice">',
+    '    <h1><?= $title ?></h1>',
+    '    <p>Ready</p>',
+    '  </section>',
+    '<?php } ?>',
+    '</body>',
+    '</html>'
+  ].join('\n')
+}
+
 function createGist (id, description, isPublic, files, updatedAt) {
   const gist = {
     id,
@@ -109,20 +128,31 @@ const gists = {
       }
     },
     '2026-06-26T09:00:00Z'
+  ),
+  'fixture-gist-5': createGist(
+    'fixture-gist-5',
+    '[PHP template] #php #smoke Embedded HTML syntax fixture.',
+    true,
+    {
+      'index.php': PHP_HTML_FILE
+    },
+    '2026-06-25T11:45:00Z'
   )
 }
 
 const gistTags = {
-  [Prefixed('All')]: ['fixture-gist-1', 'fixture-gist-2', 'fixture-gist-3', 'fixture-gist-4'],
+  [Prefixed('All')]: ['fixture-gist-1', 'fixture-gist-2', 'fixture-gist-3', 'fixture-gist-4', 'fixture-gist-5'],
   [Prefixed('JavaScript')]: ['fixture-gist-1'],
   [Prefixed('Markdown')]: ['fixture-gist-1'],
   [Prefixed('CSS')]: ['fixture-gist-1'],
   [Prefixed('Python')]: ['fixture-gist-2'],
   [Prefixed('Shell')]: ['fixture-gist-3'],
   [Prefixed('Java')]: ['fixture-gist-4'],
+  [Prefixed('PHP')]: ['fixture-gist-5'],
   ui: ['fixture-gist-1'],
-  smoke: ['fixture-gist-1'],
+  smoke: ['fixture-gist-1', 'fixture-gist-5'],
   backend: ['fixture-gist-2', 'fixture-gist-4'],
+  php: ['fixture-gist-5'],
   ops: ['fixture-gist-3']
 }
 
@@ -197,6 +227,11 @@ function getFixtureOverrides (name) {
       return { gistNewModalStatus: 'ON' }
     case 'pinned-tags':
       return { pinnedTagsModalStatus: 'ON' }
+    case 'php-html':
+      return {
+        activeGist: 'fixture-gist-5',
+        activeGistTag: Prefixed('PHP')
+      }
     case 'raw':
       return {
         gistRawModal: {

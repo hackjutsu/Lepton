@@ -1,9 +1,17 @@
 import HighlightJS from 'highlight.js'
 
+function shouldUsePhpTemplate (content, language) {
+  return typeof language === 'string' &&
+    language.toLowerCase() === 'php' &&
+    /<\?(?:php|=)?/i.test(content)
+}
+
 export function highlightContent (content, language) {
-  if (language && HighlightJS.getLanguage(language)) {
+  const highlightLanguage = shouldUsePhpTemplate(content, language) ? 'php-template' : language
+
+  if (highlightLanguage && HighlightJS.getLanguage(highlightLanguage)) {
     try {
-      return HighlightJS.highlight(content, { language, ignoreIllegals: true }).value
+      return HighlightJS.highlight(content, { language: highlightLanguage, ignoreIllegals: true }).value
     } catch (__) {}
   }
 
@@ -53,6 +61,7 @@ export function adaptedLanguage (filename, lang) {
   switch (language) {
     case 'Shell': return 'bash'
     case 'Python': return 'python'
+    case 'PHP': return 'php'
     case 'C': return 'c'
     case 'C++': return 'cpp'
     case 'C#': return 'cs'
