@@ -93,6 +93,10 @@ async function getRendererState (window) {
         readyState: document.readyState,
         hasAppContainer: Boolean(appContainer),
         hasLoginModal: Boolean(loginModal),
+        hasLeptonBridge: Boolean(window.lepton),
+        hasLeptonConfigBridge: Boolean(window.lepton && window.lepton.config && window.lepton.config.get),
+        processType: typeof process,
+        requireType: typeof require,
         languageOptions: languageSelector
           ? Array.from(languageSelector.options).map(option => option.value)
           : [],
@@ -120,6 +124,17 @@ async function captureScreenshot (window, fileName, log = console.log) {
 function assertRendererState (state) {
   if (!state.hasAppContainer || !state.hasLoginModal) {
     throw new Error(`Expected app container and login modal to exist: ${JSON.stringify(state)}`)
+  }
+
+  if (!state.hasLeptonBridge || !state.hasLeptonConfigBridge) {
+    throw new Error(`Expected preload bridge to be available: ${JSON.stringify(state)}`)
+  }
+
+  if (state.requireType !== 'undefined' || state.processType !== 'undefined') {
+    throw new Error(`Expected renderer Node globals to be unavailable: ${JSON.stringify({
+      processType: state.processType,
+      requireType: state.requireType
+    })}`)
   }
 
   const expectedTexts = (process.env.LEPTON_SMOKE_EXPECTED_TEXT || 'Login|GitHub Login').split('|')
