@@ -20,21 +20,21 @@ Lepton is a lean code snippet manager powered by GitHub Gist, built with Electro
 
 ### Runtime
 
-Use Node.js 14.x for local development, preferably the version in `.nvmrc`:
+Use Node.js 24 LTS for local development, preferably the version in `.nvmrc`:
 ```bash
 nvm install
 nvm use
 ```
 
-The project uses npm 6.x. Avoid running install/build commands with modern Node
-versions unless the task is specifically to modernize the build toolchain.
+The project uses npm 11.x. This is the host runtime for dependency installation
+and webpack builds; Electron's bundled app runtime is controlled separately by
+the Electron version in `package.json`.
 
-On Apple Silicon, the legacy dependency stack may need an x64 Node 14 runtime under
-Rosetta:
+On Apple Silicon, use the native arm64 Node.js runtime:
 ```bash
-arch -x86_64 npm ci
-arch -x86_64 npm run build
-arch -x86_64 npm start
+npm ci
+npm run build
+npm start
 ```
 
 ### Development
@@ -111,7 +111,7 @@ Register your application at https://github.com/settings/applications/new
 ## Development Notes
 
 - **Electron Version**: Uses Electron 13.x with @electron/remote for main-renderer communication
-- **Node Version**: Use Node.js 14.x. The last recorded CI runtime is Node 14.
+- **Node Version**: Use Node.js 24 LTS for local development.
 - **ES6 Support**: Babel transpiles ES6+ to support older Electron versions
 - **Hot Reloading**: Use `npm run webpack-watch` for auto-rebuilding during development
 - **Styling**: Uses Sass with component-level SCSS files

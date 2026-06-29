@@ -31,10 +31,10 @@
   ],
   "author": "CosmoX",
   "license": "MIT",
-  "packageManager": "npm@6.14.18",
+  "packageManager": "npm@11.16.0",
   "engines": {
-    "node": "14.x",
-    "npm": "6.x"
+    "node": ">=24 <25",
+    "npm": ">=11 <12"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
