@@ -1,7 +1,45 @@
+let nextGistFileEditorId = 0
+
+export function createGistFileEditorId () {
+  return `gist-file-editor-${nextGistFileEditorId++}`
+}
+
 export function normalizeGistFile (file = {}) {
   return {
     filename: file.filename || '',
+    content: file.content || '',
+    _editorId: file._editorId || createGistFileEditorId()
+  }
+}
+
+export function normalizeSubmitGistFile (file = {}) {
+  return {
+    filename: file.filename || '',
     content: file.content || ''
+  }
+}
+
+export function getGistFileEditorKey (file, fallbackKey) {
+  return file && file._editorId ? file._editorId : fallbackKey
+}
+
+export function getSubmitValues (values) {
+  return {
+    description: values.description,
+    private: values.private,
+    gistFiles: values.gistFiles.map(normalizeSubmitGistFile)
+  }
+}
+
+function getInitialSubmitValues (initialData = {}) {
+  const gistFiles = Array.isArray(initialData.gists)
+    ? initialData.gists.map(normalizeSubmitGistFile)
+    : []
+
+  return {
+    description: initialData.description || '',
+    private: Boolean(initialData.private),
+    gistFiles: gistFiles.length ? gistFiles : [normalizeSubmitGistFile()]
   }
 }
 
@@ -18,7 +56,7 @@ export function getInitialValues (initialData = {}) {
 }
 
 export function getInitialValuesKey (initialData) {
-  return JSON.stringify(getInitialValues(initialData))
+  return JSON.stringify(getInitialSubmitValues(initialData))
 }
 
 export function copyValues (values) {
