@@ -5,7 +5,10 @@ import electronBridge from '../../utilities/electronBridge'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
 import React, { Component } from 'react'
 import TagBadges from '../tagBadges'
-import { getRegularTagsForGist } from '../tagBadges/tags'
+import {
+  getRegularTagsForGist,
+  shouldUseColoredTags
+} from '../tagBadges/tags'
 
 import './index.scss'
 
@@ -54,7 +57,12 @@ class NavigationPanelDetails extends Component {
 
     const { gistTags } = this.props
     const tags = getRegularTagsForGist(gistId, customTags, gistTags)
-    return <TagBadges tags={ tags } className='snippet-thumnail-tags' />
+    return (
+      <TagBadges
+        tags={ tags }
+        className='snippet-thumnail-tags'
+        colored={ shouldUseColoredTags(conf.get('snippet:coloredTags')) } />
+    )
   }
 
   renderSnippetThumbnails () {

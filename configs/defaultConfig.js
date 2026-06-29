@@ -20,7 +20,8 @@ module.exports = {
         "sortingReverse": true,
         "expanded": true,
         "newSnippetPrivate": false,
-        "showTagsInSnippetList": false
+        "showTagsInSnippetList": false,
+        "coloredTags": true
     },
     "editor": {
         "tabSize": 4,
