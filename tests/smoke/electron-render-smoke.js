@@ -32,7 +32,60 @@ function createTempHome (locale = 'en') {
   return { configHome, root, userData }
 }
 
-function runSmokeProcess (tempHome, expectedText) {
+const RENDER_FIXTURES = [
+  {
+    name: 'active',
+    selector: '.active-layout .snippet-box',
+    text: 'React 19 render fixture'
+  },
+  {
+    name: 'edit',
+    selector: '.modal .gist-editor-form .CodeMirror',
+    text: 'Edit'
+  },
+  {
+    name: 'new',
+    selector: '.modal .gist-editor-form .CodeMirror',
+    text: 'New'
+  },
+  {
+    name: 'about',
+    selector: '.about-modal .modal-title',
+    text: 'About'
+  },
+  {
+    name: 'dashboard',
+    selector: '.dashboard-modal canvas',
+    text: 'Dashboard'
+  },
+  {
+    name: 'search',
+    selector: '.search-modal .search-box',
+    text: ''
+  },
+  {
+    name: 'delete',
+    selector: '.modal-footer .btn-danger',
+    text: 'Delete the gist?'
+  },
+  {
+    name: 'raw',
+    selector: '.raw-modal .code-area-raw',
+    text: 'hello.js'
+  },
+  {
+    name: 'pinned-tags',
+    selector: '.pinned-tags-modal .pin-tag-list',
+    text: 'Shortcuts'
+  },
+  {
+    name: 'immersive',
+    selector: '.snippet-panel-immersive .snippet-box',
+    text: 'React 19 render fixture'
+  }
+]
+
+function runSmokeProcess (tempHome, options) {
   return new Promise((resolve, reject) => {
     const electronArgs = [
       `--user-data-dir=${tempHome.userData}`,
@@ -43,14 +96,21 @@ function runSmokeProcess (tempHome, expectedText) {
       electronArgs.unshift('--no-sandbox')
     }
 
+    const env = Object.assign({}, process.env, {
+      ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
+      LEPTON_SMOKE_ARTIFACT_DIR: tempHome.root,
+      LEPTON_SMOKE_EXPECTED_TEXT: options.expectedText,
+      XDG_CONFIG_HOME: tempHome.configHome
+    })
+
+    if (options.renderFixture) {
+      env.LEPTON_RENDER_FIXTURE = options.renderFixture
+      env.LEPTON_SMOKE_EXPECTED_SELECTOR = options.expectedSelector
+    }
+
     const child = spawn(electronPath, electronArgs, {
       cwd: repoRoot,
-      env: Object.assign({}, process.env, {
-        ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
-        LEPTON_SMOKE_ARTIFACT_DIR: tempHome.root,
-        LEPTON_SMOKE_EXPECTED_TEXT: expectedText,
-        XDG_CONFIG_HOME: tempHome.configHome
-      }),
+      env,
       stdio: ['ignore', 'pipe', 'pipe']
     })
 
@@ -87,8 +147,20 @@ function runSmokeProcess (tempHome, expectedText) {
 
 async function main () {
   assertBuiltBundleExists()
-  await runSmokeProcess(createTempHome('en'), 'Login|GitHub Login')
-  await runSmokeProcess(createTempHome('ja'), 'ログイン|GitHubでログイン')
+  await runSmokeProcess(createTempHome('en'), {
+    expectedText: 'Login|GitHub Login'
+  })
+  await runSmokeProcess(createTempHome('ja'), {
+    expectedText: 'ログイン|GitHubでログイン'
+  })
+
+  for (const fixture of RENDER_FIXTURES) {
+    await runSmokeProcess(createTempHome('en'), {
+      expectedSelector: fixture.selector,
+      expectedText: fixture.text,
+      renderFixture: fixture.name
+    })
+  }
 }
 
 main().catch(err => {

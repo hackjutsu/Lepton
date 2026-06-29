@@ -11,6 +11,7 @@ import AppContainer from './containers/appContainer'
 import HumanReadableTime from 'human-readable-time'
 import SearchIndex from './utilities/search'
 import Store from './utilities/store'
+import { getRenderFixture } from './renderFixtures'
 import {
   addLangPrefix as Prefixed,
   parseCustomTags,
@@ -73,6 +74,11 @@ const GIST_DETAIL_SYNC_CONCURRENCY = 5
 let preSyncSnapshot = {
   activeGistTag: null,
   activeGist: null
+}
+
+function getRenderFixtureName () {
+  if (typeof window === 'undefined' || !window.location || !window.location.search) return null
+  return new URLSearchParams(window.location.search).get('renderFixture')
 }
 
 function launchAuthWindow (token) {
@@ -693,10 +699,22 @@ ipcRenderer.on('update-available', payload => {
 /** End: Response to  main process events **/
 
 // Start
-const reduxStore = createStore(
-  RootReducer,
-  applyMiddleware(thunk)
-)
+const renderFixture = getRenderFixture(getRenderFixtureName())
+if (renderFixture) {
+  logger.info(`[render-fixture] Rendering ${renderFixture.name} with mock state`)
+  SearchIndex.resetFuseIndex(renderFixture.searchIndexRecords)
+}
+
+const reduxStore = renderFixture
+  ? createStore(
+    RootReducer,
+    renderFixture.state,
+    applyMiddleware(thunk)
+  )
+  : createStore(
+    RootReducer,
+    applyMiddleware(thunk)
+  )
 
 createRoot(document.getElementById('container')).render(
   <Provider store = { reduxStore }>
