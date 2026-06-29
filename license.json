@@ -2182,6 +2182,12 @@
     "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/markdown-it-katex",
     "licenseFile": "node_modules/markdown-it-katex/LICENSE"
   },
+  "markdown-it-emoji@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/markdown-it/markdown-it-emoji",
+    "path": "/Users/cosmoqiu/Projects/Lepton/node_modules/markdown-it-emoji",
+    "licenseFile": "node_modules/markdown-it-emoji/LICENSE"
+  },
   "markdown-it-task-lists@2.1.1": {
     "licenses": "ISC",
     "repository": "https://github.com/revin/markdown-it-task-lists",
