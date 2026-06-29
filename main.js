@@ -76,10 +76,11 @@ function createWindow (autoLogin) {
   })
 
   const webPreferences = {
-    nodeIntegration: true,
+    nodeIntegration: false,
     enableRemoteModule: false,
     preload: path.join(__dirname, 'preload.js'),
-    contextIsolation: true
+    contextIsolation: true,
+    sandbox: true
   }
 
   mainWindow = new BrowserWindow({
@@ -590,6 +591,7 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
       nodeIntegration: false,
       enableRemoteModule: false,
       contextIsolation: true,
+      sandbox: true,
       spellcheck: false
     }
   })
