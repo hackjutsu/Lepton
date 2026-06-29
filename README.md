@@ -85,9 +85,10 @@ Example:
 
 1. Framework: [Electron](http://electron.atom.io/)
 2. Bundler: [Webpack](http://webpack.github.io/docs/), [Babel](https://babeljs.io), [electron-builder](https://github.com/electron-userland/electron-builder)
-3. Language: [ES6](https://babeljs.io/docs/learn-es2015/), [Sass](http://sass-lang.com/)
-4. Library: [React](https://facebook.github.io/react/), [Redux](https://github.com/reactjs/redux), [Redux Thunk](https://github.com/gaearon/redux-thunk), [Redux Form](http://redux-form.com/)
-5. Lint: [ESLint](http://eslint.org/)
+3. Language: ES6, Sass/SCSS
+4. UI/state: React 19, Redux, React Redux, Redux Thunk
+5. Editor/rendering: CodeMirror, Highlight.js, Markdown/Jupyter rendering
+6. Tests/lint: Vitest, Electron smoke tests, ESLint
 
 Now you can learn about Lepton project's code structure in [DeepWiki](https://deepwiki.com/hackjutsu/Lepton)!
 
@@ -130,7 +131,8 @@ Apple Silicon development should use the native arm64 Node.js runtime.
 
 ```bash
 $ git clone https://github.com/hackjutsu/Lepton.git
-$ cd Lepton && npm ci
+$ cd Lepton
+$ npm ci
 ```
 
 ```bash
@@ -152,9 +154,101 @@ module.exports = {
 $ npm run build && npm start
 ```
 
+For iterative renderer work, run webpack in watch mode in one terminal and
+restart Electron from another terminal when needed:
+
+```bash
+$ npm run webpack-watch
+$ npm start
+```
+
+### Build
+
+```bash
+# Development bundle
+$ npm run build
+
+# Production bundle
+$ npm run webpack-prod
+```
+
+### Automated Validation
+
+Use these commands before opening a pull request:
+
+```bash
+# Lint application source
+$ npm run lint
+
+# Normal local check: Vitest unit tests plus webpack development build
+$ npm test
+
+# Unit tests only
+$ npm run test:unit
+
+# Unit tests in watch mode
+$ npm run test:unit:watch
+```
+
+The project also has Electron smoke checks. These are useful for Electron,
+React, layout, preload, or packaging changes, and are run by CI.
+
+```bash
+# Launches Electron with isolated config/user-data and verifies login plus
+# fixture-backed authenticated renderer surfaces
+$ npm run test:smoke
+
+# Builds an unpacked app and verifies the packaged app can render the login UI.
+# This is primarily for macOS CI or release verification.
+$ npm run test:packaged-smoke
+```
+
+Renderer smoke fixtures are opt-in through the smoke runner and use deterministic
+mock state to check initial rendering. Fixture names include `active`, `edit`,
+`new`, `about`, `dashboard`, `search`, `delete`, `raw`, `pinned-tags`, and
+`immersive`.
+
+```bash
+# Launch one fixture directly when debugging the automated smoke check
+$ npm run build
+$ LEPTON_RENDER_FIXTURE=active npm start
+```
+
+Fixtures verify that important React surfaces mount without renderer warnings,
+errors, failed loads, or crashes. They do not verify GitHub OAuth, Gist CRUD,
+sync behavior, real API responses, OS shortcut delivery, or full interaction
+flows.
+
+GitHub Actions currently runs:
+
+- `lint-test-build`: lint, unit tests, and webpack build verification
+- `electron-smoke`: Electron renderer smoke test
+- `packaged-smoke`: packaged app smoke test
+
+The smoke jobs are currently configured as non-blocking CI checks while the
+cross-platform Electron validation continues to mature.
+
+### Manual Verification
+
+For UI or Electron changes, also launch the app locally:
+
+```bash
+$ npm run build && npm start
+```
+
+Confirm the login page visibly renders. After login, manually verify the
+surfaces affected by your change, such as new snippet, edit snippet,
+settings/about, dashboard, search, sync, and GitHub/Gist backend interactions.
+Manual verification is still required for visual quality and real GitHub
+behavior; automated smoke checks do not replace backend workflow testing.
+
 ## Build Installer App
 >Read [electron-builder docs](https://github.com/electron-userland/electron-builder#readme) and check out the [code signing wiki](https://github.com/electron-userland/electron-builder#code-signing) before building the installer app.
 
+Build an unpacked app for the current platform.
+```bash
+$ npm run pack
+```
 Build apps for macOS.
 ```bash
 $ npm run dist -- -m

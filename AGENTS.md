@@ -9,11 +9,11 @@ Lepton is a lean code snippet manager powered by GitHub Gist, built with Electro
 ## Tech Stack
 
 - **Framework**: Electron (desktop app)
-- **Frontend**: React + Redux (with Redux Thunk for async actions, Redux Form for forms)
+- **Frontend**: React 19 + Redux (with Redux Thunk for async actions)
 - **Build System**: Webpack + Babel (ES6 transpilation)
 - **Styling**: Sass/SCSS
 - **Code Editor**: CodeMirror (via react-codemirror)
-- **Linting**: ESLint with Standard config
+- **Testing/Linting**: Vitest, Electron smoke tests, ESLint with Standard config
 - **Dependencies**: Uses npm package manager
 
 ## Key Commands
@@ -69,6 +69,18 @@ npm run dist -- -wml  # All platforms
 # Lint code
 npm run lint
 
+# Normal local check: Vitest unit tests plus webpack development build
+npm test
+
+# Unit tests only
+npm run test:unit
+
+# Unit tests in watch mode
+npm run test:unit:watch
+
+# Webpack build verification only
+npm run test:build
+
 # Check for outdated dependencies
 npm run check-outdated
 
@@ -77,7 +89,29 @@ npm run preversion
 ```
 
 ### Testing
-The `npm test` command runs webpack in development mode (essentially a build verification). There are no formal unit tests configured - the project relies on build-time checks and manual testing.
+The `npm test` command runs Vitest unit tests and webpack development build
+verification. Use it for normal local validation before committing code changes.
+
+Electron smoke checks are available for UI/runtime-sensitive changes:
+
+```bash
+# Renderer smoke: login screens plus fixture-backed authenticated surfaces
+npm run test:smoke
+
+# Packaged app smoke: builds an unpacked app and verifies packaged login render
+npm run test:packaged-smoke
+```
+
+`npm run test:smoke` uses isolated config/user-data directories. It verifies the
+login UI and render fixtures such as active layout, edit/new modals,
+about/settings, dashboard, search, delete confirmation, raw modal, pinned tags,
+and immersive view. Fixture smoke verifies initial rendering, preload bridge
+availability, renderer isolation, visible dimensions, screenshots, and absence
+of renderer warnings/errors/crashes.
+
+Fixture smoke does not validate GitHub OAuth, Gist CRUD, sync behavior, real API
+responses, OS shortcut delivery, or full interaction flows. Use manual
+verification for those.
 
 ### Rendering Verification
 For any Electron, React, layout, CSS, webpack, or dependency change that could affect the UI, always verify actual rendering before considering the work complete:
@@ -88,6 +122,21 @@ npm start
 ```
 
 Confirm more than process startup. The app must visibly render the Lepton UI, not just log `updateUserSession ACTIVE`. Always capture a screenshot of the running app and show that screenshot in the chat when reporting rendering verification. If the window is blank or suspicious, inspect the renderer with Electron DevTools or a remote debugging port and verify DOM layout, visible text, and the renderer screenshot. Before relaunching, check for and stop duplicate Lepton/Electron instances so stale blank windows do not mask the current result.
+
+For render-only confidence on authenticated surfaces, use the fixture smoke
+path when appropriate:
+
+```bash
+npm run build
+LEPTON_RENDER_FIXTURE=active npm start
+```
+
+Supported fixture names are `active`, `edit`, `new`, `about`, `dashboard`,
+`search`, `delete`, `raw`, `pinned-tags`, and `immersive`. Fixture rendering is
+acceptable for checking React/Electron render regressions without login. It is
+not enough for changes touching GitHub authentication, backend sync, request
+construction, shortcut delivery, or save/delete flows; those require manual
+logged-in verification against GitHub/Gist behavior.
 
 Document rendering verification in PR descriptions, including whether the app was launched locally and what was observed.
 
@@ -109,6 +158,7 @@ Document rendering verification in PR descriptions, including whether the app wa
 - **Code Rendering**: Uses CodeMirror for syntax highlighting and editing
 - **Search**: `/app/utilities/search/` - snippet search functionality
 - **Configuration**: Uses nconf for config management, stored in `~/.leptonrc`
+- **Preload Bridge**: `/preload.js` exposes the limited renderer API as `window.lepton`
 
 ### GitHub OAuth Setup
 The app requires GitHub OAuth credentials in `/configs/account.js`:
@@ -122,9 +172,11 @@ Register your application at https://github.com/settings/applications/new
 
 ## Development Notes
 
-- **Electron Version**: Uses Electron 13.x with @electron/remote for main-renderer communication
+- **Electron Version**: Uses Electron 42.x. Renderer windows are sandboxed and context-isolated.
+- **Renderer Bridge**: Renderer code must use the `window.lepton` preload API. Do not access Node globals directly from renderer code.
+- **React Version**: Uses React 19 with `createRoot`; do not use legacy React root APIs.
 - **Node Version**: Use Node.js 24 LTS for local development.
-- **ES6 Support**: Babel transpiles ES6+ to support older Electron versions
+- **ES6 Support**: Babel transpiles application source for the Electron renderer.
 - **Hot Reloading**: Use `npm run webpack-watch` for auto-rebuilding during development
 - **Styling**: Uses Sass with component-level SCSS files
 - **State Management**: Redux store handles application state, actions use Redux Thunk for async operations
@@ -149,3 +201,6 @@ When working with this codebase:
 - Focus code changes on the `/app` directory, `/configs`, `main.js`, and configuration files
 - Avoid searching or reading files in `node_modules/`, `/bundle`, `/build`, `/dist` directories unless absolutely necessary
 - Avoid bypassing the global logger for auth-related values; logger methods automatically redact known token and secret patterns
+- Do not reintroduce `@electron/remote`, `nodeIntegration`, renderer `require`, or renderer `process` access. Add preload bridge methods instead.
+- Do not reintroduce Redux Form or other React 19-incompatible form patterns.
+- Do not use `ReactDOM.render`; use the existing React 19 root setup.
