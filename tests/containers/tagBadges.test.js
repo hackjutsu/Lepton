@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   getRegularTagsForGist,
   getTagBadgeClassName,
+  getTagBadgeLabel,
   shouldUseColoredTags,
   getTagColorClass
 } from '../../app/containers/tagBadges/tags'
@@ -58,5 +59,7 @@ describe('tag badge helpers', () => {
 
     expect(getTagBadgeClassName('tmux')).toMatch(/^tag-badge tag-badge-color-[0-5]$/)
     expect(getTagBadgeClassName('tmux', false)).toBe('tag-badge tag-badge-plain')
+    expect(getTagBadgeLabel('tmux')).toBe('tmux')
+    expect(getTagBadgeLabel('tmux', false)).toBe('#tmux')
   })
 })

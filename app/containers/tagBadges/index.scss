@@ -20,22 +20,17 @@
 }
 
 .tag-badges-plain {
-  gap: 0;
+  gap: 4px;
 }
 
 .tag-badge-plain {
   background-color: transparent;
   border-radius: 0;
-  color: inherit;
-  font-size: inherit;
-  font-style: inherit;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-style: italic;
   line-height: inherit;
   padding: 0;
-}
-
-.tag-badge-plain:not(:last-child)::after {
-  content: ', ';
-  white-space: pre;
 }
 
 .tag-badge-color-0 {

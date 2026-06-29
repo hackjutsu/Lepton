@@ -1,5 +1,8 @@
 import React from 'react'
-import { getTagBadgeClassName } from './tags'
+import {
+  getTagBadgeClassName,
+  getTagBadgeLabel
+} from './tags'
 
 import './index.scss'
 
@@ -14,7 +17,7 @@ export default function TagBadges ({ tags, className = '', colored = true }) {
     <div className={ classNames }>
       { tags.map(tag => (
         <span className={ getTagBadgeClassName(tag, colored) } key={ tag }>
-          { tag }
+          { getTagBadgeLabel(tag, colored) }
         </span>
       )) }
     </div>

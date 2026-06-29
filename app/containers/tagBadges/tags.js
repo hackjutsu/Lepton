@@ -31,6 +31,10 @@ export function getTagBadgeClassName (tag, colored = true) {
   return classNames.join(' ')
 }
 
+export function getTagBadgeLabel (tag, colored = true) {
+  return colored ? tag : `#${tag}`
+}
+
 export function getRegularTagsForGist (gistId, customTags, gistTags) {
   const seenTags = new Set()
   const tags = []
