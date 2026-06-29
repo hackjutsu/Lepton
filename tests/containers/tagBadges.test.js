@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -7,6 +8,16 @@ import {
   shouldUseColoredTags,
   getTagColorClass
 } from '../../app/containers/tagBadges/tags'
+
+const tagBadgeStyles = readFileSync(
+  new URL('../../app/containers/tagBadges/index.scss', import.meta.url),
+  'utf8'
+)
+
+function getStyleRule (selector) {
+  const match = tagBadgeStyles.match(new RegExp(`${selector}\\s*\\{[^}]+\\}`))
+  return match ? match[0] : ''
+}
 
 describe('tag badge helpers', () => {
   it('combines description tags with matching regular gist tags', () => {
@@ -61,5 +72,14 @@ describe('tag badge helpers', () => {
     expect(getTagBadgeClassName('tmux', false)).toBe('tag-badge tag-badge-plain')
     expect(getTagBadgeLabel('tmux')).toBe('tmux')
     expect(getTagBadgeLabel('tmux', false)).toBe('#tmux')
+  })
+
+  it('keeps plain tag badges compatible with the original tag text style', () => {
+    const plainTagRule = getStyleRule('\\.tag-badge-plain')
+
+    expect(plainTagRule).toContain('background-color: transparent;')
+    expect(plainTagRule).toContain('color: var(--text-secondary);')
+    expect(plainTagRule).toContain('font-size: 12px;')
+    expect(plainTagRule).toContain('font-style: italic;')
   })
 })
