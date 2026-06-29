@@ -22,10 +22,9 @@ module.exports = {
       loader: 'babel-loader',
       options: {
         presets: [
-          ['es2015',  { "modules": false }],
-          'react'
-        ],
-        plugins: ['syntax-dynamic-import']
+          ['@babel/preset-env', { modules: false }],
+          '@babel/preset-react'
+        ]
       }
     }, {
       test: /\.(scss|css)$/,
@@ -50,10 +49,18 @@ module.exports = {
       loader: 'text-loader'
     }, {
       test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url-loader?limit=10000&mimetype=application/font-woff'
+      loader: 'url-loader',
+      options: {
+        limit: 10000,
+        mimetype: 'application/font-woff'
+      }
     }, {
       test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-      loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
+      loader: 'url-loader',
+      options: {
+        limit: 10000,
+        mimetype: 'application/octet-stream'
+      }
     }, {
       test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
       loader: 'file-loader'
