@@ -2,15 +2,24 @@ import { connect } from 'react-redux'
 import { Well } from 'react-bootstrap'
 import React, { Component } from 'react'
 import Snippet from '../snippet'
-import { t } from '../../utilities/i18n'
 
 import './index.scss'
 
+const emptyStateDinosaur = [
+  '               __',
+  '              / _)',
+  '     _.----._/ /',
+  '    /         /',
+  ' __/ (  | (  |',
+  '/__.-|_|--|_|'
+].join('\n')
+
 class SnippetPanel extends Component {
   renderEmptySnippetSection () {
-    // This happens when the user has no gists
     return (
-      <Well className='welcome-section'>{ t('welcome.emptySnippet') }</Well>
+      <Well className='welcome-section'>
+        <pre className='welcome-ascii' aria-label='No gists'>{ emptyStateDinosaur }</pre>
+      </Well>
     )
   }
 

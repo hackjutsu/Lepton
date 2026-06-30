@@ -39,3 +39,24 @@
     height: 100vh;
   }
 }
+
+.snippet-panel,
+.snippet-panel-immersive {
+  .welcome-section {
+    color: var(--text-primary);
+    line-height: 1.7;
+    margin-bottom: 0;
+    padding-top: 26vh;
+  }
+
+  .welcome-ascii {
+    background: transparent;
+    border: 0;
+    color: #4078C0;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.25;
+    margin: 0;
+    padding: 0;
+  }
+}
