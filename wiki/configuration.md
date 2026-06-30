@@ -98,7 +98,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `avatarUrl` | `""` | Optional avatar image URL for GitHub Enterprise users. |
 | `notifications` | `success` | `true` | Show notifications for successful actions. |
 | | `failure` | `true` | Show notifications for failed actions. |
-| `shortcuts` | `keyShortcutForSearch` | `Shift+Space` | Open search. |
+| `shortcuts` | `keyShortcutForSearch` | `Shift+Space` | Open snippet metadata and downloaded-content search. |
 | | `keyNewGist` | `CommandOrControl+N` | Create a snippet. |
 | | `keyEditGist` | `CommandOrControl+E` | Edit the selected snippet. |
 | | `keyDeleteGist` | `CommandOrControl+Delete` | Delete the selected snippet. |

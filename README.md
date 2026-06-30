@@ -21,7 +21,7 @@
 - Built-in themes
 - macOS/Win/Linux
 - Dashboard
-- [Search](wiki/faq.md#search)
+- [Search snippets and downloaded content](wiki/faq.md#search)
 - [Proxy](wiki/faq.md#proxy)
 - Free
 
@@ -35,7 +35,7 @@
 | :-------------:| :-----:| :-----: |
 | ![Screenshot](./docs/img/portfolio/stay_organized.png) | ![Screenshot](./docs/img/portfolio/markdown.png) | ![Screenshot](./docs/img/portfolio/jupyterNotebook.png) |
 
-|      Search (*⇧ + Space*)         |    Immersive Mode *(⌘/Ctrl + i)*    | Dashboard *(⌘/Ctrl + d)* |
+|      Search snippets and content (*⇧ + Space*)         |    Immersive Mode *(⌘/Ctrl + i)*    | Dashboard *(⌘/Ctrl + d)* |
 | :-------------:| :-----:| :-----: |
 | ![Screenshot](./docs/img/portfolio/search_bar.png) | ![Screenshot](./docs/img/portfolio/immersive.png) | ![Screenshot](./docs/img/portfolio/dashboard.png)
 
@@ -51,7 +51,7 @@
 | Immersive Mode | `Cmd/Ctrl + I` |  Toggle the [Immersive mode](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/immersive.png)    |
 | Dashboard      | `Cmd/Ctrl + D` |  Toggle the [dashboard](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/dashboard.png)     |
 | About Page     | `Cmd/Ctrl + ,` |  Toggle the [About page](https://github.com/hackjutsu/Lepton/blob/dev/docs/img/portfolio/about.png)    |
-| Search         | `Shift + Space`|  Toggle the [search bar](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/search_bar.png)    |
+| Search         | `Shift + Space`|  Toggle [snippet and downloaded-content search](wiki/faq.md#search)    |
 
 See the [Search FAQ](wiki/faq.md#search) for searchable fields and content-search behavior.
 

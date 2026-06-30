@@ -29,6 +29,8 @@ Complete global content search across every snippet requires the
 disabled, content search only covers gists whose details and file content have
 already been downloaded locally, such as snippets opened during the session.
 
+See [Configuration](configuration.md#options) for the `gist.downloadAll` option.
+
 ## Title And Tags
 
 Use this pattern in the gist description to set a title and custom tags:
