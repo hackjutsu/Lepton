@@ -1,7 +1,8 @@
 import { addLangPrefix as Prefixed } from './utilities/parser'
+import leptonLogoImage from './containers/aboutPage/logo-light.png'
 
 const FIXTURE_USER = {
-  avatar_url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+  avatar_url: leptonLogoImage,
   html_url: 'https://github.com/lepton-fixture',
   login: 'lepton-fixture'
 }
