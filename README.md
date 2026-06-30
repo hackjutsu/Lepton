@@ -18,7 +18,7 @@
 - GitHub token
 - Immersive mode
 - [Customizable](wiki/configuration.md)
-- Light/Dark theme
+- Built-in themes
 - macOS/Win/Linux
 - Dashboard
 - [Search](wiki/faq.md#search)
@@ -56,7 +56,7 @@
 ## Customization
 Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact path in the About page by `Command/Ctrl + ,`. Create the file if it does not exist.
 
-- Theme (light/dark)
+- Theme
 - Snippet
 - Gist
 - Editor

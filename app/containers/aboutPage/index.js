@@ -11,6 +11,7 @@ import ContributorInfo from '../../../.all-contributorsrc'
 import logoDarkImage from './logo-dark.png'
 import logoLightImage from './logo-light.png'
 import React, { Component } from 'react'
+import { isDarkTheme } from '../../utilities/themeManager'
 import { t } from '../../utilities/i18n'
 
 import './index.scss'
@@ -68,7 +69,7 @@ class AboutPage extends Component {
       )
     })
 
-    const logoImage = conf.get('theme') === 'dark' ? logoDarkImage : logoLightImage
+    const logoImage = isDarkTheme(conf.get('theme')) ? logoDarkImage : logoLightImage
 
     return (
       <div className='about-section'>

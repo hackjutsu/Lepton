@@ -1,6 +1,7 @@
 {
     "bg-primary": "#FFFFFF",
     "bg-secondary": "#f5f4f5",
+    "text-bg-primary": "#FFFFFF",
     "border-color": "#E5E8EB",
     "text-primary": "#313133",
     "text-secondary": "#787282",

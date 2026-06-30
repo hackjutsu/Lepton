@@ -149,10 +149,11 @@ import 'codemirror/addon/display/placeholder'
 import './index.scss'
 
 import electronBridge from '../../utilities/electronBridge'
+import { getEditorTheme } from '../../utilities/themeManager'
 
 const conf = electronBridge.config
 
-const highlightTheme = conf.get('theme') === 'dark' ? 'one-dark' : 'github'
+const highlightTheme = getEditorTheme(conf.get('theme'))
 const defaultOptions = Object.assign({}, {
   theme: highlightTheme,
   lineNumbers: true,
