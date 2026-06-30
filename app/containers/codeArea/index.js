@@ -8,6 +8,7 @@ import electronBridge from '../../utilities/electronBridge'
 import { adaptedLanguage, highlightContent } from './highlighting'
 import { getHighlightTheme } from '../../utilities/themeManager'
 
+import 'katex/dist/katex.min.css'
 import '../../utilities/vendor/prism/prism.scss'
 import './jupyterNotebook.scss'
 import './markdown.scss'

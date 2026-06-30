@@ -1,8 +1,8 @@
 import HighlightJS from 'highlight.js'
 import MarkdownIt from 'markdown-it'
+import { katex as MdKatex } from '@mdit/plugin-katex'
 import { full as MdEmoji } from 'markdown-it-emoji'
 import MdTaskList from 'markdown-it-task-lists'
-import MdKatex from 'markdown-it-katex'
 import sanitizeHtml, { sanitizeInlineHtml } from './sanitizeHtml'
 
 const htmlTagPattern = /<[!/a-z].*?>/ig
@@ -75,7 +75,7 @@ const Md = MarkdownIt({
 })
   .use(MdEmoji)
   .use(MdTaskList, { enabled: true })
-  .use(MdKatex, { throwOnError: false, errorColor: ' #cc0000' })
+  .use(MdKatex, { throwOnError: false, errorColor: '#cc0000' })
 
 Md.core.ruler.after('github-task-lists', 'lepton-task-list-checkboxes', markTaskListCheckboxes)
 

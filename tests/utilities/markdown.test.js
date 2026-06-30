@@ -33,4 +33,20 @@ describe('markdown utility', () => {
     expect(html).toContain('&lt;input class=&quot;task-list-item-checkbox&quot;type=&quot;checkbox&quot;&gt;')
     expect(html).not.toContain('Raw <input class="task-list-item-checkbox"type="checkbox">')
   })
+
+  it('renders inline and display math with KaTeX', () => {
+    const html = Markdown.render('Inline $x^2$.\n\n$$\\frac{a}{b}$$')
+
+    expect(html).toContain('class="katex"')
+    expect(html).toContain('annotation encoding="application/x-tex">x^2')
+    expect(html).toContain("class='katex-block'")
+    expect(html).toContain('<mfrac>')
+  })
+
+  it('does not render raw html from malformed math content', () => {
+    const html = Markdown.render('$<img src=x onerror=alert(1)>$')
+
+    expect(html).not.toContain('<img')
+    expect(html).toContain('&lt;img')
+  })
 })
