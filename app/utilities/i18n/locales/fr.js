@@ -107,8 +107,18 @@ module.exports = {
     syncSucceeds: 'Synchronisation reussie'
   },
   search: {
+    match: {
+      content: 'Contenu',
+      description: 'Descriptif',
+      filename: 'Nom de fichier',
+      id: 'Identifiant',
+      inFile: '{{source}} dans {{filename}}',
+      language: 'Langage'
+    },
     noResults: 'Aucun resultat...',
-    placeholder: 'Rechercher descriptions, tags, noms de fichiers...'
+    placeholder: 'Rechercher descriptions, tags, noms de fichiers...',
+    resultCountMany: '{{count}} extraits trouves',
+    resultCountOne: '1 extrait trouve'
   },
   snippet: {
     copy: 'COPIER',

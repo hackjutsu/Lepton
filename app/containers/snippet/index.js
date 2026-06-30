@@ -306,17 +306,7 @@ class Snippet extends Component {
     // this.props.selectGist(gistId)
 
     // Update the search index
-    let langSearchRecords = ''
-    newLangs.forEach(lang => {
-      langSearchRecords += ',' + lang
-    })
-
-    searchIndex.updateFuseIndex({
-      id: gistId,
-      description: gistDetails.description,
-      language: langSearchRecords,
-      filename: filenameRecords
-    })
+    searchIndex.updateFuseIndex(searchIndex.buildSearchRecord(updatedGist[gistId]))
 
     notifySuccess(t('notification.gistUpdated'), HumanReadableTime(new Date()))
   }

@@ -107,8 +107,18 @@ module.exports = {
     syncSucceeds: '同期しました'
   },
   search: {
+    match: {
+      content: '内容',
+      description: '説明',
+      filename: 'ファイル名',
+      id: '識別子',
+      inFile: '{{filename}} の {{source}}',
+      language: '言語'
+    },
     noResults: '結果が見つかりません...',
-    placeholder: '説明、タグ、ファイル名を検索...'
+    placeholder: '説明、タグ、ファイル名を検索...',
+    resultCountMany: '{{count}} 件のスニペットが見つかりました',
+    resultCountOne: '1 件のスニペットが見つかりました'
   },
   snippet: {
     copy: 'コピー',
