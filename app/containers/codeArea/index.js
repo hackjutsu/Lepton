@@ -6,6 +6,7 @@ import Markdown from '../../utilities/markdown'
 import React, { Component } from 'react'
 import electronBridge from '../../utilities/electronBridge'
 import { adaptedLanguage, highlightContent } from './highlighting'
+import { getHighlightTheme } from '../../utilities/themeManager'
 
 import '../../utilities/vendor/prism/prism.scss'
 import './jupyterNotebook.scss'
@@ -21,9 +22,17 @@ function resolveHighlightLanguage (languageModule) {
   throw new TypeError('Invalid highlight.js language module')
 }
 
-// resolve syntax highlight style based on app theme
-if (conf.get('theme') === 'dark') {
+const highlightTheme = getHighlightTheme(conf.get('theme'))
+if (highlightTheme === 'atom-one-dark') {
   require('../../utilities/vendor/highlightJS/styles/atom-one-dark.css')
+} else if (highlightTheme === 'atom-one-light') {
+  require('../../utilities/vendor/highlightJS/styles/atom-one-light.css')
+} else if (highlightTheme === 'solarized-light') {
+  require('../../utilities/vendor/highlightJS/styles/solarized-light.css')
+} else if (highlightTheme === 'solarized-dark') {
+  require('../../utilities/vendor/highlightJS/styles/solarized-dark.css')
+} else if (highlightTheme === 'dracula') {
+  require('../../utilities/vendor/highlightJS/styles/dracula.css')
 } else {
   require('../../utilities/vendor/highlightJS/styles/github-gist.css')
 }
