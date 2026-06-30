@@ -56,7 +56,7 @@
 ## Customization
 Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact path in the About page by `Command/Ctrl + ,`. Create the file if it does not exist.
 
-- Theme
+- Theme (`light`, `dark`, `one-dark`, `atom-one-dark`, `github-light`, `github-dark`, `catppuccin-latte`, `catppuccin-mocha`, `solarized-light`, `solarized-dark`, `dracula`, `material-theme`, or `ayu`)
 - Snippet
 - Gist
 - Editor

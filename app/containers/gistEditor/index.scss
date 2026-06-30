@@ -68,12 +68,72 @@
   color: #0086b3
 }
 
+.cm-s-github-dark.CodeMirror {
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+.cm-s-github-dark .CodeMirror-gutters {
+  background: #0d1117;
+  border-right: 1px solid #30363d;
+}
+
+.cm-s-github-dark .CodeMirror-linenumber,
+.cm-s-github-dark .CodeMirror-guttermarker-subtle {
+  color: #6e7681;
+}
+
+.cm-s-github-dark .CodeMirror-cursor {
+  border-left: 1px solid #c9d1d9;
+}
+
+.cm-s-github-dark div.CodeMirror-selected {
+  background: #264f78;
+}
+
+.cm-s-github-dark .cm-comment {
+  color: #8b949e;
+}
+
+.cm-s-github-dark .cm-keyword,
+.cm-s-github-dark .cm-operator {
+  color: #ff7b72;
+}
+
+.cm-s-github-dark .cm-string {
+  color: #a5d6ff;
+}
+
+.cm-s-github-dark .cm-number,
+.cm-s-github-dark .cm-atom,
+.cm-s-github-dark .cm-variable-2 {
+  color: #79c0ff;
+}
+
+.cm-s-github-dark .cm-def,
+.cm-s-github-dark .cm-variable,
+.cm-s-github-dark .cm-property {
+  color: #d2a8ff;
+}
+
+.cm-s-github-dark .cm-tag,
+.cm-s-github-dark .cm-attribute {
+  color: #7ee787;
+}
+
+.cm-s-github-dark .cm-error,
+.cm-s-github-dark .cm-invalidchar {
+  color: #ffa198;
+}
+
 @import '../../../node_modules/codemirror/lib/codemirror.css';
 @import '../../../node_modules/codemirror/mode/tiddlywiki/tiddlywiki.css';
 @import '../../../node_modules/codemirror/mode/tiki/tiki.css';
 @import '../../../node_modules/codemirror/addon/dialog/dialog.css';
 @import '../../../node_modules/codemirror/addon/fold/foldgutter.css';
+@import '../../../node_modules/codemirror/theme/ayu-dark.css';
 @import '../../../node_modules/codemirror/theme/base16-light.css';
 @import '../../../node_modules/codemirror/theme/dracula.css';
+@import '../../../node_modules/codemirror/theme/material.css';
 @import '../../../node_modules/codemirror/theme/solarized.css';
 @import '../../../node_modules/codemirror-one-dark-theme/one-dark.css';
