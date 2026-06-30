@@ -15,5 +15,5 @@ For Lepton after v1.9.0, the path of the log file can be found at `Command/Ctrl 
 - Mac: `~/Library/Application Support/Lepton/logs`
 - Windows: `C:\Users\<username>\AppData\Roaming\Lepton\logs`
 - Linux: `~/.cached/Lepton/logs`
->The [debug mode](https://github.com/hackjutsu/Lepton/wiki) is recommended when producing the logs. 
+>The [debug mode](../wiki/configuration.md#debug-logging) is recommended when producing the logs.
 >You can send your log file to cosmo.lepton@gmail.com if don't want to post it here.

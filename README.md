@@ -14,15 +14,15 @@
 - Unlimited tags
 - Language groups
 - Markdown/JupyterNotebook
-- [GitHub Enterprise](https://github.com/hackjutsu/Lepton/wiki/FAQ#enable-github-enterprise)
+- [GitHub Enterprise](wiki/faq.md#enable-github-enterprise)
 - GitHub token
 - Immersive mode
-- [Customizable](https://github.com/hackjutsu/Lepton/wiki/Configuration)
+- [Customizable](wiki/configuration.md)
 - Light/Dark theme
 - macOS/Win/Linux
 - Dashboard
-- [Search](https://github.com/hackjutsu/Lepton/wiki/FAQ#search)
-- [Proxy](https://github.com/hackjutsu/Lepton/wiki/FAQ#proxy)
+- [Search](wiki/faq.md#search)
+- [Proxy](wiki/faq.md#proxy)
 - Free
 
 ![Screenshot](./docs/img/portfolio/stay_organized.png)
@@ -67,7 +67,7 @@ Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact pat
 - Notifications
 - Interface language (`i18n.locale`: `en`, `es`, `fr`, `ja`, `ko`, `tr`, `zh-Hans`, or `zh-Hant`)
 
-Check out the [configuration docs](https://github.com/hackjutsu/Lepton/wiki/Configuration) to explore different customization options.
+Check out the [configuration docs](wiki/configuration.md) to explore different customization options.
 
 Example:
 
@@ -272,7 +272,7 @@ $ npm run dist
 ```
 
 ## FAQ
-[--> Wiki FAQ](https://github.com/hackjutsu/Lepton/wiki/FAQ)
+[--> Wiki FAQ](wiki/faq.md)
 
 ## Contributors
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
