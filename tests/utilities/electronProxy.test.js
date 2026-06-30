@@ -50,7 +50,7 @@ describe('Electron proxy utility', () => {
       .toBe('http=proxy1:80;socks=socks-proxy:1080')
   })
 
-  it('maps proxy-agent PAC addresses to Electron PAC script mode', () => {
+  it('maps PAC addresses to Electron PAC script mode', () => {
     expect(createElectronProxyConfig(createConf({
       'proxy:enable': true,
       'proxy:address': 'pac+https://proxy.example.test/proxy.pac'

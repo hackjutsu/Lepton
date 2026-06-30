@@ -1,7 +1,5 @@
 const { Promise } = require('bluebird')
-const ProxyAgent = require('proxy-agent')
-const ReqPromise = require('request-promise')
-const Request = require('request')
+const { createFetchRequest } = require('./fetchAdapter')
 
 const TAG = '[REST] '
 const kTimeoutUnit = 10 * 1000 // ms
@@ -21,36 +19,26 @@ const DELETE_SINGLE_GIST = 'DELETE_SINGLE_GIST'
 function createGitHubApi ({
   conf,
   logger,
-  ProxyAgentImpl = ProxyAgent,
-  requestPromiseImpl = ReqPromise,
-  requestImpl = Request
-}) {
+  fetchImpl
+} = {}) {
   const apiLogger = logger || {
     debug: () => {},
     error: () => {},
     info: () => {}
   }
+  const apiRequest = createFetchRequest(fetchImpl)
   let gitHubHostApi = 'api.github.com'
-  let proxyAgent = null
 
-  if (conf) {
-    if (conf.get('proxy:enable')) {
-      const proxyUri = conf.get('proxy:address')
-      proxyAgent = new ProxyAgentImpl(proxyUri)
-      apiLogger.info('[.leptonrc] Use proxy', proxyUri)
-    }
-    if (conf.get('enterprise:enable')) {
-      const gitHubHost = conf.get('enterprise:host')
-      gitHubHostApi = `${gitHubHost}/api/v3`
-    }
+  if (conf && conf.get('enterprise:enable')) {
+    const gitHubHost = conf.get('enterprise:host')
+    gitHubHostApi = `${gitHubHost}/api/v3`
   }
 
   function exchangeAccessToken (clientId, clientSecret, authCode) {
     apiLogger.debug(TAG + 'Exchanging authCode with access token')
-    return requestPromiseImpl({
+    return apiRequest({
       method: 'POST',
       uri: 'https://github.com/login/oauth/access_token',
-      agent: proxyAgent,
       form: {
         client_id: clientId,
         client_secret: clientSecret,
@@ -63,9 +51,8 @@ function createGitHubApi ({
 
   function getUserProfile (token) {
     apiLogger.debug(TAG + 'Getting user profile with token ' + token)
-    return requestPromiseImpl({
+    return apiRequest({
       uri: `https://${gitHubHostApi}/user`,
-      agent: proxyAgent,
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
@@ -78,9 +65,8 @@ function createGitHubApi ({
 
   function getSingleGist (token, gistId) {
     apiLogger.debug(TAG + `Getting single gist ${gistId} with token ${token}`)
-    return requestPromiseImpl({
+    return apiRequest({
       uri: `https://${gitHubHostApi}/gists/${gistId}`,
-      agent: proxyAgent,
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
@@ -104,6 +90,11 @@ function createGitHubApi ({
         }
 
         const matches = res.headers.link.match(/page=[0-9]*/g)
+        if (!matches || matches.length === 0) {
+          apiLogger.debug(TAG + '[V2] The header link property does not include page markers')
+          return sortGistsByUpdatedAt(gistList)
+        }
+
         const maxPage = matches[matches.length - 1].substring('page='.length)
         apiLogger.debug(TAG + `[V2] The max page number for gist is ${maxPage}`)
 
@@ -120,10 +111,7 @@ function createGitHubApi ({
 
   function requestGists (token, userId, page, gistList) {
     apiLogger.debug(TAG + '[V2] Requesting gists with page ' + page)
-    return requestPromiseImpl(makeOptionForGetAllGists(token, userId, page))
-      .catch(err => {
-        apiLogger.error(err)
-      })
+    return apiRequest(makeOptionForGetAllGists(token, userId, page))
       .then(res => {
         parseBody(res.body, gistList)
         return res
@@ -131,6 +119,8 @@ function createGitHubApi ({
   }
 
   function parseBody (res, gistList) {
+    if (!res) return
+
     for (const key in res) {
       if (Object.prototype.hasOwnProperty.call(res, key)) gistList.push(res[key])
     }
@@ -143,48 +133,28 @@ function createGitHubApi ({
   function getAllGistsV1 (token, userId) {
     apiLogger.debug(TAG + `[V1] Getting all gists of ${userId} with token ${token}`)
     const gistList = []
-    return new Promise(resolve => {
-      const maxPageNumber = 100
-      const funcs = Promise.resolve(
-        makeRangeArr(1, maxPageNumber).map(
-          (n) => makeRequestForGetAllGists(makeOptionForGetAllGists(token, userId, n))))
+    const maxPageNumber = 100
 
-      funcs.mapSeries(iterator)
-        .catch(err => {
-          if (err !== EMPTY_PAGE_ERROR_MESSAGE) {
-            apiLogger.error(err)
+    return Promise.mapSeries(makeRangeArr(1, maxPageNumber), page => {
+      return apiRequest(makeOptionForGetAllGists(token, userId, page))
+        .then(res => {
+          const body = Array.isArray(res.body) ? res.body : []
+          apiLogger.debug('The gist number on this page is ' + body.length)
+
+          if (body.length === 0) {
+            throw EMPTY_PAGE_ERROR_MESSAGE
           }
-        })
-        .finally(() => {
-          resolve(gistList)
+
+          parseBody(body, gistList)
+          return body
         })
     })
-
-    function iterator (f) {
-      return f()
-    }
-
-    function makeRequestForGetAllGists (option) {
-      return () => {
-        return new Promise((resolve, reject) => {
-          requestImpl(option, (error, response, body) => {
-            apiLogger.debug('The gist number on this page is ' + body.length)
-            if (error) {
-              reject(error)
-            } else if (body.length === 0) {
-              reject(EMPTY_PAGE_ERROR_MESSAGE)
-            } else {
-              for (const key in body) {
-                if (Object.prototype.hasOwnProperty.call(body, key)) {
-                  gistList.push(body[key])
-                }
-              }
-              resolve(body)
-            }
-          })
-        })
-      }
-    }
+      .catch(err => {
+        if (err !== EMPTY_PAGE_ERROR_MESSAGE) {
+          apiLogger.error(err)
+        }
+      })
+      .then(() => gistList)
   }
 
   function makeRangeArr (start, end) {
@@ -201,7 +171,6 @@ function createGitHubApi ({
 
     return {
       uri: uri,
-      agent: proxyAgent,
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
@@ -219,14 +188,13 @@ function createGitHubApi ({
 
   function createSingleGist (token, description, files, isPublic) {
     apiLogger.debug(TAG + 'Creating single gist')
-    return requestPromiseImpl({
+    return apiRequest({
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
       },
       method: 'POST',
       uri: `https://${gitHubHostApi}/gists`,
-      agent: proxyAgent,
       body: {
         description: description,
         public: isPublic,
@@ -239,14 +207,13 @@ function createGitHubApi ({
 
   function editSingleGist (token, gistId, updatedDescription, updatedFiles) {
     apiLogger.debug(TAG + 'Editing single gist ' + gistId)
-    return requestPromiseImpl({
+    return apiRequest({
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
       },
       method: 'PATCH',
       uri: `https://${gitHubHostApi}/gists/${gistId}`,
-      agent: proxyAgent,
       body: {
         description: updatedDescription,
         files: updatedFiles
@@ -258,14 +225,13 @@ function createGitHubApi ({
 
   function deleteSingleGist (token, gistId) {
     apiLogger.debug(TAG + 'Deleting single gist ' + gistId)
-    return requestPromiseImpl({
+    return apiRequest({
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
       },
       method: 'DELETE',
       uri: `https://${gitHubHostApi}/gists/${gistId}`,
-      agent: proxyAgent,
       json: true,
       timeout: 2 * kTimeoutUnit
     })

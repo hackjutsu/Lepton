@@ -102,7 +102,6 @@
     "nconf": "^0.11.4",
     "notebookjs": "^0.6.0",
     "prismjs": "^1.30.0",
-    "proxy-agent": "^4.0.0",
     "react": "^19.2.7",
     "react-bootstrap": "^0.32.4",
     "react-dom": "^19.2.7",
@@ -110,8 +109,6 @@
     "react-split-pane": "^3.2.0",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.2",
     "twitter-text": "^3.0.0",
     "valid-filename": "^3.1.0",
     "winston": "^3.19.0"
