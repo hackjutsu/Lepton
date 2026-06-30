@@ -18,9 +18,16 @@ The default search shortcut is `Shift + Space`.
 Lepton can search these fields:
 
 - filename
+- language
 - description
 - tag
 - gist id
+- downloaded snippet file content
+
+Complete global content search across every snippet requires the
+`gist.downloadAll` option to be enabled before syncing. When `downloadAll` is
+disabled, content search only covers gists whose details and file content have
+already been downloaded locally, such as snippets opened during the session.
 
 ## Title And Tags
 
@@ -89,4 +96,3 @@ Lepton is a desktop GitHub Gist client and does not run its own sync service. Da
 Lepton does not accept personal donations. If you want to donate, consider donating to the [Wikimedia Foundation](https://wikimediafoundation.org/wiki/Ways_to_Give), which helps sustain free knowledge through Wikipedia and related projects.
 
 You are welcome to create an issue to share how much you contributed.
-
