@@ -87,6 +87,11 @@ const RENDER_FIXTURES = [
     name: 'php-html',
     selector: '.code-area .language-php',
     text: 'PHP template|index.php|Ready'
+  },
+  {
+    name: 'jupyter-notebook',
+    selector: '.jupyterNotebook-section .nb-notebook',
+    text: 'Notebook Fixture|hello from notebook|42'
   }
 ]
 

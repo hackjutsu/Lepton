@@ -62,6 +62,69 @@ const PHP_HTML_FILE = {
   ].join('\n')
 }
 
+const NOTEBOOK_CONTENT = JSON.stringify({
+  cells: [
+    {
+      cell_type: 'markdown',
+      metadata: {},
+      source: [
+        '# Notebook Fixture\n',
+        '\n',
+        'This fixture renders **markdown** and removes unsafe HTML.\n',
+        '\n',
+        '<script>alert("xss")</script>'
+      ]
+    },
+    {
+      cell_type: 'code',
+      execution_count: 1,
+      metadata: {},
+      outputs: [
+        {
+          name: 'stdout',
+          output_type: 'stream',
+          text: [
+            'hello from notebook\n'
+          ]
+        },
+        {
+          data: {
+            'text/plain': [
+              '42'
+            ]
+          },
+          execution_count: 1,
+          metadata: {},
+          output_type: 'execute_result'
+        }
+      ],
+      source: [
+        'print("hello from notebook")\n',
+        '42'
+      ]
+    }
+  ],
+  metadata: {
+    kernelspec: {
+      display_name: 'Python 3',
+      language: 'python',
+      name: 'python3'
+    },
+    language_info: {
+      name: 'python'
+    }
+  },
+  nbformat: 4,
+  nbformat_minor: 5
+}, null, 2)
+
+const NOTEBOOK_FILE = {
+  filename: 'analysis.ipynb',
+  language: 'Jupyter Notebook',
+  raw_url: 'https://gist.githubusercontent.com/lepton-fixture/mock/raw/analysis.ipynb',
+  content: NOTEBOOK_CONTENT
+}
+
 function createGist (id, description, isPublic, files, updatedAt) {
   const gist = {
     id,
@@ -137,11 +200,20 @@ const gists = {
       'index.php': PHP_HTML_FILE
     },
     '2026-06-25T11:45:00Z'
+  ),
+  'fixture-gist-6': createGist(
+    'fixture-gist-6',
+    '[Notebook fixture] #notebook #smoke Jupyter rendering fixture.',
+    true,
+    {
+      'analysis.ipynb': NOTEBOOK_FILE
+    },
+    '2026-06-24T13:20:00Z'
   )
 }
 
 const gistTags = {
-  [Prefixed('All')]: ['fixture-gist-1', 'fixture-gist-2', 'fixture-gist-3', 'fixture-gist-4', 'fixture-gist-5'],
+  [Prefixed('All')]: ['fixture-gist-1', 'fixture-gist-2', 'fixture-gist-3', 'fixture-gist-4', 'fixture-gist-5', 'fixture-gist-6'],
   [Prefixed('JavaScript')]: ['fixture-gist-1'],
   [Prefixed('Markdown')]: ['fixture-gist-1'],
   [Prefixed('CSS')]: ['fixture-gist-1'],
@@ -149,10 +221,12 @@ const gistTags = {
   [Prefixed('Shell')]: ['fixture-gist-3'],
   [Prefixed('Java')]: ['fixture-gist-4'],
   [Prefixed('PHP')]: ['fixture-gist-5'],
+  [Prefixed('Jupyter Notebook')]: ['fixture-gist-6'],
   ui: ['fixture-gist-1'],
-  smoke: ['fixture-gist-1', 'fixture-gist-5'],
+  smoke: ['fixture-gist-1', 'fixture-gist-5', 'fixture-gist-6'],
   backend: ['fixture-gist-2', 'fixture-gist-4'],
   php: ['fixture-gist-5'],
+  notebook: ['fixture-gist-6'],
   ops: ['fixture-gist-3']
 }
 
@@ -231,6 +305,11 @@ function getFixtureOverrides (name) {
       return {
         activeGist: 'fixture-gist-5',
         activeGistTag: Prefixed('PHP')
+      }
+    case 'jupyter-notebook':
+      return {
+        activeGist: 'fixture-gist-6',
+        activeGistTag: Prefixed('Jupyter Notebook')
       }
     case 'raw':
       return {
