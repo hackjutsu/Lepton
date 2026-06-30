@@ -53,10 +53,7 @@
 | About Page     | `Cmd/Ctrl + ,` |  Toggle the [About page](https://github.com/hackjutsu/Lepton/blob/dev/docs/img/portfolio/about.png)    |
 | Search         | `Shift + Space`|  Toggle the [search bar](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/search_bar.png)    |
 
-Search matches snippet titles, descriptions, tags, gist ids, filenames, languages,
-and downloaded file content. Complete global content search across all snippets
-requires `gist.downloadAll` to be enabled before syncing so Lepton downloads every
-gist's file content.
+See the [Search FAQ](wiki/faq.md#search) for searchable fields and content-search behavior.
 
 ## Customization
 Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact path in the About page by `Command/Ctrl + ,`. Create the file if it does not exist.
@@ -73,26 +70,6 @@ Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact pat
 - Interface language (`i18n.locale`: `en`, `es`, `fr`, `ja`, `ko`, `tr`, `zh-Hans`, or `zh-Hant`)
 
 Check out the [configuration docs](wiki/configuration.md) to explore different customization options.
-
-Example:
-
-```json
-{
-  "i18n": {
-    "locale": "ja"
-  }
-}
-```
-
-Enable complete global content search by downloading all gist details during sync:
-
-```json
-{
-  "gist": {
-    "downloadAll": true
-  }
-}
-```
 
 ## Tech Stack
 ![Based on](./docs/img/erb-logo.png)
