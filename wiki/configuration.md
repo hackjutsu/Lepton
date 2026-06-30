@@ -89,7 +89,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `newSnippetPrivate` | `false` | Create new snippets as secret gists by default. |
 | `tag` | `showInSnippetList` | `false` | Show custom tags in snippet list rows. |
 | | `colored` | `false` | Render custom tags with stable color badges. |
-| `gist` | `downloadAll` | `false` | Load all authenticated gists from the authenticated gists endpoint instead of the user public-gists endpoint. |
+| `gist` | `downloadAll` | `false` | Load all authenticated gists and download their details during sync. Enable this for complete global content search across snippet file contents. |
 | `editor` | `tabSize` | `4` | Tab size in spaces. |
 | | `validateFilename` | `true` | Validate gist filenames before saving. |
 | `enterprise` | `enable` | `false` | Enable GitHub Enterprise mode. |
