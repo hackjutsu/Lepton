@@ -39,6 +39,9 @@ describe('dashboard radar chart config', () => {
         },
         scales: {
           r: {
+            ticks: {
+              display: false
+            },
             pointLabels: {
               font: {
                 size: 12

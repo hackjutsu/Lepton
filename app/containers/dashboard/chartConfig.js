@@ -30,6 +30,9 @@ export function buildRadarChartConfig (data, labels, datasetLabel) {
       },
       scales: {
         r: {
+          ticks: {
+            display: false
+          },
           pointLabels: {
             font: {
               size: 12
