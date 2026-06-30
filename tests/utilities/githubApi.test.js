@@ -167,10 +167,10 @@ describe('GitHub API utility', () => {
     expect(result).toEqual([{ id: 'single-page', updated_at: '2022-01-01T00:00:00Z' }])
   })
 
-  it('uses the authenticated gists endpoint when downloadAll is enabled', async () => {
+  it('uses the authenticated gists endpoint when snippet downloadAll is enabled', async () => {
     const { api, requestPromise } = loadGitHubApi({
       confValues: {
-        'gist:downloadAll': true
+        'snippet:downloadAll': true
       },
       requestPromiseImpl: () => Promise.resolve({
         body: [],
@@ -188,6 +188,25 @@ describe('GitHub API utility', () => {
       },
       qs: { per_page: 100, page: 1 },
       resolveWithFullResponse: true
+    }))
+  })
+
+  it('keeps gist downloadAll as a legacy fallback for the authenticated gists endpoint', async () => {
+    const { api, requestPromise } = loadGitHubApi({
+      confValues: {
+        'gist:downloadAll': true
+      },
+      requestPromiseImpl: () => Promise.resolve({
+        body: [],
+        headers: {}
+      })
+    })
+
+    await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+
+    expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
+      uri: 'https://api.github.com/gists',
+      qs: { per_page: 100, page: 1 }
     }))
   })
 })
