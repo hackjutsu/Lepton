@@ -129,7 +129,7 @@ function createWindow (autoLogin) {
     // titleBarStyle: 'hidden',
     backgroundColor: '#808080',
     show: false,
-    icon: path.join(__dirname, '/icon/icon.png'),
+    icon: path.join(__dirname, 'build/icon/icon.png'),
     webPreferences
   })
 
