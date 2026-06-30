@@ -289,11 +289,8 @@ function updateUserGists (userLoginId, token) {
 
       gistList.forEach((gist) => {
         const langs = new Set()
-        let filenameRecords = ''
 
         Object.keys(gist.files).forEach(filename => {
-          // leave a space in between to help tokenization
-          filenameRecords += ', ' + filename
           const file = gist.files[filename]
           const language = file.language || 'Other'
           langs.add(language)
@@ -333,18 +330,8 @@ function updateUserGists (userLoginId, token) {
           gists[gist.id] = Object.assign(gists[gist.id], { details: preGist.details })
         }
 
-        let langSearchRecords = ''
-        langs.forEach(lang => {
-          langSearchRecords += ',' + lang
-        })
-
         // Update the SearchIndex
-        fuseSearchIndex.push({
-          id: gist.id,
-          description: gist.description,
-          language: langSearchRecords,
-          filename: filenameRecords
-        })
+        fuseSearchIndex.push(SearchIndex.buildSearchRecord(gists[gist.id]))
       }) // gistList.forEach
 
       SearchIndex.resetFuseIndex(fuseSearchIndex)

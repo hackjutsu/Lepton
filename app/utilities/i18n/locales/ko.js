@@ -107,8 +107,18 @@ module.exports = {
     syncSucceeds: '동기화 성공'
   },
   search: {
+    match: {
+      content: '내용',
+      description: '설명',
+      filename: '파일 이름',
+      id: '식별자',
+      inFile: '{{filename}}의 {{source}}',
+      language: '언어'
+    },
     noResults: '결과가 없습니다...',
-    placeholder: '설명, 태그, 파일 이름 검색...'
+    placeholder: '설명, 태그, 파일 이름 검색...',
+    resultCountMany: '{{count}}개 스니펫 발견',
+    resultCountOne: '1개 스니펫 발견'
   },
   snippet: {
     copy: '복사',
