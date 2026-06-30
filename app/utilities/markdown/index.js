@@ -7,6 +7,7 @@ import sanitizeHtml, { sanitizeInlineHtml } from './sanitizeHtml'
 
 const htmlTagPattern = /<[!/a-z].*?>/ig
 const punctuationPattern = /[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~]/g
+const taskListCheckboxPattern = /^<input class="task-list-item-checkbox"( checked="")?type="checkbox">$/
 
 function getHeadingText (token) {
   if (!token) return ''
@@ -42,6 +43,23 @@ function createUniqueHeadingId (id, env) {
   return count === 0 ? id : `${id}-${count}`
 }
 
+function isTaskListItemToken (token) {
+  if (!token || !token.attrGet) return false
+
+  return /\btask-list-item\b/.test(token.attrGet('class') || '')
+}
+
+function markTaskListCheckboxes (state) {
+  state.tokens.forEach((token, idx, tokens) => {
+    if (!token.children || !isTaskListItemToken(tokens[idx - 2])) return
+
+    const firstChild = token.children[0]
+    if (!firstChild || !taskListCheckboxPattern.test(firstChild.content)) return
+
+    firstChild.type = 'task_list_checkbox'
+  })
+}
+
 // Configure markdown-it
 const Md = MarkdownIt({
   html: true,
@@ -59,8 +77,13 @@ const Md = MarkdownIt({
   .use(MdTaskList, { enabled: true })
   .use(MdKatex, { throwOnError: false, errorColor: ' #cc0000' })
 
+Md.core.ruler.after('github-task-lists', 'lepton-task-list-checkboxes', markTaskListCheckboxes)
+
 Md.renderer.rules.html_block = (tokens, idx) => sanitizeHtml(tokens[idx].content)
 Md.renderer.rules.html_inline = (tokens, idx) => sanitizeInlineHtml(tokens[idx].content)
+Md.renderer.rules.task_list_checkbox = (tokens, idx) => {
+  return taskListCheckboxPattern.test(tokens[idx].content) ? tokens[idx].content : ''
+}
 
 Md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
   const headingText = getHeadingText(tokens[idx + 1])

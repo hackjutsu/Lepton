@@ -26,4 +26,11 @@ describe('markdown utility', () => {
     expect(html).toContain('class="task-list-item-checkbox" checked=""type="checkbox"')
     expect(html).not.toContain('disabled')
   })
+
+  it('does not trust user-authored checkbox html as a task list checkbox', () => {
+    const html = Markdown.render('Raw <input class="task-list-item-checkbox"type="checkbox">')
+
+    expect(html).toContain('&lt;input class=&quot;task-list-item-checkbox&quot;type=&quot;checkbox&quot;&gt;')
+    expect(html).not.toContain('Raw <input class="task-list-item-checkbox"type="checkbox">')
+  })
 })
