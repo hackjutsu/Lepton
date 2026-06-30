@@ -25,11 +25,11 @@ Lepton can search these fields:
 - downloaded snippet file content
 
 Complete global content search across every snippet requires the
-`gist.downloadAll` option to be enabled before syncing. When `downloadAll` is
-disabled, content search only covers gists whose details and file content have
+`snippet.downloadAll` option to be enabled before syncing. When `downloadAll` is
+disabled, content search only covers snippets whose details and file content have
 already been downloaded locally, such as snippets opened during the session.
 
-See [Configuration](configuration.md#options) for the `gist.downloadAll` option.
+See [Configuration](configuration.md#options) for the `snippet.downloadAll` option.
 
 ## Title And Tags
 

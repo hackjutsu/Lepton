@@ -32,14 +32,12 @@ The file is not generated automatically. Create it if you want to override the d
     "sorting": "updated_at",
     "sortingReverse": true,
     "expanded": true,
-    "newSnippetPrivate": false
+    "newSnippetPrivate": false,
+    "downloadAll": false
   },
   "tag": {
     "showInSnippetList": false,
     "colored": false
-  },
-  "gist": {
-    "downloadAll": false
   },
   "editor": {
     "tabSize": 4,
@@ -87,9 +85,9 @@ The file is not generated automatically. Create it if you want to override the d
 | | `sortingReverse` | `true` | Reverse the configured snippet order. |
 | | `expanded` | `true` | Expand snippets in the detail view by default. |
 | | `newSnippetPrivate` | `false` | Create new snippets as secret gists by default. |
+| | `downloadAll` | `false` | Load all authenticated snippets and download their details during sync. Enable this for complete global content search across snippet file contents. |
 | `tag` | `showInSnippetList` | `false` | Show custom tags in snippet list rows. |
 | | `colored` | `false` | Render custom tags with stable color badges. |
-| `gist` | `downloadAll` | `false` | Load all authenticated gists and download their details during sync. Enable this for complete global content search across snippet file contents. |
 | `editor` | `tabSize` | `4` | Tab size in spaces. |
 | | `validateFilename` | `true` | Validate gist filenames before saving. |
 | `enterprise` | `enable` | `false` | Enable GitHub Enterprise mode. |

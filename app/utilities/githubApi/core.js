@@ -2,6 +2,7 @@ const { Promise } = require('bluebird')
 const ProxyAgent = require('proxy-agent')
 const ReqPromise = require('request-promise')
 const Request = require('request')
+const { shouldDownloadAllSnippets } = require('../config')
 
 const TAG = '[REST] '
 const kTimeoutUnit = 10 * 1000 // ms
@@ -194,7 +195,7 @@ function createGitHubApi ({
   }
 
   function makeOptionForGetAllGists (token, userId, page) {
-    const shouldDownloadAllGists = conf && conf.get('gist:downloadAll')
+    const shouldDownloadAllGists = shouldDownloadAllSnippets(conf)
     const uri = shouldDownloadAllGists
       ? `https://${gitHubHostApi}/gists`
       : `https://${gitHubHostApi}/users/${userId}/gists`
