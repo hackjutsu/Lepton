@@ -2,9 +2,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-<p align="center">
-  <img src="./build/icon/icon.png" alt="Lepton" width="128" />
-</p>
+![](./docs/img/new_logo.png)
 
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 [![lepton](https://snapcraft.io/lepton/badge.svg)](https://snapcraft.io/lepton)
