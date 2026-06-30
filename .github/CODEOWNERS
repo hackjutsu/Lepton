@@ -1,0 +1,5 @@
+# Protect repository automation, review policy, and CODEOWNERS itself.
+/.github/ @hackjutsu
+
+# Protect future AI review helper scripts if they are added outside .github.
+/scripts/ai-review/ @hackjutsu
