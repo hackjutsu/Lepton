@@ -156,9 +156,22 @@ Document rendering verification in PR descriptions, including whether the app wa
 - **GitHub API Integration**: `/app/utilities/githubApi/` - handles Gist CRUD operations
 - **Theme Management**: `/app/utilities/themeManager/` - light/dark theme switching
 - **Code Rendering**: Uses CodeMirror for syntax highlighting and editing
-- **Search**: `/app/utilities/search/` - snippet search functionality
+- **Search**: `/app/utilities/search/` - snippet metadata and downloaded-content search functionality
 - **Configuration**: Uses nconf for config management, stored in `~/.leptonrc`
 - **Preload Bridge**: `/preload.js` exposes the limited renderer API as `window.lepton`
+
+### Search Development Notes
+
+Search records are built through `/app/utilities/search/records.js`. Use the
+shared builder when sync, create, edit, fixture rendering, or lazy single-gist
+fetches need to refresh indexed gist data. Search currently performs exact,
+case-insensitive token matching across metadata and any downloaded file content;
+do not reintroduce fuzzy matching without updating tests and UI expectations.
+
+Complete global content search depends on `gist.downloadAll` being enabled
+before sync so every gist's details and file contents are downloaded. When
+`downloadAll` is disabled, content search can only cover gists whose details
+have already been loaded locally.
 
 ### GitHub OAuth Setup
 The app requires GitHub OAuth credentials in `/configs/account.js`:
