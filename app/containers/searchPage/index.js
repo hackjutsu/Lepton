@@ -2,6 +2,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import electronBridge from '../../utilities/electronBridge'
 import Modal from '../compatModal'
+import Moment from 'moment'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
 import {
@@ -138,19 +139,167 @@ class SearchPage extends Component {
     })
   }
 
+  getSearchTokens () {
+    return this.state.inputValue.trim().toLowerCase().split(/\s+/).filter(Boolean)
+  }
+
+  mergeHighlightRanges (ranges) {
+    const sortedRanges = ranges.slice().sort((left, right) => left[0] - right[0])
+    return sortedRanges.reduce((merged, range) => {
+      const previous = merged[merged.length - 1]
+      if (!previous || range[0] > previous[1] + 1) {
+        merged.push(range)
+        return merged
+      }
+
+      previous[1] = Math.max(previous[1], range[1])
+      return merged
+    }, [])
+  }
+
+  getHighlightSegments (text) {
+    if (!text) return []
+
+    const tokens = this.getSearchTokens()
+    const lowerText = text.toLowerCase()
+    const ranges = []
+
+    tokens.forEach(token => {
+      let searchStart = 0
+      let matchStart = lowerText.indexOf(token, searchStart)
+      while (matchStart !== -1) {
+        ranges.push([matchStart, matchStart + token.length - 1])
+        searchStart = matchStart + token.length
+        matchStart = lowerText.indexOf(token, searchStart)
+      }
+    })
+
+    if (ranges.length === 0) {
+      return [{ text: text, match: false }]
+    }
+
+    const mergedRanges = this.mergeHighlightRanges(ranges)
+    const segments = []
+    let cursor = 0
+    mergedRanges.forEach(([start, end]) => {
+      if (start > cursor) {
+        segments.push({ text: text.slice(cursor, start), match: false })
+      }
+      segments.push({ text: text.slice(start, end + 1), match: true })
+      cursor = end + 1
+    })
+    if (cursor < text.length) {
+      segments.push({ text: text.slice(cursor), match: false })
+    }
+    return segments
+  }
+
+  renderHighlightedSegments (segments) {
+    return segments.map((segment, index) => (
+      <span
+        className={ segment.match ? 'search-match-highlight' : null }
+        key={ index }>
+        { segment.text }
+      </span>
+    ))
+  }
+
+  renderHighlightedText (text) {
+    return this.renderHighlightedSegments(this.getHighlightSegments(text))
+  }
+
   renderSnippetDescription (rawDescription) {
     const { title, description } = descriptionParser(rawDescription)
 
     const htmlForDescriptionSection = []
     if (title.length > 0) {
-      htmlForDescriptionSection.push(<div className='title-section' key='title'>{ title }</div>)
+      htmlForDescriptionSection.push(
+        <div className='title-section' key='title'>{ this.renderHighlightedText(title) }</div>
+      )
     }
-    htmlForDescriptionSection.push(<div className='description-section' key='description'>{ description }</div>)
+    htmlForDescriptionSection.push(
+      <div className='description-section' key='description'>{ this.renderHighlightedText(description) }</div>
+    )
 
     return (
       <div>
         { htmlForDescriptionSection }
       </div>
+    )
+  }
+
+  getSearchMatchSource (match) {
+    const sourceByKey = {
+      id: 'id',
+      description: 'description',
+      language: 'language',
+      filename: 'filename',
+      'files.filename': 'filename',
+      'files.language': 'language',
+      'files.content': 'content'
+    }
+    return sourceByKey[match.key] || 'description'
+  }
+
+  renderSearchMatchLabel (gist) {
+    const match = gist.searchMeta && gist.searchMeta.bestMatch
+    if (!match) return null
+
+    const source = t(`search.match.${this.getSearchMatchSource(match)}`)
+    const title = match.filename
+      ? t('search.match.inFile', { source: source, filename: match.filename })
+      : source
+
+    return (
+      <div className='search-match-label' title={ title }>{ source }</div>
+    )
+  }
+
+  getSearchContentMatches (gist) {
+    const matches = gist.searchMeta && gist.searchMeta.matches
+    if (!matches) return []
+    return matches.filter(match => match.key === 'files.content' && match.excerpt && match.excerpt.segments.length > 0)
+  }
+
+  renderSearchMatchExcerpts (gist) {
+    const matches = this.getSearchContentMatches(gist)
+    if (matches.length === 0) return null
+
+    return (
+      <div>
+        { matches.map((match, index) => (
+          <div className='search-match-excerpt' key={ `${match.filename || 'content'}-${index}` }>
+            { matches.length > 1 && match.filename
+              ? <span className='search-match-excerpt-file'>{ match.filename }: </span>
+              : null }
+            { this.renderHighlightedSegments(match.excerpt.segments) }
+          </div>
+        )) }
+      </div>
+    )
+  }
+
+  renderUpdatedTime (gist) {
+    if (!gist.updated_at) return null
+
+    return (
+      <div className='search-updated-time'>
+        { t('snippet.lastActive', { time: Moment(gist.updated_at).fromNow() }) }
+      </div>
+    )
+  }
+
+  renderResultCount () {
+    const { inputValue, searchResults } = this.state
+    if (!inputValue || !searchResults) return null
+
+    const count = searchResults.length
+    const label = count === 1
+      ? t('search.resultCountOne')
+      : t('search.resultCountMany', { count: count })
+
+    return (
+      <div className='search-result-count'>{ label }</div>
     )
   }
 
@@ -180,7 +329,7 @@ class SearchPage extends Component {
       if (gist.filename) {
         filenames = gist.filename.split(',').filter(file => file.trim()).map(file => {
           return (
-            <div className='gist-tag' key={ file.trim() }>{ file }</div>
+            <div className='gist-tag' key={ file.trim() }>{ this.renderHighlightedText(file) }</div>
           )
         })
       }
@@ -192,8 +341,15 @@ class SearchPage extends Component {
           key={ gist.id }
           ref={ node => this.setResultNode(index, node) }
           onClick={ this.handleSnippetClicked.bind(this, gist.id) }>
-          <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
-          <div className='gist-tag-group'>{ filenames }</div>
+          <div className='search-result-header'>
+            <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
+            { this.renderSearchMatchLabel(gist) }
+          </div>
+          { this.renderSearchMatchExcerpts(gist) }
+          <div className='search-result-footer'>
+            <div className='gist-tag-group'>{ filenames }</div>
+            { this.renderUpdatedTime(gist) }
+          </div>
         </li>
       )
     })
@@ -212,6 +368,7 @@ class SearchPage extends Component {
           onChange={ this.updateInputValue.bind(this) }
           onKeyDown={ this.handleKeyDown.bind(this) }
           onKeyUp={ this.queryInputValue.bind(this) }/>
+        { this.renderResultCount() }
         <ul className='result-group'>
           { this.renderSearchResults() }
         </ul>
@@ -234,7 +391,7 @@ class SearchPage extends Component {
 
 function mapStateToProps (state) {
   return {
-    searchWindowStatus: state.authWindowStatus,
+    searchWindowStatus: state.searchWindowStatus,
     userSessionStatus: state.userSession.activeStatus,
     gists: state.gists
   }

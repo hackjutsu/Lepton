@@ -1,6 +1,7 @@
 import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/githubApi'
 import { notifyFailure } from '../utilities/notifier'
 import electronBridge from '../utilities/electronBridge'
+import SearchIndex from '../utilities/search'
 import { t } from '../utilities/i18n'
 
 const logger = electronBridge.logger
@@ -227,10 +228,11 @@ export function fetchSingleGist (oldGist, id) {
     const state = getState()
     return getGitHubApi(GET_SINGLE_GIST)(state.accessToken, id)
       .then((details) => {
-        const newGist = Object.assign(oldGist, { details: details })
+        const newGist = Object.assign({}, oldGist, { details: details })
         const newGistWithId = {}
         newGistWithId[id] = newGist
         dispatch(updateSingleGist(newGistWithId))
+        SearchIndex.updateFuseIndex(SearchIndex.buildSearchRecord(newGist))
       })
       .catch((err) => {
         logger.error('The request has failed: ' + err)

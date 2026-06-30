@@ -1,4 +1,5 @@
 import { addLangPrefix as Prefixed } from './utilities/parser'
+import SearchIndex from './utilities/search'
 
 const FIXTURE_USER = {
   avatar_url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
@@ -156,20 +157,7 @@ const gistTags = {
   ops: ['fixture-gist-3']
 }
 
-const searchIndexRecords = Object.keys(gists).map(id => {
-  const gist = gists[id].details
-  const languages = Object.keys(gist.files)
-    .map(filename => gist.files[filename].language || 'Other')
-    .join(',')
-  const filenames = Object.keys(gist.files).join(', ')
-
-  return {
-    id,
-    description: gist.description,
-    language: languages,
-    filename: filenames
-  }
-})
+const searchIndexRecords = Object.keys(gists).map(id => SearchIndex.buildSearchRecord(gists[id]))
 
 function getBaseState () {
   return {

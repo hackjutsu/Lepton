@@ -107,8 +107,18 @@ module.exports = {
     syncSucceeds: 'Eşitleme tamamlandı'
   },
   search: {
+    match: {
+      content: 'İçerik',
+      description: 'Açıklama',
+      filename: 'Dosya adı',
+      id: 'Kimlik',
+      inFile: '{{filename}} içinde {{source}}',
+      language: 'Dil'
+    },
     noResults: 'Sonuç bulunamadı...',
-    placeholder: 'Açıklama, etiket veya dosya adı ara...'
+    placeholder: 'Açıklama, etiket veya dosya adı ara...',
+    resultCountMany: '{{count}} kod parcasi bulundu',
+    resultCountOne: '1 kod parcasi bulundu'
   },
   snippet: {
     copy: 'KOPYALA',
