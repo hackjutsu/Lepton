@@ -80,7 +80,7 @@
     "autolinker": "^3.14.1",
     "bluebird": "^3.5.3",
     "boring-avatars": "^1.5.8",
-    "chart.js": "^1.1.1",
+    "chart.js": "^4.5.1",
     "codemirror": "^5.65.21",
     "codemirror-one-dark-theme": "^1.1.1",
     "electron-context-menu": "^3.0.0",

@@ -1,11 +1,12 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import Chart from 'chart.js'
+import Chart from 'chart.js/auto'
 import { Image } from 'react-bootstrap'
 import Modal from '../compatModal'
 import { updateDashboardModalStatus } from '../../actions'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
+import { buildRadarChartConfig } from './chartConfig'
 
 import robotocatImage from '../../utilities/octodex/robotocat.png'
 
@@ -40,7 +41,7 @@ class RadarChart extends Component {
     if (!this.canvasNode) return
 
     const context = this.canvasNode.getContext('2d')
-    this.chart = new Chart(context).Radar(this.props.data, this.props.options || {})
+    this.chart = new Chart(context, this.props.config)
   }
 
   render () {
@@ -79,31 +80,12 @@ class Dashboard extends Component {
     )
   }
 
-  // https://github.com/chartjs/Chart.js/blob/v1.1.1/docs/03-Radar-Chart.md
   buildRadarChart (data, labels) {
-    const GREY = '#C2C4D1'
-    const chartData = {
-      labels: labels,
-      datasets: [
-        {
-          label: t('dashboard.statsLabel'),
-          fillColor: 'rgba(81,192,191,0.2)',
-          strokeColor: 'rgba(81,192,191,1)',
-          pointColor: 'rgba(81,192,191,1)',
-          pointStrokeColor: GREY,
-          pointHighlightFill: GREY,
-          pointHighlightStroke: 'rgba(81,192,191,1)',
-          data: data
-        }
-      ]
-    }
-    const chartOptions = {
-      pointLabelFontSize: 12,
-    }
+    const chartConfig = buildRadarChartConfig(data, labels, t('dashboard.statsLabel'))
 
     return (
       <div className='dashboard-section'>
-        <RadarChart data={ chartData } options={ chartOptions } width="350" height="300"/>
+        <RadarChart config={ chartConfig } width="350" height="300"/>
         <div className='compliment'>
           { this.renderCompliments(labels[0]) }
         </div>
