@@ -169,8 +169,7 @@ case-insensitive token matching across metadata and any downloaded file content;
 do not reintroduce fuzzy matching without updating tests and UI expectations.
 
 Complete global content search depends on `snippet.downloadAll` being enabled
-before sync so every snippet's details and file contents are downloaded. The
-legacy `gist.downloadAll` key is still accepted for compatibility. When
+before sync so every snippet's details and file contents are downloaded. When
 `downloadAll` is disabled, content search can only cover snippets whose details
 have already been loaded locally.
 

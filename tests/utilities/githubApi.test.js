@@ -191,7 +191,7 @@ describe('GitHub API utility', () => {
     }))
   })
 
-  it('keeps gist downloadAll as a legacy fallback for the authenticated gists endpoint', async () => {
+  it('ignores old gist downloadAll config for the authenticated gists endpoint', async () => {
     const { api, requestPromise } = loadGitHubApi({
       confValues: {
         'gist:downloadAll': true
@@ -205,7 +205,7 @@ describe('GitHub API utility', () => {
     await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
 
     expect(requestPromise).toHaveBeenCalledWith(expect.objectContaining({
-      uri: 'https://api.github.com/gists',
+      uri: 'https://api.github.com/users/octo/gists',
       qs: { per_page: 100, page: 1 }
     }))
   })

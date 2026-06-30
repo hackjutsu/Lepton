@@ -14,10 +14,10 @@ describe('configuration utilities', () => {
     }))).toBe(true)
   })
 
-  it('keeps gist.downloadAll as a backward-compatible fallback', () => {
+  it('does not enable download-all from old gist.downloadAll config', () => {
     expect(shouldDownloadAllSnippets(createConf({
       'gist:downloadAll': true
-    }))).toBe(true)
+    }))).toBe(false)
   })
 
   it('disables download-all when neither setting is enabled', () => {
