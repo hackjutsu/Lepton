@@ -229,7 +229,7 @@ describe('GitHub API utility', () => {
     expect(result).toEqual([{ id: 'single-page', updated_at: '2022-01-01T00:00:00Z' }])
   })
 
-  it('uses the authenticated gists endpoint when downloadAll is enabled', async () => {
+  it('uses the authenticated gists endpoint when snippet downloadAll is enabled', async () => {
     const { api, fetch } = loadGitHubApi({
       confValues: {
         'snippet:downloadAll': true
@@ -247,6 +247,20 @@ describe('GitHub API utility', () => {
       'User-Agent': 'hackjutsu-lepton-app',
       Authorization: 'token token-1'
     }))
+  })
+
+  it('ignores old gist downloadAll config for the authenticated gists endpoint', async () => {
+    const { api, fetch } = loadGitHubApi({
+      confValues: {
+        'gist:downloadAll': true
+      },
+      fetchImpl: () => Promise.resolve(createJsonResponse([]))
+    })
+
+    await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+
+    expect(fetch).toHaveBeenCalledTimes(1)
+    expect(fetch.mock.calls[0][0]).toBe('https://api.github.com/users/octo/gists?per_page=100&page=1')
   })
 
   it('falls back to sequential V1 gist requests when V2 fetching fails', async () => {

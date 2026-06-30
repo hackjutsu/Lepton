@@ -85,7 +85,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `sortingReverse` | `true` | Reverse the configured snippet order. |
 | | `expanded` | `true` | Expand snippets in the detail view by default. |
 | | `newSnippetPrivate` | `false` | Create new snippets as secret gists by default. |
-| | `downloadAll` | `false` | Load all authenticated gists from the authenticated gists endpoint and download their details during sync. Enable this for complete global content search across snippet file contents. |
+| | `downloadAll` | `false` | Load all authenticated snippets and download their details during sync. Enable this for complete global content search across snippet file contents. |
 | `tag` | `showInSnippetList` | `false` | Show custom tags in snippet list rows. |
 | | `colored` | `false` | Render custom tags with stable color badges. |
 | `editor` | `tabSize` | `4` | Tab size in spaces. |
