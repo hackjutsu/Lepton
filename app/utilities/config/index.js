@@ -3,7 +3,7 @@ function shouldDownloadAllSnippets (conf) {
     return false
   }
 
-  return Boolean(conf.get('snippet:downloadAll') || conf.get('gist:downloadAll'))
+  return Boolean(conf.get('snippet:downloadAll'))
 }
 
 module.exports = {
