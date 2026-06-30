@@ -133,7 +133,6 @@ import 'codemirror/mode/sass/sass'
 import 'codemirror/addon/edit/matchbrackets'
 import 'codemirror/addon/edit/matchtags'
 import 'codemirror/addon/dialog/dialog'
-import 'codemirror/addon/mode/loadmode'
 import 'codemirror/addon/search/search'
 import 'codemirror/addon/search/match-highlighter'
 import 'codemirror/addon/search/searchcursor'
@@ -234,7 +233,6 @@ class GistEditor extends Component {
     const { filename } = this.props
 
     this.CodeMirror = this.editor.getCodeMirrorInstance()
-    this.CodeMirror.modeURL = '../../../node_modules/codemirror/mode/%N/%N.js'
     this.setMode(filename)
   }
 
