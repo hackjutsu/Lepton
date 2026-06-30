@@ -22,11 +22,19 @@
     max-height: 70vh;
     list-style-type: none;
     padding: 0px;
+    margin-top: 0;
     overflow: auto;
   }
 
+  .search-result-count {
+    @extend .font-style-base;
+    padding: 2px 14px 10px;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
   .search-result-item {
-    padding: 10px 10px;
+    padding: 12px 14px;
     border-top: solid 1px var(--border-color);
   }
 
@@ -61,6 +69,50 @@
 
   .snippet-description {
     @extend .font-style-base;
+    min-width: 0;
+  }
+
+  .search-result-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .search-match-label {
+    @extend .font-style-base;
+    flex: 0 0 auto;
+    padding: 3px 6px;
+    border: solid 1px var(--border-color);
+    border-radius: 4px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+
+  .search-match-excerpt {
+    margin-top: 8px;
+    padding: 6px 8px;
+    border-left: solid 2px #4078C0;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-secondary);
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .search-match-highlight {
+    background: rgba(255, 213, 79, 0.35);
+    color: var(--text-primary);
+  }
+
+  .search-match-excerpt-file {
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, Segoe WPC, Segoe UI, Ubuntu, Droid Sans, sans-serif;
+    font-weight: 600;
   }
 
   .not-found-msg {
@@ -71,7 +123,7 @@
   }
 
   .gist-tag-group {
-    margin-top: 10px;
+    min-width: 0;
   }
 
   .gist-tag {
@@ -84,6 +136,24 @@
   .gist-tag-selected {
     @extend .gist-tag;
     border:solid 2px red;
+  }
+
+  .search-result-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .search-updated-time {
+    @extend .font-style-base;
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+    font-size: 11px;
+    line-height: 1.3;
+    text-align: right;
+    white-space: nowrap;
   }
 
   .modal-button-base {

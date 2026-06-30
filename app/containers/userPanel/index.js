@@ -109,12 +109,9 @@ class UserPanel extends Component {
 
     // update the language tags
     const langs = new Set()
-    let filenameRecords = ''
 
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
-      // leave a space in between to help tokenization
-      filenameRecords += ', ' + filename
       const language = files[filename].language || 'Other'
       langs.add(language)
       const prefixedLang = Prefixed(language)
@@ -155,18 +152,8 @@ class UserPanel extends Component {
     logger.info('[Dispatch] selectGist')
     selectGist(gistId)
 
-    let langSearchRecords = ''
-    langs.forEach(lang => {
-      langSearchRecords += ',' + lang
-    })
-
     // update the search index
-    searchIndex.addToFuseIndex({
-      id: gistId,
-      description: gistDetails.description,
-      language: langSearchRecords,
-      filename: filenameRecords
-    })
+    searchIndex.addToFuseIndex(searchIndex.buildSearchRecord(newGist[gistId]))
 
     notifySuccess(t('notification.gistCreated'), HumanReadableTime(new Date()))
   }

@@ -107,8 +107,18 @@ module.exports = {
     syncSucceeds: '同步成功'
   },
   search: {
+    match: {
+      content: '内容',
+      description: '描述',
+      filename: '文件名',
+      id: '标识符',
+      inFile: '{{filename}} 中的 {{source}}',
+      language: '语言'
+    },
     noResults: '未找到结果...',
-    placeholder: '搜索描述、标签、文件名...'
+    placeholder: '搜索描述、标签、文件名...',
+    resultCountMany: '找到 {{count}} 个代码片段',
+    resultCountOne: '找到 1 个代码片段'
   },
   snippet: {
     copy: '复制',
