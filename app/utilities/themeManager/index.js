@@ -4,11 +4,28 @@ import lightTheme from './themes/lightTheme.json'
 const LIGHT_THEME = 'light'
 const DARK_THEME = 'dark'
 const ONE_DARK_THEME = 'one-dark'
+const ATOM_ONE_DARK_THEME = 'atom-one-dark'
+const GITHUB_LIGHT_THEME = 'github-light'
+const GITHUB_DARK_THEME = 'github-dark'
 const CATPPUCCIN_LATTE_THEME = 'catppuccin-latte'
 const CATPPUCCIN_MOCHA_THEME = 'catppuccin-mocha'
 const SOLARIZED_LIGHT_THEME = 'solarized-light'
 const SOLARIZED_DARK_THEME = 'solarized-dark'
 const DRACULA_THEME = 'dracula'
+const MATERIAL_THEME = 'material-theme'
+const AYU_THEME = 'ayu'
+
+const darkThemes = [
+  DARK_THEME,
+  ONE_DARK_THEME,
+  ATOM_ONE_DARK_THEME,
+  GITHUB_DARK_THEME,
+  CATPPUCCIN_MOCHA_THEME,
+  SOLARIZED_DARK_THEME,
+  DRACULA_THEME,
+  MATERIAL_THEME,
+  AYU_THEME
+]
 
 const oneDarkTheme = Object.assign({}, darkTheme, {
   'bg-primary': '#282c34',
@@ -22,6 +39,42 @@ const oneDarkTheme = Object.assign({}, darkTheme, {
   'accent-regular': '#61afef',
   'shadow-color': 'rgba(0, 0, 0, 0.55)',
   'md-inline-code-background': '#3a3f4b'
+})
+
+const githubLightTheme = Object.assign({}, lightTheme, {
+  'bg-primary': '#ffffff',
+  'bg-secondary': '#f6f8fa',
+  'text-bg-primary': '#ffffff',
+  'border-color': '#d0d7de',
+  'text-primary': '#24292f',
+  'text-secondary': '#57606a',
+  'text-secondary-darken': '#24292f',
+  'text-invert': '#ffffff',
+  'text-code-block': '#24292f',
+  'accent-success': '#1a7f37',
+  'accent-warning': '#9a6700',
+  'accent-regular': '#0969da',
+  'shadow-color': 'rgba(31, 35, 40, 0.18)',
+  'modal-close-button': '#24292f',
+  'md-inline-code-background': '#f6f8fa'
+})
+
+const githubDarkTheme = Object.assign({}, darkTheme, {
+  'bg-primary': '#0d1117',
+  'bg-secondary': '#161b22',
+  'text-bg-primary': '#0d1117',
+  'border-color': '#30363d',
+  'text-primary': '#c9d1d9',
+  'text-secondary': '#8b949e',
+  'text-secondary-darken': '#f0f6fc',
+  'text-invert': '#0d1117',
+  'text-code-block': '#c9d1d9',
+  'accent-success': '#3fb950',
+  'accent-warning': '#d29922',
+  'accent-regular': '#58a6ff',
+  'shadow-color': 'rgba(1, 4, 9, 0.85)',
+  'modal-close-button': '#c9d1d9',
+  'md-inline-code-background': '#161b22'
 })
 
 const catppuccinLatteTheme = Object.assign({}, lightTheme, {
@@ -108,44 +161,94 @@ const draculaTheme = Object.assign({}, darkTheme, {
   'md-inline-code-background': '#44475a'
 })
 
+const materialTheme = Object.assign({}, darkTheme, {
+  'bg-primary': '#263238',
+  'bg-secondary': '#1e272c',
+  'text-bg-primary': '#263238',
+  'border-color': '#37474f',
+  'text-primary': '#eeffff',
+  'text-secondary': '#b0bec5',
+  'text-secondary-darken': '#80cbc4',
+  'text-invert': '#263238',
+  'text-code-block': '#eeffff',
+  'accent-success': '#c3e88d',
+  'accent-warning': '#ffcb6b',
+  'accent-regular': '#80cbc4',
+  'shadow-color': 'rgba(0, 0, 0, 0.55)',
+  'modal-close-button': '#eeffff',
+  'md-inline-code-background': '#37474f'
+})
+
+const ayuTheme = Object.assign({}, darkTheme, {
+  'bg-primary': '#0a0e14',
+  'bg-secondary': '#11151c',
+  'text-bg-primary': '#0a0e14',
+  'border-color': '#273747',
+  'text-primary': '#b3b1ad',
+  'text-secondary': '#626a73',
+  'text-secondary-darken': '#e6b450',
+  'text-invert': '#0a0e14',
+  'text-code-block': '#b3b1ad',
+  'accent-success': '#c2d94c',
+  'accent-warning': '#e6b450',
+  'accent-regular': '#39bae6',
+  'shadow-color': 'rgba(0, 0, 0, 0.65)',
+  'modal-close-button': '#b3b1ad',
+  'md-inline-code-background': '#11151c'
+})
+
 export function isDarkTheme (theme) {
-  return theme === DARK_THEME ||
-    theme === ONE_DARK_THEME ||
-    theme === CATPPUCCIN_MOCHA_THEME ||
-    theme === SOLARIZED_DARK_THEME ||
-    theme === DRACULA_THEME
+  return darkThemes.includes(theme)
 }
 
 export function getEditorTheme (theme) {
-  if (theme === CATPPUCCIN_LATTE_THEME) {
-    return 'base16-light'
+  switch (theme) {
+    case CATPPUCCIN_LATTE_THEME:
+      return 'base16-light'
+    case SOLARIZED_LIGHT_THEME:
+      return 'solarized light'
+    case SOLARIZED_DARK_THEME:
+      return 'solarized dark'
+    case DRACULA_THEME:
+      return 'dracula'
+    case GITHUB_LIGHT_THEME:
+      return 'github'
+    case GITHUB_DARK_THEME:
+      return 'github-dark'
+    case ATOM_ONE_DARK_THEME:
+      return 'one-dark'
+    case MATERIAL_THEME:
+      return 'material'
+    case AYU_THEME:
+      return 'ayu-dark'
+    default:
+      return isDarkTheme(theme) ? 'one-dark' : 'github'
   }
-  if (theme === SOLARIZED_LIGHT_THEME) {
-    return 'solarized light'
-  }
-  if (theme === SOLARIZED_DARK_THEME) {
-    return 'solarized dark'
-  }
-  if (theme === DRACULA_THEME) {
-    return 'dracula'
-  }
-  return isDarkTheme(theme) ? 'one-dark' : 'github'
 }
 
 export function getHighlightTheme (theme) {
-  if (theme === CATPPUCCIN_LATTE_THEME) {
-    return 'atom-one-light'
+  switch (theme) {
+    case GITHUB_LIGHT_THEME:
+      return 'github'
+    case GITHUB_DARK_THEME:
+      return 'github-dark'
+    case ATOM_ONE_DARK_THEME:
+      return 'atom-one-dark'
+    case CATPPUCCIN_LATTE_THEME:
+      return 'atom-one-light'
+    case SOLARIZED_LIGHT_THEME:
+      return 'solarized-light'
+    case SOLARIZED_DARK_THEME:
+      return 'solarized-dark'
+    case DRACULA_THEME:
+      return 'dracula'
+    case MATERIAL_THEME:
+      return 'material'
+    case AYU_THEME:
+      return 'ayu-dark'
+    default:
+      return isDarkTheme(theme) ? 'atom-one-dark' : 'github-gist'
   }
-  if (theme === SOLARIZED_LIGHT_THEME) {
-    return 'solarized-light'
-  }
-  if (theme === SOLARIZED_DARK_THEME) {
-    return 'solarized-dark'
-  }
-  if (theme === DRACULA_THEME) {
-    return 'dracula'
-  }
-  return isDarkTheme(theme) ? 'atom-one-dark' : 'github-gist'
 }
 
 class ThemeManager {
@@ -157,11 +260,16 @@ class ThemeManager {
       [DARK_THEME]: darkTheme,
       [LIGHT_THEME]: lightTheme,
       [ONE_DARK_THEME]: oneDarkTheme,
+      [ATOM_ONE_DARK_THEME]: oneDarkTheme,
+      [GITHUB_LIGHT_THEME]: githubLightTheme,
+      [GITHUB_DARK_THEME]: githubDarkTheme,
       [CATPPUCCIN_LATTE_THEME]: catppuccinLatteTheme,
       [CATPPUCCIN_MOCHA_THEME]: catppuccinMochaTheme,
       [SOLARIZED_LIGHT_THEME]: solarizedLightTheme,
       [SOLARIZED_DARK_THEME]: solarizedDarkTheme,
-      [DRACULA_THEME]: draculaTheme
+      [DRACULA_THEME]: draculaTheme,
+      [MATERIAL_THEME]: materialTheme,
+      [AYU_THEME]: ayuTheme
     }
   }
 

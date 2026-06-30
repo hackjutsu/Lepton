@@ -23,18 +23,36 @@ function resolveHighlightLanguage (languageModule) {
 }
 
 const highlightTheme = getHighlightTheme(conf.get('theme'))
-if (highlightTheme === 'atom-one-dark') {
-  require('../../utilities/vendor/highlightJS/styles/atom-one-dark.css')
-} else if (highlightTheme === 'atom-one-light') {
-  require('../../utilities/vendor/highlightJS/styles/atom-one-light.css')
-} else if (highlightTheme === 'solarized-light') {
-  require('../../utilities/vendor/highlightJS/styles/solarized-light.css')
-} else if (highlightTheme === 'solarized-dark') {
-  require('../../utilities/vendor/highlightJS/styles/solarized-dark.css')
-} else if (highlightTheme === 'dracula') {
-  require('../../utilities/vendor/highlightJS/styles/dracula.css')
-} else {
-  require('../../utilities/vendor/highlightJS/styles/github-gist.css')
+switch (highlightTheme) {
+  case 'github':
+    require('../../utilities/vendor/highlightJS/styles/github.css')
+    break
+  case 'github-dark':
+    require('../../utilities/vendor/highlightJS/styles/github-dark.css')
+    break
+  case 'atom-one-dark':
+    require('../../utilities/vendor/highlightJS/styles/atom-one-dark.css')
+    break
+  case 'atom-one-light':
+    require('../../utilities/vendor/highlightJS/styles/atom-one-light.css')
+    break
+  case 'solarized-light':
+    require('../../utilities/vendor/highlightJS/styles/solarized-light.css')
+    break
+  case 'solarized-dark':
+    require('../../utilities/vendor/highlightJS/styles/solarized-dark.css')
+    break
+  case 'dracula':
+    require('../../utilities/vendor/highlightJS/styles/dracula.css')
+    break
+  case 'material':
+    require('../../utilities/vendor/highlightJS/styles/material.css')
+    break
+  case 'ayu-dark':
+    require('../../utilities/vendor/highlightJS/styles/ayu-dark.css')
+    break
+  default:
+    require('../../utilities/vendor/highlightJS/styles/github-gist.css')
 }
 
 resolveHighlightLanguage(hljsDefineSolidity)(HighlightJS) // register solidity to hightlight.js

@@ -73,7 +73,7 @@ The file is not generated automatically. Create it if you want to override the d
 
 | Field | Sub-field | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `theme` | | `light` | UI theme. Supported values: `light`, `dark`, `one-dark`, `catppuccin-latte`, `catppuccin-mocha`, `solarized-light`, `solarized-dark`, `dracula`. |
+| `theme` | | `light` | UI theme. Supported values: `light`, `dark`, `one-dark`, `atom-one-dark`, `github-light`, `github-dark`, `catppuccin-latte`, `catppuccin-mocha`, `solarized-light`, `solarized-dark`, `dracula`, `material-theme`, `ayu`. |
 | `autoUpdate` | | `false` | Enable automatic update downloads for packaged releases. |
 | `startAtLogin` | | `false` | Start Lepton when the user logs in. Not supported on every Linux environment. |
 | `i18n` | `locale` | `en` | Interface language. Supported values: `en`, `es`, `fr`, `ja`, `ko`, `tr`, `zh-Hans`, `zh-Hant`. |
