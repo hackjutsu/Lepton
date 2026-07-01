@@ -111,6 +111,20 @@
     "winston": "^3.19.0"
   },
   "build": {
+    "files": [
+      "app/**",
+      "bundle/**",
+      "configs/**",
+      "build/icon/icon.png",
+      "build/touchbar/**",
+      "index.html",
+      "main.js",
+      "preload.js",
+      "package.json",
+      "license.json",
+      ".all-contributorsrc",
+      "!**/*.map"
+    ],
     "appId": "com.cosmox.lepton",
     "mac": {
       "category": "public.app-category.productivity",
