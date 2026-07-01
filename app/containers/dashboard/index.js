@@ -8,7 +8,7 @@ import { t } from '../../utilities/i18n'
 import Chart from './chart'
 import { buildRadarChartConfig } from './chartConfig'
 
-import robotocatImage from '../../utilities/octodex/robotocat.png'
+import robotocatImage from '../../utilities/octodex/robotocat.webp'
 
 import './index.scss'
 
