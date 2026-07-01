@@ -21,6 +21,7 @@ const defaultConfig = require('./configs/defaultConfig')
 const appInfo = require('./package.json')
 const { createMainLogger } = require('./app/utilities/logging/mainLogger')
 const { installLoggerRedaction } = require('./app/utilities/logging/redact')
+const { parseCommandLineConfig } = require('./app/utilities/config/commandLineConfig')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
 const { applyElectronProxy } = require('./app/utilities/electronProxy')
 const { configureI18n, t } = require('./app/utilities/i18n')
@@ -774,7 +775,7 @@ function setUpTouchBar() {
 function initGlobalConfigs () {
   const configFilePath = getConfigPath()
   logger.info(`[conf] Looking for .leptonrc at ${configFilePath}`)
-  nconf.argv().env()
+  nconf.overrides(parseCommandLineConfig()).env()
   try {
     nconf.file({ file: configFilePath })
   } catch (error) {
