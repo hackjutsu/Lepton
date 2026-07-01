@@ -63,6 +63,11 @@ div > div.modal-header > button {
 }
 /**/
 
+.modal .modal-content {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 /*For the resizer handle*/
 .split-pane-divider {
   background: #000;
