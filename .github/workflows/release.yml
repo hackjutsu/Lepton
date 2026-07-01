@@ -165,7 +165,9 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
-        run: npx electron-builder --mac --x64 --arm64 --publish ${{ needs.release-context.outputs.publish_policy }}
+        run: |
+          node ./node_modules/electron-builder/cli.js --mac --x64 --arm64 --publish ${{ needs.release-context.outputs.publish_policy }}
+          node ./.github/scripts/assert-release-artifacts.js macOS .dmg .zip
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
@@ -222,7 +224,9 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
-        run: npx electron-builder --win --x64 --ia32 --publish ${{ needs.release-context.outputs.publish_policy }}
+        run: |
+          node ./node_modules/electron-builder/cli.js --win --x64 --ia32 --publish ${{ needs.release-context.outputs.publish_policy }}
+          node ./.github/scripts/assert-release-artifacts.js Windows .exe .7z
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
@@ -282,7 +286,9 @@ jobs:
           LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
           LEPTON_SNAP_CHANNELS: ${{ needs.release-context.outputs.snap_channels }}
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-        run: npx electron-builder --linux --x64 --publish ${{ needs.release-context.outputs.publish_policy }}
+        run: |
+          node ./node_modules/electron-builder/cli.js --linux --x64 --publish ${{ needs.release-context.outputs.publish_policy }}
+          node ./.github/scripts/assert-release-artifacts.js Linux .AppImage .snap
 
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
