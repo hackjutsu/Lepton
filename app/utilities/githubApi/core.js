@@ -1,5 +1,6 @@
 const { Promise } = require('bluebird')
 const { createFetchRequest } = require('./fetchAdapter')
+const { downloadAllSnippets } = require('../config')
 
 const TAG = '[REST] '
 const kTimeoutUnit = 10 * 1000 // ms
@@ -164,8 +165,7 @@ function createGitHubApi ({
   }
 
   function makeOptionForGetAllGists (token, userId, page) {
-    const shouldDownloadAllGists = conf && conf.get('gist:downloadAll')
-    const uri = shouldDownloadAllGists
+    const uri = downloadAllSnippets(conf)
       ? `https://${gitHubHostApi}/gists`
       : `https://${gitHubHostApi}/users/${userId}/gists`
 

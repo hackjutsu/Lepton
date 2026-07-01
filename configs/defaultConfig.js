@@ -23,14 +23,12 @@ module.exports = {
         "sorting": "updated_at",
         "sortingReverse": true,
         "expanded": true,
-        "newSnippetPrivate": false
+        "newSnippetPrivate": false,
+        "downloadAll": false
     },
     "tag": {
         "showInSnippetList": false,
         "colored": false
-    },
-    "gist": {
-        "downloadAll": false
     },
     "editor": {
         "tabSize": 4,
