@@ -1,4 +1,4 @@
-// Extract standalone Lepton custom-tag hashtags without pulling in twitter-text.
+// Match standalone hashtag tokens for custom-tag parsing; embedded hashes stay in plain text.
 const HASHTAG_REGEX = /(^|[^\p{L}\p{M}\p{N}_])#([\p{L}\p{M}\p{N}_]+)/gu
 
 /* Old(Legacy) Style:  [my_title] my_description #tags: tag1, tag2, tag3
