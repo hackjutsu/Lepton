@@ -14,6 +14,7 @@ describe('electron-builder distribution config', () => {
   })
 
   it('builds macOS DMG and ZIP artifacts for Intel and Apple Silicon', () => {
+    expect(builderConfig.mac.identity).toBeNull()
     expect(builderConfig.mac.target).toEqual([
       {
         target: 'dmg',

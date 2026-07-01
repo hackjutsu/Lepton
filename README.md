@@ -288,9 +288,9 @@ release workflow
     |
     +--> validate: lint, unit tests, webpack build
     |
-    +--> macOS Intel: signed/notarized dmg + zip
-    +--> macOS Apple Silicon: signed/notarized dmg + zip
-    +--> Windows: NSIS installer + archive
+    +--> macOS Intel: unsigned dmg + zip
+    +--> macOS Apple Silicon: unsigned dmg + zip
+    +--> Windows: unsigned NSIS installer + archive
     +--> Linux: AppImage + snap
     |
     v
@@ -322,19 +322,14 @@ Release publishing requires repository secrets:
 
 - `LEPTON_GITHUB_CLIENT_ID`
 - `LEPTON_GITHUB_CLIENT_SECRET`
-- `APPLE_ID`
-- `APPLE_APP_SPECIFIC_PASSWORD`
-- `APPLE_TEAM_ID`
-- `CSC_LINK`
-- `CSC_KEY_PASSWORD`
-- `WINDOWS_CSC_LINK`
-- `WINDOWS_CSC_KEY_PASSWORD`
 - `SNAPCRAFT_STORE_CREDENTIALS`
 
 The workflow uses the built-in `GITHUB_TOKEN` for GitHub Release uploads.
-Production macOS publishing fails early if Apple signing and notarization secrets
-are missing. Windows signing is enabled when the Windows certificate secrets are
-present.
+macOS and Windows artifacts are intentionally unsigned. macOS users should
+expect Gatekeeper warnings and may need to open the app from Finder's context
+menu or adjust Privacy & Security settings. Windows users should expect
+Microsoft Defender SmartScreen warnings. If signing is added later, update the
+workflow, `electron-builder.js`, and this documentation together.
 
 Use environment-scoped secrets if prerelease and production should use different
 GitHub OAuth applications.

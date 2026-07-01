@@ -157,33 +157,12 @@ jobs:
 
           node -e "const fs = require('fs'); const config = { client_id: process.env.LEPTON_GITHUB_CLIENT_ID, client_secret: process.env.LEPTON_GITHUB_CLIENT_SECRET }; fs.writeFileSync('configs/account.js', 'module.exports = ' + JSON.stringify(config, null, 2) + '\n')"
 
-      - name: Require production signing secrets
-        if: needs.release-context.outputs.publish_policy == 'always' && needs.release-context.outputs.github_release_type == 'release'
-        env:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-        run: |
-          set -euo pipefail
-          for name in APPLE_ID APPLE_APP_SPECIFIC_PASSWORD APPLE_TEAM_ID CSC_LINK CSC_KEY_PASSWORD; do
-            if [[ -z "${!name:-}" ]]; then
-              echo "Missing required macOS production signing secret: ${name}" >&2
-              exit 1
-            fi
-          done
-
       - name: Prepare package assets
         run: npm run package:prepare
 
       - name: Build and publish macOS artifacts
         env:
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
         run: npx electron-builder --mac --x64 --arm64 --publish ${{ needs.release-context.outputs.publish_policy }}
@@ -240,8 +219,7 @@ jobs:
 
       - name: Build and publish Windows artifacts
         env:
-          CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
-          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
         run: npx electron-builder --win --x64 --ia32 --publish ${{ needs.release-context.outputs.publish_policy }}
