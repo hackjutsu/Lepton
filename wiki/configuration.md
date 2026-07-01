@@ -120,6 +120,16 @@ Set `logger.level` to `debug` when collecting logs for an issue report:
 
 ## Home Directory Notes
 
+### macOS
+
+On macOS, the home directory is your user folder under `/Users`. Place `.leptonrc` here:
+
+```text
+/Users/<CurrentUserName>/.leptonrc
+```
+
+In Finder, use `Go` > `Home` to open the home directory. Because `.leptonrc` starts with a dot, it is hidden by default; press `Command + Shift + .` to show hidden files.
+
 ### Windows
 
 The home directory can vary by Windows distribution, but it usually starts here:
