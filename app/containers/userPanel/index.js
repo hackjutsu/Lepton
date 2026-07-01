@@ -31,10 +31,10 @@ import {
 
 import './index.scss'
 
-import dojocatImage from '../../utilities/octodex/dojocat.jpg'
+import dojocatImage from '../../utilities/octodex/dojocat.webp'
 import logoutIcon from './logout.svg'
 import newIcon from './new.svg'
-import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.jpg'
+import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.webp'
 import syncIcon from './sync.svg'
 
 const conf = electronBridge.config

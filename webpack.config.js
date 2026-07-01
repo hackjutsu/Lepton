@@ -10,7 +10,7 @@ module.exports = {
   target: 'web',
   output: {
     path: path.resolve(__dirname, 'bundle'),
-    publicPath: '/bundle/',
+    publicPath: './bundle/',
     filename: 'app.bundle.js'
   },
   performance: {
@@ -51,8 +51,16 @@ module.exports = {
         }
       ]
     }, {
-      test: /\.(png|jpg)$/,
-      loader: 'url-loader'
+      test: /\.(png|jpe?g|webp)$/i,
+      type: 'asset',
+      parser: {
+        dataUrlCondition: {
+          maxSize: 4096
+        }
+      },
+      generator: {
+        filename: 'assets/[name].[contenthash][ext]'
+      }
     }, {
       test: /\.html$/,
       loader: 'html-loader'
