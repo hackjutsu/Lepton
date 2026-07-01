@@ -68,6 +68,7 @@ Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact pat
 - Interface language (`i18n.locale`: `en`, `es`, `fr`, `ja`, `ko`, `tr`, `zh-Hans`, or `zh-Hant`)
 
 Check out the [configuration docs](wiki/configuration.md) to explore different customization options.
+Missing a locale? See [How do I add a new interface locale?](wiki/faq.md#how-do-i-add-a-new-interface-locale)
 
 Example:
 

@@ -44,6 +44,28 @@ Create `.leptonrc` in the home directory reported by Electron. In Lepton v1.9.0 
 
 See [Configuration](configuration.md) for the current template and option list.
 
+## How Do I Add A New Interface Locale?
+
+Adding a locale touches both the renderer catalog and the packaged Electron
+locale resources:
+
+1. Add `app/utilities/i18n/locales/<locale>.js`, using `en.js` as the complete
+   key reference.
+2. Import the catalog in `app/utilities/i18n/index.js`, add it to `catalogs`,
+   and add the display name to `supportedLocales`.
+3. Update `tests/utilities/i18n.test.js` so the new catalog is checked for key
+   shape, translated values, and package-locale coverage.
+4. Update the supported `i18n.locale` lists in `README.md` and
+   `wiki/configuration.md`.
+5. Update `configs/electronLanguages.js` if the new Lepton locale needs a
+   different Electron/Chromium resource name in packaged apps.
+   `electron-builder.js` derives the packaged locale list from
+   `getSupportedLocales()`, so do not add a separate hard-coded list to
+   `package.json`.
+6. Validate with `npm run test:unit` and `npm run test:packaged-smoke`. For
+   packaged builds, confirm every Lepton-supported locale is present and
+   intentionally unsupported Electron locales are absent.
+
 ## Proxy
 
 Put proxy settings in `.leptonrc`:
@@ -89,4 +111,3 @@ Lepton is a desktop GitHub Gist client and does not run its own sync service. Da
 Lepton does not accept personal donations. If you want to donate, consider donating to the [Wikimedia Foundation](https://wikimediafoundation.org/wiki/Ways_to_Give), which helps sustain free knowledge through Wikipedia and related projects.
 
 You are welcome to create an issue to share how much you contributed.
-

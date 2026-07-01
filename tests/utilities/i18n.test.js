@@ -6,6 +6,8 @@ import {
   getSupportedLocales,
   t
 } from '../../app/utilities/i18n'
+import builderConfig from '../../electron-builder'
+import { getElectronLanguages } from '../../configs/electronLanguages'
 import en from '../../app/utilities/i18n/locales/en'
 import es from '../../app/utilities/i18n/locales/es'
 import fr from '../../app/utilities/i18n/locales/fr'
@@ -119,6 +121,20 @@ describe('i18n utilities', () => {
 
     locales[0].name = 'Mutated'
     expect(getSupportedLocales()[0].name).toBe('English')
+  })
+
+  it('keeps packaged Electron locales in sync with supported locales', () => {
+    expect(builderConfig.electronLanguages).toEqual(getElectronLanguages(getSupportedLocales()))
+  })
+
+  it('maps script-specific Chinese locales to Electron resource names', () => {
+    expect(getElectronLanguages([
+      { code: 'zh-Hans' },
+      { code: 'zh-Hant' }
+    ])).toEqual([
+      ['zh', String.fromCharCode(67, 78)].join('_'),
+      ['zh', String.fromCharCode(84, 87)].join('_')
+    ])
   })
 
   it('keeps every locale catalog in the same shape as English', () => {
