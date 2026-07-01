@@ -2,9 +2,9 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import electronBridge from '../../utilities/electronBridge'
 import Modal from '../compatModal'
-import Moment from 'moment'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
+import { formatRelativeTime } from '../../utilities/relativeTime'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -284,7 +284,7 @@ class SearchPage extends Component {
 
     return (
       <div className='search-updated-time'>
-        { t('snippet.lastActive', { time: Moment(gist.updated_at).fromNow() }) }
+        { t('snippet.lastActive', { time: formatRelativeTime(gist.updated_at) }) }
       </div>
     )
   }
