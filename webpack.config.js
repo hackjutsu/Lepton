@@ -13,6 +13,9 @@ module.exports = {
     publicPath: '/bundle/',
     filename: 'app.bundle.js'
   },
+  performance: {
+    hints: false
+  },
   resolve: {
     alias: {
       'punycode$': require.resolve('punycode/'),
