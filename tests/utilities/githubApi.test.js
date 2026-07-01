@@ -232,7 +232,7 @@ describe('GitHub API utility', () => {
   it('uses the authenticated gists endpoint when downloadAll is enabled', async () => {
     const { api, fetch } = loadGitHubApi({
       confValues: {
-        'gist:downloadAll': true
+        'snippet:downloadAll': true
       },
       fetchImpl: () => Promise.resolve(createJsonResponse([]))
     })
