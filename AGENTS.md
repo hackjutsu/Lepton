@@ -181,6 +181,19 @@ Register your application at https://github.com/settings/applications/new
 - **Styling**: Uses Sass with component-level SCSS files
 - **State Management**: Redux store handles application state, actions use Redux Thunk for async operations
 - **Shortcuts**: Customizable keyboard shortcuts defined in config, registered via electron-localshortcut
+- **Locales/i18n**: Adding a UI locale is not just a renderer code change. Update the locale catalog and package configuration together so packaged Electron builds keep the right Chromium locale resources.
+
+### Adding A Locale
+
+When adding a new interface locale:
+1. Add `app/utilities/i18n/locales/<locale>.js`, using `en.js` as the source-of-truth key shape.
+2. Update `app/utilities/i18n/index.js` to import the catalog, add it to `catalogs`, and add the display label to `supportedLocales`.
+3. Update `tests/utilities/i18n.test.js` so the new catalog is included in shape/translation coverage and, when useful, has a focused behavior assertion.
+4. Update user-facing supported-locale lists in `README.md` and `wiki/configuration.md`.
+5. Update `configs/electronLanguages.js` if the new Lepton locale needs a different Electron/Chromium resource name in packaged apps. `electron-builder.js` derives the packaged locale list from `getSupportedLocales()`, so do not add a separate hard-coded list to `package.json`.
+6. Validate with `npm run test:unit` and `npm run test:packaged-smoke`. For packaged-smoke, confirm the packaged app contains every supported Electron locale and no intentionally unsupported locales. On macOS, inspect both:
+   - `dist/mac-arm64/Lepton.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/*.lproj`
+   - `dist/mac-arm64/Lepton.app/Contents/Resources/*.lproj`
 
 ## Configuration
 
