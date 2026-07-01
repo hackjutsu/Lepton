@@ -51,7 +51,6 @@ import {
 
 import { notifySuccess, notifyFailure } from './utilities/notifier'
 import { configureI18n, t } from './utilities/i18n'
-import { downloadAllSnippets } from './utilities/config'
 
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
@@ -244,7 +243,7 @@ function reSyncUserGists () {
 }
 
 function downloadGistDetailsAfterListSync (gistList, token) {
-  if (!downloadAllSnippets(conf)) {
+  if (!conf.get('snippet:downloadAll')) {
     return Promise.resolve({})
   }
 
