@@ -9,6 +9,10 @@ describe('electron-builder distribution config', () => {
     expect(builderConfig.artifactName).toBe('${productName}-${version}-${os}-${arch}.${ext}')
   })
 
+  it('packages main-process runtime files used at startup', () => {
+    expect(builderConfig.files).toContain('app/utilities/updatePolicy.js')
+  })
+
   it('builds macOS DMG and ZIP artifacts for Intel and Apple Silicon', () => {
     expect(builderConfig.mac.target).toEqual([
       {

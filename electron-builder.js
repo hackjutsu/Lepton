@@ -37,7 +37,8 @@ const mainRuntimeAppFiles = [
   'app/utilities/jupyterNotebook/core.js',
   'app/utilities/logging/**',
   'app/utilities/menu/**',
-  'app/utilities/startAtLogin/**'
+  'app/utilities/startAtLogin/**',
+  'app/utilities/updatePolicy.js'
 ]
 
 // Packages in this list are renderer-only dependencies that webpack already
