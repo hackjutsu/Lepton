@@ -200,30 +200,22 @@ module.exports = {
     oneClick: false,
     allowToChangeInstallationDirectory: true
   },
-  // Linux builds produce the existing portable and store-friendly package
-  // formats, both published through the GitHub release flow.
+  // Linux targets stay as strings because this electron-builder version validates
+  // Linux target entries as scalar target names. Snap Store publishing belongs in
+  // the dedicated snap config below.
   linux: {
     category: 'Development',
     target: [
-      {
-        target: 'AppImage',
-        arch: [
-          'x64'
-        ],
-        publish: [
-          githubPublishConfig
-        ]
-      },
-      {
-        target: 'snap',
-        arch: [
-          'x64'
-        ],
-        publish: [
-          githubPublishConfig,
-          snapStorePublishConfig
-        ]
-      }
+      'AppImage',
+      'snap'
+    ],
+    publish: [
+      githubPublishConfig
+    ]
+  },
+  snap: {
+    publish: [
+      snapStorePublishConfig
     ]
   }
 }

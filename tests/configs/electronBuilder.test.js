@@ -28,20 +28,19 @@ describe('electron-builder distribution config', () => {
     ])
   })
 
-  it('publishes AppImage only to GitHub and snap to GitHub plus Snap Store', () => {
-    const appImageTarget = builderConfig.linux.target.find(target => target.target === 'AppImage')
-    const snapTarget = builderConfig.linux.target.find(target => target.target === 'snap')
+  it('keeps Linux targets schema-compatible and publishes snap to Snap Store', () => {
+    expect(builderConfig.linux.target).toEqual([
+      'AppImage',
+      'snap'
+    ])
 
-    expect(appImageTarget.publish).toHaveLength(1)
-    expect(appImageTarget.publish[0]).toMatchObject({
+    expect(builderConfig.linux.publish).toHaveLength(1)
+    expect(builderConfig.linux.publish[0]).toMatchObject({
       provider: 'github'
     })
 
-    expect(snapTarget.publish).toHaveLength(2)
-    expect(snapTarget.publish[0]).toMatchObject({
-      provider: 'github'
-    })
-    expect(snapTarget.publish[1]).toMatchObject({
+    expect(builderConfig.snap.publish).toHaveLength(1)
+    expect(builderConfig.snap.publish[0]).toMatchObject({
       provider: 'snapStore',
       publishAutoUpdate: false
     })
