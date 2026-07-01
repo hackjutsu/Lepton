@@ -1,6 +1,9 @@
 const { getSupportedLocales } = require('./app/utilities/i18n')
 const { getElectronLanguages } = require('./configs/electronLanguages')
 
+// Keep only app source that the Electron main process reads at runtime.
+// Renderer source is compiled into bundle/app.bundle.js and does not need to
+// ship separately inside app.asar.
 const mainRuntimeAppFiles = [
   'app/utilities/auth/**',
   'app/utilities/electronLocalStorage.js',
@@ -14,6 +17,9 @@ const mainRuntimeAppFiles = [
   'app/utilities/startAtLogin/**'
 ]
 
+// Packages in this list are renderer-only dependencies that webpack already
+// folds into bundle/app.bundle.js. Excluding their node_modules copies trims the
+// packaged archive without changing runtime module resolution.
 const rendererOnlyNodeModules = [
   '@asciidoctor/core',
   '@babel/runtime',
@@ -71,10 +77,15 @@ const rendererOnlyNodeModules = [
   'warning'
 ]
 
+// Some packages are renderer-only at the root, but package-manager hoisting can
+// also place versions of the same package under runtime dependencies. Exclude
+// only the root copy when nested copies may still be needed by main-process IPC.
 const topLevelRendererOnlyNodeModules = [
   'entities'
 ]
 
+// Apply package exclusions to both direct dependencies and nested copies so
+// transitive renderer-only packages do not remain in the final archive.
 function excludeNodeModule (packageName) {
   return [
     `!node_modules/${packageName}/**`,
@@ -83,6 +94,9 @@ function excludeNodeModule (packageName) {
 }
 
 module.exports = {
+  // electron-builder processes this list in order. The allowlist keeps the app
+  // payload intentionally small, and later negated patterns remove build-only
+  // or renderer-only artifacts that can otherwise be pulled in through deps.
   files: [
     ...mainRuntimeAppFiles,
     'bundle/**',
@@ -102,7 +116,12 @@ module.exports = {
     ...topLevelRendererOnlyNodeModules.map(packageName => `!node_modules/${packageName}/**`)
   ],
   appId: 'com.cosmox.lepton',
+  // Keep Electron's own locale files aligned with the locales Lepton exposes in
+  // the renderer. Add new locales in the shared i18n config first, then let this
+  // derived list control the packaged Electron resources.
   electronLanguages: getElectronLanguages(getSupportedLocales()),
+  // macOS builds publish both installer and archive artifacts for Intel and
+  // Apple Silicon users.
   mac: {
     category: 'public.app-category.productivity',
     target: [
@@ -126,6 +145,8 @@ module.exports = {
     ],
     darkModeSupport: true
   },
+  // Windows builds keep the configurable installer and an archive artifact for
+  // the supported desktop architectures.
   win: {
     target: [
       {
@@ -147,10 +168,14 @@ module.exports = {
       'github'
     ]
   },
+  // NSIS settings preserve the current installer UX: guided install flow with a
+  // selectable installation directory.
   nsis: {
     oneClick: false,
     allowToChangeInstallationDirectory: true
   },
+  // Linux builds produce the existing portable and store-friendly package
+  // formats, both published through the GitHub release flow.
   linux: {
     category: 'Development',
     target: [
