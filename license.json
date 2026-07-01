@@ -134,7 +134,7 @@
         "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
         "licenseFile": "node_modules/@types/use-sync-external-store/LICENSE"
     },
-    "Lepton@2.0.0-beta.2": {
+    "Lepton@2.0.0-beta.3": {
         "licenses": "MIT",
         "repository": "https://github.com/hackjutsu/Lepton",
         "licenseFile": "LICENSE"
