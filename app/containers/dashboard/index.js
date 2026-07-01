@@ -1,11 +1,11 @@
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import Chart from 'chart.js/auto'
 import { Image } from 'react-bootstrap'
 import Modal from '../compatModal'
 import { updateDashboardModalStatus } from '../../actions'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
+import Chart from './chart'
 import { buildRadarChartConfig } from './chartConfig'
 
 import robotocatImage from '../../utilities/octodex/robotocat.png'
