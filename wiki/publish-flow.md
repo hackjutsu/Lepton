@@ -43,13 +43,6 @@ Configure these in GitHub Actions secrets before publishing:
 | :--- | :--- | :--- |
 | `LEPTON_GITHUB_CLIENT_ID` | All packaging jobs | All release builds |
 | `LEPTON_GITHUB_CLIENT_SECRET` | All packaging jobs | All release builds |
-| `APPLE_ID` | macOS | Stable signed/notarized macOS release |
-| `APPLE_APP_SPECIFIC_PASSWORD` | macOS | Stable signed/notarized macOS release |
-| `APPLE_TEAM_ID` | macOS | Stable signed/notarized macOS release |
-| `CSC_LINK` | macOS | Stable signed/notarized macOS release |
-| `CSC_KEY_PASSWORD` | macOS | Stable signed/notarized macOS release |
-| `WINDOWS_CSC_LINK` | Windows | Signed Windows release |
-| `WINDOWS_CSC_KEY_PASSWORD` | Windows | Signed Windows release |
 | `SNAPCRAFT_STORE_CREDENTIALS` | Linux | Snap Store publish |
 
 The workflow uses GitHub's built-in `GITHUB_TOKEN` for GitHub Release uploads.
@@ -91,12 +84,12 @@ Release workflow
     +--> build macOS:
     |       dmg + zip for x64
     |       dmg + zip for arm64
-    |       signed and notarized when Apple secrets are present
+    |       unsigned by policy
     |
     +--> build Windows:
     |       NSIS installer for x64 and ia32
     |       7z archive for x64 and ia32
-    |       signed when Windows certificate secrets are present
+    |       unsigned by policy
     |
     +--> build Linux:
     |       AppImage for x64
@@ -114,6 +107,25 @@ stable auto-update metadata is available
 
 The macOS job builds Intel and Apple Silicon artifacts in one electron-builder
 run so `latest-mac.yml` is generated once for the full macOS artifact set.
+
+## Unsigned macOS And Windows Builds
+
+Lepton does not require paid Apple Developer Program or Windows code-signing
+certificates for publishing. The release workflow intentionally disables
+macOS/Windows signing and does not read Apple or Windows certificate secrets.
+
+Expected user-facing behavior:
+
+- macOS users should expect Gatekeeper warnings. They may need to open Lepton
+  from Finder's context menu or approve it in Privacy & Security settings.
+- Windows users should expect Microsoft Defender SmartScreen warnings until the
+  unsigned app has enough reputation.
+- macOS and Windows auto-update metadata is still published for stable tags,
+  but unsigned update installation should be manually verified before it is
+  advertised as a fully supported update path.
+
+If signing is added later, update `.github/workflows/release.yml`,
+`electron-builder.js`, this wiki page, and the README together.
 
 Stable app builds are eligible to check for updates when the user's
 `.leptonrc` has:
@@ -233,4 +245,3 @@ npm run dist -- -l
 Local release-like packaging still needs `configs/account.js` to exist. The
 GitHub Actions workflow generates this file from secrets; local builds must
 create it manually.
-

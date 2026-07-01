@@ -147,10 +147,12 @@ module.exports = {
   // the renderer. Add new locales in the shared i18n config first, then let this
   // derived list control the packaged Electron resources.
   electronLanguages: getElectronLanguages(getSupportedLocales()),
-  // macOS builds publish both installer and archive artifacts for Intel and
-  // Apple Silicon users.
+  // macOS builds publish unsigned installer and archive artifacts for Intel and
+  // Apple Silicon users. A paid Apple Developer account is intentionally not
+  // required for the release flow.
   mac: {
     category: 'public.app-category.productivity',
+    identity: null,
     target: [
       {
         target: 'dmg',
