@@ -1,6 +1,29 @@
 const { getSupportedLocales } = require('./app/utilities/i18n')
 const { getElectronLanguages } = require('./configs/electronLanguages')
 
+function buildGithubPublishConfig () {
+  const releaseType = process.env.LEPTON_GITHUB_RELEASE_TYPE
+  return {
+    provider: 'github',
+    ...(releaseType ? { releaseType } : {})
+  }
+}
+
+function buildSnapStorePublishConfig () {
+  const channels = process.env.LEPTON_SNAP_CHANNELS
+    ? process.env.LEPTON_SNAP_CHANNELS.split(',').map(channel => channel.trim()).filter(Boolean)
+    : undefined
+
+  return {
+    provider: 'snapStore',
+    publishAutoUpdate: false,
+    ...(channels && channels.length > 0 ? { channels } : {})
+  }
+}
+
+const githubPublishConfig = buildGithubPublishConfig()
+const snapStorePublishConfig = buildSnapStorePublishConfig()
+
 // Keep only app source that the Electron main process reads at runtime.
 // Renderer source is compiled into bundle/app.bundle.js and does not need to
 // ship separately inside app.asar.
@@ -116,6 +139,9 @@ module.exports = {
     ...topLevelRendererOnlyNodeModules.map(packageName => `!node_modules/${packageName}/**`)
   ],
   appId: 'com.cosmox.lepton',
+  // electron-builder expands these macros at packaging time.
+  // eslint-disable-next-line no-template-curly-in-string
+  artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
   // Keep Electron's own locale files aligned with the locales Lepton exposes in
   // the renderer. Add new locales in the shared i18n config first, then let this
   // derived list control the packaged Electron resources.
@@ -133,7 +159,7 @@ module.exports = {
         ]
       },
       {
-        target: '7z',
+        target: 'zip',
         arch: [
           'x64',
           'arm64'
@@ -141,7 +167,7 @@ module.exports = {
       }
     ],
     publish: [
-      'github'
+      githubPublishConfig
     ],
     darkModeSupport: true
   },
@@ -165,7 +191,7 @@ module.exports = {
       }
     ],
     publish: [
-      'github'
+      githubPublishConfig
     ]
   },
   // NSIS settings preserve the current installer UX: guided install flow with a
@@ -179,11 +205,25 @@ module.exports = {
   linux: {
     category: 'Development',
     target: [
-      'AppImage',
-      'snap'
-    ],
-    publish: [
-      'github'
+      {
+        target: 'AppImage',
+        arch: [
+          'x64'
+        ],
+        publish: [
+          githubPublishConfig
+        ]
+      },
+      {
+        target: 'snap',
+        arch: [
+          'x64'
+        ],
+        publish: [
+          githubPublishConfig,
+          snapStorePublishConfig
+        ]
+      }
     ]
   }
 }

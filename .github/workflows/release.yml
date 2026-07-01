@@ -1,0 +1,317 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish artifacts instead of only building them.
+        required: true
+        default: never
+        type: choice
+        options:
+          - never
+          - always
+      release_type:
+        description: GitHub release type for manual publishing.
+        required: true
+        default: draft
+        type: choice
+        options:
+          - draft
+          - prerelease
+          - release
+      snap_channels:
+        description: Comma-separated Snap Store channels for manual publishing.
+        required: true
+        default: edge
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-context:
+    name: Resolve release context
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.context.outputs.environment }}
+      github_release_type: ${{ steps.context.outputs.github_release_type }}
+      publish_policy: ${{ steps.context.outputs.publish_policy }}
+      snap_channels: ${{ steps.context.outputs.snap_channels }}
+    steps:
+      - name: Resolve release mode
+        id: context
+        env:
+          MANUAL_PUBLISH_POLICY: ${{ inputs.publish || 'never' }}
+          MANUAL_RELEASE_TYPE: ${{ inputs.release_type || 'draft' }}
+          MANUAL_SNAP_CHANNELS: ${{ inputs.snap_channels || 'edge' }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            tag="${GITHUB_REF_NAME}"
+            if [[ ! "${tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+              echo "Release tags must look like v1.2.3 or v1.2.3-beta.1." >&2
+              exit 1
+            fi
+
+            publish_policy="always"
+            if [[ "${tag}" == *-* ]]; then
+              github_release_type="prerelease"
+              environment="prerelease"
+              snap_channels="edge"
+            else
+              github_release_type="release"
+              environment="production"
+              snap_channels="stable"
+            fi
+          else
+            publish_policy="${MANUAL_PUBLISH_POLICY}"
+            github_release_type="${MANUAL_RELEASE_TYPE}"
+            snap_channels="${MANUAL_SNAP_CHANNELS}"
+            if [[ "${github_release_type}" == "release" ]]; then
+              environment="production"
+            else
+              environment="prerelease"
+            fi
+          fi
+
+          {
+            echo "environment=${environment}"
+            echo "github_release_type=${github_release_type}"
+            echo "publish_policy=${publish_policy}"
+            echo "snap_channels=${snap_channels}"
+          } >> "${GITHUB_OUTPUT}"
+
+  validate:
+    name: Validate release inputs
+    runs-on: ubuntu-latest
+    needs: release-context
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Build verification
+        run: npm run test:build
+
+  build-macos:
+    name: Build macOS
+    # Build both macOS architectures together so electron-builder writes one
+    # coherent latest-mac.yml for updater clients.
+    runs-on: macos-15-intel
+    needs:
+      - release-context
+      - validate
+    environment: ${{ needs.release-context.outputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create OAuth account config
+        env:
+          LEPTON_GITHUB_CLIENT_ID: ${{ secrets.LEPTON_GITHUB_CLIENT_ID }}
+          LEPTON_GITHUB_CLIENT_SECRET: ${{ secrets.LEPTON_GITHUB_CLIENT_SECRET }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${LEPTON_GITHUB_CLIENT_ID:-}" || -z "${LEPTON_GITHUB_CLIENT_SECRET:-}" ]]; then
+            echo "Missing LEPTON_GITHUB_CLIENT_ID or LEPTON_GITHUB_CLIENT_SECRET." >&2
+            exit 1
+          fi
+
+          node -e "const fs = require('fs'); const config = { client_id: process.env.LEPTON_GITHUB_CLIENT_ID, client_secret: process.env.LEPTON_GITHUB_CLIENT_SECRET }; fs.writeFileSync('configs/account.js', 'module.exports = ' + JSON.stringify(config, null, 2) + '\n')"
+
+      - name: Require production signing secrets
+        if: needs.release-context.outputs.publish_policy == 'always' && needs.release-context.outputs.github_release_type == 'release'
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          for name in APPLE_ID APPLE_APP_SPECIFIC_PASSWORD APPLE_TEAM_ID CSC_LINK CSC_KEY_PASSWORD; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Missing required macOS production signing secret: ${name}" >&2
+              exit 1
+            fi
+          done
+
+      - name: Prepare package assets
+        run: npm run package:prepare
+
+      - name: Build and publish macOS artifacts
+        env:
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.CSC_LINK }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
+        run: npx electron-builder --mac --x64 --arm64 --publish ${{ needs.release-context.outputs.publish_policy }}
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lepton-macos
+          path: |
+            dist/*.dmg
+            dist/*.zip
+            dist/*.yml
+          if-no-files-found: error
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    needs:
+      - release-context
+      - validate
+    environment: ${{ needs.release-context.outputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create OAuth account config
+        shell: bash
+        env:
+          LEPTON_GITHUB_CLIENT_ID: ${{ secrets.LEPTON_GITHUB_CLIENT_ID }}
+          LEPTON_GITHUB_CLIENT_SECRET: ${{ secrets.LEPTON_GITHUB_CLIENT_SECRET }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${LEPTON_GITHUB_CLIENT_ID:-}" || -z "${LEPTON_GITHUB_CLIENT_SECRET:-}" ]]; then
+            echo "Missing LEPTON_GITHUB_CLIENT_ID or LEPTON_GITHUB_CLIENT_SECRET." >&2
+            exit 1
+          fi
+
+          node -e "const fs = require('fs'); const config = { client_id: process.env.LEPTON_GITHUB_CLIENT_ID, client_secret: process.env.LEPTON_GITHUB_CLIENT_SECRET }; fs.writeFileSync('configs/account.js', 'module.exports = ' + JSON.stringify(config, null, 2) + '\n')"
+
+      - name: Prepare package assets
+        run: npm run package:prepare
+
+      - name: Build and publish Windows artifacts
+        env:
+          CSC_KEY_PASSWORD: ${{ secrets.WINDOWS_CSC_KEY_PASSWORD }}
+          CSC_LINK: ${{ secrets.WINDOWS_CSC_LINK }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
+        run: npx electron-builder --win --x64 --ia32 --publish ${{ needs.release-context.outputs.publish_policy }}
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lepton-windows
+          path: |
+            dist/*.exe
+            dist/*.7z
+            dist/*.yml
+          if-no-files-found: error
+
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    needs:
+      - release-context
+      - validate
+    environment: ${{ needs.release-context.outputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install npm 11
+        run: npm install -g npm@11
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create OAuth account config
+        env:
+          LEPTON_GITHUB_CLIENT_ID: ${{ secrets.LEPTON_GITHUB_CLIENT_ID }}
+          LEPTON_GITHUB_CLIENT_SECRET: ${{ secrets.LEPTON_GITHUB_CLIENT_SECRET }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${LEPTON_GITHUB_CLIENT_ID:-}" || -z "${LEPTON_GITHUB_CLIENT_SECRET:-}" ]]; then
+            echo "Missing LEPTON_GITHUB_CLIENT_ID or LEPTON_GITHUB_CLIENT_SECRET." >&2
+            exit 1
+          fi
+
+          node -e "const fs = require('fs'); const config = { client_id: process.env.LEPTON_GITHUB_CLIENT_ID, client_secret: process.env.LEPTON_GITHUB_CLIENT_SECRET }; fs.writeFileSync('configs/account.js', 'module.exports = ' + JSON.stringify(config, null, 2) + '\n')"
+
+      - name: Install Snapcraft
+        run: sudo snap install snapcraft --classic
+
+      - name: Prepare package assets
+        run: npm run package:prepare
+
+      - name: Build and publish Linux artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LEPTON_GITHUB_RELEASE_TYPE: ${{ needs.release-context.outputs.github_release_type }}
+          LEPTON_SNAP_CHANNELS: ${{ needs.release-context.outputs.snap_channels }}
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+        run: npx electron-builder --linux --x64 --publish ${{ needs.release-context.outputs.publish_policy }}
+
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lepton-linux
+          path: |
+            dist/*.AppImage
+            dist/*.snap
+            dist/*.yml
+          if-no-files-found: error

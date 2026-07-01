@@ -149,6 +149,11 @@ module.exports = {
 }
 ```
 
+`configs/account.js` is intentionally ignored by Git. If it is missing, the app
+falls back to `configs/accountDummy.js`, which is useful for rendering tests but
+will not support real GitHub login. Release builds create `configs/account.js`
+from GitHub Actions secrets before packaging.
+
 ### Run
 ```bash
 $ npm run build && npm start
@@ -224,6 +229,7 @@ GitHub Actions currently runs:
 - `lint-test-build`: lint, unit tests, and webpack build verification
 - `electron-smoke`: Electron renderer smoke test
 - `packaged-smoke`: packaged app smoke test
+- `release`: tag-driven cross-platform packaging and publishing
 
 The smoke jobs are currently configured as non-blocking CI checks while the
 cross-platform Electron validation continues to mature.
@@ -242,8 +248,102 @@ settings/about, dashboard, search, sync, and GitHub/Gist backend interactions.
 Manual verification is still required for visual quality and real GitHub
 behavior; automated smoke checks do not replace backend workflow testing.
 
-## Build Installer App
+## Distribution and Release
+
 >Read [electron-builder docs](https://github.com/electron-userland/electron-builder#readme) and check out the [code signing wiki](https://github.com/electron-userland/electron-builder#code-signing) before building the installer app.
+
+Lepton uses `electron-builder.js` for packaging and GitHub Actions for
+cross-platform release automation. GitHub Releases are the primary download
+channel. Linux users can also install the Snap Store build.
+
+Stable releases use plain semver tags and are eligible for the in-app update
+banner:
+
+```bash
+$ git tag v1.10.2
+$ git push origin v1.10.2
+```
+
+Testing releases use semver prerelease tags and are published as GitHub
+prereleases. They must not notify stable users:
+
+```bash
+$ git tag v1.11.0-alpha.1
+$ git push origin v1.11.0-alpha.1
+
+$ git tag v1.11.0-beta.1
+$ git push origin v1.11.0-beta.1
+
+$ git tag v1.11.0-rc.1
+$ git push origin v1.11.0-rc.1
+```
+
+The automated flow is:
+
+```text
+version tag
+    |
+    v
+release workflow
+    |
+    +--> validate: lint, unit tests, webpack build
+    |
+    +--> macOS Intel: signed/notarized dmg + zip
+    +--> macOS Apple Silicon: signed/notarized dmg + zip
+    +--> Windows: NSIS installer + archive
+    +--> Linux: AppImage + snap
+    |
+    v
+GitHub Release
+    |
+    +--> stable tag: published release + stable update metadata
+    +--> prerelease tag: GitHub prerelease, no stable-user notification
+    |
+    v
+Snap Store
+    |
+    +--> stable tag: stable channel
+    +--> prerelease tag: edge channel
+```
+
+The macOS release job builds Intel and Apple Silicon artifacts in the same
+`electron-builder` invocation so `latest-mac.yml` is generated once with a
+coherent set of updater files.
+
+Expected artifact names include the version, operating system, and architecture,
+for example:
+
+- `Lepton-1.10.2-mac-x64.dmg`
+- `Lepton-1.10.2-mac-arm64.zip`
+- `Lepton-1.10.2-win-x64.exe`
+- `Lepton-1.10.2-linux-x64.AppImage`
+
+Release publishing requires repository secrets:
+
+- `LEPTON_GITHUB_CLIENT_ID`
+- `LEPTON_GITHUB_CLIENT_SECRET`
+- `APPLE_ID`
+- `APPLE_APP_SPECIFIC_PASSWORD`
+- `APPLE_TEAM_ID`
+- `CSC_LINK`
+- `CSC_KEY_PASSWORD`
+- `WINDOWS_CSC_LINK`
+- `WINDOWS_CSC_KEY_PASSWORD`
+- `SNAPCRAFT_STORE_CREDENTIALS`
+
+The workflow uses the built-in `GITHUB_TOKEN` for GitHub Release uploads.
+Production macOS publishing fails early if Apple signing and notarization secrets
+are missing. Windows signing is enabled when the Windows certificate secrets are
+present.
+
+Use environment-scoped secrets if prerelease and production should use different
+GitHub OAuth applications.
+
+The release workflow can also be started manually from GitHub Actions. Manual
+runs default to `--publish never`, which is intended for packaging dry runs
+without creating a public release.
+
+### Local Packaging
 
 Build an unpacked app for the current platform.
 ```bash

@@ -26,6 +26,10 @@ const { applyElectronProxy } = require('./app/utilities/electronProxy')
 const { configureI18n, t } = require('./app/utilities/i18n')
 const { createElectronLocalStorage } = require('./app/utilities/electronLocalStorage')
 const {
+  getUpdateCheckDecision,
+  getUpdateNotificationDecision
+} = require('./app/utilities/updatePolicy')
+const {
   buildGitHubOAuthUrl,
   parseGitHubOAuthCallback
 } = require('./app/utilities/auth/githubOAuth')
@@ -37,6 +41,8 @@ const electronLocalStorage = createElectronLocalStorage({
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
+autoUpdater.allowPrerelease = false
+autoUpdater.allowDowngrade = false
 
 initGlobalConfigs()
 configureI18n(nconf.get('i18n:locale'))
@@ -69,7 +75,17 @@ function getConfigPath() {
 }
 
 function shouldCheckForUpdates () {
-  return !isDev && !appInfo.version.includes('alpha') && nconf.get('autoUpdate')
+  const decision = getUpdateCheckDecision({
+    autoUpdate: nconf.get('autoUpdate'),
+    currentVersion: appInfo.version,
+    isDev
+  })
+
+  if (!decision.shouldCheck) {
+    logger.debug('[autoUpdater] update check skipped: ' + decision.reason)
+  }
+
+  return decision.shouldCheck
 }
 
 function getRendererUrl () {
@@ -82,7 +98,6 @@ function getRendererUrl () {
 
 function checkForAppUpdates ({ notify = false } = {}) {
   if (!shouldCheckForUpdates()) {
-    logger.debug('[autoUpdater] update check skipped')
     return
   }
 
@@ -172,6 +187,16 @@ function createWindow (autoLogin) {
       logger.debug('[autoUpdater] update-not-available')
     })
     autoUpdater.on('update-available', (info) => {
+      const decision = getUpdateNotificationDecision({
+        currentVersion: appInfo.version,
+        updateInfo: info
+      })
+
+      if (!decision.shouldNotify) {
+        logger.debug('[autoUpdater] update notification skipped: ' + decision.reason)
+        return
+      }
+
       logger.debug('[autoUpdater] update-available. ' + mainWindow)
       global.newVersionInfo = info
       mainWindow && mainWindow.webContents.send('update-available')
