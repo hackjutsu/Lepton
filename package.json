@@ -107,7 +107,6 @@
     "react-split-pane": "^3.2.0",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "twitter-text": "^3.0.0",
     "valid-filename": "^3.1.0",
     "winston": "^3.19.0"
   },

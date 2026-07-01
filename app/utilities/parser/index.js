@@ -1,4 +1,4 @@
-const twitter = resolveTwitterTextApi(require('twitter-text'))
+const HASHTAG_REGEX = /(^|[^\p{L}\p{M}\p{N}_])#([\p{L}\p{M}\p{N}_]+)/gu
 
 /* Old(Legacy) Style:  [my_title] my_description #tags: tag1, tag2, tag3
    New(Twitter) Style: [my_title] my_description #tag1 #tag2 #tag3
@@ -68,18 +68,28 @@ function parseCustomTagsLegacy (payload) {
 }
 
 function parseCustomTagsTwitter (payload) {
-  const rawCustomTags = twitter.extractHashtags(payload)
+  const rawCustomTags = extractHashtags(payload)
   if (rawCustomTags.length === 0) {
     return ''
   }
 
   const prefix = '#tags:'
-  const customTags = prefix + rawCustomTags.reduce((acc, cur) => acc + ', ' + cur)
+  const customTags = prefix + rawCustomTags.join(', ')
   return customTags
 }
 
-export function resolveTwitterTextApi (twitterTextModule) {
-  return twitterTextModule && twitterTextModule.default
-    ? twitterTextModule.default
-    : twitterTextModule
+export function extractHashtags (payload) {
+  const tags = []
+  const text = payload || ''
+  let match
+
+  HASHTAG_REGEX.lastIndex = 0
+  while ((match = HASHTAG_REGEX.exec(text)) !== null) {
+    const tag = match[2]
+    if (!/^\d+$/.test(tag)) {
+      tags.push(tag)
+    }
+  }
+
+  return tags
 }
