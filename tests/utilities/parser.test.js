@@ -4,9 +4,9 @@ import {
   addCustomTagsPrefix,
   addLangPrefix,
   descriptionParser,
+  extractHashtags,
   parseCustomTags,
-  parseLangName,
-  resolveTwitterTextApi
+  parseLangName
 } from '../../app/utilities/parser'
 
 describe('parser utilities', () => {
@@ -54,12 +54,23 @@ describe('parser utilities', () => {
     expect(parseCustomTags('alpha, beta')).toEqual([])
   })
 
-  it('resolves twitter-text default exports from bundled ESM interop', () => {
-    const twitterTextApi = {
-      extractHashtags: () => ['js']
-    }
+  it('extracts hashtag tags without matching embedded hashes or numeric-only tags', () => {
+    expect(extractHashtags('Use #js #react_native. Not issue#123, #123, or C#')).toEqual([
+      'js',
+      'react_native'
+    ])
+    expect(extractHashtags('#abc123 #_x #a-b')).toEqual([
+      'abc123',
+      '_x',
+      'a'
+    ])
+  })
 
-    expect(resolveTwitterTextApi(twitterTextApi)).toBe(twitterTextApi)
-    expect(resolveTwitterTextApi({ default: twitterTextApi })).toBe(twitterTextApi)
+  it('extracts unicode hashtag tags', () => {
+    expect(descriptionParser('[Title] body text #标签1 #テスト')).toEqual({
+      title: 'Title',
+      description: ' body text #标签1 #テスト',
+      customTags: '#tags:标签1, テスト'
+    })
   })
 })

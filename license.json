@@ -272,7 +272,7 @@
     "color-name@2.1.0": {
         "licenses": "MIT",
         "repository": "https://github.com/colorjs/color-name",
-        "licenseFile": "node_modules/color-string/node_modules/color-name/LICENSE"
+        "licenseFile": "node_modules/color/node_modules/color-name/LICENSE"
     },
     "color-string@2.1.4": {
         "licenses": "MIT",
@@ -293,11 +293,6 @@
         "licenses": "MIT",
         "repository": "https://github.com/tj/commander.js",
         "licenseFile": "node_modules/katex/node_modules/commander/LICENSE"
-    },
-    "core-js@2.6.11": {
-        "licenses": "MIT",
-        "repository": "https://github.com/zloirock/core-js",
-        "licenseFile": "node_modules/core-js/LICENSE"
     },
     "core-js@2.6.12": {
         "licenses": "MIT",
@@ -854,11 +849,6 @@
         "repository": "https://github.com/mathiasbynens/punycode.js",
         "licenseFile": "node_modules/punycode.js/LICENSE-MIT.txt"
     },
-    "punycode@1.4.1": {
-        "licenses": "MIT",
-        "repository": "https://github.com/bestiejs/punycode.js",
-        "licenseFile": "node_modules/twitter-text/node_modules/punycode/LICENSE-MIT.txt"
-    },
     "punycode@2.3.1": {
         "licenses": "MIT",
         "repository": "https://github.com/mathiasbynens/punycode.js",
@@ -1097,15 +1087,6 @@
         "licenses": "0BSD",
         "repository": "https://github.com/Microsoft/tslib",
         "licenseFile": "node_modules/tslib/LICENSE.txt"
-    },
-    "twemoji-parser@11.0.2": {
-        "licenses": "MIT",
-        "licenseFile": "node_modules/twemoji-parser/LICENSE.md"
-    },
-    "twitter-text@3.1.0": {
-        "licenses": "Apache*",
-        "repository": "https://github.com/twitter/twitter-text",
-        "licenseFile": "node_modules/twitter-text/LICENSE"
     },
     "uc.micro@2.1.0": {
         "licenses": "MIT",
