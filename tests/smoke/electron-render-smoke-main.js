@@ -131,6 +131,19 @@ async function getRendererState (window) {
       const expectedSelector = ${JSON.stringify(expectedSelector)}
       const appBounds = appContainer ? appContainer.getBoundingClientRect() : null
       const languageSelector = document.querySelector('[data-role="language-selector"]')
+      const images = Array.from(document.images).map(image => {
+        const bounds = image.getBoundingClientRect()
+        return {
+          className: image.className || '',
+          complete: image.complete,
+          currentSrc: image.currentSrc || '',
+          height: bounds.height,
+          naturalHeight: image.naturalHeight,
+          naturalWidth: image.naturalWidth,
+          src: image.getAttribute('src') || '',
+          width: bounds.width
+        }
+      })
       return {
         bodyText: document.body ? document.body.innerText : '',
         bodyHtml: document.body ? document.body.innerHTML : '',
@@ -146,6 +159,7 @@ async function getRendererState (window) {
         languageOptions: languageSelector
           ? Array.from(languageSelector.options).map(option => option.value)
           : [],
+        images,
         appBounds: appBounds ? {
           width: appBounds.width,
           height: appBounds.height
@@ -208,8 +222,29 @@ function assertNoBlockingRendererEvents () {
   }
 }
 
+function assertLoadedRendererImages (state) {
+  const brokenImages = (state.images || []).filter(image =>
+    !image.complete ||
+    image.naturalWidth <= 0 ||
+    image.naturalHeight <= 0
+  )
+
+  if (brokenImages.length > 0) {
+    throw new Error(`Renderer images failed to load: ${JSON.stringify(brokenImages)}`)
+  }
+}
+
+function assertImagePresent (state, className) {
+  const image = (state.images || []).find(image => image.className.includes(className))
+  if (!image) {
+    throw new Error(`Expected renderer image with class "${className}" to exist: ${JSON.stringify(state.images || [])}`)
+  }
+}
+
 function assertLoginRendererState (state) {
   assertSharedRendererState(state)
+  assertLoadedRendererImages(state)
+  assertImagePresent(state, 'profile-image-modal')
 
   if (!state.hasAppContainer || !state.hasLoginModal) {
     throw new Error(`Expected app container and login modal to exist: ${JSON.stringify(state)}`)
@@ -230,6 +265,7 @@ function assertLoginRendererState (state) {
 function assertFixtureRendererState (state) {
   assertSharedRendererState(state)
   assertNoBlockingRendererEvents()
+  assertLoadedRendererImages(state)
 
   if (!state.hasExpectedSelector) {
     throw new Error(`Expected fixture selector was not visible: ${process.env.LEPTON_SMOKE_EXPECTED_SELECTOR}`)

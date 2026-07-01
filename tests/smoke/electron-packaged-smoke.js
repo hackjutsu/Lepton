@@ -42,6 +42,11 @@ function createTempHome (locale = 'en') {
 
 const PACKAGED_RENDER_FIXTURES = [
   {
+    name: 'active',
+    selector: '.profile-image-section',
+    text: 'React 19 render fixture'
+  },
+  {
     name: 'dashboard',
     selector: '.dashboard-modal canvas',
     text: 'Dashboard'
@@ -197,6 +202,17 @@ function connectCdp (webSocketDebuggerUrl) {
   })
 }
 
+function imageLoaded (image) {
+  return image &&
+    image.complete &&
+    image.naturalWidth > 0 &&
+    image.naturalHeight > 0
+}
+
+function allImagesLoaded (images = []) {
+  return images.every(imageLoaded)
+}
+
 async function waitForLoginUi (cdp, expectedText) {
   const deadline = Date.now() + 30000
 
@@ -208,6 +224,19 @@ async function waitForLoginUi (cdp, expectedText) {
           const loginModal = document.querySelector('.login-modal')
           const appBounds = appContainer ? appContainer.getBoundingClientRect() : null
           const languageSelector = document.querySelector('[data-role="language-selector"]')
+          const images = Array.from(document.images).map(image => {
+            const bounds = image.getBoundingClientRect()
+            return {
+              className: image.className || '',
+              complete: image.complete,
+              currentSrc: image.currentSrc || '',
+              height: bounds.height,
+              naturalHeight: image.naturalHeight,
+              naturalWidth: image.naturalWidth,
+              src: image.getAttribute('src') || '',
+              width: bounds.width
+            }
+          })
           return {
             bodyText: document.body ? document.body.innerText : '',
             hasAppContainer: Boolean(appContainer),
@@ -219,6 +248,7 @@ async function waitForLoginUi (cdp, expectedText) {
             languageOptions: languageSelector
               ? Array.from(languageSelector.options).map(option => option.value)
               : [],
+            images,
             appBounds: appBounds ? {
               width: appBounds.width,
               height: appBounds.height
@@ -230,6 +260,7 @@ async function waitForLoginUi (cdp, expectedText) {
     })
     const state = result.result.value
     const expectedTexts = expectedText.split('|')
+    const profileImage = state.images.find(image => image.className.includes('profile-image-modal'))
 
     if (
       state.hasAppContainer &&
@@ -241,6 +272,8 @@ async function waitForLoginUi (cdp, expectedText) {
       state.appBounds &&
       state.appBounds.width > 0 &&
       state.appBounds.height > 0 &&
+      imageLoaded(profileImage) &&
+      allImagesLoaded(state.images) &&
       expectedTexts.every(text => state.bodyText.includes(text)) &&
       ['en', 'es', 'fr', 'ja', 'ko', 'zh-Hans', 'zh-Hant'].every(locale => state.languageOptions.includes(locale))
     ) {
@@ -263,6 +296,19 @@ async function waitForFixtureUi (cdp, expectedSelector, expectedText) {
           const expectedNode = document.querySelector(${JSON.stringify(expectedSelector)})
           const bounds = expectedNode ? expectedNode.getBoundingClientRect() : null
           const appContainer = document.querySelector('.app-container')
+          const images = Array.from(document.images).map(image => {
+            const bounds = image.getBoundingClientRect()
+            return {
+              className: image.className || '',
+              complete: image.complete,
+              currentSrc: image.currentSrc || '',
+              height: bounds.height,
+              naturalHeight: image.naturalHeight,
+              naturalWidth: image.naturalWidth,
+              src: image.getAttribute('src') || '',
+              width: bounds.width
+            }
+          })
           return {
             bodyText: document.body ? document.body.innerText : '',
             hasAppContainer: Boolean(appContainer),
@@ -271,6 +317,7 @@ async function waitForFixtureUi (cdp, expectedSelector, expectedText) {
             hasLeptonConfigBridge: Boolean(window.lepton && window.lepton.config && window.lepton.config.get),
             processType: typeof process,
             requireType: typeof require,
+            images,
             expectedBounds: bounds ? {
               width: bounds.width,
               height: bounds.height
@@ -293,6 +340,7 @@ async function waitForFixtureUi (cdp, expectedSelector, expectedText) {
       state.expectedBounds &&
       state.expectedBounds.width > 0 &&
       state.expectedBounds.height > 0 &&
+      allImagesLoaded(state.images) &&
       expectedTexts.every(text => state.bodyText.includes(text))
     ) {
       return state
