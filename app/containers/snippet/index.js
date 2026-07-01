@@ -8,11 +8,11 @@ import CodeArea from '../codeArea'
 import Panel, { Collapse } from '../compatPanel'
 import HumanReadableTime from 'human-readable-time'
 import Modal from '../compatModal'
-import Moment from 'moment'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
+import { formatRelativeTime } from '../../utilities/relativeTime'
 import TagBadges from '../tagBadges'
 import { toggleMarkdownTaskListItem } from '../../utilities/markdown/taskList'
 import {
@@ -508,7 +508,7 @@ class Snippet extends Component {
           </div>
           : null }
         <span className='update-date'>
-          { t('snippet.lastActive', { time: Moment(gist.brief.updated_at).fromNow() }) }
+          { t('snippet.lastActive', { time: formatRelativeTime(gist.brief.updated_at) }) }
         </span>
       </div>)
 
