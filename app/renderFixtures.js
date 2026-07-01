@@ -1,5 +1,5 @@
 import { addLangPrefix as Prefixed } from './utilities/parser'
-import leptonLogoImage from './containers/aboutPage/logo-light.webp'
+import leptonLogoImage from './containers/aboutPage/logo-light.webp?inline'
 
 const FIXTURE_USER = {
   avatar_url: leptonLogoImage,

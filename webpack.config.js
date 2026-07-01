@@ -11,7 +11,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'bundle'),
     publicPath: './bundle/',
-    filename: 'app.bundle.js'
+    filename: 'app.bundle.js',
+    clean: true
   },
   performance: {
     hints: false
@@ -52,6 +53,11 @@ module.exports = {
       ]
     }, {
       test: /\.(png|jpe?g|webp)$/i,
+      resourceQuery: /inline/,
+      type: 'asset/inline'
+    }, {
+      test: /\.(png|jpe?g|webp)$/i,
+      resourceQuery: { not: [/inline/] },
       type: 'asset',
       parser: {
         dataUrlCondition: {

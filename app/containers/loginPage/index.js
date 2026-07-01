@@ -8,9 +8,9 @@ import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 
-import dojocatImage from '../../utilities/octodex/dojocat.webp'
-import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.webp'
-import saritocatImage from '../../utilities/octodex/saritocat.webp'
+import dojocatImage from '../../utilities/octodex/dojocat.webp?inline'
+import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.webp?inline'
+import saritocatImage from '../../utilities/octodex/saritocat.webp?inline'
 
 import './index.scss'
 
