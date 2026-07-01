@@ -40,6 +40,19 @@ function createTempHome (locale = 'en') {
   return { configHome, root, userData }
 }
 
+const PACKAGED_RENDER_FIXTURES = [
+  {
+    name: 'dashboard',
+    selector: '.dashboard-modal canvas',
+    text: 'Dashboard'
+  },
+  {
+    name: 'jupyter-notebook',
+    selector: '.jupyterNotebook-section .nb-notebook',
+    text: 'Notebook Fixture|hello from notebook|42'
+  }
+]
+
 function waitForProcessExit (child, timeout = 5000) {
   return new Promise((resolve, reject) => {
     if (child.exitCode !== null || child.signalCode !== null) {
@@ -240,6 +253,57 @@ async function waitForLoginUi (cdp, expectedText) {
   throw new Error('Timed out waiting for the packaged login UI to render.')
 }
 
+async function waitForFixtureUi (cdp, expectedSelector, expectedText) {
+  const deadline = Date.now() + 30000
+
+  while (Date.now() < deadline) {
+    const result = await cdp.call('Runtime.evaluate', {
+      expression: `
+        (() => {
+          const expectedNode = document.querySelector(${JSON.stringify(expectedSelector)})
+          const bounds = expectedNode ? expectedNode.getBoundingClientRect() : null
+          const appContainer = document.querySelector('.app-container')
+          return {
+            bodyText: document.body ? document.body.innerText : '',
+            hasAppContainer: Boolean(appContainer),
+            hasExpectedNode: Boolean(expectedNode),
+            hasLeptonBridge: Boolean(window.lepton),
+            hasLeptonConfigBridge: Boolean(window.lepton && window.lepton.config && window.lepton.config.get),
+            processType: typeof process,
+            requireType: typeof require,
+            expectedBounds: bounds ? {
+              width: bounds.width,
+              height: bounds.height
+            } : null
+          }
+        })()
+      `,
+      returnByValue: true
+    })
+    const state = result.result.value
+    const expectedTexts = expectedText.split('|').filter(Boolean)
+
+    if (
+      state.hasAppContainer &&
+      state.hasExpectedNode &&
+      state.hasLeptonBridge &&
+      state.hasLeptonConfigBridge &&
+      state.requireType === 'undefined' &&
+      state.processType === 'undefined' &&
+      state.expectedBounds &&
+      state.expectedBounds.width > 0 &&
+      state.expectedBounds.height > 0 &&
+      expectedTexts.every(text => state.bodyText.includes(text))
+    ) {
+      return state
+    }
+
+    await wait(100)
+  }
+
+  throw new Error(`Timed out waiting for packaged fixture selector "${expectedSelector}" to render.`)
+}
+
 async function captureScreenshot (cdp, artifactDir, fileName) {
   await cdp.call('Runtime.evaluate', {
     expression: 'new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))',
@@ -252,20 +316,19 @@ async function captureScreenshot (cdp, artifactDir, fileName) {
   console.log(`Saved packaged smoke-test screenshot to ${screenshotPath}`)
 }
 
-async function runPackagedSmoke () {
-  const appPath = findPackagedApp()
+async function runPackagedScenario (appPath, options) {
   const executablePath = getExecutablePath(appPath)
   const tempHome = createTempHome('en')
   const port = await getFreePort()
-
-  runCodesignDiagnostics(appPath)
 
   const child = spawn(executablePath, [
     `--remote-debugging-port=${port}`,
     `--user-data-dir=${tempHome.userData}`
   ], {
     cwd: repoRoot,
-    env: Object.assign({}, process.env, {
+    env: Object.assign({}, process.env, options.renderFixture ? {
+      LEPTON_RENDER_FIXTURE: options.renderFixture
+    } : {}, {
       ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
       XDG_CONFIG_HOME: tempHome.configHome
     }),
@@ -290,10 +353,13 @@ async function runPackagedSmoke () {
     cdp = await connectCdp(target.webSocketDebuggerUrl)
     await cdp.call('Page.enable')
     await cdp.call('Runtime.enable')
-    await waitForLoginUi(cdp, 'Login|GitHub Login')
-    await captureScreenshot(cdp, tempHome.root, 'electron-packaged-smoke-success.png')
+    if (options.renderFixture) {
+      await waitForFixtureUi(cdp, options.expectedSelector, options.expectedText)
+    } else {
+      await waitForLoginUi(cdp, options.expectedText)
+    }
+    await captureScreenshot(cdp, tempHome.root, options.screenshotName)
     cdp.call('Browser.close').catch(() => {})
-    console.log('electron packaged smoke test passed')
   } catch (err) {
     if (cdp) cdp.close()
     child.kill('SIGKILL')
@@ -305,6 +371,27 @@ async function runPackagedSmoke () {
       await waitForProcessExit(child).catch(() => {})
     }
   }
+}
+
+async function runPackagedSmoke () {
+  const appPath = findPackagedApp()
+  runCodesignDiagnostics(appPath)
+
+  await runPackagedScenario(appPath, {
+    expectedText: 'Login|GitHub Login',
+    screenshotName: 'electron-packaged-smoke-success.png'
+  })
+
+  for (const fixture of PACKAGED_RENDER_FIXTURES) {
+    await runPackagedScenario(appPath, {
+      expectedSelector: fixture.selector,
+      expectedText: fixture.text,
+      renderFixture: fixture.name,
+      screenshotName: `electron-packaged-${fixture.name}-success.png`
+    })
+  }
+
+  console.log('electron packaged smoke test passed')
 }
 
 runPackagedSmoke().catch(err => {
