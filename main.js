@@ -24,13 +24,16 @@ const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
 const { applyElectronProxy } = require('./app/utilities/electronProxy')
 const { configureI18n, t } = require('./app/utilities/i18n')
-const electronLocalStorage = require('electron-json-storage-sync')
+const { createElectronLocalStorage } = require('./app/utilities/electronLocalStorage')
 const {
   buildGitHubOAuthUrl,
   parseGitHubOAuthCallback
 } = require('./app/utilities/auth/githubOAuth')
 
 const logger = createMainLogger()
+const electronLocalStorage = createElectronLocalStorage({
+  getUserDataPath: () => app.getPath('userData')
+})
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger

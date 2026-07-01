@@ -84,7 +84,6 @@
     "codemirror-one-dark-theme": "^1.1.1",
     "electron-context-menu": "^3.0.0",
     "electron-is-dev": "^2.0.0",
-    "electron-json-storage-sync": "^1.1.1",
     "electron-localshortcut": "^3.1.0",
     "electron-updater": "^6.8.9",
     "electron-window-state": "^5.0.0",
