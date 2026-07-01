@@ -32,7 +32,6 @@ module.exports = {
       }
     },
     "plugins": [
-        "standard",
         "react"
     ],
 };
