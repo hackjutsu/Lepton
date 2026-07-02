@@ -102,7 +102,7 @@ describe('GitHub API utility', () => {
     expect(init.headers).toEqual(expect.objectContaining({
       Accept: 'application/json',
       'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': 'hackjutsu-lepton-app'
+      'User-Agent': 'lepton-snippet-app'
     }))
     expect(init).not.toHaveProperty('agent')
   })
@@ -159,7 +159,7 @@ describe('GitHub API utility', () => {
     }))
     expect(init.headers).toEqual(expect.objectContaining({
       Accept: 'application/json',
-      'User-Agent': 'hackjutsu-lepton-app',
+      'User-Agent': 'lepton-snippet-app',
       Authorization: 'token token-1'
     }))
     expect(result).toEqual({ login: 'octo' })
@@ -207,7 +207,7 @@ describe('GitHub API utility', () => {
     expect(init.headers).toEqual(expect.objectContaining({
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'User-Agent': 'hackjutsu-lepton-app',
+      'User-Agent': 'lepton-snippet-app',
       Authorization: 'token token-1'
     }))
     expect(result).toEqual({ id: 'gist-1' })
@@ -293,7 +293,7 @@ describe('GitHub API utility', () => {
     const [url, init] = fetch.mock.calls[0]
     expect(url).toBe('https://api.github.com/gists?per_page=100&page=1')
     expect(init.headers).toEqual(expect.objectContaining({
-      'User-Agent': 'hackjutsu-lepton-app',
+      'User-Agent': 'lepton-snippet-app',
       Authorization: 'token token-1'
     }))
   })
