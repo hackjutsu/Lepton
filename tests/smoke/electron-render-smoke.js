@@ -92,6 +92,16 @@ const RENDER_FIXTURES = [
     name: 'jupyter-notebook',
     selector: '.jupyterNotebook-section .nb-notebook',
     text: 'Notebook Fixture|hello from notebook|42'
+  },
+  {
+    name: 'login-progress',
+    selector: '.login-status-line',
+    text: 'Exchanging OAuth code for access token...'
+  },
+  {
+    name: 'login-error-log',
+    selector: '.login-status-line a[href="file:///tmp/lepton-login.log"]',
+    text: 'GitHub sign-in failed.|See log'
   }
 ]
 

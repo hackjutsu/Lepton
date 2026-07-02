@@ -18,6 +18,7 @@ export const UPDATE_PINNED_TAGS = 'UPDATE_PINNED_TAGS'
 export const SELECT_GIST_TAG = 'SELECT_GIST_TAG'
 export const SELECT_GIST = 'SELECT_GIST'
 export const UPDATE_AUTHWINDOW_STATUS = 'UPDATE_AUTHWINDOW_STATUS'
+export const UPDATE_LOGIN_STATUS = 'UPDATE_LOGIN_STATUS'
 export const UPDATE_GIST_SYNC_STATUS = 'UPDATE_GIST_SYNC_STATUS'
 export const UPDATE_SEARCHWINDOW_STATUS = 'UPDATE_SEARCHWINDOW_STATUS'
 export const UPDATE_SCROLL_REQUEST_STATUS = 'UPDATE_SCROLL_REQUEST_STATUS'
@@ -121,6 +122,13 @@ export function updateGistSyncStatus (status) {
 export function updateAuthWindowStatus (status) {
   return {
     type: UPDATE_AUTHWINDOW_STATUS,
+    payload: status
+  }
+}
+
+export function updateLoginStatus (status) {
+  return {
+    type: UPDATE_LOGIN_STATUS,
     payload: status
   }
 }

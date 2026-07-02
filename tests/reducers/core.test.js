@@ -20,6 +20,7 @@ import {
   updateAccessToken,
   updateGists,
   updateGistTags,
+  updateLoginStatus,
   updateSingleGist,
   updateUpdateAvailableBarStatus,
   updateUserSession
@@ -28,6 +29,7 @@ import activeGist from '../../app/reducers/reducer_active_gist'
 import accessToken from '../../app/reducers/reducer_token'
 import gistTags from '../../app/reducers/reducer_gist_tags'
 import gists from '../../app/reducers/reducer_gists'
+import loginStatus from '../../app/reducers/reducer_login_status'
 import updateAvailableBarStatus from '../../app/reducers/reducer_update_available_bar_status'
 import userSession from '../../app/reducers/reducer_user_session'
 
@@ -70,5 +72,35 @@ describe('core reducers', () => {
   it('tracks update alert visibility', () => {
     expect(updateAvailableBarStatus(undefined, { type: '@@INIT' })).toBe('OFF')
     expect(updateAvailableBarStatus('OFF', updateUpdateAvailableBarStatus('ON'))).toBe('ON')
+  })
+
+  it('tracks login status details for authentication feedback', () => {
+    expect(loginStatus(undefined, { type: '@@INIT' })).toEqual({
+      message: '',
+      level: 'info',
+      logFilePath: null
+    })
+    expect(loginStatus(undefined, updateLoginStatus({
+      message: 'Exchanging OAuth code for access token...'
+    }))).toEqual({
+      message: 'Exchanging OAuth code for access token...',
+      level: 'info',
+      logFilePath: null
+    })
+    expect(loginStatus(undefined, updateLoginStatus({
+      message: 'GitHub sign-in failed.',
+      level: 'error',
+      logFilePath: '/tmp/lepton.log'
+    }))).toEqual({
+      message: 'GitHub sign-in failed.',
+      level: 'error',
+      logFilePath: '/tmp/lepton.log'
+    })
+    expect(loginStatus({ message: 'old', level: 'error', logFilePath: '/tmp/old.log' },
+      updateLoginStatus(null))).toEqual({
+      message: '',
+      level: 'info',
+      logFilePath: null
+    })
   })
 })
