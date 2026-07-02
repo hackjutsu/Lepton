@@ -13,15 +13,67 @@
   }
 
   .modal-dialog {
-    perspective: 900px;
+    perspective: 1200px;
   }
 
   .modal-content {
     animation: login-modal-fade-in 180ms ease-out;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    height: 455px;
     margin-top: 100px;
-    min-height: 430px;
     opacity: 1;
+    overflow: visible;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
     transition: opacity 180ms ease-in;
+  }
+
+  .login-modal-card {
+    height: 100%;
+    position: relative;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    transform-origin: center center;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    width: 100%;
+    will-change: transform;
+  }
+
+  &.login-modal-flipping .login-modal-card {
+    animation: login-modal-card-flip 520ms cubic-bezier(.22, .61, .36, 1) both;
+    pointer-events: none;
+  }
+
+  .login-modal-face {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 6px;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+    height: 100%;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    width: 100%;
+  }
+
+  .login-modal-face-front {
+    -webkit-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+  }
+
+  .login-modal-face-back {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
   }
 
   .modal-header {
@@ -106,23 +158,13 @@
   }
 
   .login-modal-body {
-    min-height: 356px;
+    height: 394px;
     overflow: hidden;
     perspective: 900px;
   }
 
-  .login-modal-body-flipper {
-    backface-visibility: hidden;
+  .login-modal-body-content {
     display: block;
-    min-height: 326px;
-    transform: translateZ(0);
-    transform-origin: center center;
-    transform-style: preserve-3d;
-    will-change: transform;
-  }
-
-  &.login-modal-flipping .login-modal-body-flipper {
-    animation: login-modal-horizontal-flip 320ms cubic-bezier(.2, .7, .2, 1) both;
   }
 
   .button-group-modal {
@@ -190,26 +232,32 @@
   }
 }
 
-@keyframes login-modal-horizontal-flip {
+@keyframes login-modal-card-flip {
   0% {
+    -webkit-transform: translateZ(0) rotateY(0deg);
     transform: translateZ(0) rotateY(0deg);
-  }
-
-  47% {
-    transform: translateZ(0) rotateY(88deg);
-  }
-
-  53% {
-    transform: translateZ(0) rotateY(88deg);
   }
 
   100% {
+    -webkit-transform: translateZ(0) rotateY(-180deg);
+    transform: translateZ(0) rotateY(-180deg);
+  }
+}
+
+@-webkit-keyframes login-modal-card-flip {
+  0% {
+    -webkit-transform: translateZ(0) rotateY(0deg);
     transform: translateZ(0) rotateY(0deg);
+  }
+
+  100% {
+    -webkit-transform: translateZ(0) rotateY(-180deg);
+    transform: translateZ(0) rotateY(-180deg);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .login-modal.login-modal-flipping .login-modal-body-flipper {
+  .login-modal.login-modal-flipping .login-modal-card {
     animation: none;
   }
 }

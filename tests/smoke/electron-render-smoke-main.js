@@ -3,6 +3,7 @@ const path = require('path')
 const { app, BrowserWindow } = require('electron')
 
 const repoRoot = path.resolve(__dirname, '../..')
+const loginModalFlipSettleMs = 700
 
 app.getAppPath = () => repoRoot
 
@@ -288,6 +289,106 @@ function assertLoginRendererState (state) {
   }
 }
 
+async function assertLoginModeSwitchKeepsModalHeight (window) {
+  const result = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const modalContent = document.querySelector('.login-modal .modal-content')
+      const switchButton = document.querySelector('.login-mode-switch')
+
+      function getHeight() {
+        return modalContent ? Math.round(modalContent.getBoundingClientRect().height) : null
+      }
+
+      if (!modalContent || !switchButton) {
+        resolve({
+          reason: 'missing modal content or mode switch',
+          before: getHeight(),
+          hasSwitch: Boolean(switchButton)
+        })
+        return
+      }
+
+      const before = getHeight()
+      switchButton.click()
+
+      setTimeout(() => {
+        const afterSwitch = getHeight()
+        const hasTokenInput = Boolean(document.querySelector('.login-modal input.form-control'))
+        const updatedSwitchButton = document.querySelector('.login-mode-switch')
+
+        if (updatedSwitchButton) updatedSwitchButton.click()
+
+        setTimeout(() => {
+          resolve({
+            afterSwitch,
+            before,
+            hasTokenInput,
+            restored: getHeight()
+          })
+        }, ${loginModalFlipSettleMs})
+      }, ${loginModalFlipSettleMs})
+    })
+  `, true)
+
+  if (!result.hasTokenInput) {
+    throw new Error(`Expected login mode switch to render the token form: ${JSON.stringify(result)}`)
+  }
+
+  if (Math.abs(result.before - result.afterSwitch) > 1 || Math.abs(result.before - result.restored) > 1) {
+    throw new Error(`Expected login modal height to stay fixed across mode switches: ${JSON.stringify(result)}`)
+  }
+}
+
+async function assertLoginLocaleSwitchRendersInPlace (window) {
+  const result = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const modalContent = document.querySelector('.login-modal .modal-content')
+      const languageSelector = document.querySelector('[data-role="language-selector"]')
+
+      function getHeight() {
+        return modalContent ? Math.round(modalContent.getBoundingClientRect().height) : null
+      }
+
+      if (!modalContent || !languageSelector) {
+        resolve({
+          reason: 'missing modal content or language selector',
+          before: getHeight(),
+          hasLanguageSelector: Boolean(languageSelector)
+        })
+        return
+      }
+
+      const before = getHeight()
+      const targetLocale = languageSelector.value === 'ja' ? 'en' : 'ja'
+      const expectedTitle = targetLocale === 'ja' ? 'ログイン' : 'Login'
+      languageSelector.value = targetLocale
+      languageSelector.dispatchEvent(new Event('change', { bubbles: true }))
+
+      setTimeout(() => {
+        resolve({
+          afterSwitch: getHeight(),
+          bodyText: document.body ? document.body.innerText : '',
+          expectedTitle,
+          selectedLocale: languageSelector.value,
+          targetLocale
+        })
+      }, ${loginModalFlipSettleMs})
+    })
+  `, true)
+
+  if (result.selectedLocale !== result.targetLocale) {
+    throw new Error(`Expected language selector to keep the selected locale: ${JSON.stringify(result)}`)
+  }
+
+  if (!result.bodyText || !result.bodyText.includes(result.expectedTitle)) {
+    throw new Error(`Expected login modal to render the selected locale in place: ${JSON.stringify(result)}`)
+  }
+
+  if (Math.abs(result.before - result.afterSwitch) > 1) {
+    throw new Error(`Expected login modal height to stay fixed across locale switches: ${JSON.stringify(result)}`)
+  }
+}
+
 function assertFixtureRendererState (state) {
   assertSharedRendererState(state)
   assertNoBlockingRendererEvents()
@@ -320,6 +421,8 @@ async function main () {
     } else {
       await waitForLoginUi(window)
       assertLoginRendererState(await getRendererState(window))
+      await assertLoginModeSwitchKeepsModalHeight(window)
+      await assertLoginLocaleSwitchRendersInPlace(window)
       await captureScreenshot(window, 'electron-render-smoke-success.png')
       console.log('electron render smoke test passed')
     }

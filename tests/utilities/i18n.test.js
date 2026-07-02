@@ -4,7 +4,8 @@ import {
   configureI18n,
   getLocale,
   getSupportedLocales,
-  t
+  t,
+  translate
 } from '../../app/utilities/i18n'
 import builderConfig from '../../electron-builder'
 import { getElectronLanguages } from '../../configs/electronLanguages'
@@ -94,6 +95,13 @@ describe('i18n utilities', () => {
   it('interpolates named values', () => {
     configureI18n('en')
     expect(t('login.continueAs', { username: 'octocat' })).toBe('Continue as octocat')
+  })
+
+  it('translates a specific locale without changing the active locale', () => {
+    configureI18n('en')
+    expect(translate('ja', 'login.title')).toBe('ログイン')
+    expect(getLocale()).toBe('en')
+    expect(t('login.title')).toBe('Login')
   })
 
   it('falls back to English for missing keys in a supported locale', () => {

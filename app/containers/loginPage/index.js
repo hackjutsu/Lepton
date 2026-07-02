@@ -6,7 +6,7 @@ import LanguageSelector from '../languageSelector'
 import Modal from '../compatModal'
 import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
-import { t } from '../../utilities/i18n'
+import { getLocale, translate } from '../../utilities/i18n'
 
 import dojocatImage from '../../utilities/octodex/dojocat.webp?inline'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.webp?inline'
@@ -19,8 +19,7 @@ const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 
 const LoginModeEnum = { CREDENTIALS: 1, TOKEN: 2 }
-const LOGIN_MODAL_FLIP_DURATION_MS = 320
-const LOGIN_MODAL_FLIP_SWAP_MS = LOGIN_MODAL_FLIP_DURATION_MS / 2
+const LOGIN_MODAL_FLIP_DURATION_MS = 520
 
 function getFileUrl (filePath) {
   if (!filePath) return null
@@ -34,8 +33,12 @@ class LoginPage extends Component {
     super(props)
     this.state = {
       inputTokenValue: '',
+      activeLocale: getLocale(),
       loginMode: LoginModeEnum.CREDENTIALS,
-      modalFlipping: false
+      modalFlipping: false,
+      pendingLoginMode: null,
+      pendingLocale: null,
+      pendingModalState: null
     }
   }
 
@@ -58,8 +61,6 @@ class LoginPage extends Component {
     logger.debug('-----> Removing listener for auto-login signal')
     unsubscribeIpc(this.ipcSubscriptions)
     clearTimeout(this.loginModeFlipTimer)
-    clearTimeout(this.loginModeSwapTimer)
-    clearTimeout(this.languageChangeTimer)
   }
 
   handleLoginClicked () {
@@ -78,28 +79,61 @@ class LoginPage extends Component {
     }
   }
 
-  handleLoginModeSwitched (event) {
-    if (event && typeof event.preventDefault === 'function') event.preventDefault()
-    if (this.state.modalFlipping) return
+  startModalFlip (getFinalState) {
+    if (this.state.modalFlipping) return Promise.resolve()
 
-    this.setState({ modalFlipping: true })
-    this.loginModeSwapTimer = setTimeout(() => {
-      this.setState(prevState => ({
-        loginMode: prevState.loginMode === LoginModeEnum.CREDENTIALS
-          ? LoginModeEnum.TOKEN
-          : LoginModeEnum.CREDENTIALS
-      }))
-    }, LOGIN_MODAL_FLIP_SWAP_MS)
-    this.loginModeFlipTimer = setTimeout(() => {
-      this.setState({ modalFlipping: false })
-    }, LOGIN_MODAL_FLIP_DURATION_MS)
+    clearTimeout(this.loginModeFlipTimer)
+
+    return new Promise(resolve => {
+      this.setState(prevState => {
+        const finalState = typeof getFinalState === 'function' ? getFinalState(prevState) : {}
+        const pendingLoginMode = Object.prototype.hasOwnProperty.call(finalState, 'loginMode')
+          ? finalState.loginMode
+          : prevState.loginMode
+        const pendingLocale = Object.prototype.hasOwnProperty.call(finalState, 'activeLocale')
+          ? finalState.activeLocale
+          : prevState.activeLocale
+
+        return {
+          modalFlipping: true,
+          pendingLoginMode,
+          pendingLocale,
+          pendingModalState: finalState
+        }
+      })
+
+      this.loginModeFlipTimer = setTimeout(() => {
+        this.setState(prevState => Object.assign(
+          {},
+          prevState.pendingModalState || {},
+          {
+            modalFlipping: false,
+            pendingLoginMode: null,
+            pendingLocale: null,
+            pendingModalState: null
+          }
+        ), resolve)
+      }, LOGIN_MODAL_FLIP_DURATION_MS)
+    })
   }
 
-  renderControlSection () {
+  handleLoginModeSwitched (event) {
+    if (event && typeof event.preventDefault === 'function') event.preventDefault()
+    this.startModalFlip(prevState => ({
+      loginMode: prevState.loginMode === LoginModeEnum.CREDENTIALS
+        ? LoginModeEnum.TOKEN
+        : LoginModeEnum.CREDENTIALS
+    }))
+  }
+
+  translate (locale, key, values) {
+    return translate(locale || this.state.activeLocale, key, values)
+  }
+
+  renderControlSection (loginMode = this.state.loginMode, locale = this.state.activeLocale, isInteractive = true) {
     const { authWindowStatus, loggedInUserInfo, userSessionStatus } = this.props
-    const { loginMode } = this.state
     const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
-    const welcomeMessage = t('login.welcome')
+    const welcomeMessage = this.translate(locale, 'login.welcome')
 
     if (userSessionStatus === 'IN_PROGRESS') {
       return (
@@ -121,13 +155,17 @@ class LoginPage extends Component {
           </div>
           { token
             ? <Button
-              autoFocus
+              autoFocus={ isInteractive }
               className='modal-button'
               bsStyle="default"
+              disabled={ !isInteractive }
               onClick={ this.handleContinueButtonClicked.bind(this, token) }>
-              { loggedInUserName ? t('login.continueAs', { username: loggedInUserName }) : t('login.happyCoding') }
+              { loggedInUserName
+                ? this.translate(locale, 'login.continueAs', { username: loggedInUserName })
+                : this.translate(locale, 'login.happyCoding')
+              }
             </Button>
-            : this.renderTokenLoginSection(userSessionStatus)}
+            : this.renderTokenLoginSection(userSessionStatus, locale, isInteractive)}
         </div>
       )
     }
@@ -140,8 +178,8 @@ class LoginPage extends Component {
             <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
           </div>
           { loginMode === LoginModeEnum.CREDENTIALS
-            ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus)
-            : this.renderTokenLoginSection(userSessionStatus)
+            ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus, locale, isInteractive)
+            : this.renderTokenLoginSection(userSessionStatus, locale, isInteractive)
           }
         </div>
       )
@@ -150,28 +188,40 @@ class LoginPage extends Component {
     return null
   }
 
-  renderLanguageSelector () {
+  renderLanguageSelector (locale = this.state.activeLocale, isInteractive = true) {
     return (
       <LanguageSelector
         className='login-language-selector'
         compact
+        disabled={ !isInteractive }
+        displayLocale={ locale }
         onBeforeChange={ this.handleLanguageChanging.bind(this) }
+        onChangeComplete={ this.handleLanguageChangeComplete.bind(this) }
         onChangeFailed={ this.handleLanguageChangeFailed.bind(this) }
+        selectedLocale={ locale }
       />
     )
   }
 
-  handleLanguageChanging () {
-    clearTimeout(this.loginModeFlipTimer)
-    clearTimeout(this.loginModeSwapTimer)
-    this.setState({ modalFlipping: true })
-    return new Promise(resolve => {
-      this.languageChangeTimer = setTimeout(resolve, LOGIN_MODAL_FLIP_DURATION_MS)
-    })
+  handleLanguageChanging (locale) {
+    return this.startModalFlip(() => ({
+      activeLocale: locale
+    }))
+  }
+
+  handleLanguageChangeComplete (locale) {
+    this.setState({ activeLocale: locale })
   }
 
   handleLanguageChangeFailed () {
-    this.setState({ modalFlipping: false })
+    clearTimeout(this.loginModeFlipTimer)
+    this.setState({
+      activeLocale: getLocale(),
+      modalFlipping: false,
+      pendingLoginMode: null,
+      pendingLocale: null,
+      pendingModalState: null
+    })
   }
 
   updateInputValue (evt) {
@@ -180,41 +230,45 @@ class LoginPage extends Component {
     })
   }
 
-  renderCredentialLoginSection (authWindowStatus, userSessionStatus) {
+  renderCredentialLoginSection (authWindowStatus, userSessionStatus, locale = this.state.activeLocale, isInteractive = true) {
     return (
       <div>
         { userSessionStatus === 'EXPIRED'
-          ? <Alert bsStyle="warning" className="login-alert">{ t('login.tokenInvalid') }</Alert>
+          ? <Alert bsStyle="warning" className="login-alert">{ this.translate(locale, 'login.tokenInvalid') }</Alert>
           : null
         }
         <Button
-          autoFocus
+          autoFocus={ isInteractive }
           className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
+          disabled={ !isInteractive }
           onClick={ this.handleLoginClicked.bind(this) }>
-          { t('login.githubLogin') }
+          { this.translate(locale, 'login.githubLogin') }
         </Button>
       </div>
     )
   }
 
-  renderTokenLoginSection (userSessionStatus) {
+  renderTokenLoginSection (userSessionStatus, locale = this.state.activeLocale, isInteractive = true) {
     return (
       <form>
         { userSessionStatus === 'EXPIRED'
-          ? <Alert bsStyle="warning" className="login-alert">{ t('login.tokenInvalid') }</Alert>
+          ? <Alert bsStyle="warning" className="login-alert">{ this.translate(locale, 'login.tokenInvalid') }</Alert>
           : null
         }
         <input
           className="form-control"
-          placeholder={ t('login.tokenPlaceholder') }
+          placeholder={ this.translate(locale, 'login.tokenPlaceholder') }
+          readOnly={ !isInteractive }
+          tabIndex={ isInteractive ? undefined : -1 }
           value={ this.state.inputTokenValue }
           onChange={ this.updateInputValue.bind(this) }
         />
         <Button
-          autoFocus
+          autoFocus={ isInteractive }
           className='modal-button'
+          disabled={ !isInteractive }
           onClick={ this.handleTokenLoginButtonClicked.bind(this, this.state.inputTokenValue) }>
-          { t('login.tokenLogin') }
+          { this.translate(locale, 'login.tokenLogin') }
         </Button>
       </form>
     )
@@ -229,18 +283,19 @@ class LoginPage extends Component {
       loggedInUserName === null || loggedInUserName === 'null')
   }
 
-  renderLoginModeSwitch () {
+  renderLoginModeSwitch (loginMode = this.state.loginMode, locale = this.state.activeLocale, isInteractive = true) {
     if (!this.shouldRenderLoginModeSwitch()) return null
 
-    const label = this.state.loginMode === LoginModeEnum.CREDENTIALS
-      ? t('login.switchToToken')
-      : t('login.switchToCredentials')
-    const icon = this.state.loginMode === LoginModeEnum.CREDENTIALS ? '🔑' : '👤'
+    const label = loginMode === LoginModeEnum.CREDENTIALS
+      ? this.translate(locale, 'login.switchToToken')
+      : this.translate(locale, 'login.switchToCredentials')
+    const icon = loginMode === LoginModeEnum.CREDENTIALS ? '🔑' : '👤'
 
     return (
       <button
         aria-label={ label }
         className='login-header-icon login-mode-switch'
+        disabled={ !isInteractive }
         onClick={ this.handleLoginModeSwitched.bind(this) }
         title={ label }
         type='button'>
@@ -249,20 +304,20 @@ class LoginPage extends Component {
     )
   }
 
-  renderHeaderActions () {
+  renderHeaderActions (loginMode = this.state.loginMode, locale = this.state.activeLocale, isInteractive = true) {
     return (
       <div className='login-header-actions'>
-        { this.renderLoginModeSwitch() }
-        { this.renderLanguageSelector() }
+        { this.renderLoginModeSwitch(loginMode, locale, isInteractive) }
+        { this.renderLanguageSelector(locale, isInteractive) }
       </div>
     )
   }
 
-  renderLoginModalBody () {
+  renderLoginModalBody (loginMode = this.state.loginMode, locale = this.state.activeLocale, isInteractive = true) {
     return (
-      <center className='login-modal-body-flipper'>
-        { this.renderAvatar() }
-        { this.renderControlSection() }
+      <center className='login-modal-body-content'>
+        { this.renderAvatar(loginMode) }
+        { this.renderControlSection(loginMode, locale, isInteractive) }
         { this.renderLoginStatus() }
       </center>
     )
@@ -288,9 +343,7 @@ class LoginPage extends Component {
     )
   }
 
-  renderAvatar () {
-    const { loginMode } = this.state
-
+  renderAvatar (loginMode = this.state.loginMode) {
     if (conf.get('avatar:type') === 'boring') {
       return <a href="https://github.com/hackjutsu/Lepton">
         <Avatar
@@ -317,21 +370,40 @@ class LoginPage extends Component {
     }
   }
 
+  renderModalFace (loginMode, locale, className, isInteractive = true) {
+    return (
+      <div className={ className } aria-hidden={ isInteractive ? undefined : true }>
+        <Modal.Header>
+          <Modal.Title className='login-modal-title' title={ this.translate(locale, 'login.title') }>
+            { this.translate(locale, 'login.title') }
+          </Modal.Title>
+          { this.renderHeaderActions(loginMode, locale, isInteractive) }
+        </Modal.Header>
+        <Modal.Body className='login-modal-body'>
+          { this.renderLoginModalBody(loginMode, locale, isInteractive) }
+        </Modal.Body>
+      </div>
+    )
+  }
+
   render () {
-    const className = this.state.modalFlipping
+    const { activeLocale, loginMode, modalFlipping, pendingLocale, pendingLoginMode } = this.state
+    const className = modalFlipping
       ? 'login-modal login-modal-flipping'
       : 'login-modal'
+    const backLoginMode = pendingLoginMode || loginMode
+    const backLocale = pendingLocale || activeLocale
 
     return (
       <div className={ className }>
         <Modal.Dialog bsSize='small'>
-          <Modal.Header>
-            <Modal.Title className='login-modal-title' title={ t('login.title') }>{ t('login.title') }</Modal.Title>
-            { this.renderHeaderActions() }
-          </Modal.Header>
-          <Modal.Body className='login-modal-body'>
-            { this.renderLoginModalBody() }
-          </Modal.Body>
+          <div className='login-modal-card'>
+            { this.renderModalFace(loginMode, activeLocale, 'login-modal-face login-modal-face-front', !modalFlipping) }
+            { modalFlipping
+              ? this.renderModalFace(backLoginMode, backLocale, 'login-modal-face login-modal-face-back', false)
+              : null
+            }
+          </div>
         </Modal.Dialog>
       </div>
     )
