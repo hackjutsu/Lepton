@@ -34,6 +34,9 @@ const {
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback
 } = require('./app/utilities/auth/githubOAuth')
+const {
+  clearGitHubAuthWindowStorageAndDestroy
+} = require('./app/utilities/auth/githubAuthWindow')
 
 const logger = createMainLogger()
 const electronLocalStorage = createElectronLocalStorage({
@@ -776,41 +779,7 @@ function finishGitHubAuthFlow (result, options = {}) {
 
   if (options.destroyWindow === false || !authWindow || authWindow.isDestroyed()) return
 
-  clearGitHubAuthWindowStorageAndDestroy(authWindow)
-}
-
-function clearGitHubAuthWindowStorageAndDestroy (authWindow) {
-  let clearResult
-  try {
-    clearResult = authWindow.webContents.session.clearStorageData({})
-  } catch (err) {
-    logger.warn('[auth] Failed to clear OAuth session data: ' + err.message)
-    destroyGitHubAuthWindow(authWindow)
-    return
-  }
-
-  if (clearResult && typeof clearResult.then === 'function') {
-    clearResult
-      .then(() => {
-        logger.debug('[auth] OAuth session storage cleared')
-      })
-      .catch(err => {
-        logger.warn('[auth] Failed to clear OAuth session data: ' + err.message)
-      })
-      .finally(() => {
-        destroyGitHubAuthWindow(authWindow)
-      })
-    return
-  }
-
-  logger.debug('[auth] OAuth session storage clear requested')
-  destroyGitHubAuthWindow(authWindow)
-}
-
-function destroyGitHubAuthWindow (authWindow) {
-  if (!authWindow || authWindow.isDestroyed()) return
-  logger.debug('[auth] Destroying OAuth auth window')
-  authWindow.destroy()
+  clearGitHubAuthWindowStorageAndDestroy({ authWindow, logger })
 }
 
 function describeGitHubAuthResult (result) {
