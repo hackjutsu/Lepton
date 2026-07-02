@@ -36,7 +36,12 @@ function createGitHubApi ({
   }
 
   function exchangeAccessToken (clientId, clientSecret, authCode) {
-    apiLogger.debug(TAG + 'Exchanging authCode with access token')
+    apiLogger.debug(TAG + 'Exchanging authCode with access credential ' + JSON.stringify({
+      hasClientId: Boolean(clientId),
+      clientIdLength: clientId ? clientId.length : 0,
+      hasClientSecret: Boolean(clientSecret),
+      codeLength: authCode ? authCode.length : 0
+    }))
     return apiRequest({
       method: 'POST',
       uri: 'https://github.com/login/oauth/access_token',
@@ -50,11 +55,14 @@ function createGitHubApi ({
       },
       json: true,
       timeout: 2 * kTimeoutUnit
-    }).then(validateOAuthAccessTokenResponse)
+    }).then(payload => {
+      apiLogger.debug(TAG + 'OAuth credential exchange response metadata ' + JSON.stringify(describeOAuthAccessTokenResponse(payload)))
+      return validateOAuthAccessTokenResponse(payload)
+    })
   }
 
   function getUserProfile (token) {
-    apiLogger.debug(TAG + 'Getting user profile with token ' + token)
+    apiLogger.debug(TAG + 'Getting user profile ' + JSON.stringify({ hasCredential: Boolean(token) }))
     return apiRequest({
       uri: `https://${gitHubHostApi}/user`,
       headers: {
@@ -68,7 +76,7 @@ function createGitHubApi ({
   }
 
   function getSingleGist (token, gistId) {
-    apiLogger.debug(TAG + `Getting single gist ${gistId} with token ${token}`)
+    apiLogger.debug(TAG + `Getting single gist ${gistId} ` + JSON.stringify({ hasCredential: Boolean(token) }))
     return apiRequest({
       uri: `https://${gitHubHostApi}/gists/${gistId}`,
       headers: {
@@ -82,7 +90,7 @@ function createGitHubApi ({
   }
 
   function getAllGistsV2 (token, userId) {
-    apiLogger.debug(TAG + `[V2] Getting all gists of ${userId} with token ${token}`)
+    apiLogger.debug(TAG + `[V2] Getting all gists of ${userId} ` + JSON.stringify({ hasCredential: Boolean(token) }))
     const gistList = []
     return requestGists(token, userId, 1, gistList)
       .then(res => {
@@ -135,7 +143,7 @@ function createGitHubApi ({
   }
 
   function getAllGistsV1 (token, userId) {
-    apiLogger.debug(TAG + `[V1] Getting all gists of ${userId} with token ${token}`)
+    apiLogger.debug(TAG + `[V1] Getting all gists of ${userId} ` + JSON.stringify({ hasCredential: Boolean(token) }))
     const gistList = []
     const maxPageNumber = 100
 
@@ -285,6 +293,31 @@ function validateOAuthAccessTokenResponse (payload) {
   error.errorDescription = errorDescription
 
   throw error
+}
+
+function describeOAuthAccessTokenResponse (payload) {
+  if (!payload || typeof payload !== 'object') {
+    return {
+      hasPayload: Boolean(payload)
+    }
+  }
+
+  return removeUndefinedProperties({
+    hasAccessCredential: Boolean(payload.access_token),
+    credentialType: payload.token_type,
+    scope: payload.scope,
+    error: payload.error,
+    errorDescription: payload.error_description
+  })
+}
+
+function removeUndefinedProperties (value) {
+  Object.keys(value).forEach(key => {
+    if (value[key] === undefined) {
+      delete value[key]
+    }
+  })
+  return value
 }
 
 module.exports = {

@@ -31,6 +31,7 @@ const {
 } = require('./app/utilities/updatePolicy')
 const {
   buildGitHubOAuthUrl,
+  describeGitHubOAuthUrl,
   parseGitHubOAuthCallback
 } = require('./app/utilities/auth/githubOAuth')
 
@@ -633,6 +634,7 @@ function setUpBridgeIpcHandlers () {
 
 function startGitHubAuthFlow ({ clientId, scopes } = {}) {
   if (authFlow) {
+    logger.debug('[auth] Reusing active GitHub OAuth flow')
     if (authFlow.authWindow && !authFlow.authWindow.isDestroyed()) {
       authFlow.authWindow.focus()
     }
@@ -640,6 +642,7 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
   }
 
   if (typeof clientId !== 'string' || clientId.length === 0) {
+    logger.warn('[auth] GitHub OAuth flow cannot start: missing client id')
     return Promise.resolve({
       status: 'error',
       error: 'missing-client-id'
@@ -673,7 +676,16 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
   const authUrl = buildGitHubOAuthUrl({ clientId, scopes })
   const options = { extraHeaders: 'pragma: no-cache\n' }
 
-  function handleAuthNavigation (event, callbackUrl) {
+  logger.debug('[auth] Starting GitHub OAuth flow ' + JSON.stringify({
+    hasClientId: Boolean(clientId),
+    clientIdLength: clientId.length,
+    scopeCount: Array.isArray(scopes) ? scopes.length : 0,
+    authorizeUrl: describeGitHubOAuthUrl(authUrl)
+  }))
+
+  function handleAuthNavigation (event, callbackUrl, eventName) {
+    logger.debug('[auth] OAuth navigation ' + eventName + ': ' + JSON.stringify(describeGitHubOAuthUrl(callbackUrl)))
+
     const result = parseGitHubOAuthCallback(callbackUrl)
     if (!result) return
 
@@ -681,24 +693,42 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
       event.preventDefault()
     }
 
+    logger.debug('[auth] OAuth callback parsed: ' + JSON.stringify(describeGitHubAuthResult(result)))
     finishGitHubAuthFlow(result)
   }
 
   authWindow.webContents.on('will-navigate', (event, callbackUrl) => {
-    handleAuthNavigation(event, callbackUrl)
+    handleAuthNavigation(event, callbackUrl, 'will-navigate')
   })
 
   authWindow.webContents.on('will-redirect', (event, callbackUrl) => {
-    handleAuthNavigation(event, callbackUrl)
+    handleAuthNavigation(event, callbackUrl, 'will-redirect')
   })
 
   authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
-    handleAuthNavigation(event, newUrl)
+    handleAuthNavigation(event, newUrl, 'did-get-redirect-request')
+  })
+
+  authWindow.webContents.on('did-navigate', (event, callbackUrl, httpResponseCode, httpStatusText) => {
+    logger.debug('[auth] OAuth did-navigate response: ' + JSON.stringify({
+      httpResponseCode,
+      httpStatusText,
+      url: describeGitHubOAuthUrl(callbackUrl)
+    }))
+    handleAuthNavigation(event, callbackUrl, 'did-navigate')
+  })
+
+  authWindow.webContents.on('did-finish-load', () => {
+    logger.debug('[auth] OAuth window finished load: ' + JSON.stringify(describeGitHubOAuthUrl(authWindow.webContents.getURL())))
   })
 
   authWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
     if (errorCode === -3) return
-    logger.error('[auth] OAuth window failed to load: ' + errorDescription)
+    logger.error('[auth] OAuth window failed to load: ' + JSON.stringify({
+      errorCode,
+      errorDescription,
+      url: describeGitHubOAuthUrl(authWindow.webContents.getURL())
+    }))
     finishGitHubAuthFlow({
       status: 'error',
       error: 'load-failed',
@@ -708,6 +738,7 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
 
   authWindow.once('closed', () => {
     if (authFlow && authFlow.authWindow === authWindow) {
+      logger.debug('[auth] OAuth window closed before completion')
       finishGitHubAuthFlow({
         status: 'closed'
       }, {
@@ -716,10 +747,13 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
     }
   })
 
-  logger.debug('loading authUrl ' + authUrl)
+  logger.debug('[auth] Loading GitHub OAuth authorize URL')
   authWindow.loadURL(authUrl, options)
     .catch(err => {
-      logger.error('[auth] OAuth window failed to load: ' + err.message)
+      logger.error('[auth] OAuth window failed to load: ' + JSON.stringify({
+        errorDescription: err.message,
+        url: describeGitHubOAuthUrl(authUrl)
+      }))
       finishGitHubAuthFlow({
         status: 'error',
         error: 'load-failed',
@@ -727,6 +761,7 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
       })
     })
   authWindow.show()
+  logger.debug('[auth] OAuth window shown')
 
   return promise
 }
@@ -736,6 +771,7 @@ function finishGitHubAuthFlow (result, options = {}) {
 
   const { authWindow, resolve } = authFlow
   authFlow = null
+  logger.debug('[auth] Finishing GitHub OAuth flow: ' + JSON.stringify(describeGitHubAuthResult(result)))
   resolve(result)
 
   if (options.destroyWindow === false || !authWindow || authWindow.isDestroyed()) return
@@ -743,6 +779,7 @@ function finishGitHubAuthFlow (result, options = {}) {
   try {
     authWindow.webContents.session.clearStorageData({}, () => {
       if (!authWindow.isDestroyed()) {
+        logger.debug('[auth] OAuth session storage cleared; destroying auth window')
         authWindow.destroy()
       }
     })
@@ -752,6 +789,22 @@ function finishGitHubAuthFlow (result, options = {}) {
       authWindow.destroy()
     }
   }
+}
+
+function describeGitHubAuthResult (result) {
+  if (!result || typeof result !== 'object') {
+    return {
+      status: 'unknown'
+    }
+  }
+
+  return removeUndefinedProperties({
+    status: result.status,
+    hasCode: Boolean(result.code),
+    codeLength: result.code ? result.code.length : undefined,
+    error: result.error,
+    errorDescription: result.errorDescription
+  })
 }
 
 function createGitHubApiBridgeResponse (data, error) {

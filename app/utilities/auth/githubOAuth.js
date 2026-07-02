@@ -56,7 +56,51 @@ function parseGitHubOAuthCallback (callbackUrl) {
   return null
 }
 
+function describeGitHubOAuthUrl (callbackUrl) {
+  if (typeof callbackUrl !== 'string') {
+    return {
+      valid: false,
+      reason: 'not-string'
+    }
+  }
+
+  let parsedUrl
+  try {
+    parsedUrl = new URL(callbackUrl)
+  } catch (err) {
+    return {
+      valid: false,
+      reason: 'invalid-url'
+    }
+  }
+
+  const code = parsedUrl.searchParams.get('code')
+  const error = parsedUrl.searchParams.get('error')
+
+  return removeUndefinedProperties({
+    valid: true,
+    origin: parsedUrl.origin,
+    pathname: parsedUrl.pathname,
+    queryKeys: Array.from(parsedUrl.searchParams.keys()).sort(),
+    hasCode: Boolean(code),
+    codeLength: code ? code.length : undefined,
+    hasError: Boolean(error),
+    error: error || undefined,
+    errorDescription: parsedUrl.searchParams.get('error_description') || undefined
+  })
+}
+
+function removeUndefinedProperties (value) {
+  Object.keys(value).forEach(key => {
+    if (value[key] === undefined) {
+      delete value[key]
+    }
+  })
+  return value
+}
+
 module.exports = {
   buildGitHubOAuthUrl,
+  describeGitHubOAuthUrl,
   parseGitHubOAuthCallback
 }

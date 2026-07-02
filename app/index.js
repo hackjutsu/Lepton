@@ -85,12 +85,19 @@ function getRenderFixtureName () {
 }
 
 function launchAuthWindow (token) {
-  logger.debug(`-----> Inside launchAuthWindow with token ${token}`)
+  logger.debug('[auth] launchAuthWindow called ' + JSON.stringify({ hasCachedCredential: Boolean(token) }))
   if (token) {
-    logger.debug('-----> calling initUserSession with cached token ' + token)
+    logger.debug('[auth] Starting session with cached credential')
     initUserSession(token)
     return
   }
+
+  logger.debug('[auth] Starting GitHub OAuth login ' + JSON.stringify({
+    hasClientId: Boolean(CONFIG_OPTIONS.client_id),
+    clientIdLength: CONFIG_OPTIONS.client_id ? CONFIG_OPTIONS.client_id.length : 0,
+    hasClientSecret: Boolean(CONFIG_OPTIONS.client_secret),
+    scopeCount: CONFIG_OPTIONS.scopes.length
+  }))
 
   updateAuthWindowStatusOn()
 
@@ -101,13 +108,14 @@ function launchAuthWindow (token) {
     .then(handleAuthResult)
     .catch((err) => {
       updateAuthWindowStatusOff()
-      logger.error('Failed to launch GitHub auth window: ' + err.message)
+      logger.error('Failed to launch GitHub auth window: ' + describeGitHubLoginError(err))
       notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
     })
 }
 
 function handleAuthResult (result) {
   updateAuthWindowStatusOff()
+  logger.debug('[auth] GitHub OAuth result received: ' + JSON.stringify(describeGitHubAuthResult(result)))
 
   if (!result || result.status === 'closed') {
     return
@@ -117,10 +125,20 @@ function handleAuthResult (result) {
     logger.info('[Dispatch] updateUserSession IN_PROGRESS')
     reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
 
+    logger.debug('[auth] Exchanging OAuth code for access credential ' + JSON.stringify({
+      codeLength: result.code.length,
+      hasClientId: Boolean(CONFIG_OPTIONS.client_id),
+      hasClientSecret: Boolean(CONFIG_OPTIONS.client_secret)
+    }))
+
     getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
       CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, result.code)
       .then((payload) => {
-        logger.debug('-----> calling initUserSession with new token ' + payload.access_token)
+        logger.debug('[auth] OAuth credential exchange succeeded ' + JSON.stringify({
+          hasAccessCredential: Boolean(payload && payload.access_token),
+          credentialType: payload && payload.token_type,
+          scope: payload && payload.scope
+        }))
         return initUserSession(payload.access_token)
       })
       .catch((err) => {
@@ -152,6 +170,37 @@ function describeGitHubLoginError (err) {
   }
 
   return String(details)
+}
+
+function describeGitHubAuthResult (result) {
+  if (!result || typeof result !== 'object') {
+    return {
+      status: 'unknown'
+    }
+  }
+
+  return {
+    status: result.status,
+    hasCode: Boolean(result.code),
+    codeLength: result.code ? result.code.length : undefined,
+    error: result.error,
+    errorDescription: result.errorDescription
+  }
+}
+
+function describeGitHubProfile (profile) {
+  if (!profile || typeof profile !== 'object') {
+    return {
+      hasProfile: false
+    }
+  }
+
+  return {
+    hasProfile: true,
+    login: profile.login,
+    id: profile.id,
+    type: profile.type
+  }
 }
 
 function setSyncTime (time) {
@@ -392,13 +441,13 @@ function updateUserGists (userLoginId, token) {
 
 /** Start: User session management **/
 function initUserSession (token) {
-  logger.debug(`-----> Inside initUserSession with access token ${token}`)
+  logger.debug('[auth] initUserSession called ' + JSON.stringify({ hasCredential: Boolean(token) }))
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   initAccessToken(token)
   let newProfile = null
   getGitHubApi(GET_USER_PROFILE)(token)
     .then((profile) => {
-      logger.debug('-----> from GET_USER_PROFILE with profile ' + JSON.stringify(profile))
+      logger.debug('[auth] GET_USER_PROFILE succeeded ' + JSON.stringify(describeGitHubProfile(profile)))
       newProfile = profile
       return updateUserGists(profile.login, token)
     })
@@ -440,9 +489,9 @@ function initUserSession (token) {
 /** Start: Local storage management **/
 function updateLocalStorage (data) {
   try {
-    logger.debug(`-----> Caching token ${data.token}`)
+    logger.debug('[auth] Caching credential metadata ' + JSON.stringify({ hasCredential: Boolean(data.token) }))
     let rst = electronBridge.localStorage.set('token', data.token)
-    logger.debug(`-----> [${rst.status}] Cached token ${data.token}`)
+    logger.debug(`[auth] [${rst.status}] Cached credential`)
 
     logger.debug(`-----> Caching profile ${data.profile}`)
     rst = electronBridge.localStorage.set('profile', data.profile)
@@ -459,7 +508,10 @@ function getCachedUserInfo () {
   const cachedProfile = electronBridge.localStorage.get('profile')
   logger.debug(`-----> [${cachedProfile.status}] cachedProfile is ${cachedProfile.data}`)
   const cachedToken = electronBridge.localStorage.get('token')
-  logger.debug(`-----> [${cachedToken.status}] cachedToken is ${cachedToken.data}`)
+  logger.debug('[auth] Cached credential lookup ' + JSON.stringify({
+    status: cachedToken.status,
+    hasCredential: Boolean(cachedToken.data)
+  }))
 
   if (cachedProfile.status && cachedToken.status) {
     return {
