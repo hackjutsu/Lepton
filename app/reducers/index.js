@@ -14,6 +14,7 @@ import gists from './reducer_gists'
 import gistSyncStatus from './reducer_gist_sync_status'
 import gistTags from './reducer_gist_tags'
 import immersiveMode from './reducer_immersive_mode'
+import loginStatus from './reducer_login_status'
 import logoutModalStatus from './reducer_logout_modal'
 import newVersionInfo from './reducer_new_version_info'
 import pinnedTags from './reducer_pinned_tags'
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
   gistSyncStatus,
   gistTags,
   immersiveMode,
+  loginStatus,
   logoutModalStatus,
   newVersionInfo,
   pinnedTags,

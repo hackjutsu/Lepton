@@ -37,6 +37,7 @@ import {
   fetchSingleGist,
   selectGist,
   updateAuthWindowStatus,
+  updateLoginStatus,
   updateGistSyncStatus,
   updateSearchWindowStatus,
   updateUpdateAvailableBarStatus,
@@ -73,6 +74,17 @@ const CONFIG_OPTIONS = {
   scopes: ['gist']
 }
 const GIST_DETAIL_SYNC_CONCURRENCY = 5
+const LOGIN_STATUS = {
+  openingOAuthWindow: 'Opening GitHub OAuth window...',
+  waitingGitHubAuthorization: 'Waiting for GitHub authorization...',
+  receivedOAuthCode: 'Received OAuth code.',
+  exchangingOAuthCode: 'Exchanging OAuth code for access token...',
+  accessTokenReceived: 'Access token received. Loading GitHub profile...',
+  loadingGitHubProfile: 'Loading GitHub profile...',
+  profileLoadedSyncingGists: 'GitHub profile loaded. Syncing gists...',
+  signInComplete: 'Sign-in complete.',
+  signInFailed: 'GitHub sign-in failed.'
+}
 
 let preSyncSnapshot = {
   activeGistTag: null,
@@ -100,14 +112,20 @@ function launchAuthWindow (token) {
   }))
 
   updateAuthWindowStatusOn()
+  updateLoginStatusInfo(LOGIN_STATUS.openingOAuthWindow)
 
-  electronBridge.auth.startGitHubLogin({
+  const gitHubLogin = electronBridge.auth.startGitHubLogin({
     clientId: CONFIG_OPTIONS.client_id,
     scopes: CONFIG_OPTIONS.scopes
   })
+
+  updateLoginStatusInfo(LOGIN_STATUS.waitingGitHubAuthorization)
+
+  gitHubLogin
     .then(handleAuthResult)
     .catch((err) => {
       updateAuthWindowStatusOff()
+      updateLoginStatusFailure()
       logger.error('Failed to launch GitHub auth window: ' + describeGitHubLoginError(err))
       notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
     })
@@ -118,12 +136,14 @@ function handleAuthResult (result) {
   logger.debug('[auth] GitHub OAuth result received: ' + JSON.stringify(describeGitHubAuthResult(result)))
 
   if (!result || result.status === 'closed') {
+    clearLoginStatus()
     return
   }
 
   if (result.status === 'success' && result.code) {
     logger.info('[Dispatch] updateUserSession IN_PROGRESS')
     reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
+    updateLoginStatusInfo(LOGIN_STATUS.receivedOAuthCode)
 
     logger.debug('[auth] Exchanging OAuth code for access credential ' + JSON.stringify({
       codeLength: result.code.length,
@@ -131,6 +151,7 @@ function handleAuthResult (result) {
       hasClientSecret: Boolean(CONFIG_OPTIONS.client_secret)
     }))
 
+    updateLoginStatusInfo(LOGIN_STATUS.exchangingOAuthCode)
     getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
       CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, result.code)
       .then((payload) => {
@@ -139,16 +160,18 @@ function handleAuthResult (result) {
           credentialType: payload && payload.token_type,
           scope: payload && payload.scope
         }))
-        return initUserSession(payload.access_token)
+        return initUserSession(payload.access_token, { freshOAuthToken: true })
       })
       .catch((err) => {
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+        updateLoginStatusFailure()
         logger.error('GitHub login failed: ' + describeGitHubLoginError(err))
         notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
       })
     return
   }
 
+  updateLoginStatusFailure()
   logger.error('Oops! Something went wrong and we couldn\'t' +
     'log you in using Github. Please try again.')
 }
@@ -221,6 +244,44 @@ function updateAuthWindowStatusOn () {
 function updateAuthWindowStatusOff () {
   logger.info('[Dispatch] updateAuthWindowStatus OFF')
   reduxStore.dispatch(updateAuthWindowStatus('OFF'))
+}
+
+function updateLoginStatusInfo (message) {
+  logger.info('[Dispatch] updateLoginStatus ' + JSON.stringify({ message, level: 'info' }))
+  reduxStore.dispatch(updateLoginStatus({
+    message,
+    level: 'info',
+    logFilePath: null
+  }))
+}
+
+function updateLoginStatusFailure () {
+  const logFilePath = getLogFilePath()
+  logger.info('[Dispatch] updateLoginStatus ' + JSON.stringify({
+    message: LOGIN_STATUS.signInFailed,
+    level: 'error',
+    hasLogFilePath: Boolean(logFilePath)
+  }))
+  reduxStore.dispatch(updateLoginStatus({
+    message: LOGIN_STATUS.signInFailed,
+    level: 'error',
+    logFilePath
+  }))
+}
+
+function clearLoginStatus () {
+  logger.info('[Dispatch] updateLoginStatus clear')
+  reduxStore.dispatch(updateLoginStatus(null))
+}
+
+function getLogFilePath () {
+  try {
+    const paths = electronBridge.globals.getPaths()
+    return paths && paths.logFilePath ? paths.logFilePath : null
+  } catch (err) {
+    logger.warn('Unable to read log file path for login status: ' + describeGitHubLoginError(err))
+    return null
+  }
 }
 
 /** Start: Language tags management **/
@@ -440,15 +501,19 @@ function updateUserGists (userLoginId, token) {
 /** End: User gists management **/
 
 /** Start: User session management **/
-function initUserSession (token) {
+function initUserSession (token, options = {}) {
   logger.debug('[auth] initUserSession called ' + JSON.stringify({ hasCredential: Boolean(token) }))
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
+  updateLoginStatusInfo(options.freshOAuthToken
+    ? LOGIN_STATUS.accessTokenReceived
+    : LOGIN_STATUS.loadingGitHubProfile)
   initAccessToken(token)
   let newProfile = null
   getGitHubApi(GET_USER_PROFILE)(token)
     .then((profile) => {
       logger.debug('[auth] GET_USER_PROFILE succeeded ' + JSON.stringify(describeGitHubProfile(profile)))
       newProfile = profile
+      updateLoginStatusInfo(LOGIN_STATUS.profileLoadedSyncingGists)
       return updateUserGists(profile.login, token)
     })
     .then(() => {
@@ -467,12 +532,14 @@ function initUserSession (token) {
 
       logger.info('[Dispatch] updateUserSession ACTIVE')
       reduxStore.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: newProfile }))
+      updateLoginStatusInfo(LOGIN_STATUS.signInComplete)
 
       ipcRenderer.send('session-ready')
     })
     .catch((err) => {
       logger.debug('-----> Failure with ' + JSON.stringify(err))
       logger.error('The request has failed: \n' + JSON.stringify(err))
+      updateLoginStatusFailure()
 
       if (err.statusCode === 401) {
         logger.info('[Dispatch] updateUserSession EXPIRED')

@@ -256,6 +256,11 @@ function getBaseState () {
     gistSyncStatus: 'DONE',
     gistTags,
     immersiveMode: 'OFF',
+    loginStatus: {
+      message: '',
+      level: 'info',
+      logFilePath: null
+    },
     logoutModalStatus: 'OFF',
     newVersionInfo: {
       version: 'fixture-version',
@@ -299,6 +304,28 @@ function getFixtureOverrides (name) {
       return {
         activeGist: 'fixture-gist-6',
         activeGistTag: Prefixed('Jupyter Notebook')
+      }
+    case 'login-error-log':
+      return {
+        loginStatus: {
+          message: 'GitHub sign-in failed.',
+          level: 'error',
+          logFilePath: '/tmp/lepton-login.log'
+        },
+        userSession: {
+          activeStatus: 'INACTIVE'
+        }
+      }
+    case 'login-progress':
+      return {
+        loginStatus: {
+          message: 'Exchanging OAuth code for access token...',
+          level: 'info',
+          logFilePath: null
+        },
+        userSession: {
+          activeStatus: 'IN_PROGRESS'
+        }
       }
     case 'raw':
       return {

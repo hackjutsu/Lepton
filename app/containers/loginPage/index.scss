@@ -15,7 +15,7 @@
   .modal-content {
     animation: login-modal-fade-in 180ms ease-out;
     margin-top: 100px;
-    min-height: 400px;
+    min-height: 440px;
     opacity: 1;
     transition: opacity 180ms ease-in;
   }
@@ -96,6 +96,26 @@
     margin-top: 10px;
     margin-bottom: 10px;
     text-decoration: underline;
+  }
+
+  .login-status-line {
+    color: #888;
+    font-size: 11px;
+    line-height: 16px;
+    margin: 0 10px 18px 10px;
+    min-height: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .login-status-line a {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  .login-status-line-error {
+    color: #a94442;
   }
 
   .login-alert {

@@ -20,6 +20,13 @@ const logger = electronBridge.logger
 
 const LoginModeEnum = { CREDENTIALS: 1, TOKEN: 2 }
 
+function getFileUrl (filePath) {
+  if (!filePath) return null
+  const normalizedPath = String(filePath).replace(/\\/g, '/')
+  const fileUrlPrefix = normalizedPath[0] === '/' ? 'file://' : 'file:///'
+  return fileUrlPrefix + encodeURI(normalizedPath)
+}
+
 class LoginPage extends Component {
   constructor (props) {
     super(props)
@@ -215,7 +222,28 @@ class LoginPage extends Component {
       <center>
         { this.renderAvatar() }
         { this.renderControlSection() }
+        { this.renderLoginStatus() }
       </center>
+    )
+  }
+
+  renderLoginStatus () {
+    const { loginStatus } = this.props
+    if (!loginStatus || !loginStatus.message) return null
+
+    const logFileUrl = getFileUrl(loginStatus.logFilePath)
+    const className = loginStatus.level === 'error'
+      ? 'login-status-line login-status-line-error'
+      : 'login-status-line'
+
+    return (
+      <div className={ className }>
+        <span>{ loginStatus.message }</span>
+        { logFileUrl
+          ? <span> <a href={ logFileUrl } title={ loginStatus.logFilePath }>See log</a></span>
+          : null
+        }
+      </div>
     )
   }
 
@@ -272,6 +300,7 @@ class LoginPage extends Component {
 function mapStateToProps (state) {
   return {
     authWindowStatus: state.authWindowStatus,
+    loginStatus: state.loginStatus,
     userSessionStatus: state.userSession.activeStatus
   }
 }
