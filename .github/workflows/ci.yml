@@ -83,4 +83,6 @@ jobs:
         run: npm ci
 
       - name: Packaged Electron smoke test
+        env:
+          CSC_FOR_PULL_REQUEST: 'true'
         run: npm run test:packaged-smoke
