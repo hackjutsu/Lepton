@@ -557,17 +557,23 @@ function setUpBridgeIpcHandlers () {
     logger[method](...args)
   })
 
-  ipcMain.handle('lepton:github-api:request', (event, selection, args = []) => {
+  ipcMain.handle('lepton:github-api:request', async (event, selection, args = []) => {
     if (!isMainWindowSender(event) || typeof selection !== 'string' || !Array.isArray(args)) {
-      throw new Error('Invalid GitHub API bridge request')
+      return createGitHubApiBridgeResponse(null, createGitHubApiBridgeError(new Error('Invalid GitHub API bridge request')))
     }
 
-    const request = getGitHubApiBridge().getGitHubApi(selection)
-    if (typeof request !== 'function') {
-      throw new Error(`Unsupported GitHub API selection: ${selection}`)
-    }
+    try {
+      const request = getGitHubApiBridge().getGitHubApi(selection)
+      if (typeof request !== 'function') {
+        throw new Error(`Unsupported GitHub API selection: ${selection}`)
+      }
 
-    return request(...args)
+      return createGitHubApiBridgeResponse(await request(...args))
+    } catch (error) {
+      const serializedError = createGitHubApiBridgeError(error)
+      logger.error('[bridge] GitHub API request failed: ' + JSON.stringify(serializedError))
+      return createGitHubApiBridgeResponse(null, serializedError)
+    }
   })
 
   ipcMain.on('lepton:notebook:render', (event, content) => {
@@ -746,6 +752,53 @@ function finishGitHubAuthFlow (result, options = {}) {
       authWindow.destroy()
     }
   }
+}
+
+function createGitHubApiBridgeResponse (data, error) {
+  return {
+    __leptonGitHubApiBridgeResponse: true,
+    ok: !error,
+    data,
+    error
+  }
+}
+
+function createGitHubApiBridgeError (error) {
+  if (!error || typeof error !== 'object') {
+    return {
+      message: String(error || 'GitHub API request failed'),
+      name: 'Error'
+    }
+  }
+
+  return removeUndefinedProperties({
+    message: error.message || 'GitHub API request failed',
+    name: error.name || 'Error',
+    status: error.status,
+    statusCode: error.statusCode,
+    error: cloneSerializableValue(error.error),
+    errorDescription: error.errorDescription,
+    response: cloneSerializableValue(error.response)
+  })
+}
+
+function cloneSerializableValue (value) {
+  if (value === undefined) return undefined
+
+  try {
+    return JSON.parse(JSON.stringify(value))
+  } catch (err) {
+    return String(value)
+  }
+}
+
+function removeUndefinedProperties (value) {
+  Object.keys(value).forEach(key => {
+    if (value[key] === undefined) {
+      delete value[key]
+    }
+  })
+  return value
 }
 
 function setUpTouchBar() {

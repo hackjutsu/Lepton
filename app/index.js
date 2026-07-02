@@ -124,7 +124,8 @@ function handleAuthResult (result) {
         return initUserSession(payload.access_token)
       })
       .catch((err) => {
-        logger.error('Failed: ' + JSON.stringify(err.error))
+        reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+        logger.error('GitHub login failed: ' + describeGitHubLoginError(err))
         notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '03' }))
       })
     return
@@ -132,6 +133,25 @@ function handleAuthResult (result) {
 
   logger.error('Oops! Something went wrong and we couldn\'t' +
     'log you in using Github. Please try again.')
+}
+
+function describeGitHubLoginError (err) {
+  if (!err) return 'unknown error'
+
+  const details = err.error || err.response || err
+  if (details && typeof details === 'object') {
+    return JSON.stringify({
+      name: err.name,
+      message: err.message,
+      statusCode: err.statusCode || (err.response && err.response.statusCode),
+      error: details.error || details.message,
+      errorDescription: details.error_description || err.errorDescription,
+      parseError: details.parseError,
+      bodyPrefix: details.bodyPrefix
+    })
+  }
+
+  return String(details)
 }
 
 function setSyncTime (time) {
