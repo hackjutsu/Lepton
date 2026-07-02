@@ -24,6 +24,7 @@ const { installLoggerRedaction } = require('./app/utilities/logging/redact')
 const { applyStartAtLoginSetting } = require('./app/utilities/startAtLogin')
 const { applyElectronProxy } = require('./app/utilities/electronProxy')
 const { configureI18n, t } = require('./app/utilities/i18n')
+const { createAccessTokenStorage } = require('./app/utilities/accessTokenStorage')
 const { createElectronLocalStorage } = require('./app/utilities/electronLocalStorage')
 const {
   getUpdateCheckDecision,
@@ -41,6 +42,13 @@ const {
 const logger = createMainLogger()
 const electronLocalStorage = createElectronLocalStorage({
   getUserDataPath: () => app.getPath('userData')
+})
+const accessTokenStorage = createAccessTokenStorage({
+  conf: nconf,
+  getSafeStorage: () => electron.safeStorage,
+  isDev,
+  localStorage: electronLocalStorage,
+  logger
 })
 
 const { autoUpdater } = require("electron-updater")
@@ -538,6 +546,22 @@ function setUpBridgeIpcHandlers () {
       return
     }
     event.returnValue = electronLocalStorage.set(key, value)
+  })
+
+  ipcMain.on('lepton:credentials:get-access-token', (event) => {
+    if (!isMainWindowSender(event)) {
+      event.returnValue = { status: false, data: null }
+      return
+    }
+    event.returnValue = accessTokenStorage.get()
+  })
+
+  ipcMain.on('lepton:credentials:set-access-token', (event, token) => {
+    if (!isMainWindowSender(event)) {
+      event.returnValue = { status: false }
+      return
+    }
+    event.returnValue = accessTokenStorage.set(token)
   })
 
   ipcMain.on('lepton:renderer-store:get', (event, configName, defaults) => {
