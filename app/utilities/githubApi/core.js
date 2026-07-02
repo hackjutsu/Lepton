@@ -4,7 +4,7 @@ const { shouldDownloadAllSnippets } = require('../config')
 
 const TAG = '[REST] '
 const kTimeoutUnit = 10 * 1000 // ms
-const userAgent = 'hackjutsu-lepton-app'
+const userAgent = 'lepton-snippet-app'
 const GISTS_PER_PAGE = 100
 const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
 
