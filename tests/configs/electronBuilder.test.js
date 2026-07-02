@@ -13,8 +13,9 @@ describe('electron-builder distribution config', () => {
     expect(builderConfig.files).toContain('app/utilities/updatePolicy.js')
   })
 
-  it('builds macOS DMG and ZIP artifacts for Intel and Apple Silicon', () => {
-    expect(builderConfig.mac.identity).toBeNull()
+  it('ad-hoc signs macOS DMG and ZIP artifacts for Intel and Apple Silicon', () => {
+    expect(builderConfig.mac.identity).toBe('-')
+    expect(builderConfig.mac.hardenedRuntime).toBe(false)
     expect(builderConfig.mac.target).toEqual([
       {
         target: 'dmg',

@@ -84,7 +84,7 @@ Release workflow
     +--> build macOS:
     |       dmg + zip for x64
     |       dmg + zip for arm64
-    |       unsigned by policy
+    |       ad-hoc signed, not notarized
     |
     +--> build Windows:
     |       NSIS installer for x64 and ia32
@@ -108,24 +108,31 @@ stable auto-update metadata is available
 The macOS job builds Intel and Apple Silicon artifacts in one electron-builder
 run so `latest-mac.yml` is generated once for the full macOS artifact set.
 
-## Unsigned macOS And Windows Builds
+## macOS Gatekeeper And Windows SmartScreen
 
 Lepton does not require paid Apple Developer Program or Windows code-signing
-certificates for publishing. The release workflow intentionally disables
-macOS/Windows signing and does not read Apple or Windows certificate secrets.
+certificates for publishing. macOS artifacts are ad-hoc signed so the app
+bundle is structurally valid for local code-signing checks, but they are not
+Developer ID signed or notarized. The workflow does not read Apple certificate
+secrets.
 
 Expected user-facing behavior:
 
-- macOS users should expect Gatekeeper warnings. They may need to open Lepton
-  from Finder's context menu or approve it in Privacy & Security settings.
+- macOS users should expect Gatekeeper to say Apple cannot verify Lepton is
+  free of malware. They may need to open Lepton from Finder's context menu or
+  approve it in Privacy & Security settings.
+- If macOS still reports that Lepton is damaged after the app is dragged into
+  `/Applications`, advanced users can clear the downloaded-app quarantine flag:
+  `xattr -dr com.apple.quarantine /Applications/Lepton.app`.
 - Windows users should expect Microsoft Defender SmartScreen warnings until the
   unsigned app has enough reputation.
 - macOS and Windows auto-update metadata is still published for stable tags,
-  but unsigned update installation should be manually verified before it is
-  advertised as a fully supported update path.
+  but ad-hoc-signed macOS updates and unsigned Windows updates should be
+  manually verified before they are advertised as fully supported update paths.
 
-If signing is added later, update `.github/workflows/release.yml`,
-`electron-builder.js`, this wiki page, and the README together.
+If Developer ID signing or notarization is added later, update
+`.github/workflows/release.yml`, `electron-builder.js`, this wiki page, and the
+README together.
 
 Stable app builds are eligible to check for updates when the user's
 `.leptonrc` has:

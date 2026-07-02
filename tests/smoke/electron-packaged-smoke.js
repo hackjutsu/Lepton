@@ -124,15 +124,11 @@ function runCodesignDiagnostics (appPath) {
   const output = [result.stdout, result.stderr].filter(Boolean).join('\n').trim()
   const message = [
     'Packaged app strict codesign verification did not pass.',
-    'This is expected on unsigned local builds without a Developer ID identity.',
+    'macOS builds should be ad-hoc signed so Gatekeeper sees a structurally valid bundle.',
     output
   ].join('\n')
 
-  if (process.env.LEPTON_PACKAGED_SMOKE_REQUIRE_CODESIGN === '1') {
-    throw new Error(message)
-  }
-
-  console.warn(message)
+  throw new Error(message)
 }
 
 async function fetchJson (url) {
