@@ -194,6 +194,7 @@ Register your application at https://github.com/settings/applications/new
 - **Styling**: Uses Sass with component-level SCSS files
 - **State Management**: Redux store handles application state, actions use Redux Thunk for async operations
 - **Shortcuts**: Customizable keyboard shortcuts defined in config, registered via electron-localshortcut
+- **Packaged Runtime Files**: `electron-builder.js` allowlists the main-process runtime files shipped in packaged apps. When `main.js`, `preload.js`, or another packaged runtime file starts requiring a new local helper, add that helper path to `mainRuntimeAppFiles` in `electron-builder.js` and update `tests/configs/electronBuilder.test.js`.
 - **Locales/i18n**: Adding a UI locale is not just a renderer code change. Update the locale catalog and package configuration together so packaged Electron builds keep the right Chromium locale resources.
 
 ### Adding A Locale
@@ -227,6 +228,7 @@ When working with this codebase:
 - Focus code changes on the `/app` directory, `/configs`, `main.js`, and configuration files
 - Avoid searching or reading files in `node_modules/`, `/bundle`, `/build`, `/dist` directories unless absolutely necessary
 - Avoid bypassing the global logger for auth-related values; logger methods automatically redact known token and secret patterns
+- When adding new files used by the Electron main process at packaged-app startup, update `electron-builder.js` so packaged builds include them; otherwise `npm run test:packaged-smoke` can fail even when dev builds work.
 - Do not reintroduce `@electron/remote`, `nodeIntegration`, renderer `require`, or renderer `process` access. Add preload bridge methods instead.
 - Do not reintroduce Redux Form or other React 19-incompatible form patterns.
 - Do not use `ReactDOM.render`; use the existing React 19 root setup.

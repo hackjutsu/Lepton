@@ -40,7 +40,8 @@ const mainRuntimeAppFiles = [
   'app/utilities/logging/**',
   'app/utilities/menu/**',
   'app/utilities/startAtLogin/**',
-  'app/utilities/updatePolicy.js'
+  'app/utilities/updatePolicy.js',
+  'app/utilities/zoom/**'
 ]
 
 // Packages in this list are renderer-only dependencies that webpack already

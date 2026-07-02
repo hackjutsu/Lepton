@@ -12,7 +12,8 @@ describe('electron-builder distribution config', () => {
   it('packages main-process runtime files used at startup', () => {
     expect(builderConfig.files).toEqual(expect.arrayContaining([
       'app/utilities/accessTokenStorage.js',
-      'app/utilities/updatePolicy.js'
+      'app/utilities/updatePolicy.js',
+      'app/utilities/zoom/**'
     ]))
   })
 

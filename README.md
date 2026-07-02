@@ -65,6 +65,7 @@ Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact pat
 - Logger
 - Proxy
 - Shortcuts
+- Zoom
 - Enterprise
 - Notifications
 - Interface language (`i18n.locale`: `en`, `es`, `fr`, `ja`, `ko`, `tr`, `zh-Hans`, or `zh-Hant`)
