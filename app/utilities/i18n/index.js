@@ -64,7 +64,12 @@ function interpolate (message, values) {
 }
 
 function t (key, values) {
-  const activeMessage = readPath(catalogs[activeLocale], key)
+  return translate(activeLocale, key, values)
+}
+
+function translate (locale, key, values) {
+  const normalizedLocale = normalizeLocale(locale)
+  const activeMessage = readPath(catalogs[normalizedLocale], key)
   const fallbackMessage = readPath(catalogs[DEFAULT_LOCALE], key)
   const message = activeMessage !== undefined ? activeMessage : fallbackMessage
   return interpolate(message !== undefined ? message : key, values)
@@ -82,5 +87,6 @@ module.exports = {
   configureI18n,
   getLocale,
   getSupportedLocales,
-  t
+  t,
+  translate
 }

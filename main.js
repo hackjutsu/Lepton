@@ -478,7 +478,7 @@ function setUpBridgeIpcHandlers () {
     nconf.set(key, persistedValue)
     writeConfigValue(key, persistedValue)
     setUpApplicationMenu()
-    if (mainWindow && !mainWindow.isDestroyed()) {
+    if (key !== 'i18n:locale' && mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.reload()
     }
     return persistedValue

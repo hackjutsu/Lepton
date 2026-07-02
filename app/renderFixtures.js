@@ -360,6 +360,11 @@ function getFixtureOverrides (name) {
       }
     case 'search':
       return { searchWindowStatus: 'ON' }
+    case 'search-results':
+      return {
+        initialSearchQuery: 'fixture',
+        searchWindowStatus: 'ON'
+      }
     case 'active':
       return {}
     default:
@@ -370,10 +375,12 @@ function getFixtureOverrides (name) {
 export function getRenderFixture (name) {
   const overrides = getFixtureOverrides(name)
   if (!overrides) return null
+  const { initialSearchQuery, ...stateOverrides } = overrides
 
   return {
+    initialSearchQuery,
     name,
     searchIndexRecords,
-    state: Object.assign({}, getBaseState(), overrides)
+    state: Object.assign({}, getBaseState(), stateOverrides)
   }
 }

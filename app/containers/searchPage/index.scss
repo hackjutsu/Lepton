@@ -5,11 +5,15 @@
     font-size: 13px;
   }
 
+  .search-header {
+    position: relative;
+  }
+
   .search-box {
     @extend .font-style-base;
     font-size: 16px;
     width: 100%;
-    padding: 10px;
+    padding: 10px 180px 10px 10px;
     border: 0;
     background: var(--bg-primary);
   }
@@ -28,7 +32,17 @@
 
   .search-result-count {
     @extend .font-style-base;
-    padding: 2px 14px 10px;
+    max-width: 160px;
+    overflow: hidden;
+    padding: 0;
+    pointer-events: none;
+    position: absolute;
+    right: 14px;
+    text-align: right;
+    text-overflow: ellipsis;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
     color: var(--text-secondary);
     font-size: 12px;
   }

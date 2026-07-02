@@ -64,6 +64,11 @@ const RENDER_FIXTURES = [
     text: ''
   },
   {
+    name: 'search-results',
+    selector: '.search-modal .search-result-count',
+    text: '6 snippets found|React 19 render fixture'
+  },
+  {
     name: 'delete',
     selector: '.modal-footer .btn-danger',
     text: 'Delete the gist?'

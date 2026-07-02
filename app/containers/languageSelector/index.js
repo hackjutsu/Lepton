@@ -1,6 +1,6 @@
 import electronBridge from '../../utilities/electronBridge'
 import React, { Component } from 'react'
-import { getLocale, getSupportedLocales, t } from '../../utilities/i18n'
+import { configureI18n, getLocale, getSupportedLocales, t, translate } from '../../utilities/i18n'
 
 const logger = electronBridge.logger
 
@@ -14,10 +14,17 @@ class LanguageSelector extends Component {
 
   handleLanguageChanged (event) {
     const locale = event.target.value
-    const { onBeforeChange, onChangeFailed } = this.props
+    const { onBeforeChange, onChangeComplete, onChangeFailed } = this.props
     this.setState({ locale })
     Promise.resolve(onBeforeChange ? onBeforeChange(locale) : null)
       .then(() => electronBridge.config.set('i18n:locale', locale))
+      .then(persistedLocale => {
+        const configuredLocale = configureI18n(persistedLocale || locale)
+        this.setState({ locale: configuredLocale })
+        if (onChangeComplete) {
+          onChangeComplete(configuredLocale)
+        }
+      })
       .catch(error => {
         logger.error(t('i18n.saveFailed'), error)
         this.setState({ locale: getLocale() })
@@ -28,15 +35,19 @@ class LanguageSelector extends Component {
   }
 
   render () {
-    const { className, compact } = this.props
+    const { className, compact, disabled, displayLocale, selectedLocale } = this.props
     const labelClassName = `${className || ''}${compact ? ' language-selector-compact' : ''}`.trim()
+    const label = displayLocale ? translate(displayLocale, 'i18n.language') : t('i18n.language')
     return (
-      <label className={ labelClassName }>
-        <span>{ compact ? '🌐' : t('i18n.language') }</span>
+      <label className={ labelClassName } title={ compact ? label : undefined }>
+        <span aria-hidden={ compact ? true : undefined }>{ compact ? '🌐' : label }</span>
         <select
+          aria-label={ label }
           className='form-control'
           data-role='language-selector'
-          value={ this.state.locale }
+          disabled={ disabled }
+          tabIndex={ disabled ? -1 : undefined }
+          value={ selectedLocale || this.state.locale }
           onChange={ this.handleLanguageChanged.bind(this) }>
           { getSupportedLocales().map(locale => (
             <option key={ locale.code } value={ locale.code }>
