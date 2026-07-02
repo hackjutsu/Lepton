@@ -51,6 +51,20 @@ function createJsonResponse (body, {
   }
 }
 
+function createTextResponse (body, {
+  status = 200,
+  statusText = 'OK',
+  headers = {}
+} = {}) {
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    statusText,
+    headers: createHeaders(headers),
+    text: () => Promise.resolve(body)
+  }
+}
+
 function loadGitHubApi ({
   confValues = {},
   fetchImpl
@@ -71,7 +85,9 @@ function loadGitHubApi ({
 
 describe('GitHub API utility', () => {
   it('builds the OAuth access-token exchange request', async () => {
-    const { api, fetch } = loadGitHubApi()
+    const { api, fetch } = loadGitHubApi({
+      fetchImpl: () => Promise.resolve(createJsonResponse({ access_token: 'token-1' }))
+    })
 
     await api.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
 
@@ -85,9 +101,42 @@ describe('GitHub API utility', () => {
     }))
     expect(init.headers).toEqual(expect.objectContaining({
       Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': 'hackjutsu-lepton-app'
     }))
     expect(init).not.toHaveProperty('agent')
+  })
+
+  it('rejects OAuth token exchange responses without an access token', async () => {
+    const { api } = loadGitHubApi({
+      fetchImpl: () => Promise.resolve(createJsonResponse({
+        error: 'incorrect_client_credentials',
+        error_description: 'The client credentials are incorrect.'
+      }))
+    })
+
+    await expect(api.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code'))
+      .rejects.toMatchObject({
+        name: 'OAuthTokenExchangeError',
+        errorDescription: 'The client credentials are incorrect.',
+        error: {
+          error: 'incorrect_client_credentials'
+        }
+      })
+  })
+
+  it('reports non-json GitHub API responses as parse errors', async () => {
+    const { api } = loadGitHubApi({
+      fetchImpl: () => Promise.resolve(createTextResponse('<html>nope</html>'))
+    })
+
+    await expect(api.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code'))
+      .rejects.toMatchObject({
+        name: 'ResponseParseError',
+        error: {
+          bodyPrefix: '<html>nope</html>'
+        }
+      })
   })
 
   it('uses GitHub Enterprise API host when configured', async () => {

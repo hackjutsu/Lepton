@@ -40,6 +40,9 @@ function createGitHubApi ({
     return apiRequest({
       method: 'POST',
       uri: 'https://github.com/login/oauth/access_token',
+      headers: {
+        'User-Agent': userAgent
+      },
       form: {
         client_id: clientId,
         client_secret: clientSecret,
@@ -47,7 +50,7 @@ function createGitHubApi ({
       },
       json: true,
       timeout: 2 * kTimeoutUnit
-    })
+    }).then(validateOAuthAccessTokenResponse)
   }
 
   function getUserProfile (token) {
@@ -264,6 +267,24 @@ function createGitHubApi ({
   return {
     getGitHubApi
   }
+}
+
+function validateOAuthAccessTokenResponse (payload) {
+  if (payload && payload.access_token) {
+    return payload
+  }
+
+  const errorCode = payload && payload.error ? payload.error : 'missing_access_token'
+  const errorDescription = payload && payload.error_description
+    ? payload.error_description
+    : 'GitHub OAuth did not return an access token.'
+  const error = new Error(`GitHub OAuth token exchange failed: ${errorCode}`)
+
+  error.name = 'OAuthTokenExchangeError'
+  error.error = payload || { error: errorCode, error_description: errorDescription }
+  error.errorDescription = errorDescription
+
+  throw error
 }
 
 module.exports = {

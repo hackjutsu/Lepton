@@ -128,7 +128,11 @@ function readResponseBody (response, shouldParseJson) {
     .then(text => {
       if (!shouldParseJson) return text
       if (!text) return null
-      return JSON.parse(text)
+      try {
+        return JSON.parse(text)
+      } catch (err) {
+        throw createResponseParseError(response, text, err)
+      }
     })
 }
 
@@ -152,6 +156,20 @@ function createStatusCodeError (response, body) {
     headers: headersToObject(response.headers),
     statusCode: statusCode,
     statusMessage: statusMessage
+  }
+
+  return error
+}
+
+function createResponseParseError (response, text, parseError) {
+  const error = new Error('GitHub API response was not valid JSON')
+
+  error.name = 'ResponseParseError'
+  error.status = response.status || 0
+  error.statusCode = response.status || 0
+  error.error = {
+    parseError: parseError.message,
+    bodyPrefix: typeof text === 'string' ? text.slice(0, 200) : ''
   }
 
   return error
