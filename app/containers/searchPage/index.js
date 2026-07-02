@@ -24,8 +24,9 @@ const logger = electronBridge.logger
 class SearchPage extends Component {
   constructor (props) {
     super(props)
+    const initialSearchQuery = props.initialSearchQuery || ''
     this.state = {
-      inputValue: '',
+      inputValue: initialSearchQuery,
       selectedIndex: 0,
       searchResults: []
     }
@@ -35,6 +36,11 @@ class SearchPage extends Component {
   componentDidMount () {
     const { searchIndex } = this.props
     searchIndex.initFuseSearch()
+    if (this.state.inputValue) {
+      this.setState({
+        searchResults: searchIndex.fuseSearch(this.state.inputValue)
+      })
+    }
   }
 
   selectPreGist () {
@@ -359,16 +365,18 @@ class SearchPage extends Component {
   renderSearchModalBody () {
     return (
       <div>
-        <input
-          type="text"
-          className='search-box'
-          placeholder={ t('search.placeholder') }
-          autoFocus
-          value={ this.state.inputValue }
-          onChange={ this.updateInputValue.bind(this) }
-          onKeyDown={ this.handleKeyDown.bind(this) }
-          onKeyUp={ this.queryInputValue.bind(this) }/>
-        { this.renderResultCount() }
+        <div className='search-header'>
+          <input
+            type="text"
+            className='search-box'
+            placeholder={ t('search.placeholder') }
+            autoFocus
+            value={ this.state.inputValue }
+            onChange={ this.updateInputValue.bind(this) }
+            onKeyDown={ this.handleKeyDown.bind(this) }
+            onKeyUp={ this.queryInputValue.bind(this) }/>
+          { this.renderResultCount() }
+        </div>
         <ul className='result-group'>
           { this.renderSearchResults() }
         </ul>

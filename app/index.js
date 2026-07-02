@@ -881,6 +881,7 @@ createRoot(document.getElementById('container')).render(
   <Provider store = { reduxStore }>
     <AppContainer
       searchIndex = { SearchIndex }
+      initialSearchQuery = { renderFixture ? renderFixture.initialSearchQuery : undefined }
       localPref = { localPref }
       updateLocalStorage = { updateLocalStorage }
       loggedInUserInfo = { getCachedUserInfo() }

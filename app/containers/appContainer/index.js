@@ -80,10 +80,12 @@ class AppContainer extends Component {
   }
 
   renderSearchPage () {
-    const { searchWindowStatus, searchIndex } = this.props
+    const { initialSearchQuery, searchWindowStatus, searchIndex } = this.props
     return searchWindowStatus === 'OFF'
       ? null
-      : <SearchPage searchIndex = { searchIndex } />
+      : <SearchPage
+        initialSearchQuery = { initialSearchQuery }
+        searchIndex = { searchIndex } />
   }
 
   dismissUpdateAlert () {

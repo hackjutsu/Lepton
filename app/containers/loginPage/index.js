@@ -19,6 +19,8 @@ const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 
 const LoginModeEnum = { CREDENTIALS: 1, TOKEN: 2 }
+const LOGIN_MODAL_FLIP_DURATION_MS = 320
+const LOGIN_MODAL_FLIP_SWAP_MS = LOGIN_MODAL_FLIP_DURATION_MS / 2
 
 function getFileUrl (filePath) {
   if (!filePath) return null
@@ -33,7 +35,7 @@ class LoginPage extends Component {
     this.state = {
       inputTokenValue: '',
       loginMode: LoginModeEnum.CREDENTIALS,
-      languageChanging: false
+      modalFlipping: false
     }
   }
 
@@ -55,6 +57,8 @@ class LoginPage extends Component {
   componentWillUnmount () {
     logger.debug('-----> Removing listener for auto-login signal')
     unsubscribeIpc(this.ipcSubscriptions)
+    clearTimeout(this.loginModeFlipTimer)
+    clearTimeout(this.loginModeSwapTimer)
     clearTimeout(this.languageChangeTimer)
   }
 
@@ -74,16 +78,21 @@ class LoginPage extends Component {
     }
   }
 
-  handleLoginModeSwitched () {
-    if (this.state.loginMode === LoginModeEnum.CREDENTIALS) {
-      this.setState({
-        loginMode: LoginModeEnum.TOKEN
-      })
-    } else {
-      this.setState({
-        loginMode: LoginModeEnum.CREDENTIALS
-      })
-    }
+  handleLoginModeSwitched (event) {
+    if (event && typeof event.preventDefault === 'function') event.preventDefault()
+    if (this.state.modalFlipping) return
+
+    this.setState({ modalFlipping: true })
+    this.loginModeSwapTimer = setTimeout(() => {
+      this.setState(prevState => ({
+        loginMode: prevState.loginMode === LoginModeEnum.CREDENTIALS
+          ? LoginModeEnum.TOKEN
+          : LoginModeEnum.CREDENTIALS
+      }))
+    }, LOGIN_MODAL_FLIP_SWAP_MS)
+    this.loginModeFlipTimer = setTimeout(() => {
+      this.setState({ modalFlipping: false })
+    }, LOGIN_MODAL_FLIP_DURATION_MS)
   }
 
   renderControlSection () {
@@ -118,7 +127,7 @@ class LoginPage extends Component {
               onClick={ this.handleContinueButtonClicked.bind(this, token) }>
               { loggedInUserName ? t('login.continueAs', { username: loggedInUserName }) : t('login.happyCoding') }
             </Button>
-            : this.renderTokenLoginSection(false, userSessionStatus)}
+            : this.renderTokenLoginSection(userSessionStatus)}
         </div>
       )
     }
@@ -132,7 +141,7 @@ class LoginPage extends Component {
           </div>
           { loginMode === LoginModeEnum.CREDENTIALS
             ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus)
-            : this.renderTokenLoginSection(true, userSessionStatus)
+            : this.renderTokenLoginSection(userSessionStatus)
           }
         </div>
       )
@@ -153,14 +162,16 @@ class LoginPage extends Component {
   }
 
   handleLanguageChanging () {
-    this.setState({ languageChanging: true })
+    clearTimeout(this.loginModeFlipTimer)
+    clearTimeout(this.loginModeSwapTimer)
+    this.setState({ modalFlipping: true })
     return new Promise(resolve => {
-      this.languageChangeTimer = setTimeout(resolve, 180)
+      this.languageChangeTimer = setTimeout(resolve, LOGIN_MODAL_FLIP_DURATION_MS)
     })
   }
 
   handleLanguageChangeFailed () {
-    this.setState({ languageChanging: false })
+    this.setState({ modalFlipping: false })
   }
 
   updateInputValue (evt) {
@@ -182,14 +193,11 @@ class LoginPage extends Component {
           onClick={ this.handleLoginClicked.bind(this) }>
           { t('login.githubLogin') }
         </Button>
-        <div className="login-page-text-link">
-          <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>{ t('login.switchToToken') }</a>
-        </div>
       </div>
     )
   }
 
-  renderTokenLoginSection (showLoginSwitch, userSessionStatus) {
+  renderTokenLoginSection (userSessionStatus) {
     return (
       <form>
         { userSessionStatus === 'EXPIRED'
@@ -208,12 +216,33 @@ class LoginPage extends Component {
           onClick={ this.handleTokenLoginButtonClicked.bind(this, this.state.inputTokenValue) }>
           { t('login.tokenLogin') }
         </Button>
-        { showLoginSwitch
-          ? <div className="login-page-text-link">
-            <a href="#" onClick={ this.handleLoginModeSwitched.bind(this) }>{ t('login.switchToCredentials') }</a>
-          </div>
-          : null}
       </form>
+    )
+  }
+
+  shouldRenderLoginModeSwitch () {
+    const { loggedInUserInfo, userSessionStatus } = this.props
+    const loggedInUserName = loggedInUserInfo ? loggedInUserInfo.profile : null
+
+    return !conf.get('enterprise:enable') &&
+      (userSessionStatus === 'EXPIRED' || userSessionStatus === 'INACTIVE' ||
+      loggedInUserName === null || loggedInUserName === 'null')
+  }
+
+  renderLoginModeSwitch () {
+    if (!this.shouldRenderLoginModeSwitch()) return null
+
+    const label = this.state.loginMode === LoginModeEnum.CREDENTIALS
+      ? t('login.switchToToken')
+      : t('login.switchToCredentials')
+
+    return (
+      <a
+        className='login-mode-switch'
+        href="#"
+        onClick={ this.handleLoginModeSwitched.bind(this) }>
+        { label }
+      </a>
     )
   }
 
@@ -277,8 +306,8 @@ class LoginPage extends Component {
   }
 
   render () {
-    const className = this.state.languageChanging
-      ? 'login-modal login-modal-language-changing'
+    const className = this.state.modalFlipping
+      ? 'login-modal login-modal-flipping'
       : 'login-modal'
 
     return (
@@ -286,6 +315,7 @@ class LoginPage extends Component {
         <Modal.Dialog bsSize='small'>
           <Modal.Header>
             <Modal.Title>{ t('login.title') }</Modal.Title>
+            { this.renderLoginModeSwitch() }
             { this.renderLanguageSelector() }
           </Modal.Header>
           <Modal.Body>

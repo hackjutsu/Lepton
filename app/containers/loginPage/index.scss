@@ -12,20 +12,46 @@
     background: #808080;
   }
 
-  .modal-content {
-    animation: login-modal-fade-in 180ms ease-out;
-    margin-top: 100px;
-    min-height: 440px;
-    opacity: 1;
-    transition: opacity 180ms ease-in;
+  .modal-dialog {
+    perspective: 900px;
   }
 
-  &.login-modal-language-changing .modal-content {
-    opacity: 0;
+  .modal-content {
+    animation: login-modal-fade-in 180ms ease-out;
+    backface-visibility: hidden;
+    margin-top: 100px;
+    min-height: 420px;
+    opacity: 1;
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    transition: opacity 180ms ease-in;
+    will-change: transform;
+  }
+
+  &.login-modal-flipping .modal-content {
+    animation: login-modal-horizontal-flip 320ms ease-in-out;
   }
 
   .modal-header {
     position: relative;
+  }
+
+  .login-mode-switch {
+    -webkit-app-region: no-drag;
+    color: gray;
+    font-size: 12px;
+    font-style: italic;
+    left: 50%;
+    line-height: 24px;
+    max-width: 170px;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    text-decoration: underline;
+    text-overflow: ellipsis;
+    top: 23px;
+    transform: translateX(-50%);
+    white-space: nowrap;
   }
 
   .login-language-selector {
@@ -102,7 +128,7 @@
     color: #888;
     font-size: 11px;
     line-height: 16px;
-    margin: 0 10px 18px 10px;
+    margin: 14px 10px 18px 10px;
     min-height: 16px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -130,5 +156,33 @@
 
   to {
     opacity: 1;
+  }
+}
+
+@keyframes login-modal-horizontal-flip {
+  0% {
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+
+  49% {
+    opacity: .78;
+    transform: rotateY(90deg);
+  }
+
+  50% {
+    opacity: .78;
+    transform: rotateY(-90deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-modal.login-modal-flipping .modal-content {
+    animation: none;
   }
 }
