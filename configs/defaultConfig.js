@@ -15,6 +15,9 @@ module.exports = {
     "logger": {
         "level": "info"
     },
+    "security": {
+        "cachedAccessTokenStorage": "auto"
+    },
     "proxy": {
         "enable": false,
         "address": "socks://localhost:1080"

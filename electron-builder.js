@@ -28,6 +28,7 @@ const snapStorePublishConfig = buildSnapStorePublishConfig()
 // Renderer source is compiled into bundle/app.bundle.js and does not need to
 // ship separately inside app.asar.
 const mainRuntimeAppFiles = [
+  'app/utilities/accessTokenStorage.js',
   'app/utilities/auth/**',
   'app/utilities/config/**',
   'app/utilities/electronLocalStorage.js',

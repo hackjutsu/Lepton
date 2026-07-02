@@ -30,6 +30,10 @@ function createUnavailableBridge () {
       get: unavailableBridgeMethod,
       set: unavailableBridgeMethod
     },
+    credentials: {
+      getAccessToken: unavailableBridgeMethod,
+      setAccessToken: unavailableBridgeMethod
+    },
     files: {
       ensureConfigFile: unavailableBridgeMethod
     },

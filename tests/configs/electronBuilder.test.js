@@ -10,7 +10,10 @@ describe('electron-builder distribution config', () => {
   })
 
   it('packages main-process runtime files used at startup', () => {
-    expect(builderConfig.files).toContain('app/utilities/updatePolicy.js')
+    expect(builderConfig.files).toEqual(expect.arrayContaining([
+      'app/utilities/accessTokenStorage.js',
+      'app/utilities/updatePolicy.js'
+    ]))
   })
 
   it('packages GitHub API bridge runtime dependencies', () => {

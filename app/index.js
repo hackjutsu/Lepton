@@ -568,7 +568,7 @@ function initUserSession (token, options = {}) {
 function updateLocalStorage (data) {
   try {
     logger.debug('[auth] Caching credential metadata ' + JSON.stringify({ hasCredential: Boolean(data.token) }))
-    let rst = electronBridge.localStorage.set('token', data.token)
+    let rst = electronBridge.credentials.setAccessToken(data.token)
     logger.debug(`[auth] [${rst.status}] Cached credential`)
 
     logger.debug(`-----> Caching profile ${data.profile}`)
@@ -585,7 +585,7 @@ function getCachedUserInfo () {
   logger.debug('-----> Inside getCachedUserInfo')
   const cachedProfile = electronBridge.localStorage.get('profile')
   logger.debug(`-----> [${cachedProfile.status}] cachedProfile is ${cachedProfile.data}`)
-  const cachedToken = electronBridge.localStorage.get('token')
+  const cachedToken = electronBridge.credentials.getAccessToken()
   logger.debug('[auth] Cached credential lookup ' + JSON.stringify({
     status: cachedToken.status,
     hasCredential: Boolean(cachedToken.data)

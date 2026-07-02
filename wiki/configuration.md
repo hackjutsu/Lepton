@@ -24,6 +24,9 @@ The file is not generated automatically. Create it if you want to override the d
   "logger": {
     "level": "info"
   },
+  "security": {
+    "cachedAccessTokenStorage": "auto"
+  },
   "proxy": {
     "enable": false,
     "address": "socks://localhost:1080"
@@ -79,6 +82,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `boringAvatarVariant` | `beam` | Variant used when `avatar.type` is `boring`. |
 | `userPanel` | `hideProfilePhoto` | `false` | Hide the profile photo in the user panel. |
 | `logger` | `level` | `info` | Logging level. Use `info` for normal use or `debug` when collecting diagnostic logs. |
+| `security` | `cachedAccessTokenStorage` | `auto` | Cached GitHub OAuth token storage. Supported values: `auto`, `encrypted`, `file`. `auto` uses file storage in development builds and Electron safeStorage in packaged builds. |
 | `proxy` | `enable` | `false` | Route GitHub API requests and Electron sessions through a proxy. |
 | | `address` | `socks://localhost:1080` | Proxy address. Supports normal proxy URLs, Chromium proxy rule lists, and `pac+https://...` PAC URLs. |
 | `snippet` | `sorting` | `updated_at` | Snippet order. Supported values: `updated_at`, `created_at`, `description`. |
@@ -92,7 +96,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `validateFilename` | `true` | Validate gist filenames before saving. |
 | `enterprise` | `enable` | `false` | Enable GitHub Enterprise mode. |
 | | `host` | `""` | GitHub Enterprise host, for example `github.example.com`. |
-| | `token` | `""` | Personal access token with the `gist` scope. |
+| | `token` | `""` | Personal access token with the `gist` scope. This remains plain `.leptonrc` configuration and is not affected by `security.cachedAccessTokenStorage`. |
 | | `avatarUrl` | `""` | Optional avatar image URL for GitHub Enterprise users. |
 | `notifications` | `success` | `true` | Show notifications for successful actions. |
 | | `failure` | `true` | Show notifications for failed actions. |
