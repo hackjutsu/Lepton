@@ -686,9 +686,7 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
     authorizeUrl: describeGitHubOAuthUrl(authUrl)
   }))
 
-  function handleAuthNavigation (event, callbackUrl, eventName) {
-    logger.debug('[auth] OAuth navigation ' + eventName + ': ' + JSON.stringify(describeGitHubOAuthUrl(callbackUrl)))
-
+  function handleAuthNavigation (event, callbackUrl) {
     const result = parseGitHubOAuthCallback(callbackUrl)
     if (!result) return
 
@@ -701,28 +699,19 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
   }
 
   authWindow.webContents.on('will-navigate', (event, callbackUrl) => {
-    handleAuthNavigation(event, callbackUrl, 'will-navigate')
+    handleAuthNavigation(event, callbackUrl)
   })
 
   authWindow.webContents.on('will-redirect', (event, callbackUrl) => {
-    handleAuthNavigation(event, callbackUrl, 'will-redirect')
+    handleAuthNavigation(event, callbackUrl)
   })
 
   authWindow.webContents.on('did-get-redirect-request', (event, oldUrl, newUrl) => {
-    handleAuthNavigation(event, newUrl, 'did-get-redirect-request')
+    handleAuthNavigation(event, newUrl)
   })
 
-  authWindow.webContents.on('did-navigate', (event, callbackUrl, httpResponseCode, httpStatusText) => {
-    logger.debug('[auth] OAuth did-navigate response: ' + JSON.stringify({
-      httpResponseCode,
-      httpStatusText,
-      url: describeGitHubOAuthUrl(callbackUrl)
-    }))
-    handleAuthNavigation(event, callbackUrl, 'did-navigate')
-  })
-
-  authWindow.webContents.on('did-finish-load', () => {
-    logger.debug('[auth] OAuth window finished load: ' + JSON.stringify(describeGitHubOAuthUrl(authWindow.webContents.getURL())))
+  authWindow.webContents.on('did-navigate', (event, callbackUrl) => {
+    handleAuthNavigation(event, callbackUrl)
   })
 
   authWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
@@ -750,7 +739,6 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
     }
   })
 
-  logger.debug('[auth] Loading GitHub OAuth authorize URL')
   authWindow.loadURL(authUrl, options)
     .catch(err => {
       logger.error('[auth] OAuth window failed to load: ' + JSON.stringify({
@@ -764,7 +752,6 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
       })
     })
   authWindow.show()
-  logger.debug('[auth] OAuth window shown')
 
   return promise
 }

@@ -247,7 +247,6 @@ function updateAuthWindowStatusOff () {
 }
 
 function updateLoginStatusInfo (message) {
-  logger.info('[Dispatch] updateLoginStatus ' + JSON.stringify({ message, level: 'info' }))
   reduxStore.dispatch(updateLoginStatus({
     message,
     level: 'info',
@@ -257,9 +256,6 @@ function updateLoginStatusInfo (message) {
 
 function updateSnippetDownloadStatus (downloaded, total) {
   const message = `Downloading snippets (${downloaded}/${total})`
-  if (downloaded === 0 || downloaded === total) {
-    logger.info('[Dispatch] updateLoginStatus ' + JSON.stringify({ message, level: 'info' }))
-  }
   reduxStore.dispatch(updateLoginStatus({
     message,
     level: 'info',
@@ -269,11 +265,6 @@ function updateSnippetDownloadStatus (downloaded, total) {
 
 function updateLoginStatusFailure () {
   const logFilePath = getLogFilePath()
-  logger.info('[Dispatch] updateLoginStatus ' + JSON.stringify({
-    message: LOGIN_STATUS.signInFailed,
-    level: 'error',
-    hasLogFilePath: Boolean(logFilePath)
-  }))
   reduxStore.dispatch(updateLoginStatus({
     message: LOGIN_STATUS.signInFailed,
     level: 'error',
@@ -282,7 +273,6 @@ function updateLoginStatusFailure () {
 }
 
 function clearLoginStatus () {
-  logger.info('[Dispatch] updateLoginStatus clear')
   reduxStore.dispatch(updateLoginStatus(null))
 }
 
