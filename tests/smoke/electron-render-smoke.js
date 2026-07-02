@@ -99,6 +99,16 @@ const RENDER_FIXTURES = [
     text: 'Exchanging token...'
   },
   {
+    name: 'login-index-sync',
+    selector: '.login-status-line',
+    text: 'Syncing snippet index...'
+  },
+  {
+    name: 'login-download-progress',
+    selector: '.login-status-line',
+    text: 'Downloading snippets (12/252)'
+  },
+  {
     name: 'login-error-log',
     selector: '.login-status-line a[href="file:///tmp/lepton-login.log"]',
     text: 'Sign-in failed.|See log'

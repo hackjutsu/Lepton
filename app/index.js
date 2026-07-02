@@ -81,7 +81,7 @@ const LOGIN_STATUS = {
   exchangingOAuthCode: 'Exchanging token...',
   accessTokenReceived: 'Loading profile...',
   loadingGitHubProfile: 'Loading profile...',
-  profileLoadedSyncingGists: 'Syncing gists...',
+  syncingSnippetIndex: 'Syncing snippet index...',
   signInComplete: 'Signed in.',
   signInFailed: 'Sign-in failed.'
 }
@@ -255,6 +255,18 @@ function updateLoginStatusInfo (message) {
   }))
 }
 
+function updateSnippetDownloadStatus (downloaded, total) {
+  const message = `Downloading snippets (${downloaded}/${total})`
+  if (downloaded === 0 || downloaded === total) {
+    logger.info('[Dispatch] updateLoginStatus ' + JSON.stringify({ message, level: 'info' }))
+  }
+  reduxStore.dispatch(updateLoginStatus({
+    message,
+    level: 'info',
+    logFilePath: null
+  }))
+}
+
 function updateLoginStatusFailure () {
   const logFilePath = getLogFilePath()
   logger.info('[Dispatch] updateLoginStatus ' + JSON.stringify({
@@ -378,10 +390,19 @@ function downloadGistDetailsAfterListSync (gistList, token) {
     return Promise.resolve({})
   }
 
-  logger.info(`[sync] Downloading details for ${gistList.length} gists`)
+  const total = gistList.length
+  if (total === 0) {
+    return Promise.resolve({})
+  }
+
+  let downloaded = 0
+  updateSnippetDownloadStatus(downloaded, total)
+  logger.info(`[sync] Downloading details for ${total} gists`)
   return Promise.map(gistList, gist => {
     return getGitHubApi(GET_SINGLE_GIST)(token, gist.id)
       .then(details => {
+        downloaded += 1
+        updateSnippetDownloadStatus(downloaded, total)
         return {
           id: gist.id,
           details: details
@@ -399,6 +420,7 @@ function downloadGistDetailsAfterListSync (gistList, token) {
 
 function updateUserGists (userLoginId, token) {
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
+  updateLoginStatusInfo(LOGIN_STATUS.syncingSnippetIndex)
   return getGitHubApi(GET_ALL_GISTS)(token, userLoginId)
     .then((gistList) => {
       return downloadGistDetailsAfterListSync(gistList, token)
@@ -513,7 +535,6 @@ function initUserSession (token, options = {}) {
     .then((profile) => {
       logger.debug('[auth] GET_USER_PROFILE succeeded ' + JSON.stringify(describeGitHubProfile(profile)))
       newProfile = profile
-      updateLoginStatusInfo(LOGIN_STATUS.profileLoadedSyncingGists)
       return updateUserGists(profile.login, token)
     })
     .then(() => {

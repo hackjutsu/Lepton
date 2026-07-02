@@ -327,6 +327,28 @@ function getFixtureOverrides (name) {
           activeStatus: 'IN_PROGRESS'
         }
       }
+    case 'login-index-sync':
+      return {
+        loginStatus: {
+          message: 'Syncing snippet index...',
+          level: 'info',
+          logFilePath: null
+        },
+        userSession: {
+          activeStatus: 'IN_PROGRESS'
+        }
+      }
+    case 'login-download-progress':
+      return {
+        loginStatus: {
+          message: 'Downloading snippets (12/252)',
+          level: 'info',
+          logFilePath: null
+        },
+        userSession: {
+          activeStatus: 'IN_PROGRESS'
+        }
+      }
     case 'raw':
       return {
         gistRawModal: {
