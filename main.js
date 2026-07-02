@@ -38,6 +38,7 @@ const {
 const {
   clearGitHubAuthWindowStorageAndDestroy
 } = require('./app/utilities/auth/githubAuthWindow')
+const { applyDefaultZoomPercent } = require('./app/utilities/zoom')
 
 const logger = createMainLogger()
 const electronLocalStorage = createElectronLocalStorage({
@@ -190,6 +191,11 @@ function createWindow (autoLogin) {
   })
 
   mainWindow.once('ready-to-show', () => {
+    applyDefaultZoomPercent({
+      webContents: mainWindow.webContents,
+      percent: nconf.get('zoom:percent'),
+      logger
+    })
     mainWindow.show()
     console.timeEnd('init')
     autoUpdater.on('error', data => {

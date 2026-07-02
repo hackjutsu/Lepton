@@ -47,6 +47,9 @@ module.exports = {
         "success": true,
         "failure": true
     },
+    "zoom": {
+        "percent": 100
+    },
     "shortcuts": {
         "keyShortcutForSearch": "Shift+Space",
         "keyNewGist": "CommandOrControl+N",

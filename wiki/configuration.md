@@ -56,6 +56,9 @@ The file is not generated automatically. Create it if you want to override the d
     "success": true,
     "failure": true
   },
+  "zoom": {
+    "percent": 100
+  },
   "shortcuts": {
     "keyShortcutForSearch": "Shift+Space",
     "keyNewGist": "CommandOrControl+N",
@@ -100,6 +103,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `avatarUrl` | `""` | Optional avatar image URL for GitHub Enterprise users. |
 | `notifications` | `success` | `true` | Show notifications for successful actions. |
 | | `failure` | `true` | Show notifications for failed actions. |
+| `zoom` | `percent` | `100` | Default page zoom percentage. `100` is original size; use values like `80`, `120`, or `150`. |
 | `shortcuts` | `keyShortcutForSearch` | `Shift+Space` | Open snippet metadata and downloaded-content search. |
 | | `keyNewGist` | `CommandOrControl+N` | Create a snippet. |
 | | `keyEditGist` | `CommandOrControl+E` | Edit the selected snippet. |
