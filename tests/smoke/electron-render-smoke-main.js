@@ -131,6 +131,8 @@ async function getRendererState (window) {
       const expectedSelector = ${JSON.stringify(expectedSelector)}
       const appBounds = appContainer ? appContainer.getBoundingClientRect() : null
       const languageSelector = document.querySelector('[data-role="language-selector"]')
+      const languageSelectorLabel = document.querySelector('.login-language-selector')
+      const loginModeSwitch = document.querySelector('.login-mode-switch')
       const images = Array.from(document.images).map(image => {
         const bounds = image.getBoundingClientRect()
         return {
@@ -159,6 +161,14 @@ async function getRendererState (window) {
         languageOptions: languageSelector
           ? Array.from(languageSelector.options).map(option => option.value)
           : [],
+        languageSelectorTitle: languageSelectorLabel ? languageSelectorLabel.getAttribute('title') : '',
+        loginModeSwitch: loginModeSwitch
+          ? {
+              ariaLabel: loginModeSwitch.getAttribute('aria-label') || '',
+              text: loginModeSwitch.innerText || '',
+              title: loginModeSwitch.getAttribute('title') || ''
+            }
+          : null,
         images,
         appBounds: appBounds ? {
           width: appBounds.width,
@@ -259,6 +269,22 @@ function assertLoginRendererState (state) {
   const expectedLocales = ['en', 'es', 'fr', 'ja', 'ko', 'zh-Hans', 'zh-Hant']
   if (expectedLocales.some(locale => !state.languageOptions.includes(locale))) {
     throw new Error(`Expected language selector options were not visible: ${JSON.stringify(state.languageOptions)}`)
+  }
+
+  if (!state.loginModeSwitch) {
+    throw new Error(`Expected login mode switch icon to be visible: ${JSON.stringify(state)}`)
+  }
+
+  if (!state.loginModeSwitch.title || state.loginModeSwitch.title !== state.loginModeSwitch.ariaLabel) {
+    throw new Error(`Expected login mode switch to expose its tooltip as the accessible label: ${JSON.stringify(state.loginModeSwitch)}`)
+  }
+
+  if ((state.loginModeSwitch.text || '').trim().length > 3) {
+    throw new Error(`Expected login mode switch to render as a compact icon: ${JSON.stringify(state.loginModeSwitch)}`)
+  }
+
+  if (!state.languageSelectorTitle) {
+    throw new Error(`Expected compact language selector to expose a tooltip: ${JSON.stringify(state)}`)
   }
 }
 

@@ -30,10 +30,12 @@ class LanguageSelector extends Component {
   render () {
     const { className, compact } = this.props
     const labelClassName = `${className || ''}${compact ? ' language-selector-compact' : ''}`.trim()
+    const label = t('i18n.language')
     return (
-      <label className={ labelClassName }>
-        <span>{ compact ? '🌐' : t('i18n.language') }</span>
+      <label className={ labelClassName } title={ compact ? label : undefined }>
+        <span aria-hidden={ compact ? true : undefined }>{ compact ? '🌐' : label }</span>
         <select
+          aria-label={ label }
           className='form-control'
           data-role='language-selector'
           value={ this.state.locale }

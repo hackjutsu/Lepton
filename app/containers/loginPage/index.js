@@ -235,20 +235,32 @@ class LoginPage extends Component {
     const label = this.state.loginMode === LoginModeEnum.CREDENTIALS
       ? t('login.switchToToken')
       : t('login.switchToCredentials')
+    const icon = this.state.loginMode === LoginModeEnum.CREDENTIALS ? '🔑' : '👤'
 
     return (
-      <a
-        className='login-mode-switch'
-        href="#"
-        onClick={ this.handleLoginModeSwitched.bind(this) }>
-        { label }
-      </a>
+      <button
+        aria-label={ label }
+        className='login-header-icon login-mode-switch'
+        onClick={ this.handleLoginModeSwitched.bind(this) }
+        title={ label }
+        type='button'>
+        <span aria-hidden='true'>{ icon }</span>
+      </button>
+    )
+  }
+
+  renderHeaderActions () {
+    return (
+      <div className='login-header-actions'>
+        { this.renderLoginModeSwitch() }
+        { this.renderLanguageSelector() }
+      </div>
     )
   }
 
   renderLoginModalBody () {
     return (
-      <center>
+      <center className='login-modal-body-flipper'>
         { this.renderAvatar() }
         { this.renderControlSection() }
         { this.renderLoginStatus() }
@@ -314,11 +326,10 @@ class LoginPage extends Component {
       <div className={ className }>
         <Modal.Dialog bsSize='small'>
           <Modal.Header>
-            <Modal.Title>{ t('login.title') }</Modal.Title>
-            { this.renderLoginModeSwitch() }
-            { this.renderLanguageSelector() }
+            <Modal.Title className='login-modal-title' title={ t('login.title') }>{ t('login.title') }</Modal.Title>
+            { this.renderHeaderActions() }
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className='login-modal-body'>
             { this.renderLoginModalBody() }
           </Modal.Body>
         </Modal.Dialog>

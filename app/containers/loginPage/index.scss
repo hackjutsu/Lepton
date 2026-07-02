@@ -18,49 +18,60 @@
 
   .modal-content {
     animation: login-modal-fade-in 180ms ease-out;
-    backface-visibility: hidden;
     margin-top: 100px;
-    min-height: 420px;
+    min-height: 430px;
     opacity: 1;
-    transform-origin: center center;
-    transform-style: preserve-3d;
     transition: opacity 180ms ease-in;
-    will-change: transform;
-  }
-
-  &.login-modal-flipping .modal-content {
-    animation: login-modal-horizontal-flip 320ms ease-in-out;
   }
 
   .modal-header {
     position: relative;
   }
 
-  .login-mode-switch {
-    -webkit-app-region: no-drag;
-    color: gray;
-    font-size: 12px;
-    font-style: italic;
-    left: 50%;
-    line-height: 24px;
-    max-width: 170px;
+  .login-modal-title {
     overflow: hidden;
-    position: absolute;
-    text-align: center;
-    text-decoration: underline;
+    padding-right: 74px;
     text-overflow: ellipsis;
-    top: 23px;
-    transform: translateX(-50%);
     white-space: nowrap;
+  }
+
+  .login-header-actions {
+    -webkit-app-region: no-drag;
+    position: absolute;
+    right: 18px;
+    top: 20px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .login-header-icon {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: #555;
+    cursor: pointer;
+    display: flex;
+    filter: grayscale(1);
+    font-size: 16px;
+    height: 24px;
+    justify-content: center;
+    line-height: 1;
+    opacity: .72;
+    padding: 0;
+    width: 24px;
+  }
+
+  .login-header-icon:hover,
+  .login-header-icon:focus {
+    opacity: 1;
+    outline: none;
   }
 
   .login-language-selector {
     -webkit-app-region: no-drag;
     display: block;
     height: 24px;
-    position: absolute;
-    right: 18px;
-    top: 20px;
+    position: relative;
     width: 24px;
   }
 
@@ -92,6 +103,26 @@
     width: 200px;
     height: 200px;
     margin: 5px;
+  }
+
+  .login-modal-body {
+    min-height: 356px;
+    overflow: hidden;
+    perspective: 900px;
+  }
+
+  .login-modal-body-flipper {
+    backface-visibility: hidden;
+    display: block;
+    min-height: 326px;
+    transform: translateZ(0);
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  &.login-modal-flipping .login-modal-body-flipper {
+    animation: login-modal-horizontal-flip 320ms cubic-bezier(.2, .7, .2, 1) both;
   }
 
   .button-group-modal {
@@ -161,28 +192,24 @@
 
 @keyframes login-modal-horizontal-flip {
   0% {
-    opacity: 1;
-    transform: rotateY(0deg);
+    transform: translateZ(0) rotateY(0deg);
   }
 
-  49% {
-    opacity: .78;
-    transform: rotateY(90deg);
+  47% {
+    transform: translateZ(0) rotateY(88deg);
   }
 
-  50% {
-    opacity: .78;
-    transform: rotateY(-90deg);
+  53% {
+    transform: translateZ(0) rotateY(88deg);
   }
 
   100% {
-    opacity: 1;
-    transform: rotateY(0deg);
+    transform: translateZ(0) rotateY(0deg);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .login-modal.login-modal-flipping .modal-content {
+  .login-modal.login-modal-flipping .login-modal-body-flipper {
     animation: none;
   }
 }
