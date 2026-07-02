@@ -776,19 +776,41 @@ function finishGitHubAuthFlow (result, options = {}) {
 
   if (options.destroyWindow === false || !authWindow || authWindow.isDestroyed()) return
 
+  clearGitHubAuthWindowStorageAndDestroy(authWindow)
+}
+
+function clearGitHubAuthWindowStorageAndDestroy (authWindow) {
+  let clearResult
   try {
-    authWindow.webContents.session.clearStorageData({}, () => {
-      if (!authWindow.isDestroyed()) {
-        logger.debug('[auth] OAuth session storage cleared; destroying auth window')
-        authWindow.destroy()
-      }
-    })
+    clearResult = authWindow.webContents.session.clearStorageData({})
   } catch (err) {
     logger.warn('[auth] Failed to clear OAuth session data: ' + err.message)
-    if (!authWindow.isDestroyed()) {
-      authWindow.destroy()
-    }
+    destroyGitHubAuthWindow(authWindow)
+    return
   }
+
+  if (clearResult && typeof clearResult.then === 'function') {
+    clearResult
+      .then(() => {
+        logger.debug('[auth] OAuth session storage cleared')
+      })
+      .catch(err => {
+        logger.warn('[auth] Failed to clear OAuth session data: ' + err.message)
+      })
+      .finally(() => {
+        destroyGitHubAuthWindow(authWindow)
+      })
+    return
+  }
+
+  logger.debug('[auth] OAuth session storage clear requested')
+  destroyGitHubAuthWindow(authWindow)
+}
+
+function destroyGitHubAuthWindow (authWindow) {
+  if (!authWindow || authWindow.isDestroyed()) return
+  logger.debug('[auth] Destroying OAuth auth window')
+  authWindow.destroy()
 }
 
 function describeGitHubAuthResult (result) {
