@@ -308,7 +308,7 @@ function getFixtureOverrides (name) {
     case 'login-error-log':
       return {
         loginStatus: {
-          message: 'GitHub sign-in failed.',
+          message: 'Sign-in failed.',
           level: 'error',
           logFilePath: '/tmp/lepton-login.log'
         },
@@ -319,7 +319,7 @@ function getFixtureOverrides (name) {
     case 'login-progress':
       return {
         loginStatus: {
-          message: 'Exchanging OAuth code for access token...',
+          message: 'Exchanging token...',
           level: 'info',
           logFilePath: null
         },

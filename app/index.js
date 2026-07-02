@@ -75,15 +75,15 @@ const CONFIG_OPTIONS = {
 }
 const GIST_DETAIL_SYNC_CONCURRENCY = 5
 const LOGIN_STATUS = {
-  openingOAuthWindow: 'Opening GitHub OAuth window...',
-  waitingGitHubAuthorization: 'Waiting for GitHub authorization...',
-  receivedOAuthCode: 'Received OAuth code.',
-  exchangingOAuthCode: 'Exchanging OAuth code for access token...',
-  accessTokenReceived: 'Access token received. Loading GitHub profile...',
-  loadingGitHubProfile: 'Loading GitHub profile...',
-  profileLoadedSyncingGists: 'GitHub profile loaded. Syncing gists...',
-  signInComplete: 'Sign-in complete.',
-  signInFailed: 'GitHub sign-in failed.'
+  openingOAuthWindow: 'Opening OAuth...',
+  waitingGitHubAuthorization: 'Awaiting auth...',
+  receivedOAuthCode: 'Code received.',
+  exchangingOAuthCode: 'Exchanging token...',
+  accessTokenReceived: 'Loading profile...',
+  loadingGitHubProfile: 'Loading profile...',
+  profileLoadedSyncingGists: 'Syncing gists...',
+  signInComplete: 'Signed in.',
+  signInFailed: 'Sign-in failed.'
 }
 
 let preSyncSnapshot = {

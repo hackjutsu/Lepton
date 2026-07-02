@@ -96,12 +96,12 @@ const RENDER_FIXTURES = [
   {
     name: 'login-progress',
     selector: '.login-status-line',
-    text: 'Exchanging OAuth code for access token...'
+    text: 'Exchanging token...'
   },
   {
     name: 'login-error-log',
     selector: '.login-status-line a[href="file:///tmp/lepton-login.log"]',
-    text: 'GitHub sign-in failed.|See log'
+    text: 'Sign-in failed.|See log'
   }
 ]
 
