@@ -13,6 +13,14 @@ describe('electron-builder distribution config', () => {
     expect(builderConfig.files).toContain('app/utilities/updatePolicy.js')
   })
 
+  it('packages GitHub API bridge runtime dependencies', () => {
+    expect(builderConfig.files).toEqual(expect.arrayContaining([
+      'app/utilities/config/**',
+      'app/utilities/githubApi/core.js',
+      'app/utilities/githubApi/fetchAdapter.js'
+    ]))
+  })
+
   it('ad-hoc signs macOS DMG and ZIP artifacts for Intel and Apple Silicon', () => {
     expect(builderConfig.mac.identity).toBe('-')
     expect(builderConfig.mac.hardenedRuntime).toBe(false)

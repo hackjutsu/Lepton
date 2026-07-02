@@ -29,6 +29,7 @@ const snapStorePublishConfig = buildSnapStorePublishConfig()
 // ship separately inside app.asar.
 const mainRuntimeAppFiles = [
   'app/utilities/auth/**',
+  'app/utilities/config/**',
   'app/utilities/electronLocalStorage.js',
   'app/utilities/electronProxy/**',
   'app/utilities/githubApi/core.js',
