@@ -81,18 +81,18 @@ describe('core reducers', () => {
       logFilePath: null
     })
     expect(loginStatus(undefined, updateLoginStatus({
-      message: 'Exchanging OAuth code for access token...'
+      message: 'Exchanging token...'
     }))).toEqual({
-      message: 'Exchanging OAuth code for access token...',
+      message: 'Exchanging token...',
       level: 'info',
       logFilePath: null
     })
     expect(loginStatus(undefined, updateLoginStatus({
-      message: 'GitHub sign-in failed.',
+      message: 'Sign-in failed.',
       level: 'error',
       logFilePath: '/tmp/lepton.log'
     }))).toEqual({
-      message: 'GitHub sign-in failed.',
+      message: 'Sign-in failed.',
       level: 'error',
       logFilePath: '/tmp/lepton.log'
     })
