@@ -147,12 +147,13 @@ module.exports = {
   // the renderer. Add new locales in the shared i18n config first, then let this
   // derived list control the packaged Electron resources.
   electronLanguages: getElectronLanguages(getSupportedLocales()),
-  // macOS builds publish unsigned installer and archive artifacts for Intel and
-  // Apple Silicon users. A paid Apple Developer account is intentionally not
-  // required for the release flow.
+  // macOS builds use ad-hoc signing so Gatekeeper sees a structurally valid
+  // bundle without requiring a paid Apple Developer account. This still does
+  // not provide Developer ID trust or notarization.
   mac: {
     category: 'public.app-category.productivity',
-    identity: null,
+    identity: '-',
+    hardenedRuntime: false,
     target: [
       {
         target: 'dmg',

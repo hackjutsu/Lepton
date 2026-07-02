@@ -280,8 +280,8 @@ release workflow
     |
     +--> validate: lint, unit tests, webpack build
     |
-    +--> macOS Intel: unsigned dmg + zip
-    +--> macOS Apple Silicon: unsigned dmg + zip
+    +--> macOS Intel: ad-hoc signed dmg + zip
+    +--> macOS Apple Silicon: ad-hoc signed dmg + zip
     +--> Windows: unsigned NSIS installer + archive
     +--> Linux: AppImage + snap
     |
@@ -317,11 +317,23 @@ Release publishing requires repository secrets:
 - `SNAPCRAFT_STORE_CREDENTIALS`
 
 The workflow uses the built-in `GITHUB_TOKEN` for GitHub Release uploads.
-macOS and Windows artifacts are intentionally unsigned. macOS users should
-expect Gatekeeper warnings and may need to open the app from Finder's context
-menu or adjust Privacy & Security settings. Windows users should expect
-Microsoft Defender SmartScreen warnings. If signing is added later, update the
-workflow, `electron-builder.js`, and this documentation together.
+macOS artifacts are ad-hoc signed, which gives macOS a valid sealed app bundle
+without requiring a paid Apple Developer account. They are not Developer ID
+signed or notarized, so macOS users should still expect a Gatekeeper warning
+that Apple cannot verify the app is free of malware. Open Lepton from Finder's
+context menu or approve it in Privacy & Security. If macOS still reports the
+app as damaged after dragging it into Applications, advanced users can clear
+the downloaded-app quarantine flag:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/Lepton.app
+open /Applications/Lepton.app
+```
+
+Windows artifacts are intentionally unsigned. Windows users should expect
+Microsoft Defender SmartScreen warnings. If Developer ID signing or
+notarization is added later, update the workflow, `electron-builder.js`, and
+this documentation together.
 
 Use environment-scoped secrets if prerelease and production should use different
 GitHub OAuth applications.
