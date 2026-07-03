@@ -403,6 +403,55 @@ function assertFixtureRendererState (state) {
   if (missingText) {
     throw new Error(`Expected fixture UI text "${missingText}" was not visible. Body text: ${state.bodyText}`)
   }
+
+  assertForbiddenFixtureTextAbsent(state)
+}
+
+function assertForbiddenFixtureTextAbsent (state) {
+  const forbiddenTexts = (process.env.LEPTON_SMOKE_FORBIDDEN_TEXT || '').split('|').filter(Boolean)
+  const visibleForbiddenText = forbiddenTexts.find(text => state.bodyText.includes(text))
+  if (visibleForbiddenText) {
+    throw new Error(`Forbidden fixture UI text "${visibleForbiddenText}" was visible. Body text: ${state.bodyText}`)
+  }
+}
+
+async function assertFixtureLoginModeSwitch (window) {
+  if (process.env.LEPTON_SMOKE_SWITCH_LOGIN_MODE !== '1') return
+
+  const result = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const switchButton = document.querySelector('.login-mode-switch')
+
+      if (!switchButton) {
+        resolve({
+          reason: 'missing login mode switch',
+          bodyText: document.body ? document.body.innerText : ''
+        })
+        return
+      }
+
+      switchButton.click()
+
+      setTimeout(() => {
+        resolve({
+          bodyText: document.body ? document.body.innerText : '',
+          hasTokenInput: Boolean(document.querySelector('.login-modal input.form-control'))
+        })
+      }, ${loginModalFlipSettleMs})
+    })
+  `, true)
+
+  if (!result.hasTokenInput) {
+    throw new Error(`Expected fixture login mode switch to render the token form: ${JSON.stringify(result)}`)
+  }
+
+  const expectedTexts = (process.env.LEPTON_SMOKE_AFTER_SWITCH_TEXT || '').split('|').filter(Boolean)
+  const missingText = expectedTexts.find(text => !result.bodyText.includes(text))
+  if (missingText) {
+    throw new Error(`Expected fixture UI text "${missingText}" after login mode switch was not visible. Body text: ${result.bodyText}`)
+  }
+
+  assertForbiddenFixtureTextAbsent(result)
 }
 
 async function main () {
@@ -416,6 +465,7 @@ async function main () {
     if (process.env.LEPTON_RENDER_FIXTURE) {
       await waitForFixtureUi(window)
       assertFixtureRendererState(await getRendererState(window))
+      await assertFixtureLoginModeSwitch(window)
       await captureScreenshot(window, `electron-render-${process.env.LEPTON_RENDER_FIXTURE}-success.png`)
       console.log(`electron render fixture smoke test passed: ${process.env.LEPTON_RENDER_FIXTURE}`)
     } else {

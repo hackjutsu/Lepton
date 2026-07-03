@@ -117,6 +117,14 @@ const RENDER_FIXTURES = [
     name: 'login-error-log',
     selector: '.login-status-line a[href="file:///tmp/lepton-login.log"]',
     text: 'Sign-in failed.|See log'
+  },
+  {
+    name: 'login-stale-success-logged-out',
+    selector: '.login-modal',
+    text: 'Login|GitHub Login',
+    forbiddenText: 'Signed in.',
+    switchLoginMode: true,
+    switchText: 'Token Login'
   }
 ]
 
@@ -134,6 +142,9 @@ function runSmokeProcess (tempHome, options) {
     const env = Object.assign({}, process.env, {
       ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
       LEPTON_SMOKE_ARTIFACT_DIR: tempHome.root,
+      LEPTON_SMOKE_AFTER_SWITCH_TEXT: options.switchText || '',
+      LEPTON_SMOKE_FORBIDDEN_TEXT: options.forbiddenText || '',
+      LEPTON_SMOKE_SWITCH_LOGIN_MODE: options.switchLoginMode ? '1' : '',
       LEPTON_SMOKE_EXPECTED_TEXT: options.expectedText,
       XDG_CONFIG_HOME: tempHome.configHome
     })
@@ -192,8 +203,11 @@ async function main () {
   for (const fixture of RENDER_FIXTURES) {
     await runSmokeProcess(createTempHome('en'), {
       expectedSelector: fixture.selector,
+      forbiddenText: fixture.forbiddenText,
       expectedText: fixture.text,
-      renderFixture: fixture.name
+      renderFixture: fixture.name,
+      switchLoginMode: fixture.switchLoginMode,
+      switchText: fixture.switchText
     })
   }
 }

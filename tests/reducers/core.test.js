@@ -102,5 +102,11 @@ describe('core reducers', () => {
       level: 'info',
       logFilePath: null
     })
+    expect(loginStatus({ message: 'Signed in.', level: 'info', logFilePath: null },
+      logoutUserSession())).toEqual({
+      message: '',
+      level: 'info',
+      logFilePath: null
+    })
   })
 })

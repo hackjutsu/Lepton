@@ -324,8 +324,11 @@ class LoginPage extends Component {
   }
 
   renderLoginStatus () {
-    const { loginStatus } = this.props
+    const { authWindowStatus, loginStatus, userSessionStatus } = this.props
     if (!loginStatus || !loginStatus.message) return null
+
+    const isIdleLoggedOut = userSessionStatus === 'INACTIVE' && authWindowStatus === 'OFF'
+    if (isIdleLoggedOut && loginStatus.level !== 'error') return null
 
     const logFileUrl = getFileUrl(loginStatus.logFilePath)
     const className = loginStatus.level === 'error'

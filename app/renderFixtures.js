@@ -316,6 +316,17 @@ function getFixtureOverrides (name) {
           activeStatus: 'INACTIVE'
         }
       }
+    case 'login-stale-success-logged-out':
+      return {
+        loginStatus: {
+          message: 'Signed in.',
+          level: 'info',
+          logFilePath: null
+        },
+        userSession: {
+          activeStatus: 'INACTIVE'
+        }
+      }
     case 'login-progress':
       return {
         loginStatus: {
