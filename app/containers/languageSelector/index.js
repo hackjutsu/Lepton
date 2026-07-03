@@ -39,7 +39,7 @@ class LanguageSelector extends Component {
     const labelClassName = `${className || ''}${compact ? ' language-selector-compact' : ''}`.trim()
     const label = displayLocale ? translate(displayLocale, 'i18n.language') : t('i18n.language')
     return (
-      <label className={ labelClassName } title={ compact ? label : undefined }>
+      <label className={ labelClassName } data-tooltip={ compact ? label : undefined }>
         <span aria-hidden={ compact ? true : undefined }>{ compact ? '🌐' : label }</span>
         <select
           aria-label={ label }
