@@ -63,8 +63,11 @@
   .active-snippet-thumnail-base {
     @extend .font-style-base;
     padding: 6px;
-    font-weight: 500;
     background: var(--bg-secondary);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    position: relative;
+    transform: translateY(-1px);
+    z-index: 1;
   }
 
   .active-snippet-thumnail-public {
