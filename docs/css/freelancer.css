@@ -321,6 +321,12 @@ footer .footer-below {
   transition: all 0.3s ease-in-out;
   margin-top: 15px;
 }
+header .intro-text .btn-outline {
+  width: 128px;
+}
+header .intro-text .btn-outline + .btn-outline {
+  margin-left: 12px;
+}
 .btn-outline:hover,
 .btn-outline:focus,
 .btn-outline:active,
@@ -599,12 +605,15 @@ header {
 
 /* DEMO-SPECIFIC STYLES */
 .typewriter {
-  width: 350px;
+  --typewriter-width: 283px;
+  max-width: calc(100vw - 40px);
+  width: var(--typewriter-width);
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: .15em solid orange; /* The typwriter cursor */
   white-space: nowrap; /* Keeps the content on a single line */
   margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-  letter-spacing: .1em; /* Adjust as needed */
+  letter-spacing: 0;
+  text-align: left;
   animation:
     typing 3.5s steps(40, end),
     blink-caret .75s step-end infinite;
@@ -613,7 +622,7 @@ header {
 /* The typing effect */
 @keyframes typing {
   from { width: 0 }
-  to { width: 350px; }
+  to { width: var(--typewriter-width); }
 }
 
 /* The typewriter cursor effect */
@@ -624,11 +633,6 @@ header {
 
 @media (max-width: 767px) {
   .typewriter {
-    width: 245px;
-  }
-
-  @keyframes typing {
-    from { width: 0 }
-    to { width: 245px; }
+    --typewriter-width: 204px;
   }
 }
