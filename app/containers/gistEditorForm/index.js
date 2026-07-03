@@ -29,6 +29,7 @@ const conf = electronBridge.config
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 
+const DESCRIPTION_TIPS_ID = 'gist-editor-description-tips'
 const getDescriptionTips = () => t('editor.descriptionPlaceholder')
 
 function preventDefault (event) {
@@ -246,29 +247,40 @@ const renderTitleInputField = ({ value, placeholder, type, touched, error, warni
   </div>
 )
 
-const renderDescriptionField = ({ value, type, touched, error, warning, onChange, onBlur }) => (
-  <div className='gist-editor-section gist-editor-name'>
-    <input
-      className='gist-editor-input-area'
-      value={ value }
-      type={ type }
-      placeholder={ getDescriptionTips() }
-      onChange={ onChange }
-      onBlur={ onBlur }/>
-    { touched && ((error && <span className='error-msg'>{ error }</span>) ||
-        (warning && <span className='error-msg'>{ warning }</span>)) }
-    <a
-      className='tips'
-      href='#'
-      title={ getDescriptionTips() }
-      onClick={ event => event.preventDefault() }>
-      <div
-        className='tips-icon'
-        dangerouslySetInnerHTML={{ __html: tipsIcon }} />
-      <span>{ t('editor.tips') }</span>
-    </a>
-  </div>
-)
+const renderDescriptionField = ({ value, type, touched, error, warning, onChange, onBlur }) => {
+  const descriptionTips = getDescriptionTips()
+  const tipsLabel = t('editor.tips')
+
+  return (
+    <div className='gist-editor-section gist-editor-name'>
+      <input
+        className='gist-editor-input-area'
+        value={ value }
+        type={ type }
+        placeholder={ descriptionTips }
+        onChange={ onChange }
+        onBlur={ onBlur }/>
+      { touched && ((error && <span className='error-msg'>{ error }</span>) ||
+          (warning && <span className='error-msg'>{ warning }</span>)) }
+      <button
+        className='tips'
+        type='button'
+        aria-label={ `${tipsLabel}: ${descriptionTips}` }
+        aria-describedby={ DESCRIPTION_TIPS_ID }>
+        <span
+          className='tips-icon'
+          dangerouslySetInnerHTML={{ __html: tipsIcon }} />
+        <span className='tips-label'>{ tipsLabel }</span>
+        <span
+          className='tips-popover'
+          id={ DESCRIPTION_TIPS_ID }
+          role='tooltip'>
+          { descriptionTips }
+        </span>
+      </button>
+    </div>
+  )
+}
 
 const renderContentField = ({ value, type, touched, error, warning, filename, onChange }) => (
   <div>
@@ -368,16 +380,17 @@ const renderGistFiles = ({
         onClick={ onAddFile }>
         { t('editor.addFile') }
       </a>
-      <div className='gist-editor-privacy-checkbox'>
+      <label className='gist-editor-privacy-checkbox'>
         <input
+          className='gist-editor-privacy-input'
           name='private'
           id='private'
           type='checkbox'
           checked={ privateValue }
           onChange={ onPrivateChange }
           disabled={ formStyle === UPDATE_GIST }/>
-         &nbsp;{ t('editor.secret') }
-      </div>
+        <span>{ t('editor.secret') }</span>
+      </label>
     </div>
   </ListGroup>
 )
