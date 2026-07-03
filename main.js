@@ -77,6 +77,8 @@ let authFlow = null
 let githubApi = null
 let operationType = 0
 
+const MACOS_TRAY_ICON_SIZE = 18
+
 const shortcuts = nconf.get('shortcuts')
 
 function getConfigPath() {
@@ -968,31 +970,20 @@ function getTrayIcon () {
   const iconPath = path.join(__dirname, 'build/icon/icon.png')
   if (process.platform !== 'darwin') return iconPath
 
-  // macOS menu bar items need a transparent template image; the full app icon
-  // becomes an unreadable blob at status-item size.
-  const svg = [
-    '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">',
-    '<g fill="none" stroke="black" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">',
-    '<ellipse cx="9" cy="9" rx="6.25" ry="2.75"/>',
-    '<ellipse cx="9" cy="9" rx="6.25" ry="2.75" transform="rotate(60 9 9)"/>',
-    '<ellipse cx="9" cy="9" rx="6.25" ry="2.75" transform="rotate(-60 9 9)"/>',
-    '</g>',
-    '<circle cx="9" cy="9" r="1.4" fill="black"/>',
-    '</svg>'
-  ].join('')
-  const image = electron.nativeImage.createFromDataURL(
-    `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
+  const image = electron.nativeImage.createFromPath(
+    path.join(__dirname, 'build/icon/tray-flowerTemplate.png')
   )
-  if (image.isEmpty()) {
-    const fallbackImage = electron.nativeImage.createFromPath(iconPath).resize({
-      width: 16,
-      height: 16
-    })
-    fallbackImage.setTemplateImage(true)
-    return fallbackImage
+  if (!image.isEmpty()) {
+    image.setTemplateImage(true)
+    return image
   }
-  image.setTemplateImage(true)
-  return image
+
+  const fallbackImage = electron.nativeImage.createFromPath(iconPath).resize({
+    width: MACOS_TRAY_ICON_SIZE,
+    height: MACOS_TRAY_ICON_SIZE
+  })
+  fallbackImage.setTemplateImage(true)
+  return fallbackImage
 }
 
 function showMainWindow (mainWindow) {
@@ -1014,13 +1005,13 @@ function ensureTray (win) {
 
   const trayMenuTemplate = [
     {
-      label: t('menu.openWindow'),
+      label: t('menu.openLeptonWindow'),
       click: () => {
         showMainWindow(win)
       }
     },
     {
-      label: t('menu.quit'),
+      label: t('menu.quitLepton'),
       click: () => {
         operationType = 2
         app.quit()
