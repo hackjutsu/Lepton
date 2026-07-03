@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="description" content="Lepton is a lean desktop code snippet manager powered by GitHub Gist.">
     <meta name="author" content="">
 
     <title>Lepton - A Lean Snippet Manager powered by GitHub Gist</title>
@@ -63,7 +63,7 @@
                         <a href="#page-top"></a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#portfolio">Feature</a>
+                        <a href="#portfolio">Features</a>
                     </li>
                     <li class="page-scroll">
                         <a href="#faq">FAQ</a>
@@ -80,7 +80,7 @@
 
     <!-- Header -->
     <header class='header-container'>
-        <img class="img-hidden" src="img/new_logo2.png" alt="">
+        <img class="img-hidden" src="img/app-icon.png" alt="">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -90,10 +90,13 @@
                         <div class="skills typewriter">A Lean <b>Snippet Manager</b>:)</div>
                         <div>powered by GitHub Gist</div>
                         </br>
-                        <img class="img-logo" src="img/new_logo2.png" alt="">
+                        <img class="img-logo" src="img/app-icon.png" alt="Lepton app icon">
                         <div class="col-lg-8 col-lg-offset-2 text-center">
-                            <a href="https://github.com/hackjutsu/Lepton/releases" class="btn btn-lg btn-outline">
-                                <i class="fa fa-download"></i> Download
+                            <a href="https://github.com/hackjutsu/Lepton/releases/latest" class="btn btn-lg btn-outline" title="Latest stable release">
+                                <i class="fa fa-download"></i> Stable
+                            </a>
+                            <a href="https://github.com/hackjutsu/Lepton/releases/tag/v2.0.0-beta.7" class="btn btn-lg btn-outline" title="Current v2 prerelease">
+                                <i class="fa fa-flask"></i> Beta
                             </a>
                             <div class="platforms"> #macOS / #Win / #Linux</div>
                             <br/>
@@ -112,7 +115,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2>Feature</h2>
+                    <h2>Features</h2>
                     <hr class="star-primary">
                 </div>
             </div>
@@ -139,7 +142,7 @@
                         </div>
                         <center>
                            <img src="img/portfolio/lepton-dark-small.png" class="img-responsive" alt="">
-                           <span class="feature-title">Dark Theme</span>
+                           <span class="feature-title">Built-in Themes</span>
                         </center>
                     </a>
                 </div>
@@ -230,7 +233,7 @@
                         </div>
                         <center>
                            <img src="img/portfolio/lepton_logins.png" class="img-responsive" alt="">
-                           <span class="feature-title">GitHub Login (credentials / token)</span>
+                           <span class="feature-title">OAuth & Token Login</span>
                         </center>
                     </a>
                 </div>
@@ -253,13 +256,14 @@
                     <li class='faq-item'>
                         <div class="faq-question">Is Lepton free?</div>
                         <div class="faq-answer">
-                            Lepton is an open source project on GitHub. It's FREE and we DON'T accept donations. If you like, feel free to donate to <a class="faq-link" href="https://donate.wikimedia.org/wiki/Ways_to_Give">Wikimedia Foundation</a>, which helps sustain free knowledge through Wikipedia and its sister projects for people around the world.
+                            Lepton is an open source project on GitHub. It's FREE, and we DON'T accept donations unless you'd like to <a class="faq-link" href="https://www.buymeacoffee.com/cosmolepton" target="_blank">buy me a coffee</a>.
+                            We recommend donating to <a class="faq-link" href="https://donate.wikimedia.org/wiki/Ways_to_Give">Wikimedia Foundation</a>, which helps sustain free knowledge through Wikipedia and its sister projects.
                         </div>
                     </li>
                     <li class='faq-item'>
-                        <div class="faq-question">Why is the language of my gist "Other"?</div>
+                        <div class="faq-question">Why is the language of my snippet "Other"?</div>
                         <div class="faq-answer">
-                            Lepton replies on GitHub APIs to detect the language. To overwrite the result, put <code>"// vim: syntax=&ltyour_language&gt"</code> at the beginning of the gist.
+                            Lepton relies on GitHub APIs to detect the language. To overwrite the result, put <code>"// vim: syntax=&ltyour_language&gt"</code> at the beginning of the snippet.
                             <div class="github-snippet">
                                 <script src="https://gist.github.com/hackjutsu/288bbaaf821851df0ded368cf36e3104.js"></script>
                             </div>
@@ -283,6 +287,24 @@
                         <div class="faq-question">What can Search find?</div>
                         <div class="faq-answer">
                             Search matches snippet metadata and downloaded file content. Complete global content search requires the download-all snippets option (<code>snippet.downloadAll</code>) before sync. See the <a class="faq-link" href="https://github.com/hackjutsu/Lepton/blob/master/wiki/faq.md#search" target="_blank">Search FAQ</a>.
+                        </div>
+                    </li>
+                    <li class='faq-item'>
+                        <div class="faq-question">Which release should I download?</div>
+                        <div class="faq-answer">
+                            Choose <a class="faq-link" href="https://github.com/hackjutsu/Lepton/releases/latest" target="_blank">Stable</a> for the latest stable build. Choose <a class="faq-link" href="https://github.com/hackjutsu/Lepton/releases/tag/v2.0.0-beta.7" target="_blank">Beta</a> to try the prerelease which includes the latest fixes and experimental features.
+                        </div>
+                    </li>
+                    <li class='faq-item'>
+                        <div class="faq-question">How does Lepton store my GitHub access token?</div>
+                        <div class="faq-answer">
+                            Lepton's cached access tokens are encrypted with <a class="faq-link" href="https://www.electronjs.org/docs/latest/api/safe-storage" target="_blank">Electron safeStorage</a> when the operating system supports encrypted storage, for example, keychain in macOS.
+                        </div>
+                    </li>
+                    <li class='faq-item'>
+                        <div class="faq-question">How does Lepton manage my data?</div>
+                        <div class="faq-answer">
+                            Lepton is a local desktop client. Your app talks directly to <a class="faq-link" href="https://gist.github.com/" target="_blank">GitHub Gist</a> for snippet operations. Lepton does not have its own backend and does not collect user data, usage data, or any other data; it is purely between you and GitHub Gist.
                         </div>
                     </li>
                     <li class='faq-item'>
@@ -386,7 +408,7 @@
                             <h2>Markdown Rendering</h2>
                             <hr class="star-primary">
                             <img src="img/portfolio/markdown.png" class="img-responsive img-centered" alt="">
-                            <p>Letpon supports Markdown rendering</p>
+                            <p>Lepton supports Markdown rendering.</p>
                             <div class="faq-note">
                                 As a bonus, you can use Lepton for markdown note taking and access it everywhere.
                             </div>
@@ -410,7 +432,7 @@
                 <div class="row">
                     <div class="col-lg-12 col-lg-offset-0">
                         <div class="modal-body">
-                            <h2>Search Snippets And Content</h2>
+                            <h2>Search Snippets</h2>
                             <hr class="star-primary">
                             <img src="img/portfolio/search_bar.png" class="img-responsive img-centered" alt="">
                             <p>
@@ -547,9 +569,9 @@
                             <h2>GitHub Login</h2>
                             <hr class="star-primary">
                             <img src="img/portfolio/lepton_logins.png" class="img-responsive img-centered" alt="">
-                            <p>Credentials or token, whichever you like!</p>
+                            <p>Sign in with GitHub OAuth or use a personal access token with the <code>gist</code> scope.</p>
                             <div class="faq-note">
-                                A token is an alternative to the credentials to access your GitHub account.
+                                The v2 prerelease encrypts cached tokens when Electron safeStorage can use secure OS storage.
                             </div>
                             <br/>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>

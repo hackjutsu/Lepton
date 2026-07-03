@@ -97,6 +97,13 @@ snap install lepton
 ```
 ![Based on](./docs/img/lepton-ubuntu-tweet2.png)
 
+## Support
+Lepton is a free and open source project. We do not accept project donations, but if you would like to support the maintainer, you can [buy me a coffee](https://www.buymeacoffee.com/cosmolepton).
+
+<a href="https://www.buymeacoffee.com/cosmolepton"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=cosmolepton&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy me a coffee" /></a>
+
+We also recommend donating to [Wikimedia Foundation](https://donate.wikimedia.org/wiki/Ways_to_Give), which helps sustain free knowledge through Wikipedia and its sister projects.
+
 ## Development
 
 ### Runtime requirements
