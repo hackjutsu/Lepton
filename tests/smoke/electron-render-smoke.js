@@ -71,7 +71,7 @@ const RENDER_FIXTURES = [
   {
     name: 'delete',
     selector: '.modal-footer .btn-danger',
-    text: 'Delete the gist?'
+    text: 'Delete the snippet?'
   },
   {
     name: 'raw',

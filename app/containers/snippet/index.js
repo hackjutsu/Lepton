@@ -88,12 +88,12 @@ class Snippet extends Component {
       accessToken,
       activeGist)
       .catch(err => {
-        logger.error('Failed to delete the gist ' + activeGist)
+        logger.error('Failed to delete the snippet ' + activeGist)
         logger.error(JSON.stringify(err))
         notifyFailure(t('notification.deletionFailed'), t('notification.networkFailure', { code: '02' }))
       })
       .then(data => {
-        logger.info('The gist ' + activeGist + ' has been deleted.')
+        logger.info('The snippet ' + activeGist + ' has been deleted.')
         notifySuccess(t('notification.gistDeleted'))
 
         // For performance purpose, we should perform an internal update, like what

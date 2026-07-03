@@ -47,7 +47,7 @@ class NavigationPanelDetails extends Component {
   handleClicked (gistId) {
     const { gists, fetchSingleGist, selectGist } = this.props
 
-    logger.info('A new gist is selected: ' + gistId)
+    logger.info('A new snippet is selected: ' + gistId)
     if (!gists[gistId].details) {
       logger.info('[Dispatch] fetchSingleGist ' + gistId)
       fetchSingleGist(gists[gistId], gistId)

@@ -37,6 +37,10 @@ const allowedIdenticalValues = new Set([
   'snippet.raw'
 ])
 
+const allowedGistTerminologyKeys = new Set([
+  'login.tokenPlaceholder'
+])
+
 function flattenCatalog (catalog, prefix = '') {
   return Object.keys(catalog).reduce((flatCatalog, key) => {
     const path = prefix ? `${prefix}.${key}` : key
@@ -95,6 +99,30 @@ describe('i18n utilities', () => {
   it('interpolates named values', () => {
     configureI18n('en')
     expect(t('login.continueAs', { username: 'octocat' })).toBe('Continue as octocat')
+  })
+
+  it('uses snippet terminology for English user-facing snippet actions', () => {
+    configureI18n('en')
+
+    expect(t('menu.gist')).toBe('Snippet')
+    expect(t('menu.newGist')).toBe('New Snippet')
+    expect(t('menu.editGist')).toBe('Edit Snippet')
+    expect(t('menu.deleteGist')).toBe('Delete Snippet')
+    expect(t('menu.submitGist')).toBe('Submit Snippet')
+    expect(t('menu.syncGist')).toBe('Sync Snippet')
+    expect(t('notification.gistCreated')).toBe('Snippet created')
+    expect(t('snippet.deleteConfirmTitle')).toBe('Delete the snippet?')
+  })
+
+  it('keeps gist terminology out of user-facing locale copy except the GitHub scope', () => {
+    Object.entries(Object.assign({ en }, catalogs)).forEach(([locale, catalog]) => {
+      const offendingKeys = Object.entries(flattenCatalog(catalog))
+        .filter(([key]) => !allowedGistTerminologyKeys.has(key))
+        .filter(([, value]) => /\bgists?\b/i.test(String(value)))
+        .map(([key]) => `${locale}.${key}`)
+
+      expect(offendingKeys).toEqual([])
+    })
   })
 
   it('translates a specific locale without changing the active locale', () => {
