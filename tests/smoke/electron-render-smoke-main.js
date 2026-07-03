@@ -162,10 +162,12 @@ async function getRendererState (window) {
         languageOptions: languageSelector
           ? Array.from(languageSelector.options).map(option => option.value)
           : [],
+        languageSelectorTooltip: languageSelectorLabel ? languageSelectorLabel.getAttribute('data-tooltip') : '',
         languageSelectorTitle: languageSelectorLabel ? languageSelectorLabel.getAttribute('title') : '',
         loginModeSwitch: loginModeSwitch
           ? {
               ariaLabel: loginModeSwitch.getAttribute('aria-label') || '',
+              dataTooltip: loginModeSwitch.getAttribute('data-tooltip') || '',
               text: loginModeSwitch.innerText || '',
               title: loginModeSwitch.getAttribute('title') || ''
             }
@@ -276,17 +278,79 @@ function assertLoginRendererState (state) {
     throw new Error(`Expected login mode switch icon to be visible: ${JSON.stringify(state)}`)
   }
 
-  if (!state.loginModeSwitch.title || state.loginModeSwitch.title !== state.loginModeSwitch.ariaLabel) {
-    throw new Error(`Expected login mode switch to expose its tooltip as the accessible label: ${JSON.stringify(state.loginModeSwitch)}`)
+  if (state.loginModeSwitch.title) {
+    throw new Error(`Expected login mode switch to avoid native delayed title tooltips: ${JSON.stringify(state.loginModeSwitch)}`)
+  }
+
+  if (!state.loginModeSwitch.dataTooltip || state.loginModeSwitch.dataTooltip !== state.loginModeSwitch.ariaLabel) {
+    throw new Error(`Expected login mode switch to expose a custom tooltip matching its accessible label: ${JSON.stringify(state.loginModeSwitch)}`)
   }
 
   if ((state.loginModeSwitch.text || '').trim().length > 3) {
     throw new Error(`Expected login mode switch to render as a compact icon: ${JSON.stringify(state.loginModeSwitch)}`)
   }
 
-  if (!state.languageSelectorTitle) {
-    throw new Error(`Expected compact language selector to expose a tooltip: ${JSON.stringify(state)}`)
+  if (state.languageSelectorTitle) {
+    throw new Error(`Expected compact language selector to avoid native delayed title tooltips: ${JSON.stringify(state)}`)
   }
+
+  if (!state.languageSelectorTooltip) {
+    throw new Error(`Expected compact language selector to expose a custom tooltip: ${JSON.stringify(state)}`)
+  }
+}
+
+async function assertHeaderTooltipContract (window, selector) {
+  const tooltipState = await window.webContents.executeJavaScript(`
+    (() => {
+      const element = document.querySelector(${JSON.stringify(selector)})
+      if (!element) return null
+
+      function delayToMs(value) {
+        return value.split(',').reduce((maxDelay, rawDelay) => {
+          const delay = rawDelay.trim()
+          const multiplier = delay.endsWith('ms') ? 1 : 1000
+          const parsed = Number.parseFloat(delay)
+          return Number.isFinite(parsed) ? Math.max(maxDelay, parsed * multiplier) : maxDelay
+        }, 0)
+      }
+
+      const restingStyle = window.getComputedStyle(element, '::after')
+      return {
+        content: restingStyle.content,
+        dataTooltip: element.getAttribute('data-tooltip') || '',
+        delayMs: delayToMs(restingStyle.transitionDelay || ''),
+        title: element.getAttribute('title') || ''
+      }
+    })()
+  `, true)
+
+  if (!tooltipState) {
+    throw new Error(`Expected tooltip target to exist: ${selector}`)
+  }
+
+  if (!tooltipState.dataTooltip) {
+    throw new Error(`Expected tooltip target to expose data-tooltip: ${JSON.stringify({ selector, tooltipState })}`)
+  }
+
+  if (tooltipState.title) {
+    throw new Error(`Expected tooltip target to avoid native title tooltip: ${JSON.stringify({ selector, tooltipState })}`)
+  }
+
+  if (tooltipState.delayMs > 200) {
+    throw new Error(`Expected custom tooltip delay to stay short: ${JSON.stringify({ selector, tooltipState })}`)
+  }
+
+  if (!tooltipState.content.includes(tooltipState.dataTooltip)) {
+    throw new Error(`Expected custom tooltip text to be rendered by CSS: ${JSON.stringify({
+      selector,
+      tooltipState
+    })}`)
+  }
+}
+
+async function assertLoginHeaderTooltips (window) {
+  await assertHeaderTooltipContract(window, '.login-mode-switch')
+  await assertHeaderTooltipContract(window, '.login-language-selector')
 }
 
 async function assertLoginModeSwitchKeepsModalHeight (window) {
@@ -471,6 +535,7 @@ async function main () {
     } else {
       await waitForLoginUi(window)
       assertLoginRendererState(await getRendererState(window))
+      await assertLoginHeaderTooltips(window)
       await assertLoginModeSwitchKeepsModalHeight(window)
       await assertLoginLocaleSwitchRendersInPlace(window)
       await captureScreenshot(window, 'electron-render-smoke-success.png')

@@ -191,7 +191,7 @@ class LoginPage extends Component {
   renderLanguageSelector (locale = this.state.activeLocale, isInteractive = true) {
     return (
       <LanguageSelector
-        className='login-language-selector'
+        className='login-language-selector login-header-tooltip'
         compact
         disabled={ !isInteractive }
         displayLocale={ locale }
@@ -294,10 +294,10 @@ class LoginPage extends Component {
     return (
       <button
         aria-label={ label }
-        className='login-header-icon login-mode-switch'
+        className='login-header-icon login-mode-switch login-header-tooltip'
+        data-tooltip={ label }
         disabled={ !isInteractive }
         onClick={ this.handleLoginModeSwitched.bind(this) }
-        title={ label }
         type='button'>
         <span aria-hidden='true'>{ icon }</span>
       </button>
