@@ -100,8 +100,19 @@
 
   .gist-editor-privacy-checkbox {
     @extend .font-style-base;
-    display: inline;
+    align-items: center;
+    cursor: pointer;
+    display: inline-flex;
     float: right;
+    font-weight: normal;
+    gap: 6px;
+    line-height: 20px;
+    margin-bottom: 0px;
+  }
+
+  .gist-editor-privacy-input {
+    flex: 0 0 auto;
+    margin: 0px;
   }
 
   .title-input-field {
@@ -123,13 +134,30 @@
 
   .tips {
     @extend .font-style-base;
+    align-items: center;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: help;
+    display: inline-flex;
     font-size: 13px;
     font-style: italic;
     flex: 0 0 auto;
+    gap: 2px;
+    padding: 0px 2px;
     position: relative;
+    text-decoration: none;
 
-    & > span {
-      vertical-align: middle;
+    &:hover,
+    &:focus {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    &:hover .tips-popover,
+    &:focus .tips-popover {
+      opacity: 1;
+      visibility: visible;
     }
   }
 
@@ -139,6 +167,33 @@
     display: inline-block;
     vertical-align: middle;
     fill: currentColor;
+  }
+
+  .tips-label {
+    vertical-align: middle;
+  }
+
+  .tips-popover {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+    color: var(--text-primary);
+    font-size: 12px;
+    font-style: normal;
+    line-height: 1.4;
+    max-width: 260px;
+    opacity: 0;
+    padding: 6px 8px;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    transition: opacity 120ms ease-in-out;
+    visibility: hidden;
+    white-space: normal;
+    width: max-content;
+    z-index: 20;
   }
 
   hr {
