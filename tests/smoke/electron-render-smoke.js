@@ -125,6 +125,11 @@ const RENDER_FIXTURES = [
     forbiddenText: 'Signed in.',
     switchLoginMode: true,
     switchText: 'Token Login'
+  },
+  {
+    name: 'exit',
+    selector: '.logout-modal .modal-footer .btn-danger',
+    text: 'Confirm logout?|logout'
   }
 ]
 

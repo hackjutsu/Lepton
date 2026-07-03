@@ -129,6 +129,8 @@ module.exports = {
     'bundle/**',
     'configs/**',
     'build/icon/icon.png',
+    'build/icon/tray-flowerTemplate.png',
+    'build/icon/tray-flowerTemplate@2x.png',
     'build/touchbar/**',
     'index.html',
     'main.js',

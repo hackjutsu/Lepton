@@ -14,6 +14,10 @@ The file is not generated automatically. Create it if you want to override the d
   "i18n": {
     "locale": "en"
   },
+  "window": {
+    "closeToTray": false,
+    "minimizeToTray": false
+  },
   "avatar": {
     "type": "github",
     "boringAvatarVariant": "beam"
@@ -81,6 +85,8 @@ The file is not generated automatically. Create it if you want to override the d
 | `autoUpdate` | | `false` | Enable automatic update downloads for packaged releases. |
 | `startAtLogin` | | `false` | Start Lepton when the user logs in. Not supported on every Linux environment. |
 | `i18n` | `locale` | `en` | Interface language. Supported values: `en`, `es`, `fr`, `ja`, `ko`, `tr`, `zh-Hans`, `zh-Hant`. |
+| `window` | `closeToTray` | `false` | Hide Lepton to the tray/menu bar when the window is closed. On macOS, the normal close behavior hides the window without creating a tray item unless this is enabled. |
+| | `minimizeToTray` | `false` | Hide Lepton to the tray/menu bar when the window is minimized. Currently applies on macOS. |
 | `avatar` | `type` | `github` | Profile image source. Use `github` for the GitHub avatar or `boring` for a generated avatar. |
 | | `boringAvatarVariant` | `beam` | Variant used when `avatar.type` is `boring`. |
 | `userPanel` | `hideProfilePhoto` | `false` | Hide the profile photo in the user panel. |
