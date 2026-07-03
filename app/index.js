@@ -387,7 +387,7 @@ function downloadGistDetailsAfterListSync (gistList, token) {
 
   let downloaded = 0
   updateSnippetDownloadStatus(downloaded, total)
-  logger.info(`[sync] Downloading details for ${total} gists`)
+  logger.info(`[sync] Downloading details for ${total} snippets`)
   return Promise.map(gistList, gist => {
     return getGitHubApi(GET_SINGLE_GIST)(token, gist.id)
       .then(details => {

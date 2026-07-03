@@ -47,7 +47,7 @@
 | Edit Snippet   | `Cmd/Ctrl + E` | Edit a snippet      |
 | Delete Snippet   | `Cmd/Ctrl + Del` | Delete selected snippet      |
 | Submit         | `Cmd/Ctrl + S` | Submit the changes from the editor      |
-| Sync           | `Cmd/Ctrl + R` | Sync with remote Gist server   |
+| Sync           | `Cmd/Ctrl + R` | Sync snippets with GitHub Gist   |
 | Immersive Mode | `Cmd/Ctrl + I` |  Toggle the [Immersive mode](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/immersive.png)    |
 | Dashboard      | `Cmd/Ctrl + D` |  Toggle the [dashboard](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/dashboard.png)     |
 | About Page     | `Cmd/Ctrl + ,` |  Toggle the [About page](https://github.com/hackjutsu/Lepton/blob/dev/docs/img/portfolio/about.png)    |
@@ -60,7 +60,6 @@ Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact pat
 
 - Theme (`light`, `dark`, `one-dark`, `atom-one-dark`, `github-light`, `github-dark`, `catppuccin-latte`, `catppuccin-mocha`, `solarized-light`, `solarized-dark`, `dracula`, `material-theme`, or `ayu`)
 - Snippet
-- Gist
 - Editor
 - Logger
 - Proxy
@@ -220,7 +219,7 @@ $ LEPTON_RENDER_FIXTURE=active npm start
 ```
 
 Fixtures verify that important React surfaces mount without renderer warnings,
-errors, failed loads, or crashes. They do not verify GitHub OAuth, Gist CRUD,
+errors, failed loads, or crashes. They do not verify GitHub OAuth, snippet CRUD,
 sync behavior, real API responses, OS shortcut delivery, or full interaction
 flows.
 
@@ -244,7 +243,7 @@ $ npm run build && npm start
 
 Confirm the login page visibly renders. After login, manually verify the
 surfaces affected by your change, such as new snippet, edit snippet,
-settings/about, dashboard, search, sync, and GitHub/Gist backend interactions.
+settings/about, dashboard, search, sync, and GitHub Gist backend interactions.
 Manual verification is still required for visual quality and real GitHub
 behavior; automated smoke checks do not replace backend workflow testing.
 

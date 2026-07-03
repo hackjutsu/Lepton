@@ -21,7 +21,7 @@ Lepton can search these fields:
 - language
 - description
 - tag
-- gist id
+- snippet id
 - downloaded snippet file content
 
 Complete global content search across every snippet requires the
@@ -33,7 +33,7 @@ See [Configuration](configuration.md#options) for the `snippet.downloadAll` opti
 
 ## Title And Tags
 
-Use this pattern in the gist description to set a title and custom tags:
+Use this pattern in the snippet description to set a title and custom tags:
 
 ```text
 [title] description #tag1 #tag2
@@ -113,7 +113,7 @@ Lepton requires the `gist` scope.
 
 ## About Data Collection
 
-Lepton is a desktop GitHub Gist client and does not run its own sync service. Data is stored locally by the app or remotely in GitHub Gist.
+Lepton is a desktop snippet client backed by GitHub Gist and does not run its own sync service. Data is stored locally by the app or remotely in GitHub Gist.
 
 ## Donation
 

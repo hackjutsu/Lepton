@@ -18,7 +18,7 @@ class SnippetPanel extends Component {
   renderEmptySnippetSection () {
     return (
       <Well className='welcome-section'>
-        <pre className='welcome-ascii' aria-label='No gists'>{ emptyStateDinosaur }</pre>
+        <pre className='welcome-ascii' aria-label='No snippets'>{ emptyStateDinosaur }</pre>
       </Well>
     )
   }

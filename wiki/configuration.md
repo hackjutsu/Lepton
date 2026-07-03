@@ -97,12 +97,12 @@ The file is not generated automatically. Create it if you want to override the d
 | `snippet` | `sorting` | `updated_at` | Snippet order. Supported values: `updated_at`, `created_at`, `description`. |
 | | `sortingReverse` | `true` | Reverse the configured snippet order. |
 | | `expanded` | `true` | Expand snippets in the detail view by default. |
-| | `newSnippetPrivate` | `false` | Create new snippets as secret gists by default. |
+| | `newSnippetPrivate` | `false` | Create new snippets as secret snippets by default. |
 | | `downloadAll` | `false` | Load all authenticated snippets and download their details during sync. Enable this for complete global content search across snippet file contents. |
 | `tag` | `showInSnippetList` | `false` | Show custom tags in snippet list rows. |
 | | `colored` | `false` | Render custom tags with stable color badges. |
 | `editor` | `tabSize` | `4` | Tab size in spaces. |
-| | `validateFilename` | `true` | Validate gist filenames before saving. |
+| | `validateFilename` | `true` | Validate snippet filenames before saving. |
 | `enterprise` | `enable` | `false` | Enable GitHub Enterprise mode. |
 | | `host` | `""` | GitHub Enterprise host, for example `github.example.com`. |
 | | `token` | `""` | Personal access token with the `gist` scope. This remains plain `.leptonrc` configuration and is not affected by `security.cachedAccessTokenStorage`. |
@@ -118,7 +118,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `keyImmersiveMode` | `CommandOrControl+I` | Toggle immersive mode. |
 | | `keyAboutPage` | `CommandOrControl+,` | Open the About page. |
 | | `keyDashboard` | `CommandOrControl+D` | Open the dashboard. |
-| | `keySyncGists` | `CommandOrControl+R` | Sync with GitHub Gist. |
+| | `keySyncGists` | `CommandOrControl+R` | Sync snippets with GitHub Gist. |
 
 ## Debug Logging
 
