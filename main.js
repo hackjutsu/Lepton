@@ -34,10 +34,7 @@ const {
   buildGitHubOAuthUrl,
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
-  shouldIgnoreGitHubOAuthLoadFailure,
-  shouldDisableGitHubOAuthHardwareAccelerationWorkaround,
-  getGitHubOAuthDisabledChromiumFeaturesWorkaround,
-  shouldSandboxGitHubOAuthWindow
+  shouldIgnoreGitHubOAuthLoadFailure
 } = require('./app/utilities/auth/githubOAuth')
 const {
   clearGitHubAuthWindowStorageAndDestroy
@@ -45,7 +42,6 @@ const {
 const { applyDefaultZoomPercent } = require('./app/utilities/zoom')
 
 const logger = createMainLogger()
-applyGitHubOAuthRenderWorkarounds()
 const electronLocalStorage = createElectronLocalStorage({
   getUserDataPath: () => app.getPath('userData')
 })
@@ -85,25 +81,6 @@ let operationType = 0
 const MACOS_TRAY_ICON_SIZE = 18
 
 const shortcuts = nconf.get('shortcuts')
-
-function applyGitHubOAuthRenderWorkarounds () {
-  const disableHardwareAcceleration = shouldDisableGitHubOAuthHardwareAccelerationWorkaround(process.platform)
-  const disabledChromiumFeatures = getGitHubOAuthDisabledChromiumFeaturesWorkaround(process.platform)
-  if (!disableHardwareAcceleration && disabledChromiumFeatures.length === 0) return
-
-  if (disabledChromiumFeatures.length > 0) {
-    app.commandLine.appendSwitch('disable-features', disabledChromiumFeatures.join(','))
-  }
-
-  if (disableHardwareAcceleration) {
-    app.disableHardwareAcceleration()
-  }
-
-  logger.info('[auth] Applied Electron render workarounds for Windows GitHub OAuth: ' + JSON.stringify({
-    disabledChromiumFeatures,
-    hardwareAccelerationDisabled: disableHardwareAcceleration
-  }))
-}
 
 function getConfigPath() {
   if (process && process.env && process.env.XDG_CONFIG_HOME) {
@@ -727,7 +704,6 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
     })
   }
 
-  const sandboxAuthWindow = shouldSandboxGitHubOAuthWindow(process.platform)
   const authWindow = new BrowserWindow({
     parent: mainWindow,
     width: 400,
@@ -737,7 +713,7 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
       nodeIntegration: false,
       enableRemoteModule: false,
       contextIsolation: true,
-      sandbox: sandboxAuthWindow,
+      sandbox: true,
       spellcheck: false
     }
   })
@@ -763,7 +739,6 @@ function startGitHubAuthFlow ({ clientId, scopes } = {}) {
     hasClientId: Boolean(clientId),
     clientIdLength: clientId.length,
     scopeCount: Array.isArray(scopes) ? scopes.length : 0,
-    sandbox: sandboxAuthWindow,
     authorizeUrl: describeGitHubOAuthUrl(authUrl)
   }))
 

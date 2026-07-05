@@ -5,10 +5,7 @@ const {
   buildGitHubOAuthUrl,
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
-  shouldIgnoreGitHubOAuthLoadFailure,
-  shouldDisableGitHubOAuthHardwareAccelerationWorkaround,
-  getGitHubOAuthDisabledChromiumFeaturesWorkaround,
-  shouldSandboxGitHubOAuthWindow
+  shouldIgnoreGitHubOAuthLoadFailure
 } = githubOAuth
 
 describe('GitHub OAuth utility', () => {
@@ -100,24 +97,5 @@ describe('GitHub OAuth utility', () => {
       errorCode: -2,
       isMainFrame: true
     })).toBe(false)
-  })
-
-  it('uses a non-sandboxed OAuth auth window on Windows', () => {
-    expect(shouldSandboxGitHubOAuthWindow('win32')).toBe(false)
-    expect(shouldSandboxGitHubOAuthWindow('darwin')).toBe(true)
-    expect(shouldSandboxGitHubOAuthWindow('linux')).toBe(true)
-  })
-
-  it('disables hardware acceleration only for the Windows OAuth rendering workaround', () => {
-    expect(shouldDisableGitHubOAuthHardwareAccelerationWorkaround('win32')).toBe(true)
-    expect(shouldDisableGitHubOAuthHardwareAccelerationWorkaround('darwin')).toBe(false)
-    expect(shouldDisableGitHubOAuthHardwareAccelerationWorkaround('linux')).toBe(false)
-  })
-
-  it('disables Chromium renderer code integrity only for the Windows OAuth rendering workaround', () => {
-    expect(getGitHubOAuthDisabledChromiumFeaturesWorkaround('win32'))
-      .toEqual(['RendererCodeIntegrity'])
-    expect(getGitHubOAuthDisabledChromiumFeaturesWorkaround('darwin')).toEqual([])
-    expect(getGitHubOAuthDisabledChromiumFeaturesWorkaround('linux')).toEqual([])
   })
 })

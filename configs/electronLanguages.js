@@ -1,15 +1,13 @@
-const scriptSpecificChineseResourceSuffixes = {
-  Hans: [67, 78],
-  Hant: [84, 87]
+// Electron packages Chromium locale resources by .pak filename, which does not
+// always match Lepton's app-facing locale id.
+const electronLanguageOverrides = {
+  en: 'en-US',
+  'zh-Hans': 'zh-CN',
+  'zh-Hant': 'zh-TW'
 }
 
 function toElectronLanguage (locale) {
-  const [language, script] = locale.split('-')
-  const resourceSuffix = scriptSpecificChineseResourceSuffixes[script]
-
-  return resourceSuffix
-    ? [language, String.fromCharCode(...resourceSuffix)].join('_')
-    : locale
+  return electronLanguageOverrides[locale] || locale
 }
 
 function getElectronLanguages (supportedLocales) {

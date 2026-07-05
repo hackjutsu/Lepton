@@ -163,13 +163,28 @@ describe('i18n utilities', () => {
     expect(builderConfig.electronLanguages).toEqual(getElectronLanguages(getSupportedLocales()))
   })
 
-  it('maps script-specific Chinese locales to Electron resource names', () => {
+  it('maps app locales to Electron resource names', () => {
     expect(getElectronLanguages([
+      { code: 'en' },
       { code: 'zh-Hans' },
       { code: 'zh-Hant' }
     ])).toEqual([
-      ['zh', String.fromCharCode(67, 78)].join('_'),
-      ['zh', String.fromCharCode(84, 87)].join('_')
+      'en-US',
+      'zh-CN',
+      'zh-TW'
+    ])
+  })
+
+  it('maps every supported locale to the expected Electron resource names', () => {
+    expect(getElectronLanguages(getSupportedLocales())).toEqual([
+      'en-US',
+      'es',
+      'fr',
+      'ja',
+      'ko',
+      'tr',
+      'zh-CN',
+      'zh-TW'
     ])
   })
 
