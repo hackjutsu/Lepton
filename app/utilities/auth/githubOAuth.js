@@ -1,6 +1,5 @@
 const GITHUB_OAUTH_URL = 'https://github.com/login/oauth/authorize'
 const ELECTRON_ABORTED_LOAD_ERROR_CODE = -3
-const WINDOWS_GITHUB_OAUTH_DISABLED_CHROMIUM_FEATURES = ['RendererCodeIntegrity']
 
 function normalizeScopes (scopes = []) {
   if (Array.isArray(scopes)) {
@@ -100,20 +99,6 @@ function shouldIgnoreGitHubOAuthLoadFailure ({
   return isAbortedLoadError(errorCode, errorDescription) || isMainFrame === false
 }
 
-function shouldSandboxGitHubOAuthWindow (platform = process.platform) {
-  return platform !== 'win32'
-}
-
-function shouldDisableGitHubOAuthHardwareAccelerationWorkaround (platform = process.platform) {
-  return platform === 'win32'
-}
-
-function getGitHubOAuthDisabledChromiumFeaturesWorkaround (platform = process.platform) {
-  if (platform !== 'win32') return []
-
-  return WINDOWS_GITHUB_OAUTH_DISABLED_CHROMIUM_FEATURES.slice()
-}
-
 function isAbortedLoadError (errorCode, errorDescription) {
   return Number(errorCode) === ELECTRON_ABORTED_LOAD_ERROR_CODE ||
     /\bERR_ABORTED\b|\(-3\)/.test(String(errorDescription || ''))
@@ -132,8 +117,5 @@ module.exports = {
   buildGitHubOAuthUrl,
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
-  shouldIgnoreGitHubOAuthLoadFailure,
-  shouldDisableGitHubOAuthHardwareAccelerationWorkaround,
-  getGitHubOAuthDisabledChromiumFeaturesWorkaround,
-  shouldSandboxGitHubOAuthWindow
+  shouldIgnoreGitHubOAuthLoadFailure
 }
