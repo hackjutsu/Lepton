@@ -28,6 +28,21 @@ on:
         required: true
         default: edge
         type: string
+      release_ref:
+        description: Optional branch, tag, or SHA to checkout for manual builds.
+        required: false
+        default: ''
+        type: string
+      platform:
+        description: Platform to build for manual runs.
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - macos
+          - windows
+          - linux
 
 permissions:
   contents: write
@@ -45,6 +60,10 @@ jobs:
       github_release_type: ${{ steps.context.outputs.github_release_type }}
       publish_policy: ${{ steps.context.outputs.publish_policy }}
       snap_channels: ${{ steps.context.outputs.snap_channels }}
+      checkout_ref: ${{ steps.context.outputs.checkout_ref }}
+      build_macos: ${{ steps.context.outputs.build_macos }}
+      build_windows: ${{ steps.context.outputs.build_windows }}
+      build_linux: ${{ steps.context.outputs.build_linux }}
     steps:
       - name: Resolve release mode
         id: context
@@ -52,8 +71,15 @@ jobs:
           MANUAL_PUBLISH_POLICY: ${{ inputs.publish || 'never' }}
           MANUAL_RELEASE_TYPE: ${{ inputs.release_type || 'draft' }}
           MANUAL_SNAP_CHANNELS: ${{ inputs.snap_channels || 'edge' }}
+          MANUAL_RELEASE_REF: ${{ inputs.release_ref || '' }}
+          MANUAL_PLATFORM: ${{ inputs.platform || 'all' }}
         run: |
           set -euo pipefail
+
+          checkout_ref="${GITHUB_REF_NAME}"
+          build_macos="true"
+          build_windows="true"
+          build_linux="true"
 
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             tag="${GITHUB_REF_NAME}"
@@ -76,6 +102,31 @@ jobs:
             publish_policy="${MANUAL_PUBLISH_POLICY}"
             github_release_type="${MANUAL_RELEASE_TYPE}"
             snap_channels="${MANUAL_SNAP_CHANNELS}"
+            if [[ -n "${MANUAL_RELEASE_REF}" ]]; then
+              checkout_ref="${MANUAL_RELEASE_REF}"
+            fi
+
+            case "${MANUAL_PLATFORM}" in
+              all)
+                ;;
+              macos)
+                build_windows="false"
+                build_linux="false"
+                ;;
+              windows)
+                build_macos="false"
+                build_linux="false"
+                ;;
+              linux)
+                build_macos="false"
+                build_windows="false"
+                ;;
+              *)
+                echo "Unsupported platform: ${MANUAL_PLATFORM}" >&2
+                exit 1
+                ;;
+            esac
+
             if [[ "${github_release_type}" == "release" ]]; then
               environment="production"
             else
@@ -88,6 +139,10 @@ jobs:
             echo "github_release_type=${github_release_type}"
             echo "publish_policy=${publish_policy}"
             echo "snap_channels=${snap_channels}"
+            echo "checkout_ref=${checkout_ref}"
+            echo "build_macos=${build_macos}"
+            echo "build_windows=${build_windows}"
+            echo "build_linux=${build_linux}"
           } >> "${GITHUB_OUTPUT}"
 
   validate:
@@ -97,6 +152,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.release-context.outputs.checkout_ref }}
 
       - name: Set up Node
         uses: actions/setup-node@v5
@@ -127,10 +184,13 @@ jobs:
     needs:
       - release-context
       - validate
+    if: needs.release-context.outputs.build_macos == 'true'
     environment: ${{ needs.release-context.outputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.release-context.outputs.checkout_ref }}
 
       - name: Set up Node
         uses: actions/setup-node@v5
@@ -185,10 +245,13 @@ jobs:
     needs:
       - release-context
       - validate
+    if: needs.release-context.outputs.build_windows == 'true'
     environment: ${{ needs.release-context.outputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.release-context.outputs.checkout_ref }}
 
       - name: Set up Node
         uses: actions/setup-node@v5
@@ -244,10 +307,13 @@ jobs:
     needs:
       - release-context
       - validate
+    if: needs.release-context.outputs.build_linux == 'true'
     environment: ${{ needs.release-context.outputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.release-context.outputs.checkout_ref }}
 
       - name: Set up Node
         uses: actions/setup-node@v5
@@ -275,7 +341,20 @@ jobs:
           node -e "const fs = require('fs'); const config = { client_id: process.env.LEPTON_GITHUB_CLIENT_ID, client_secret: process.env.LEPTON_GITHUB_CLIENT_SECRET }; fs.writeFileSync('configs/account.js', 'module.exports = ' + JSON.stringify(config, null, 2) + '\n')"
 
       - name: Install Snapcraft
-        run: sudo snap install snapcraft --classic
+        run: |
+          set -euo pipefail
+
+          for attempt in 1 2 3 4 5; do
+            if sudo snap install snapcraft --classic; then
+              exit 0
+            fi
+
+            sleep_seconds=$((attempt * 60))
+            echo "Snapcraft install failed on attempt ${attempt}; retrying in ${sleep_seconds}s." >&2
+            sleep "${sleep_seconds}"
+          done
+
+          sudo snap install snapcraft --classic
 
       - name: Prepare package assets
         run: npm run package:prepare
