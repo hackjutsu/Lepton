@@ -19,7 +19,9 @@ const DELETE_SINGLE_GIST = 'DELETE_SINGLE_GIST'
 
 function createGitHubApi ({
   conf,
+  gitHubApiBaseUrl,
   logger,
+  oauthAccessTokenUrl,
   fetchImpl
 } = {}) {
   const apiLogger = logger || {
@@ -34,6 +36,8 @@ function createGitHubApi ({
     const gitHubHost = conf.get('enterprise:host')
     gitHubHostApi = `${gitHubHost}/api/v3`
   }
+  const apiBaseUrl = normalizeBaseUrl(gitHubApiBaseUrl || `https://${gitHubHostApi}`)
+  const accessTokenUrl = oauthAccessTokenUrl || 'https://github.com/login/oauth/access_token'
 
   function exchangeAccessToken (clientId, clientSecret, authCode) {
     apiLogger.debug(TAG + 'Exchanging authCode with access credential ' + JSON.stringify({
@@ -44,7 +48,7 @@ function createGitHubApi ({
     }))
     return apiRequest({
       method: 'POST',
-      uri: 'https://github.com/login/oauth/access_token',
+      uri: accessTokenUrl,
       headers: {
         'User-Agent': userAgent
       },
@@ -64,7 +68,7 @@ function createGitHubApi ({
   function getUserProfile (token) {
     apiLogger.debug(TAG + 'Getting user profile ' + JSON.stringify({ hasCredential: Boolean(token) }))
     return apiRequest({
-      uri: `https://${gitHubHostApi}/user`,
+      uri: `${apiBaseUrl}/user`,
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
@@ -78,7 +82,7 @@ function createGitHubApi ({
   function getSingleGist (token, gistId) {
     apiLogger.debug(TAG + `Getting single gist ${gistId} ` + JSON.stringify({ hasCredential: Boolean(token) }))
     return apiRequest({
-      uri: `https://${gitHubHostApi}/gists/${gistId}`,
+      uri: `${apiBaseUrl}/gists/${gistId}`,
       headers: {
         'User-Agent': userAgent,
         Authorization: 'token ' + token
@@ -178,8 +182,8 @@ function createGitHubApi ({
   function makeOptionForGetAllGists (token, userId, page) {
     const shouldDownloadAllGists = shouldDownloadAllSnippets(conf)
     const uri = shouldDownloadAllGists
-      ? `https://${gitHubHostApi}/gists`
-      : `https://${gitHubHostApi}/users/${userId}/gists`
+      ? `${apiBaseUrl}/gists`
+      : `${apiBaseUrl}/users/${userId}/gists`
 
     return {
       uri: uri,
@@ -206,7 +210,7 @@ function createGitHubApi ({
         Authorization: 'token ' + token
       },
       method: 'POST',
-      uri: `https://${gitHubHostApi}/gists`,
+      uri: `${apiBaseUrl}/gists`,
       body: {
         description: description,
         public: isPublic,
@@ -225,7 +229,7 @@ function createGitHubApi ({
         Authorization: 'token ' + token
       },
       method: 'PATCH',
-      uri: `https://${gitHubHostApi}/gists/${gistId}`,
+      uri: `${apiBaseUrl}/gists/${gistId}`,
       body: {
         description: updatedDescription,
         files: updatedFiles
@@ -243,7 +247,7 @@ function createGitHubApi ({
         Authorization: 'token ' + token
       },
       method: 'DELETE',
-      uri: `https://${gitHubHostApi}/gists/${gistId}`,
+      uri: `${apiBaseUrl}/gists/${gistId}`,
       json: true,
       timeout: 2 * kTimeoutUnit
     })
@@ -275,6 +279,10 @@ function createGitHubApi ({
   return {
     getGitHubApi
   }
+}
+
+function normalizeBaseUrl (baseUrl) {
+  return String(baseUrl || '').replace(/\/+$/, '')
 }
 
 function validateOAuthAccessTokenResponse (payload) {

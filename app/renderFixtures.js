@@ -318,6 +318,17 @@ function getFixtureOverrides (name) {
           activeStatus: 'INACTIVE'
         }
       }
+    case 'login-expired-token':
+      return {
+        loginStatus: {
+          message: 'Token invalid. Please try again.',
+          level: 'error',
+          logFilePath: null
+        },
+        userSession: {
+          activeStatus: 'INACTIVE'
+        }
+      }
     case 'login-stale-success-logged-out':
       return {
         loginStatus: {

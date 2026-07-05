@@ -1,4 +1,4 @@
-import { Alert, Button, Image, ProgressBar } from 'react-bootstrap'
+import { Button, Image, ProgressBar } from 'react-bootstrap'
 import Avatar from 'boring-avatars'
 import { connect } from 'react-redux'
 import electronBridge from '../../utilities/electronBridge'
@@ -55,6 +55,21 @@ class LoginPage extends Component {
 
     logger.debug('-----> sending login-page-ready signal')
     ipcRenderer.send('login-page-ready')
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.userSessionStatus === 'IN_PROGRESS' &&
+      this.props.userSessionStatus === 'INACTIVE') {
+      clearTimeout(this.loginModeFlipTimer)
+      this.setState({
+        inputTokenValue: '',
+        loginMode: LoginModeEnum.CREDENTIALS,
+        modalFlipping: false,
+        pendingLoginMode: null,
+        pendingLocale: null,
+        pendingModalState: null
+      })
+    }
   }
 
   componentWillUnmount () {
@@ -165,7 +180,7 @@ class LoginPage extends Component {
                 : this.translate(locale, 'login.happyCoding')
               }
             </Button>
-            : this.renderTokenLoginSection(userSessionStatus, locale, isInteractive)}
+            : this.renderTokenLoginSection(locale, isInteractive)}
         </div>
       )
     }
@@ -178,8 +193,8 @@ class LoginPage extends Component {
             <a href="https://github.com/hackjutsu/Lepton">{ welcomeMessage }</a>
           </div>
           { loginMode === LoginModeEnum.CREDENTIALS
-            ? this.renderCredentialLoginSection(authWindowStatus, userSessionStatus, locale, isInteractive)
-            : this.renderTokenLoginSection(userSessionStatus, locale, isInteractive)
+            ? this.renderCredentialLoginSection(authWindowStatus, locale, isInteractive)
+            : this.renderTokenLoginSection(locale, isInteractive)
           }
         </div>
       )
@@ -230,13 +245,9 @@ class LoginPage extends Component {
     })
   }
 
-  renderCredentialLoginSection (authWindowStatus, userSessionStatus, locale = this.state.activeLocale, isInteractive = true) {
+  renderCredentialLoginSection (authWindowStatus, locale = this.state.activeLocale, isInteractive = true) {
     return (
       <div>
-        { userSessionStatus === 'EXPIRED'
-          ? <Alert bsStyle="warning" className="login-alert">{ this.translate(locale, 'login.tokenInvalid') }</Alert>
-          : null
-        }
         <Button
           autoFocus={ isInteractive }
           className={ authWindowStatus === 'OFF' ? 'modal-button' : 'modal-button-disabled' }
@@ -248,13 +259,9 @@ class LoginPage extends Component {
     )
   }
 
-  renderTokenLoginSection (userSessionStatus, locale = this.state.activeLocale, isInteractive = true) {
+  renderTokenLoginSection (locale = this.state.activeLocale, isInteractive = true) {
     return (
       <form>
-        { userSessionStatus === 'EXPIRED'
-          ? <Alert bsStyle="warning" className="login-alert">{ this.translate(locale, 'login.tokenInvalid') }</Alert>
-          : null
-        }
         <input
           className="form-control"
           placeholder={ this.translate(locale, 'login.tokenPlaceholder') }

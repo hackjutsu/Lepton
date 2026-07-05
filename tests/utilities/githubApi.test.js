@@ -107,6 +107,41 @@ describe('GitHub API utility', () => {
     expect(init).not.toHaveProperty('agent')
   })
 
+  it('supports a mock OAuth token endpoint for login-flow smoke tests', async () => {
+    const fetch = vi.fn(() => Promise.resolve(createJsonResponse({ access_token: 'token-1' })))
+
+    const mockApi = createGitHubApi({
+      conf: createConf(),
+      logger,
+      oauthAccessTokenUrl: 'http://127.0.0.1:9999/login/oauth/access_token',
+      fetchImpl: fetch
+    })
+
+    await mockApi.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
+
+    const [url] = fetch.mock.calls[0]
+    expect(url).toBe('http://127.0.0.1:9999/login/oauth/access_token')
+  })
+
+  it('supports a mock GitHub API base URL for login-flow smoke tests', async () => {
+    const fetch = vi.fn((url) => Promise.resolve(createJsonResponse(
+      String(url).includes('/user') ? { login: 'octo' } : []
+    )))
+    const api = createGitHubApi({
+      conf: createConf(),
+      gitHubApiBaseUrl: 'http://127.0.0.1:9999/api/',
+      logger,
+      fetchImpl: fetch
+    })
+
+    await api.getGitHubApi(GET_USER_PROFILE)('token-1')
+    expect(fetch.mock.calls[0][0]).toBe('http://127.0.0.1:9999/api/user')
+
+    fetch.mockClear()
+    await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+    expect(fetch.mock.calls[0][0]).toBe('http://127.0.0.1:9999/api/users/octo/gists?per_page=100&page=1')
+  })
+
   it('rejects OAuth token exchange responses without an access token', async () => {
     const { api } = loadGitHubApi({
       fetchImpl: () => Promise.resolve(createJsonResponse({

@@ -51,7 +51,7 @@ module.exports = {
     tokenInvalid: 'Token invalid',
     tokenLogin: 'Token Login',
     tokenPlaceholder: 'scope: gist',
-    welcome: 'Lepton is FREE. Like us on GitHub!'
+    welcome: 'Lepton is FREE. Like us on GitHub ⭐'
   },
   i18n: {
     language: 'Language',
