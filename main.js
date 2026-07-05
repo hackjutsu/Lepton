@@ -36,6 +36,7 @@ const {
   parseGitHubOAuthCallback,
   shouldIgnoreGitHubOAuthLoadFailure,
   shouldDisableGitHubOAuthHardwareAccelerationWorkaround,
+  getGitHubOAuthDisabledChromiumFeaturesWorkaround,
   shouldSandboxGitHubOAuthWindow
 } = require('./app/utilities/auth/githubOAuth')
 const {
@@ -86,10 +87,22 @@ const MACOS_TRAY_ICON_SIZE = 18
 const shortcuts = nconf.get('shortcuts')
 
 function applyGitHubOAuthRenderWorkarounds () {
-  if (!shouldDisableGitHubOAuthHardwareAccelerationWorkaround(process.platform)) return
+  const disableHardwareAcceleration = shouldDisableGitHubOAuthHardwareAccelerationWorkaround(process.platform)
+  const disabledChromiumFeatures = getGitHubOAuthDisabledChromiumFeaturesWorkaround(process.platform)
+  if (!disableHardwareAcceleration && disabledChromiumFeatures.length === 0) return
 
-  app.disableHardwareAcceleration()
-  logger.info('[auth] Disabled Electron hardware acceleration for Windows GitHub OAuth rendering stability')
+  if (disabledChromiumFeatures.length > 0) {
+    app.commandLine.appendSwitch('disable-features', disabledChromiumFeatures.join(','))
+  }
+
+  if (disableHardwareAcceleration) {
+    app.disableHardwareAcceleration()
+  }
+
+  logger.info('[auth] Applied Electron render workarounds for Windows GitHub OAuth: ' + JSON.stringify({
+    disabledChromiumFeatures,
+    hardwareAccelerationDisabled: disableHardwareAcceleration
+  }))
 }
 
 function getConfigPath() {
