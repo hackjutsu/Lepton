@@ -6,6 +6,7 @@ const {
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
   shouldIgnoreGitHubOAuthLoadFailure,
+  shouldDisableGitHubOAuthHardwareAccelerationWorkaround,
   shouldSandboxGitHubOAuthWindow
 } = githubOAuth
 
@@ -104,5 +105,11 @@ describe('GitHub OAuth utility', () => {
     expect(shouldSandboxGitHubOAuthWindow('win32')).toBe(false)
     expect(shouldSandboxGitHubOAuthWindow('darwin')).toBe(true)
     expect(shouldSandboxGitHubOAuthWindow('linux')).toBe(true)
+  })
+
+  it('disables hardware acceleration only for the Windows OAuth rendering workaround', () => {
+    expect(shouldDisableGitHubOAuthHardwareAccelerationWorkaround('win32')).toBe(true)
+    expect(shouldDisableGitHubOAuthHardwareAccelerationWorkaround('darwin')).toBe(false)
+    expect(shouldDisableGitHubOAuthHardwareAccelerationWorkaround('linux')).toBe(false)
   })
 })

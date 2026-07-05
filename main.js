@@ -35,6 +35,7 @@ const {
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
   shouldIgnoreGitHubOAuthLoadFailure,
+  shouldDisableGitHubOAuthHardwareAccelerationWorkaround,
   shouldSandboxGitHubOAuthWindow
 } = require('./app/utilities/auth/githubOAuth')
 const {
@@ -43,6 +44,7 @@ const {
 const { applyDefaultZoomPercent } = require('./app/utilities/zoom')
 
 const logger = createMainLogger()
+applyGitHubOAuthRenderWorkarounds()
 const electronLocalStorage = createElectronLocalStorage({
   getUserDataPath: () => app.getPath('userData')
 })
@@ -82,6 +84,13 @@ let operationType = 0
 const MACOS_TRAY_ICON_SIZE = 18
 
 const shortcuts = nconf.get('shortcuts')
+
+function applyGitHubOAuthRenderWorkarounds () {
+  if (!shouldDisableGitHubOAuthHardwareAccelerationWorkaround(process.platform)) return
+
+  app.disableHardwareAcceleration()
+  logger.info('[auth] Disabled Electron hardware acceleration for Windows GitHub OAuth rendering stability')
+}
 
 function getConfigPath() {
   if (process && process.env && process.env.XDG_CONFIG_HOME) {

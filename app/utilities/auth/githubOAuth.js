@@ -103,6 +103,10 @@ function shouldSandboxGitHubOAuthWindow (platform = process.platform) {
   return platform !== 'win32'
 }
 
+function shouldDisableGitHubOAuthHardwareAccelerationWorkaround (platform = process.platform) {
+  return platform === 'win32'
+}
+
 function isAbortedLoadError (errorCode, errorDescription) {
   return Number(errorCode) === ELECTRON_ABORTED_LOAD_ERROR_CODE ||
     /\bERR_ABORTED\b|\(-3\)/.test(String(errorDescription || ''))
@@ -122,5 +126,6 @@ module.exports = {
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
   shouldIgnoreGitHubOAuthLoadFailure,
+  shouldDisableGitHubOAuthHardwareAccelerationWorkaround,
   shouldSandboxGitHubOAuthWindow
 }
