@@ -5,7 +5,8 @@ const {
   buildGitHubOAuthUrl,
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
-  shouldIgnoreGitHubOAuthLoadFailure
+  shouldIgnoreGitHubOAuthLoadFailure,
+  shouldSandboxGitHubOAuthWindow
 } = githubOAuth
 
 describe('GitHub OAuth utility', () => {
@@ -97,5 +98,11 @@ describe('GitHub OAuth utility', () => {
       errorCode: -2,
       isMainFrame: true
     })).toBe(false)
+  })
+
+  it('uses a non-sandboxed OAuth auth window on Windows', () => {
+    expect(shouldSandboxGitHubOAuthWindow('win32')).toBe(false)
+    expect(shouldSandboxGitHubOAuthWindow('darwin')).toBe(true)
+    expect(shouldSandboxGitHubOAuthWindow('linux')).toBe(true)
   })
 })

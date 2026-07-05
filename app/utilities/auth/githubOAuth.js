@@ -99,6 +99,10 @@ function shouldIgnoreGitHubOAuthLoadFailure ({
   return isAbortedLoadError(errorCode, errorDescription) || isMainFrame === false
 }
 
+function shouldSandboxGitHubOAuthWindow (platform = process.platform) {
+  return platform !== 'win32'
+}
+
 function isAbortedLoadError (errorCode, errorDescription) {
   return Number(errorCode) === ELECTRON_ABORTED_LOAD_ERROR_CODE ||
     /\bERR_ABORTED\b|\(-3\)/.test(String(errorDescription || ''))
@@ -117,5 +121,6 @@ module.exports = {
   buildGitHubOAuthUrl,
   describeGitHubOAuthUrl,
   parseGitHubOAuthCallback,
-  shouldIgnoreGitHubOAuthLoadFailure
+  shouldIgnoreGitHubOAuthLoadFailure,
+  shouldSandboxGitHubOAuthWindow
 }
