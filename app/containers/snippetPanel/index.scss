@@ -5,8 +5,16 @@
 .snippet-panel {
   float: right;
   width: 100%;
-  overflow: overlay;
+  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-y: auto;
   height: 100vh;
+}
+
+.snippet-panel-content {
+  max-width: 100%;
+  min-height: 100%;
+  min-width: 0;
 }
 
 .snippet-panel-immersive {

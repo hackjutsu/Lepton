@@ -1,4 +1,50 @@
-// Avoid global WebKit scrollbar customization. Setting scrollbar dimensions
-// forces classic scrollbars in Chromium and creates blank layout gutters between
-// panes. Native overlay scrollbars avoid both hover-time resize and persistent
-// gaps on macOS.
+// Keep scrollbar customization scoped to app scroll containers. Global WebKit
+// scrollbar rules force classic scrollbars in Chromium and create blank gutters
+// between panes.
+$quiet-scrollbar-thumb: color-mix(in srgb, var(--text-secondary) 38%, transparent);
+$quiet-scrollbar-thumb-active: color-mix(in srgb, var(--text-secondary) 58%, transparent);
+
+@mixin quiet-scrollbar {
+  scrollbar-color: transparent transparent;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-corner,
+  &::-webkit-scrollbar-button {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: transparent;
+    border: 3px solid transparent;
+    border-radius: 999px;
+  }
+
+  &:hover,
+  &:focus,
+  &:focus-within {
+    scrollbar-color: $quiet-scrollbar-thumb transparent;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $quiet-scrollbar-thumb;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:active {
+    background-color: $quiet-scrollbar-thumb-active;
+  }
+}
+
+.menu-panel .tag-section-content,
+.panel-thumbnails-scroll,
+.snippet-panel,
+.snippet-panel-immersive,
+.snippet-box pre,
+.markdown-section .highlight pre,
+.markdown-section.asciidoc-section .listingblock pre,
+.jupyterNotebook-section .nb-output,
+.raw-modal .modal-content {
+  @include quiet-scrollbar;
+}
