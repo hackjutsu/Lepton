@@ -1,6 +1,6 @@
 {
   "name": "Lepton",
-  "version": "2.0.0-beta.7",
+  "version": "2.0.0-beta.8",
   "description": "Democratizing Code Snippets Management (macOS/Win/Linux)",
   "productName": "Lepton",
   "main": "main.js",
@@ -17,6 +17,7 @@
     "test:unit:watch": "vitest",
     "test:build": "webpack --mode development",
     "test:smoke": "npm run test:build && node tests/smoke/electron-render-smoke.js",
+    "test:login-flow": "npm run test:build && node tests/smoke/electron-login-flow-smoke.js",
     "test:packaged-smoke": "npm run pack && node tests/smoke/electron-packaged-smoke.js",
     "package:prepare": "npm run license && npm run webpack-prod",
     "dist": "npm run package:prepare && electron-builder",

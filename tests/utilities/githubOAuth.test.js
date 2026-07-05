@@ -4,7 +4,8 @@ import githubOAuth from '../../app/utilities/auth/githubOAuth'
 const {
   buildGitHubOAuthUrl,
   describeGitHubOAuthUrl,
-  parseGitHubOAuthCallback
+  parseGitHubOAuthCallback,
+  shouldIgnoreGitHubOAuthLoadFailure
 } = githubOAuth
 
 describe('GitHub OAuth utility', () => {
@@ -15,6 +16,16 @@ describe('GitHub OAuth utility', () => {
     })
 
     expect(url).toBe('https://github.com/login/oauth/authorize?client_id=client-id&scope=gist+repo')
+  })
+
+  it('can build the OAuth authorize URL against a mock service', () => {
+    const url = buildGitHubOAuthUrl({
+      authorizeUrl: 'http://127.0.0.1:9999/login/oauth/authorize',
+      clientId: 'client-id',
+      scopes: ['gist']
+    })
+
+    expect(url).toBe('http://127.0.0.1:9999/login/oauth/authorize?client_id=client-id&scope=gist')
   })
 
   it('parses successful callback codes', () => {
@@ -64,5 +75,27 @@ describe('GitHub OAuth utility', () => {
         error: 'access_denied',
         errorDescription: 'nope'
       })
+  })
+
+  it('keeps OAuth auth windows open for aborted or non-main-frame load failures', () => {
+    expect(shouldIgnoreGitHubOAuthLoadFailure({
+      errorCode: -3,
+      isMainFrame: true
+    })).toBe(true)
+
+    expect(shouldIgnoreGitHubOAuthLoadFailure({
+      errorDescription: "ERR_ABORTED (-3) loading 'https://github.com/login/oauth/authorize'",
+      isMainFrame: true
+    })).toBe(true)
+
+    expect(shouldIgnoreGitHubOAuthLoadFailure({
+      errorCode: -2,
+      isMainFrame: false
+    })).toBe(true)
+
+    expect(shouldIgnoreGitHubOAuthLoadFailure({
+      errorCode: -2,
+      isMainFrame: true
+    })).toBe(false)
   })
 })

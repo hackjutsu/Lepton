@@ -1,4 +1,5 @@
 const GITHUB_OAUTH_URL = 'https://github.com/login/oauth/authorize'
+const ELECTRON_ABORTED_LOAD_ERROR_CODE = -3
 
 function normalizeScopes (scopes = []) {
   if (Array.isArray(scopes)) {
@@ -12,7 +13,7 @@ function normalizeScopes (scopes = []) {
   return ''
 }
 
-function buildGitHubOAuthUrl ({ clientId, scopes }) {
+function buildGitHubOAuthUrl ({ authorizeUrl = GITHUB_OAUTH_URL, clientId, scopes }) {
   const params = new URLSearchParams()
   params.set('client_id', clientId)
 
@@ -21,7 +22,7 @@ function buildGitHubOAuthUrl ({ clientId, scopes }) {
     params.set('scope', scope)
   }
 
-  return `${GITHUB_OAUTH_URL}?${params.toString()}`
+  return `${authorizeUrl}?${params.toString()}`
 }
 
 function parseGitHubOAuthCallback (callbackUrl) {
@@ -90,6 +91,19 @@ function describeGitHubOAuthUrl (callbackUrl) {
   })
 }
 
+function shouldIgnoreGitHubOAuthLoadFailure ({
+  errorCode,
+  errorDescription,
+  isMainFrame
+} = {}) {
+  return isAbortedLoadError(errorCode, errorDescription) || isMainFrame === false
+}
+
+function isAbortedLoadError (errorCode, errorDescription) {
+  return Number(errorCode) === ELECTRON_ABORTED_LOAD_ERROR_CODE ||
+    /\bERR_ABORTED\b|\(-3\)/.test(String(errorDescription || ''))
+}
+
 function removeUndefinedProperties (value) {
   Object.keys(value).forEach(key => {
     if (value[key] === undefined) {
@@ -102,5 +116,6 @@ function removeUndefinedProperties (value) {
 module.exports = {
   buildGitHubOAuthUrl,
   describeGitHubOAuthUrl,
-  parseGitHubOAuthCallback
+  parseGitHubOAuthCallback,
+  shouldIgnoreGitHubOAuthLoadFailure
 }

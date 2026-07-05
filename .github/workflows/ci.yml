@@ -66,6 +66,11 @@ jobs:
           LEPTON_SMOKE_NO_SANDBOX: '1'
         run: xvfb-run --auto-servernum npm run test:smoke
 
+      - name: Electron login-flow smoke test
+        env:
+          LEPTON_SMOKE_NO_SANDBOX: '1'
+        run: xvfb-run --auto-servernum npm run test:login-flow
+
   packaged-smoke:
     runs-on: macos-latest
     continue-on-error: true

@@ -130,6 +130,7 @@ async function getRendererState (window) {
       const appContainer = document.querySelector('.app-container')
       const loginModal = document.querySelector('.login-modal')
       const expectedSelector = ${JSON.stringify(expectedSelector)}
+      const forbiddenSelector = ${JSON.stringify(process.env.LEPTON_SMOKE_FORBIDDEN_SELECTOR || '')}
       const appBounds = appContainer ? appContainer.getBoundingClientRect() : null
       const languageSelector = document.querySelector('[data-role="language-selector"]')
       const languageSelectorLabel = document.querySelector('.login-language-selector')
@@ -155,6 +156,7 @@ async function getRendererState (window) {
         hasAppContainer: Boolean(appContainer),
         hasLoginModal: Boolean(loginModal),
         hasExpectedSelector: expectedSelector ? Boolean(document.querySelector(expectedSelector)) : true,
+        hasForbiddenSelector: forbiddenSelector ? Boolean(document.querySelector(forbiddenSelector)) : false,
         hasLeptonBridge: Boolean(window.lepton),
         hasLeptonConfigBridge: Boolean(window.lepton && window.lepton.config && window.lepton.config.get),
         processType: typeof process,
@@ -469,6 +471,7 @@ function assertFixtureRendererState (state) {
   }
 
   assertForbiddenFixtureTextAbsent(state)
+  assertForbiddenFixtureSelectorAbsent(state)
 }
 
 function assertForbiddenFixtureTextAbsent (state) {
@@ -477,6 +480,11 @@ function assertForbiddenFixtureTextAbsent (state) {
   if (visibleForbiddenText) {
     throw new Error(`Forbidden fixture UI text "${visibleForbiddenText}" was visible. Body text: ${state.bodyText}`)
   }
+}
+
+function assertForbiddenFixtureSelectorAbsent (state) {
+  if (!state.hasForbiddenSelector) return
+  throw new Error(`Forbidden fixture selector was visible: ${process.env.LEPTON_SMOKE_FORBIDDEN_SELECTOR}`)
 }
 
 async function assertFixtureLoginModeSwitch (window) {

@@ -37,6 +37,7 @@ import {
   fetchSingleGist,
   selectGist,
   updateAuthWindowStatus,
+  removeAccessToken,
   updateLoginStatus,
   updateGistSyncStatus,
   updateSearchWindowStatus,
@@ -83,6 +84,7 @@ const LOGIN_STATUS = {
   loadingGitHubProfile: 'Loading profile...',
   syncingSnippetIndex: 'Syncing snippet index...',
   signInComplete: 'Signed in.',
+  tokenInvalid: 'Token invalid. Please try again.',
   signInFailed: 'Sign-in failed.'
 }
 
@@ -136,6 +138,7 @@ function handleAuthResult (result) {
   logger.debug('[auth] GitHub OAuth result received: ' + JSON.stringify(describeGitHubAuthResult(result)))
 
   if (!result || result.status === 'closed') {
+    logger.info('[auth] GitHub OAuth flow ended without authorization; returning to login modal')
     clearLoginStatus()
     return
   }
@@ -163,6 +166,7 @@ function handleAuthResult (result) {
         return initUserSession(payload.access_token, { freshOAuthToken: true })
       })
       .catch((err) => {
+        logger.warn('[auth] OAuth credential exchange failed; returning to login modal')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
         updateLoginStatusFailure()
         logger.error('GitHub login failed: ' + describeGitHubLoginError(err))
@@ -171,8 +175,9 @@ function handleAuthResult (result) {
     return
   }
 
+  logger.warn('[auth] GitHub OAuth flow returned a non-success result: ' + JSON.stringify(describeGitHubAuthResult(result)))
   updateLoginStatusFailure()
-  logger.error('Oops! Something went wrong and we couldn\'t' +
+  logger.error('Oops! Something went wrong and we couldn\'t ' +
     'log you in using Github. Please try again.')
 }
 
@@ -263,12 +268,20 @@ function updateSnippetDownloadStatus (downloaded, total) {
   }))
 }
 
-function updateLoginStatusFailure () {
+function updateLoginStatusFailure (message = LOGIN_STATUS.signInFailed) {
   const logFilePath = getLogFilePath()
   reduxStore.dispatch(updateLoginStatus({
-    message: LOGIN_STATUS.signInFailed,
+    message,
     level: 'error',
     logFilePath
+  }))
+}
+
+function updateLoginStatusUserError (message) {
+  reduxStore.dispatch(updateLoginStatus({
+    message,
+    level: 'error',
+    logFilePath: null
   }))
 }
 
@@ -550,17 +563,28 @@ function initUserSession (token, options = {}) {
     .catch((err) => {
       logger.debug('-----> Failure with ' + JSON.stringify(err))
       logger.error('The request has failed: \n' + JSON.stringify(err))
-      updateLoginStatusFailure()
-
-      if (err.statusCode === 401) {
-        logger.info('[Dispatch] updateUserSession EXPIRED')
-        reduxStore.dispatch(updateUserSession({ activeStatus: 'EXPIRED' }))
-      } else {
+      if (isUnauthorizedGitHubError(err)) {
+        logger.warn('[auth] GitHub rejected the active credential with 401; clearing cached auth and returning to login modal')
+        clearCachedUserInfo()
+        updateLoginStatusUserError(LOGIN_STATUS.tokenInvalid)
         logger.info('[Dispatch] updateUserSession INACTIVE')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+        return
       }
+
+      updateLoginStatusFailure()
+      logger.info('[Dispatch] updateUserSession INACTIVE')
+      reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
       notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '00' }))
     })
+}
+
+function isUnauthorizedGitHubError (err) {
+  return Boolean(err && (
+    err.statusCode === 401 ||
+    err.status === 401 ||
+    (err.response && err.response.statusCode === 401)
+  ))
 }
 /** End: User session management **/
 
@@ -579,6 +603,22 @@ function updateLocalStorage (data) {
   } catch (e) {
     logger.error(`-----> Failed to cache user info. ${JSON.stringify(e)}`)
   }
+}
+
+function clearCachedUserInfo () {
+  try {
+    logger.debug('[auth] Clearing cached credential metadata after unauthorized response')
+    const credentialClear = electronBridge.credentials.setAccessToken(null)
+    logger.debug(`[auth] [${credentialClear.status}] Cleared cached credential`)
+
+    const profileClear = electronBridge.localStorage.set('profile', null)
+    logger.debug(`[auth] [${profileClear.status}] Cleared cached profile`)
+  } catch (e) {
+    logger.error(`-----> Failed to clear cached user info. ${JSON.stringify(e)}`)
+  }
+
+  logger.info('[Dispatch] removeAccessToken')
+  reduxStore.dispatch(removeAccessToken())
 }
 
 function getCachedUserInfo () {

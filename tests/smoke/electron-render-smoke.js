@@ -119,6 +119,13 @@ const RENDER_FIXTURES = [
     text: 'Sign-in failed.|See log'
   },
   {
+    name: 'login-expired-token',
+    selector: '.login-modal',
+    text: 'Login|GitHub Login|Token invalid. Please try again.',
+    forbiddenText: 'See log',
+    forbiddenSelector: '.login-alert'
+  },
+  {
     name: 'login-stale-success-logged-out',
     selector: '.login-modal',
     text: 'Login|GitHub Login',
@@ -148,6 +155,7 @@ function runSmokeProcess (tempHome, options) {
       ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
       LEPTON_SMOKE_ARTIFACT_DIR: tempHome.root,
       LEPTON_SMOKE_AFTER_SWITCH_TEXT: options.switchText || '',
+      LEPTON_SMOKE_FORBIDDEN_SELECTOR: options.forbiddenSelector || '',
       LEPTON_SMOKE_FORBIDDEN_TEXT: options.forbiddenText || '',
       LEPTON_SMOKE_SWITCH_LOGIN_MODE: options.switchLoginMode ? '1' : '',
       LEPTON_SMOKE_EXPECTED_TEXT: options.expectedText,
@@ -210,6 +218,7 @@ async function main () {
       expectedSelector: fixture.selector,
       forbiddenText: fixture.forbiddenText,
       expectedText: fixture.text,
+      forbiddenSelector: fixture.forbiddenSelector,
       renderFixture: fixture.name,
       switchLoginMode: fixture.switchLoginMode,
       switchText: fixture.switchText
