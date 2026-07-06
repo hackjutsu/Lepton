@@ -1,6 +1,6 @@
 # FAQ
 
-## My Snippet's Language Is Classified As "Other"
+## Why Is The Language Of My Snippet "Other"?
 
 Lepton depends on GitHub's API to detect snippet language. If GitHub cannot classify the language, Lepton marks it as `Other`.
 
@@ -109,7 +109,25 @@ See [Configuration](configuration.md#options) for the full `enterprise` option l
 
 ## Scope For GitHub Access Token
 
-Lepton requires the `gist` scope.
+Lepton can use token login instead of GitHub OAuth credentials. Create a
+GitHub personal access token with the `gist` scope, then paste that token into
+Lepton's token login screen.
+
+The fastest path is GitHub's prefilled token page:
+[Create a Lepton token with the `gist` scope](https://github.com/settings/tokens/new?description=Lepton&scopes=gist).
+
+If you create the token manually:
+
+1. Open GitHub, then go to Settings -> Developer settings -> Personal access
+   tokens -> Tokens (classic).
+2. Select Generate new token -> Generate new token (classic).
+3. Enter a descriptive note, such as `Lepton`, and choose an expiration.
+4. Under Select scopes, enable only `gist`.
+5. Click Generate token and copy the token immediately. GitHub only shows it
+   once.
+
+For GitHub Enterprise, create the token on your Enterprise host with the same
+`gist` scope.
 
 ## About Data Collection
 
