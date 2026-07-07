@@ -1,0 +1,116 @@
+name: Scheduled Prerelease
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+
+concurrency:
+  group: scheduled-prerelease
+  cancel-in-progress: false
+
+jobs:
+  prerelease:
+    name: Create scheduled prerelease
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check monthly cadence
+        id: cadence
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "should_run=true" >> "${GITHUB_OUTPUT}"
+            echo "Manual dispatch bypasses the monthly cadence gate."
+            exit 0
+          fi
+
+          day_of_month="$(date -u +%d)"
+          if (( 10#${day_of_month} <= 7 )); then
+            echo "should_run=true" >> "${GITHUB_OUTPUT}"
+            echo "This is the first Monday of the month."
+          else
+            echo "should_run=false" >> "${GITHUB_OUTPUT}"
+            echo "This is not the first Monday of the month."
+          fi
+
+      - name: Checkout master
+        if: steps.cadence.outputs.should_run == 'true'
+        uses: actions/checkout@v5
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Fetch release tags
+        if: steps.cadence.outputs.should_run == 'true'
+        shell: bash
+        run: git fetch origin master:refs/remotes/origin/master --tags --force
+
+      - name: Resolve prerelease
+        if: steps.cadence.outputs.should_run == 'true'
+        id: prerelease
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source_sha="$(git rev-parse origin/master)"
+          node ./.github/scripts/resolve-scheduled-prerelease.js \
+            --master-sha "${source_sha}" \
+            --repository "${GITHUB_REPOSITORY}"
+
+      - name: Report skipped prerelease
+        if: steps.cadence.outputs.should_run == 'true' && steps.prerelease.outputs.should_release == 'false'
+        shell: bash
+        run: echo "${{ steps.prerelease.outputs.skip_reason }}"
+
+      - name: Create beta tag
+        if: steps.prerelease.outputs.should_release == 'true'
+        env:
+          NEXT_TAG: ${{ steps.prerelease.outputs.next_tag }}
+          SOURCE_SHA: ${{ steps.prerelease.outputs.source_sha }}
+          TAG_MESSAGE: ${{ steps.prerelease.outputs.tag_message }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git rev-parse -q --verify "refs/tags/${NEXT_TAG}" > /dev/null; then
+            tag_sha="$(git rev-list -n 1 "${NEXT_TAG}")"
+            if [[ "${tag_sha}" != "${SOURCE_SHA}" ]]; then
+              echo "Tag ${NEXT_TAG} already exists on ${tag_sha}, not ${SOURCE_SHA}." >&2
+              exit 1
+            fi
+
+            echo "Tag ${NEXT_TAG} already exists on ${SOURCE_SHA}; reusing it."
+          else
+            printf '%s\n' "${TAG_MESSAGE}" > tag-message.txt
+            git tag -a "${NEXT_TAG}" "${SOURCE_SHA}" -F tag-message.txt
+            git push origin "refs/tags/${NEXT_TAG}"
+          fi
+
+      - name: Dispatch release workflow
+        if: steps.prerelease.outputs.should_release == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEXT_TAG: ${{ steps.prerelease.outputs.next_tag }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh workflow run release.yml \
+            --ref master \
+            -f publish=always \
+            -f release_type=prerelease \
+            -f snap_channels=edge \
+            -f release_ref="${NEXT_TAG}" \
+            -f platform=all
+
+          echo "Dispatched release workflow for ${NEXT_TAG}."
