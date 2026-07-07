@@ -61,6 +61,8 @@ jobs:
       publish_policy: ${{ steps.context.outputs.publish_policy }}
       snap_channels: ${{ steps.context.outputs.snap_channels }}
       checkout_ref: ${{ steps.context.outputs.checkout_ref }}
+      release_version: ${{ steps.context.outputs.release_version }}
+      release_tag: ${{ steps.context.outputs.release_tag }}
       build_macos: ${{ steps.context.outputs.build_macos }}
       build_windows: ${{ steps.context.outputs.build_windows }}
       build_linux: ${{ steps.context.outputs.build_linux }}
@@ -80,6 +82,8 @@ jobs:
           build_macos="true"
           build_windows="true"
           build_linux="true"
+          release_version=""
+          release_tag=""
 
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             tag="${GITHUB_REF_NAME}"
@@ -88,6 +92,8 @@ jobs:
               exit 1
             fi
 
+            release_version="${tag#v}"
+            release_tag="${tag}"
             publish_policy="always"
             if [[ "${tag}" == *-* ]]; then
               github_release_type="prerelease"
@@ -104,6 +110,12 @@ jobs:
             snap_channels="${MANUAL_SNAP_CHANNELS}"
             if [[ -n "${MANUAL_RELEASE_REF}" ]]; then
               checkout_ref="${MANUAL_RELEASE_REF}"
+            fi
+
+            checkout_tag="${checkout_ref#refs/tags/}"
+            if [[ "${checkout_tag}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+              release_version="${checkout_tag#v}"
+              release_tag="${checkout_tag}"
             fi
 
             case "${MANUAL_PLATFORM}" in
@@ -140,6 +152,8 @@ jobs:
             echo "publish_policy=${publish_policy}"
             echo "snap_channels=${snap_channels}"
             echo "checkout_ref=${checkout_ref}"
+            echo "release_version=${release_version}"
+            echo "release_tag=${release_tag}"
             echo "build_macos=${build_macos}"
             echo "build_windows=${build_windows}"
             echo "build_linux=${build_linux}"
@@ -163,6 +177,10 @@ jobs:
 
       - name: Install npm 11
         run: npm install -g npm@11
+
+      - name: Apply release version
+        if: needs.release-context.outputs.release_version != ''
+        run: npm version ${{ needs.release-context.outputs.release_version }} --no-git-tag-version --allow-same-version --ignore-scripts
 
       - name: Install dependencies
         run: npm ci
@@ -200,6 +218,10 @@ jobs:
 
       - name: Install npm 11
         run: npm install -g npm@11
+
+      - name: Apply release version
+        if: needs.release-context.outputs.release_version != ''
+        run: npm version ${{ needs.release-context.outputs.release_version }} --no-git-tag-version --allow-same-version --ignore-scripts
 
       - name: Install dependencies
         run: npm ci
@@ -261,6 +283,10 @@ jobs:
 
       - name: Install npm 11
         run: npm install -g npm@11
+
+      - name: Apply release version
+        if: needs.release-context.outputs.release_version != ''
+        run: npm version ${{ needs.release-context.outputs.release_version }} --no-git-tag-version --allow-same-version --ignore-scripts
 
       - name: Install dependencies
         run: npm ci
@@ -324,6 +350,10 @@ jobs:
       - name: Install npm 11
         run: npm install -g npm@11
 
+      - name: Apply release version
+        if: needs.release-context.outputs.release_version != ''
+        run: npm version ${{ needs.release-context.outputs.release_version }} --no-git-tag-version --allow-same-version --ignore-scripts
+
       - name: Install dependencies
         run: npm ci
 
@@ -378,3 +408,52 @@ jobs:
             dist/*.snap
             dist/*.yml
           if-no-files-found: error
+
+  update-release-metadata:
+    name: Update GitHub release metadata
+    runs-on: ubuntu-latest
+    needs:
+      - release-context
+      - build-macos
+      - build-windows
+      - build-linux
+    if: |
+      always() &&
+      needs.release-context.outputs.publish_policy == 'always' &&
+      needs.release-context.outputs.release_tag != '' &&
+      (needs.release-context.outputs.build_macos != 'true' || needs.build-macos.result == 'success') &&
+      (needs.release-context.outputs.build_windows != 'true' || needs.build-windows.result == 'success') &&
+      (needs.release-context.outputs.build_linux != 'true' || needs.build-linux.result == 'success')
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.release-context.outputs.release_tag }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Update release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.release-context.outputs.release_tag }}
+          RELEASE_VERSION: ${{ needs.release-context.outputs.release_version }}
+        run: |
+          set -euo pipefail
+
+          git fetch origin --tags --force
+          source_sha="$(git rev-list -n 1 "${RELEASE_TAG}")"
+          previous_tag="$(node ./.github/scripts/resolve-scheduled-prerelease.js previous-release-tag --current-tag "${RELEASE_TAG}")"
+
+          node ./.github/scripts/resolve-scheduled-prerelease.js release-notes \
+            --version "${RELEASE_VERSION}" \
+            --tag "${RELEASE_TAG}" \
+            --source-sha "${source_sha}" \
+            --previous-tag "${previous_tag}" \
+            --repository "${GITHUB_REPOSITORY}" \
+            > release-notes.md
+
+          gh release edit "${RELEASE_TAG}" --notes-file release-notes.md --verify-tag
