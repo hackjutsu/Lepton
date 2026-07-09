@@ -45,6 +45,9 @@ $quiet-scrollbar-thumb-active: color-mix(in srgb, var(--text-secondary) 58%, tra
 .markdown-section .highlight pre,
 .markdown-section.asciidoc-section .listingblock pre,
 .jupyterNotebook-section .nb-output,
-.raw-modal .modal-content {
+.raw-modal .modal-content,
+.about-modal .contributor-section,
+.about-modal .license-section,
+.about-modal .one-line-section {
   @include quiet-scrollbar;
 }
