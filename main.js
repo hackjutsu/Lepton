@@ -697,7 +697,7 @@ function setUpBridgeIpcHandlers () {
     })
   })
 
-  ipcMain.on('lepton:window:stop-find-in-page', (event) => {
+  ipcMain.handle('lepton:window:stop-find-in-page', (event) => {
     if (!isMainWindowSender(event)) return
     activeFindRequestId = null
     activeFindQuery = ''

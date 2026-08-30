@@ -67,7 +67,7 @@ class FindInPage extends PureComponent {
     this.cancelScheduledFind()
     if (this.unsubscribeFindRequest) this.unsubscribeFindRequest()
     if (this.unsubscribeFindResult) this.unsubscribeFindResult()
-    if (this.state.isOpen) this.getBridge().window.stopFindInPage()
+    if (this.state.isOpen) this.stopFindInPage()
   }
 
   cancelScheduledFind () {
@@ -87,6 +87,20 @@ class FindInPage extends PureComponent {
     if (selectQuery) this.inputRef.current.select()
   }
 
+  stopFindInPage (restoreInputFocus = false) {
+    const stopResult = this.getBridge().window.stopFindInPage()
+    const restoreFocus = () => {
+      if (restoreInputFocus && this.state.isOpen) this.focusInput()
+    }
+
+    if (!stopResult || typeof stopResult.then !== 'function') {
+      restoreFocus()
+      return
+    }
+
+    stopResult.then(restoreFocus, () => {})
+  }
+
   open () {
     const wasOpen = this.state.isOpen
     this.setState({ isOpen: true }, () => {
@@ -99,7 +113,7 @@ class FindInPage extends PureComponent {
     this.cancelScheduledFind()
     this.lastSearchedQuery = ''
     this.restoreInputFocus = false
-    this.getBridge().window.stopFindInPage()
+    this.stopFindInPage()
     this.setState({
       activeMatchOrdinal: 0,
       isOpen: false,
@@ -192,7 +206,7 @@ class FindInPage extends PureComponent {
       this.scheduleFind(query)
     } else {
       this.restoreInputFocus = false
-      this.getBridge().window.stopFindInPage()
+      this.stopFindInPage(true)
     }
   }
 

@@ -95,7 +95,7 @@ const leptonApi = {
       return () => ipcRenderer.removeListener('lepton:window:found-in-page', wrapped)
     },
     setTitle: (title) => ipcRenderer.send('lepton:window:set-title', title),
-    stopFindInPage: () => ipcRenderer.send('lepton:window:stop-find-in-page')
+    stopFindInPage: () => ipcRenderer.invoke('lepton:window:stop-find-in-page')
   }
 }
 

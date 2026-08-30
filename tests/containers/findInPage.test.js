@@ -210,6 +210,27 @@ describe('find in page', () => {
     })
   })
 
+  it('restores input focus after clearing the query', async () => {
+    let finishClear
+    bridge.window.stopFindInPage.mockReturnValueOnce(new Promise(resolve => {
+      finishClear = resolve
+    }))
+
+    openWithShortcut()
+    const input = typeQuery('fixture')
+    typeQuery('')
+    document.getElementById('outside').focus()
+
+    expect(document.activeElement).not.toBe(input)
+
+    await act(async () => {
+      finishClear()
+      await Promise.resolve()
+    })
+
+    expect(document.activeElement).toBe(input)
+  })
+
   it('is limited to the snippet-reading surface', () => {
     const activeSnippetState = {
       searchWindowStatus: 'OFF',
