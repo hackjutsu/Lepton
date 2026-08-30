@@ -88,6 +88,27 @@ function createAccessTokenStorage ({
     return unavailableReason
   }
 
+  function logFileStorageFallback (unavailableReason) {
+    logWarn(logger, `[auth] Falling back to local file for cached access token: ${unavailableReason}`)
+  }
+
+  function readFileTokenFallback (unavailableReason) {
+    logFileStorageFallback(unavailableReason)
+    return localStorage.get(LEGACY_TOKEN_KEY)
+  }
+
+  function writeFileTokenFallback (token, unavailableReason) {
+    logFileStorageFallback(unavailableReason)
+
+    const encryptedClear = localStorage.set(ENCRYPTED_TOKEN_KEY, null)
+    const legacyWrite = localStorage.set(LEGACY_TOKEN_KEY, token)
+    return createResult(
+      Boolean(encryptedClear.status && legacyWrite.status),
+      token,
+      encryptedClear.error || legacyWrite.error
+    )
+  }
+
   function clearEncryptedToken () {
     const encryptedClear = localStorage.set(ENCRYPTED_TOKEN_KEY, null)
     const legacyClear = localStorage.set(LEGACY_TOKEN_KEY, null)
@@ -96,9 +117,6 @@ function createAccessTokenStorage ({
 
   function writeEncryptedToken (token) {
     if (!hasTokenValue(token)) return clearEncryptedToken()
-
-    const unavailableReason = ensureEncryptedStorageAvailable()
-    if (unavailableReason) return createResult(false, null, new Error(unavailableReason))
 
     let encryptedToken
     try {
@@ -145,6 +163,12 @@ function createAccessTokenStorage ({
       return createResult(false, null, legacyToken.error)
     }
 
+    const unavailableReason = ensureEncryptedStorageAvailable()
+    if (unavailableReason) {
+      logFileStorageFallback(unavailableReason)
+      return legacyToken
+    }
+
     const encryptedWrite = writeEncryptedToken(legacyToken.data)
     if (!encryptedWrite.status) return encryptedWrite
 
@@ -156,7 +180,7 @@ function createAccessTokenStorage ({
     const encryptedToken = localStorage.get(ENCRYPTED_TOKEN_KEY)
     if (encryptedToken.status && encryptedToken.data) {
       const unavailableReason = ensureEncryptedStorageAvailable()
-      if (unavailableReason) return createResult(false, null, new Error(unavailableReason))
+      if (unavailableReason) return readFileTokenFallback(unavailableReason)
       return readEncryptedTokenRecord(encryptedToken.data)
     }
 
@@ -172,6 +196,9 @@ function createAccessTokenStorage ({
     set (token) {
       if (!hasTokenValue(token)) return clearEncryptedToken()
       if (getMode() === 'file') return localStorage.set(LEGACY_TOKEN_KEY, token)
+
+      const unavailableReason = ensureEncryptedStorageAvailable()
+      if (unavailableReason) return writeFileTokenFallback(token, unavailableReason)
       return writeEncryptedToken(token)
     }
   }

@@ -91,7 +91,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `boringAvatarVariant` | `beam` | Variant used when `avatar.type` is `boring`. |
 | `userPanel` | `hideProfilePhoto` | `false` | Hide the profile photo in the user panel. |
 | `logger` | `level` | `info` | Logging level. Use `info` for normal use or `debug` when collecting diagnostic logs. |
-| `security` | `cachedAccessTokenStorage` | `auto` | Cached GitHub OAuth token storage. Supported values: `auto`, `encrypted`, `file`. `auto` uses file storage in development builds and Electron safeStorage in packaged builds. |
+| `security` | `cachedAccessTokenStorage` | `auto` | Cached GitHub OAuth token storage. Supported values: `auto`, `encrypted`, `file`. `auto` uses file storage in development builds and Electron safeStorage in packaged builds. When safeStorage is unavailable, encrypted storage falls back to the legacy plaintext `<userData>/storage/token.json` file and migrates back once encryption is available. |
 | `proxy` | `enable` | `false` | Route GitHub API requests and Electron sessions through a proxy. |
 | | `address` | `socks://localhost:1080` | Proxy address. Supports normal proxy URLs, Chromium proxy rule lists, and `pac+https://...` PAC URLs. |
 | `snippet` | `sorting` | `updated_at` | Snippet order. Supported values: `updated_at`, `created_at`, `description`. |
