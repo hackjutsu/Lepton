@@ -11,7 +11,7 @@ describe('find in page', () => {
   let bridge
   let container
   let findRequestListener
-  let findResultListener
+  let finder
   let root
 
   beforeEach(() => {
@@ -30,23 +30,25 @@ describe('find in page', () => {
 
     bridge = {
       window: {
-        findInPage: vi.fn(),
         onFindInPageRequest: vi.fn(listener => {
           findRequestListener = listener
           return vi.fn()
-        }),
-        onFindInPageResult: vi.fn(listener => {
-          findResultListener = listener
-          return vi.fn()
-        }),
-        stopFindInPage: vi.fn()
+        })
       }
+    }
+    finder = {
+      clear: vi.fn(),
+      navigate: vi.fn(forward => ({
+        activeMatchOrdinal: forward ? 2 : 3,
+        matches: 3
+      })),
+      search: vi.fn(() => ({ activeMatchOrdinal: 1, matches: 5 }))
     }
     container = document.getElementById('root')
     root = createRoot(container)
 
     act(() => {
-      root.render(h(FindInPage, { bridge }))
+      root.render(h(FindInPage, { bridge, finder }))
     })
   })
 
@@ -83,30 +85,22 @@ describe('find in page', () => {
     return input
   }
 
-  it('opens from Cmd/Ctrl+F and sends the query only to local page find', () => {
+  it('opens from Cmd/Ctrl+F and searches only the local page', () => {
     expect(container.querySelector('.find-in-page')).toBeNull()
 
     openWithShortcut()
 
     const input = typeQuery('fixture')
     expect(document.activeElement).toBe(input)
-    expect(bridge.window.findInPage).not.toHaveBeenCalled()
+    expect(finder.search).not.toHaveBeenCalled()
 
     act(() => {
       vi.runOnlyPendingTimers()
     })
 
-    expect(bridge.window.findInPage).toHaveBeenLastCalledWith('fixture', {
-      findNext: true,
-      forward: true
-    })
+    expect(finder.search).toHaveBeenLastCalledWith('fixture')
 
-    document.getElementById('outside').focus()
-    act(() => {
-      findResultListener({ activeMatchOrdinal: 2, finalUpdate: true, matches: 5, query: 'fixture' })
-    })
-
-    expect(container.querySelector('.find-in-page-count').textContent).toBe('2/5')
+    expect(container.querySelector('.find-in-page-count').textContent).toBe('1/5')
     expect(document.activeElement).toBe(input)
   })
 
@@ -115,6 +109,7 @@ describe('find in page', () => {
       findRequestListener()
     })
     const input = typeQuery('snippet')
+    finder.search.mockReturnValueOnce({ activeMatchOrdinal: 1, matches: 3 })
     act(() => {
       vi.runOnlyPendingTimers()
     })
@@ -123,10 +118,9 @@ describe('find in page', () => {
     act(() => {
       buttons[1].dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
     })
-    expect(bridge.window.findInPage).toHaveBeenLastCalledWith('snippet', {
-      findNext: false,
-      forward: true
-    })
+    expect(finder.navigate).toHaveBeenLastCalledWith(true)
+    expect(container.querySelector('.find-in-page-count').textContent).toBe('2/3')
+    expect(document.activeElement).toBe(input)
 
     act(() => {
       input.dispatchEvent(new window.KeyboardEvent('keydown', {
@@ -135,12 +129,9 @@ describe('find in page', () => {
         shiftKey: true
       }))
     })
-    expect(bridge.window.findInPage).toHaveBeenLastCalledWith('snippet', {
-      findNext: false,
-      forward: false
-    })
+    expect(finder.navigate).toHaveBeenLastCalledWith(false)
 
-    const stopCallsBeforeClose = bridge.window.stopFindInPage.mock.calls.length
+    const clearCallsBeforeClose = finder.clear.mock.calls.length
 
     act(() => {
       document.dispatchEvent(new window.KeyboardEvent('keydown', {
@@ -149,43 +140,30 @@ describe('find in page', () => {
       }))
     })
 
-    expect(bridge.window.stopFindInPage).toHaveBeenCalledTimes(stopCallsBeforeClose + 1)
+    expect(finder.clear).toHaveBeenCalledTimes(clearCallsBeforeClose + 1)
     expect(container.querySelector('.find-in-page')).toBeNull()
   })
 
-  it('debounces typing and ignores stale or incomplete native find results', () => {
+  it('debounces typing and applies only the latest query', () => {
     openWithShortcut()
 
     typeQuery('f')
     typeQuery('fi')
     typeQuery('fixture')
 
-    expect(bridge.window.findInPage).not.toHaveBeenCalled()
-    expect(bridge.window.stopFindInPage).not.toHaveBeenCalled()
+    expect(finder.search).not.toHaveBeenCalled()
+    expect(finder.clear).toHaveBeenCalledTimes(3)
 
     act(() => {
       vi.runOnlyPendingTimers()
     })
 
-    expect(bridge.window.findInPage).toHaveBeenCalledTimes(1)
-    expect(bridge.window.findInPage).toHaveBeenCalledWith('fixture', {
-      findNext: true,
-      forward: true
-    })
-
-    act(() => {
-      findResultListener({ activeMatchOrdinal: 1, finalUpdate: true, matches: 2, query: 'fi' })
-      findResultListener({ activeMatchOrdinal: 1, finalUpdate: false, matches: 2, query: 'fixture' })
-    })
-    expect(container.querySelector('.find-in-page-count').textContent).toBe('0/0')
-
-    act(() => {
-      findResultListener({ activeMatchOrdinal: 1, finalUpdate: true, matches: 7, query: 'fixture' })
-    })
-    expect(container.querySelector('.find-in-page-count').textContent).toBe('1/7')
+    expect(finder.search).toHaveBeenCalledTimes(1)
+    expect(finder.search).toHaveBeenCalledWith('fixture')
+    expect(container.querySelector('.find-in-page-count').textContent).toBe('1/5')
   })
 
-  it('does not clear native highlights for every backspace', () => {
+  it('clears stale highlights immediately while debouncing backspace searches', () => {
     openWithShortcut()
     typeQuery('fixture')
     act(() => {
@@ -196,38 +174,23 @@ describe('find in page', () => {
     typeQuery('fixtu')
     typeQuery('fixt')
 
-    expect(bridge.window.stopFindInPage).not.toHaveBeenCalled()
-    expect(bridge.window.findInPage).toHaveBeenCalledTimes(1)
+    expect(finder.clear).toHaveBeenCalledTimes(4)
+    expect(finder.search).toHaveBeenCalledTimes(1)
 
     act(() => {
       vi.runOnlyPendingTimers()
     })
 
-    expect(bridge.window.findInPage).toHaveBeenCalledTimes(2)
-    expect(bridge.window.findInPage).toHaveBeenLastCalledWith('fixt', {
-      findNext: true,
-      forward: true
-    })
+    expect(finder.search).toHaveBeenCalledTimes(2)
+    expect(finder.search).toHaveBeenLastCalledWith('fixt')
   })
 
-  it('restores input focus after clearing the query', async () => {
-    let finishClear
-    bridge.window.stopFindInPage.mockReturnValueOnce(new Promise(resolve => {
-      finishClear = resolve
-    }))
-
+  it('keeps input focus after clearing the query', () => {
     openWithShortcut()
     const input = typeQuery('fixture')
     typeQuery('')
-    document.getElementById('outside').focus()
 
-    expect(document.activeElement).not.toBe(input)
-
-    await act(async () => {
-      finishClear()
-      await Promise.resolve()
-    })
-
+    expect(finder.clear).toHaveBeenCalled()
     expect(document.activeElement).toBe(input)
   })
 

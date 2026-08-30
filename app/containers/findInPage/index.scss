@@ -76,3 +76,13 @@
 .find-in-page-close {
   font-size: 18px;
 }
+
+::highlight(lepton-find-match) {
+  background-color: rgba(255, 214, 10, .45);
+  color: inherit;
+}
+
+::highlight(lepton-find-active) {
+  background-color: #ff7a00;
+  color: #fff;
+}
