@@ -5,6 +5,7 @@ import electronBridge from '../../utilities/electronBridge'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
 import AboutPage from '../aboutPage'
 import Dashboard from '../dashboard'
+import FindInPage, { isFindInPageAvailable } from '../findInPage'
 import LoginPage from '../loginPage'
 import NavigationPanel from '../navigationPanel'
 import NavigationPanelDetails from '../navigationPanelDetails'
@@ -65,6 +66,11 @@ function SplitPaneDivider (props) {
 }
 
 class AppContainer extends Component {
+  renderFindInPage () {
+    if (!isFindInPageAvailable(this.props)) return null
+    return <FindInPage />
+  }
+
   renderAboutPage () {
     const { updateAboutModalStatus } = this.props
     return (
@@ -198,6 +204,7 @@ class AppContainer extends Component {
     const { userSession } = this.props
     return (
       <div className='app-container'>
+        { this.renderFindInPage() }
         { userSession.activeStatus === 'ACTIVE'
           ? this.renderActiveSection()
           : this.renderInactiveSection() }
@@ -212,6 +219,12 @@ function mapStateToProps (state) {
     searchWindowStatus: state.searchWindowStatus,
     aboutModalStatus: state.aboutModalStatus,
     dashboardModalStatus: state.dashboardModalStatus,
+    gistDeleteModalStatus: state.gistDeleteModalStatus,
+    gistEditModalStatus: state.gistEditModalStatus,
+    gistNewModalStatus: state.gistNewModalStatus,
+    gistRawModal: state.gistRawModal,
+    logoutModalStatus: state.logoutModalStatus,
+    pinnedTagsModalStatus: state.pinnedTagsModalStatus,
     newVersionInfo: state.newVersionInfo,
     updateAvailableBarStatus: state.updateAvailableBarStatus,
     immersiveMode: state.immersiveMode

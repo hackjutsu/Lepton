@@ -41,6 +41,11 @@ module.exports = {
     submit: '提交',
     tips: '提示'
   },
+  findInPage: {
+    next: '下一个匹配项',
+    placeholder: '在页面中查找',
+    previous: '上一个匹配项'
+  },
   login: {
     continueAs: '以 {{username}} 继续',
     githubLogin: '使用 GitHub 登录',
@@ -67,6 +72,7 @@ module.exports = {
     edit: '编辑',
     editGist: '编辑代码片段',
     exitEditor: '退出编辑器',
+    findInPage: '在页面中查找',
     gist: '代码片段',
     immersiveMode: '沉浸模式',
     learnMore: '了解更多',

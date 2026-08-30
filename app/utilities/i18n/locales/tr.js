@@ -41,6 +41,11 @@ module.exports = {
     submit: 'Gönder',
     tips: 'ipuçları'
   },
+  findInPage: {
+    next: 'Sonraki eşleşme',
+    placeholder: 'Sayfada bul',
+    previous: 'Önceki eşleşme'
+  },
   login: {
     continueAs: '{{username}} olarak devam et',
     githubLogin: 'GitHub ile giriş',
@@ -67,6 +72,7 @@ module.exports = {
     edit: 'Düzenle',
     editGist: 'Kod parçasını düzenle',
     exitEditor: 'Düzenleyiciden çık',
+    findInPage: 'Sayfada bul',
     gist: 'Kod parçası',
     immersiveMode: 'Odak modu',
     learnMore: 'Daha fazla bilgi',

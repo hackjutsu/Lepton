@@ -77,6 +77,7 @@ let tray = null
 let authFlow = null
 let githubApi = null
 let operationType = 0
+let activeFindRequestId = null
 
 const MACOS_TRAY_ICON_SIZE = 18
 
@@ -191,6 +192,17 @@ function createWindow (autoLogin) {
   mainWindow.webContents.on('will-navigate', (e, url) => {
     e.preventDefault()
     electron.shell.openExternal(url)
+  })
+
+  mainWindow.webContents.on('found-in-page', (event, result) => {
+    if (!result || result.requestId !== activeFindRequestId) return
+    if (!mainWindow || mainWindow.isDestroyed()) return
+
+    mainWindow.webContents.send('lepton:window:found-in-page', {
+      activeMatchOrdinal: result.activeMatchOrdinal,
+      finalUpdate: result.finalUpdate,
+      matches: result.matches
+    })
   })
 
   mainWindow.once('ready-to-show', () => {
@@ -668,6 +680,23 @@ function setUpBridgeIpcHandlers () {
   ipcMain.on('lepton:window:set-title', (event, title) => {
     if (!isMainWindowSender(event) || typeof title !== 'string') return
     mainWindow.setTitle(title)
+  })
+
+  ipcMain.on('lepton:window:find-in-page', (event, text, options = {}) => {
+    if (!isMainWindowSender(event) || typeof text !== 'string' || text.length === 0 || text.length > 1000) return
+    const findOptions = options && typeof options === 'object' ? options : {}
+
+    activeFindRequestId = mainWindow.webContents.findInPage(text, {
+      findNext: findOptions.findNext === true,
+      forward: findOptions.forward !== false,
+      matchCase: false
+    })
+  })
+
+  ipcMain.on('lepton:window:stop-find-in-page', (event) => {
+    if (!isMainWindowSender(event)) return
+    activeFindRequestId = null
+    mainWindow.webContents.stopFindInPage('clearSelection')
   })
 
   ipcMain.on('lepton:clipboard:write-text', (event, value) => {

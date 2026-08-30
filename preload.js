@@ -83,7 +83,19 @@ const leptonApi = {
     set: (configName, data) => ipcRenderer.sendSync('lepton:renderer-store:set', configName, data)
   },
   window: {
-    setTitle: (title) => ipcRenderer.send('lepton:window:set-title', title)
+    findInPage: (text, options) => ipcRenderer.send('lepton:window:find-in-page', text, options),
+    onFindInPageRequest: (listener) => {
+      const wrapped = () => listener()
+      ipcRenderer.on('lepton:window:open-find-in-page', wrapped)
+      return () => ipcRenderer.removeListener('lepton:window:open-find-in-page', wrapped)
+    },
+    onFindInPageResult: (listener) => {
+      const wrapped = (event, result) => listener(result)
+      ipcRenderer.on('lepton:window:found-in-page', wrapped)
+      return () => ipcRenderer.removeListener('lepton:window:found-in-page', wrapped)
+    },
+    setTitle: (title) => ipcRenderer.send('lepton:window:set-title', title),
+    stopFindInPage: () => ipcRenderer.send('lepton:window:stop-find-in-page')
   }
 }
 

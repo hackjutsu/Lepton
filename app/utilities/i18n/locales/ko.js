@@ -41,6 +41,11 @@ module.exports = {
     submit: '제출',
     tips: '팁'
   },
+  findInPage: {
+    next: '다음 일치',
+    placeholder: '페이지에서 찾기',
+    previous: '이전 일치'
+  },
   login: {
     continueAs: '{{username}}로 계속',
     githubLogin: 'GitHub 로그인',
@@ -67,6 +72,7 @@ module.exports = {
     edit: '편집',
     editGist: '스니펫 편집',
     exitEditor: '편집기 종료',
+    findInPage: '페이지에서 찾기',
     gist: '스니펫',
     immersiveMode: '몰입 모드',
     learnMore: '자세히 보기',

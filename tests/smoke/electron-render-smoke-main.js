@@ -526,6 +526,91 @@ async function assertFixtureLoginModeSwitch (window) {
   assertForbiddenFixtureTextAbsent(result)
 }
 
+async function assertFixturePageFind (window) {
+  const fixture = process.env.LEPTON_RENDER_FIXTURE
+  if (fixture !== 'active' && fixture !== 'search') return
+
+  const findResults = []
+  const recordFindResult = (event, result) => findResults.push(result)
+  window.webContents.on('found-in-page', recordFindResult)
+
+  const shortcutState = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        bubbles: true,
+        ctrlKey: ${process.platform !== 'darwin'},
+        key: 'f',
+        metaKey: ${process.platform === 'darwin'}
+      }))
+
+      const deadline = Date.now() + 1000
+      function waitForFindBar() {
+        const input = document.querySelector('.find-in-page-input')
+        if (input || Date.now() > deadline) {
+          resolve({
+            focused: input === document.activeElement,
+            hasFindBar: Boolean(input)
+          })
+          return
+        }
+        setTimeout(waitForFindBar, 50)
+      }
+      waitForFindBar()
+    })
+  `, true)
+
+  if (fixture === 'active' && shortcutState.hasFindBar) {
+    await window.webContents.insertText('fixture')
+    const resultState = await window.webContents.executeJavaScript(`
+      new Promise(resolve => {
+        const deadline = Date.now() + 5000
+        function waitForResults() {
+          const count = document.querySelector('.find-in-page-count')
+          const input = document.querySelector('.find-in-page-input')
+          const countText = count ? count.textContent : ''
+          if (countText && countText !== '0/0') {
+            resolve({ countText, value: input ? input.value : '' })
+            return
+          }
+          if (Date.now() > deadline) {
+            resolve({ countText, reason: 'find results did not arrive', value: input ? input.value : '' })
+            return
+          }
+          setTimeout(waitForResults, 50)
+        }
+        waitForResults()
+      })
+    `, true)
+    Object.assign(shortcutState, resultState)
+  }
+
+  await wait(750)
+  shortcutState.settledCountText = await window.webContents.executeJavaScript(`
+    (() => {
+      const count = document.querySelector('.find-in-page-count')
+      return count ? count.textContent : ''
+    })()
+  `, true)
+  shortcutState.findResults = findResults.map(result => ({
+    activeMatchOrdinal: result.activeMatchOrdinal,
+    finalUpdate: result.finalUpdate,
+    matches: result.matches,
+    requestId: result.requestId
+  }))
+  window.webContents.removeListener('found-in-page', recordFindResult)
+
+  if (fixture === 'search') {
+    if (shortcutState.hasFindBar) {
+      throw new Error(`Expected snippet-wide search to exclude page find: ${JSON.stringify(shortcutState)}`)
+    }
+    return
+  }
+
+  if (!shortcutState.hasFindBar || shortcutState.value !== 'fixture' || !/^[1-9]\d*\/[1-9]\d*$/.test(shortcutState.settledCountText || '')) {
+    throw new Error(`Expected active snippet fixture to support local page find: ${JSON.stringify(shortcutState)}`)
+  }
+}
+
 async function main () {
   let window
 
@@ -538,6 +623,7 @@ async function main () {
       await waitForFixtureUi(window)
       assertFixtureRendererState(await getRendererState(window))
       await assertFixtureLoginModeSwitch(window)
+      await assertFixturePageFind(window)
       await captureScreenshot(window, `electron-render-${process.env.LEPTON_RENDER_FIXTURE}-success.png`)
       console.log(`electron render fixture smoke test passed: ${process.env.LEPTON_RENDER_FIXTURE}`)
     } else {

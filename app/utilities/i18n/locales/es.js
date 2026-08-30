@@ -41,6 +41,11 @@ module.exports = {
     submit: 'Enviar',
     tips: 'consejos'
   },
+  findInPage: {
+    next: 'Siguiente coincidencia',
+    placeholder: 'Buscar en la pagina',
+    previous: 'Coincidencia anterior'
+  },
   login: {
     continueAs: 'Continuar como {{username}}',
     githubLogin: 'Iniciar sesion con GitHub',
@@ -67,6 +72,7 @@ module.exports = {
     edit: 'Editar',
     editGist: 'Editar snippet',
     exitEditor: 'Salir del editor',
+    findInPage: 'Buscar en la pagina',
     gist: 'Snippet',
     immersiveMode: 'Modo inmersivo',
     learnMore: 'Mas informacion',

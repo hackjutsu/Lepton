@@ -32,6 +32,18 @@ function buildMainMenuTemplate (t) {
         },
         {
           role: 'selectall'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: t('menu.findInPage'),
+          accelerator: 'CmdOrCtrl+F',
+          click (item, focusedWindow) {
+            if (focusedWindow) {
+              focusedWindow.webContents.send('lepton:window:open-find-in-page')
+            }
+          }
         }
       ]
     },

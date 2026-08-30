@@ -41,6 +41,11 @@ module.exports = {
     submit: '送信',
     tips: 'ヒント'
   },
+  findInPage: {
+    next: '次の一致',
+    placeholder: 'ページ内を検索',
+    previous: '前の一致'
+  },
   login: {
     continueAs: '{{username}}として続行',
     githubLogin: 'GitHubでログイン',
@@ -67,6 +72,7 @@ module.exports = {
     edit: '編集',
     editGist: 'スニペットを編集',
     exitEditor: 'エディターを終了',
+    findInPage: 'ページ内を検索',
     gist: 'スニペット',
     immersiveMode: '集中モード',
     learnMore: '詳しく見る',

@@ -41,6 +41,11 @@ module.exports = {
     submit: 'Envoyer',
     tips: 'astuces'
   },
+  findInPage: {
+    next: 'Resultat suivant',
+    placeholder: 'Rechercher dans la page',
+    previous: 'Resultat precedent'
+  },
   login: {
     continueAs: 'Continuer avec {{username}}',
     githubLogin: 'Connexion GitHub',
@@ -67,6 +72,7 @@ module.exports = {
     edit: 'Modifier',
     editGist: 'Modifier l extrait',
     exitEditor: 'Quitter l editeur',
+    findInPage: 'Rechercher dans la page',
     gist: 'Extrait',
     immersiveMode: 'Mode immersif',
     learnMore: 'En savoir plus',
