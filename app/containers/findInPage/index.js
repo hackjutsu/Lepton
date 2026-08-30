@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import electronBridge from '../../utilities/electronBridge'
 import { t } from '../../utilities/i18n'
 
@@ -25,18 +25,21 @@ export function isFindInPageAvailable (state) {
     blockingStatuses.every(status => status !== 'ON')
 }
 
-class FindInPage extends Component {
+class FindInPage extends PureComponent {
   constructor (props) {
     super(props)
     this.state = {
       activeMatchOrdinal: 0,
+      hasQuery: false,
       isOpen: false,
-      matches: 0,
-      query: ''
+      matches: 0
     }
+    this.findFrame = null
     this.inputRef = React.createRef()
     this.findTimer = null
     this.lastSearchedQuery = ''
+    this.query = ''
+    this.restoreInputFocus = false
     this.unsubscribeFindRequest = null
     this.unsubscribeFindResult = null
 
@@ -68,9 +71,14 @@ class FindInPage extends Component {
   }
 
   cancelScheduledFind () {
-    if (!this.findTimer) return
-    clearTimeout(this.findTimer)
-    this.findTimer = null
+    if (this.findTimer !== null) {
+      clearTimeout(this.findTimer)
+      this.findTimer = null
+    }
+    if (this.findFrame !== null && typeof window.cancelAnimationFrame === 'function') {
+      window.cancelAnimationFrame(this.findFrame)
+      this.findFrame = null
+    }
   }
 
   focusInput (selectQuery = false) {
@@ -80,15 +88,17 @@ class FindInPage extends Component {
   }
 
   open () {
+    const wasOpen = this.state.isOpen
     this.setState({ isOpen: true }, () => {
       this.focusInput(true)
-      if (this.state.query) this.runFind(this.state.query, true)
+      if (!wasOpen && this.query) this.scheduleFind(this.query)
     })
   }
 
   close () {
     this.cancelScheduledFind()
     this.lastSearchedQuery = ''
+    this.restoreInputFocus = false
     this.getBridge().window.stopFindInPage()
     this.setState({
       activeMatchOrdinal: 0,
@@ -100,6 +110,7 @@ class FindInPage extends Component {
   runFind (query, startNewSession, forward = true) {
     if (!query) return
     this.lastSearchedQuery = query
+    this.restoreInputFocus = document.activeElement === this.inputRef.current
     this.getBridge().window.findInPage(query, {
       // Electron uses findNext=true for a new session and false to continue it.
       findNext: startNewSession,
@@ -111,20 +122,29 @@ class FindInPage extends Component {
     this.cancelScheduledFind()
     this.findTimer = setTimeout(() => {
       this.findTimer = null
-      if (!this.state.isOpen || this.state.query !== query) return
-      this.runFind(query, true)
+      const runFind = () => {
+        this.findFrame = null
+        if (!this.state.isOpen || this.query !== query) return
+        this.runFind(query, true)
+      }
+
+      if (typeof window.requestAnimationFrame === 'function') {
+        this.findFrame = window.requestAnimationFrame(runFind)
+      } else {
+        runFind()
+      }
     }, FIND_DEBOUNCE_MS)
   }
 
   navigate (forward) {
-    if (!this.state.query) return
+    if (!this.query) return
     this.cancelScheduledFind()
+    this.focusInput()
     this.runFind(
-      this.state.query,
-      this.lastSearchedQuery !== this.state.query,
+      this.query,
+      this.lastSearchedQuery !== this.query,
       forward
     )
-    this.focusInput()
   }
 
   handleGlobalKeyDown (event) {
@@ -154,34 +174,50 @@ class FindInPage extends Component {
 
   handleQueryChange (event) {
     const query = event.target.value
+    const hasQuery = Boolean(query)
+    this.query = query
     this.cancelScheduledFind()
     this.lastSearchedQuery = ''
-    this.setState({
-      activeMatchOrdinal: 0,
-      matches: 0,
-      query
-    })
+    if (this.state.activeMatchOrdinal !== 0 ||
+        this.state.matches !== 0 ||
+        this.state.hasQuery !== hasQuery) {
+      this.setState({
+        activeMatchOrdinal: 0,
+        hasQuery,
+        matches: 0
+      })
+    }
 
     if (query) {
       this.scheduleFind(query)
     } else {
+      this.restoreInputFocus = false
       this.getBridge().window.stopFindInPage()
     }
   }
 
   handleResult (result) {
-    if (!this.state.isOpen || !this.state.query || !result || result.finalUpdate === false) return
-    if (result.query !== this.state.query) return
-    this.setState({
-      activeMatchOrdinal: result.activeMatchOrdinal || 0,
-      matches: result.matches || 0
+    if (!this.state.isOpen || !this.query || !result || result.finalUpdate === false) return
+    if (result.query !== this.query) return
+
+    const activeMatchOrdinal = result.activeMatchOrdinal || 0
+    const matches = result.matches || 0
+    const restoreInputFocus = this.restoreInputFocus
+    this.restoreInputFocus = false
+    if (this.state.activeMatchOrdinal === activeMatchOrdinal && this.state.matches === matches) {
+      if (restoreInputFocus) this.focusInput()
+      return
+    }
+
+    this.setState({ activeMatchOrdinal, matches }, () => {
+      if (restoreInputFocus) this.focusInput()
     })
   }
 
   render () {
     if (!this.state.isOpen) return null
 
-    const { activeMatchOrdinal, matches, query } = this.state
+    const { activeMatchOrdinal, hasQuery, matches } = this.state
     const currentMatch = matches === 0 ? 0 : activeMatchOrdinal
     const h = React.createElement
 
@@ -197,7 +233,7 @@ class FindInPage extends Component {
         ref: this.inputRef,
         spellCheck: false,
         type: 'search',
-        value: query
+        defaultValue: this.query
       }),
       h('span', {
         'aria-live': 'polite',
@@ -206,7 +242,7 @@ class FindInPage extends Component {
       h('button', {
         'aria-label': t('findInPage.previous'),
         className: 'find-in-page-button',
-        disabled: !query,
+        disabled: !hasQuery,
         onClick: () => this.navigate(false),
         title: t('findInPage.previous'),
         type: 'button'
@@ -214,7 +250,7 @@ class FindInPage extends Component {
       h('button', {
         'aria-label': t('findInPage.next'),
         className: 'find-in-page-button',
-        disabled: !query,
+        disabled: !hasQuery,
         onClick: () => this.navigate(true),
         title: t('findInPage.next'),
         type: 'button'

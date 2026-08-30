@@ -16,7 +16,7 @@ describe('find in page', () => {
 
   beforeEach(() => {
     vi.useFakeTimers()
-    const dom = new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>', {
+    const dom = new JSDOM('<!doctype html><html><body><div id="root"></div><button id="outside">Outside</button></body></html>', {
       url: 'http://localhost'
     })
 
@@ -101,11 +101,13 @@ describe('find in page', () => {
       forward: true
     })
 
+    document.getElementById('outside').focus()
     act(() => {
       findResultListener({ activeMatchOrdinal: 2, finalUpdate: true, matches: 5, query: 'fixture' })
     })
 
     expect(container.querySelector('.find-in-page-count').textContent).toBe('2/5')
+    expect(document.activeElement).toBe(input)
   })
 
   it('moves between matches and clears highlights when closed', () => {

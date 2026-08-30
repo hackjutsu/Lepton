@@ -569,7 +569,11 @@ async function assertFixturePageFind (window) {
           const input = document.querySelector('.find-in-page-input')
           const countText = count ? count.textContent : ''
           if (countText && countText !== '0/0') {
-            resolve({ countText, value: input ? input.value : '' })
+            resolve({
+              countText,
+              focusedAfterFind: input === document.activeElement,
+              value: input ? input.value : ''
+            })
             return
           }
           if (Date.now() > deadline) {
@@ -582,6 +586,57 @@ async function assertFixturePageFind (window) {
       })
     `, true)
     Object.assign(shortcutState, resultState)
+
+    shortcutState.rapidInput = await window.webContents.executeJavaScript(`
+      new Promise(resolve => {
+        const input = document.querySelector('.find-in-page-input')
+        const count = document.querySelector('.find-in-page-count')
+        const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+        const values = [
+          'fixtur', 'fixtu', 'fixt', 'fix', 'fi', 'f', '',
+          'f', 'fi', 'fix', 'fixt', 'fixtu', 'fixtur', 'fixture'
+        ]
+        const startedAt = performance.now()
+
+        input.focus()
+        for (const value of values) {
+          valueSetter.call(input, value)
+          input.dispatchEvent(new Event('input', { bubbles: true }))
+        }
+
+        const dispatchDurationMs = performance.now() - startedAt
+        const deadline = Date.now() + 5000
+        requestAnimationFrame(() => {
+          const nextFrameDelayMs = performance.now() - startedAt
+          function waitForSettledResults() {
+            const countText = count ? count.textContent : ''
+            if (input.value === 'fixture' && countText && countText !== '0/0') {
+              resolve({
+                countText,
+                dispatchDurationMs,
+                focused: input === document.activeElement,
+                nextFrameDelayMs,
+                value: input.value
+              })
+              return
+            }
+            if (Date.now() > deadline) {
+              resolve({
+                countText,
+                dispatchDurationMs,
+                focused: input === document.activeElement,
+                nextFrameDelayMs,
+                reason: 'rapid input results did not settle',
+                value: input.value
+              })
+              return
+            }
+            setTimeout(waitForSettledResults, 25)
+          }
+          waitForSettledResults()
+        })
+      })
+    `, true)
   }
 
   await wait(750)
@@ -606,7 +661,15 @@ async function assertFixturePageFind (window) {
     return
   }
 
-  if (!shortcutState.hasFindBar || shortcutState.value !== 'fixture' || !/^[1-9]\d*\/[1-9]\d*$/.test(shortcutState.settledCountText || '')) {
+  if (!shortcutState.hasFindBar ||
+      !shortcutState.focused ||
+      !shortcutState.focusedAfterFind ||
+      shortcutState.value !== 'fixture' ||
+      !shortcutState.rapidInput ||
+      !shortcutState.rapidInput.focused ||
+      shortcutState.rapidInput.value !== 'fixture' ||
+      !/^[1-9]\d*\/[1-9]\d*$/.test(shortcutState.rapidInput.countText || '') ||
+      !/^[1-9]\d*\/[1-9]\d*$/.test(shortcutState.settledCountText || '')) {
     throw new Error(`Expected active snippet fixture to support local page find: ${JSON.stringify(shortcutState)}`)
   }
 }
