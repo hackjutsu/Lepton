@@ -15,6 +15,7 @@ describe('find in page', () => {
   let root
 
   beforeEach(() => {
+    vi.useFakeTimers()
     const dom = new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>', {
       url: 'http://localhost'
     })
@@ -59,6 +60,7 @@ describe('find in page', () => {
     delete globalThis.document
     delete globalThis.HTMLElement
     delete globalThis.Node
+    vi.useRealTimers()
   })
 
   function openWithShortcut () {
@@ -88,13 +90,19 @@ describe('find in page', () => {
 
     const input = typeQuery('fixture')
     expect(document.activeElement).toBe(input)
+    expect(bridge.window.findInPage).not.toHaveBeenCalled()
+
+    act(() => {
+      vi.runOnlyPendingTimers()
+    })
+
     expect(bridge.window.findInPage).toHaveBeenLastCalledWith('fixture', {
       findNext: true,
       forward: true
     })
 
     act(() => {
-      findResultListener({ activeMatchOrdinal: 2, matches: 5 })
+      findResultListener({ activeMatchOrdinal: 2, finalUpdate: true, matches: 5 })
     })
 
     expect(container.querySelector('.find-in-page-count').textContent).toBe('2/5')
@@ -105,6 +113,9 @@ describe('find in page', () => {
       findRequestListener()
     })
     const input = typeQuery('snippet')
+    act(() => {
+      vi.runOnlyPendingTimers()
+    })
     const buttons = container.querySelectorAll('.find-in-page-button')
 
     act(() => {
@@ -127,6 +138,8 @@ describe('find in page', () => {
       forward: false
     })
 
+    const stopCallsBeforeClose = bridge.window.stopFindInPage.mock.calls.length
+
     act(() => {
       document.dispatchEvent(new window.KeyboardEvent('keydown', {
         bubbles: true,
@@ -134,8 +147,39 @@ describe('find in page', () => {
       }))
     })
 
-    expect(bridge.window.stopFindInPage).toHaveBeenCalledTimes(1)
+    expect(bridge.window.stopFindInPage).toHaveBeenCalledTimes(stopCallsBeforeClose + 1)
     expect(container.querySelector('.find-in-page')).toBeNull()
+  })
+
+  it('debounces typing and ignores incomplete native find results', () => {
+    openWithShortcut()
+
+    typeQuery('f')
+    typeQuery('fi')
+    typeQuery('fixture')
+
+    expect(bridge.window.findInPage).not.toHaveBeenCalled()
+    expect(bridge.window.stopFindInPage).toHaveBeenCalledTimes(3)
+
+    act(() => {
+      vi.runOnlyPendingTimers()
+    })
+
+    expect(bridge.window.findInPage).toHaveBeenCalledTimes(1)
+    expect(bridge.window.findInPage).toHaveBeenCalledWith('fixture', {
+      findNext: true,
+      forward: true
+    })
+
+    act(() => {
+      findResultListener({ activeMatchOrdinal: 1, finalUpdate: false, matches: 2 })
+    })
+    expect(container.querySelector('.find-in-page-count').textContent).toBe('0/0')
+
+    act(() => {
+      findResultListener({ activeMatchOrdinal: 1, finalUpdate: true, matches: 7 })
+    })
+    expect(container.querySelector('.find-in-page-count').textContent).toBe('1/7')
   })
 
   it('is limited to the snippet-reading surface', () => {

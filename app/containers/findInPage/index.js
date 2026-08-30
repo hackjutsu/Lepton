@@ -4,6 +4,8 @@ import { t } from '../../utilities/i18n'
 
 import './index.scss'
 
+const FIND_DEBOUNCE_MS = 100
+
 export function isFindInPageAvailable (state) {
   const userSession = state.userSession || {}
   const gistRawModal = state.gistRawModal || {}
@@ -33,6 +35,8 @@ class FindInPage extends Component {
       query: ''
     }
     this.inputRef = React.createRef()
+    this.findTimer = null
+    this.lastSearchedQuery = ''
     this.unsubscribeFindRequest = null
     this.unsubscribeFindResult = null
 
@@ -57,25 +61,34 @@ class FindInPage extends Component {
 
   componentWillUnmount () {
     document.removeEventListener('keydown', this.handleGlobalKeyDown, true)
+    this.cancelScheduledFind()
     if (this.unsubscribeFindRequest) this.unsubscribeFindRequest()
     if (this.unsubscribeFindResult) this.unsubscribeFindResult()
     if (this.state.isOpen) this.getBridge().window.stopFindInPage()
   }
 
-  focusInput () {
+  cancelScheduledFind () {
+    if (!this.findTimer) return
+    clearTimeout(this.findTimer)
+    this.findTimer = null
+  }
+
+  focusInput (selectQuery = false) {
     if (!this.inputRef.current) return
     this.inputRef.current.focus()
-    this.inputRef.current.select()
+    if (selectQuery) this.inputRef.current.select()
   }
 
   open () {
     this.setState({ isOpen: true }, () => {
-      this.focusInput()
+      this.focusInput(true)
       if (this.state.query) this.runFind(this.state.query, true)
     })
   }
 
   close () {
+    this.cancelScheduledFind()
+    this.lastSearchedQuery = ''
     this.getBridge().window.stopFindInPage()
     this.setState({
       activeMatchOrdinal: 0,
@@ -86,6 +99,7 @@ class FindInPage extends Component {
 
   runFind (query, startNewSession, forward = true) {
     if (!query) return
+    this.lastSearchedQuery = query
     this.getBridge().window.findInPage(query, {
       // Electron uses findNext=true for a new session and false to continue it.
       findNext: startNewSession,
@@ -93,9 +107,23 @@ class FindInPage extends Component {
     })
   }
 
+  scheduleFind (query) {
+    this.cancelScheduledFind()
+    this.findTimer = setTimeout(() => {
+      this.findTimer = null
+      if (!this.state.isOpen || this.state.query !== query) return
+      this.runFind(query, true)
+    }, FIND_DEBOUNCE_MS)
+  }
+
   navigate (forward) {
     if (!this.state.query) return
-    this.runFind(this.state.query, false, forward)
+    this.cancelScheduledFind()
+    this.runFind(
+      this.state.query,
+      this.lastSearchedQuery !== this.state.query,
+      forward
+    )
     this.focusInput()
   }
 
@@ -126,21 +154,20 @@ class FindInPage extends Component {
 
   handleQueryChange (event) {
     const query = event.target.value
+    this.cancelScheduledFind()
+    this.lastSearchedQuery = ''
+    this.getBridge().window.stopFindInPage()
     this.setState({
       activeMatchOrdinal: 0,
       matches: 0,
       query
     })
 
-    if (query) {
-      this.runFind(query, true)
-    } else {
-      this.getBridge().window.stopFindInPage()
-    }
+    if (query) this.scheduleFind(query)
   }
 
   handleResult (result) {
-    if (!this.state.isOpen || !this.state.query || !result) return
+    if (!this.state.isOpen || !this.state.query || !result || result.finalUpdate === false) return
     this.setState({
       activeMatchOrdinal: result.activeMatchOrdinal || 0,
       matches: result.matches || 0

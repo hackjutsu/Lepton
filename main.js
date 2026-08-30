@@ -196,6 +196,7 @@ function createWindow (autoLogin) {
 
   mainWindow.webContents.on('found-in-page', (event, result) => {
     if (!result || result.requestId !== activeFindRequestId) return
+    if (result.finalUpdate !== true) return
     if (!mainWindow || mainWindow.isDestroyed()) return
 
     mainWindow.webContents.send('lepton:window:found-in-page', {
