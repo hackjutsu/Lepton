@@ -55,7 +55,6 @@ function createSafeStorage (options = {}) {
 
 function createLogger () {
   return {
-    info: vi.fn(),
     warn: vi.fn()
   }
 }
@@ -143,39 +142,16 @@ describe('access token storage', () => {
     expect(getSafeStorage).not.toHaveBeenCalled()
   })
 
-  it('migrates a legacy plaintext cached token into encrypted storage', () => {
+  it('reads a legacy plaintext cached token without relocating it', () => {
     const localStorage = createMemoryStorage({
       [LEGACY_TOKEN_KEY]: 'legacy-token'
     })
-    const logger = createLogger()
+    const safeStorage = createSafeStorage()
     const accessTokenStorage = createAccessTokenStorage({
       conf: createConf({ 'security:cachedAccessTokenStorage': 'encrypted' }),
       isDev: false,
       localStorage,
-      logger,
-      safeStorage: createSafeStorage()
-    })
-
-    expect(accessTokenStorage.get()).toEqual({
-      status: true,
-      data: 'legacy-token'
-    })
-    expect(localStorage.values[LEGACY_TOKEN_KEY]).toBeNull()
-    expect(localStorage.values[ENCRYPTED_TOKEN_KEY].provider).toBe(SAFE_STORAGE_PROVIDER)
-    expect(logger.info).toHaveBeenCalledWith('[auth] Migrated cached access token to encrypted storage')
-  })
-
-  it('falls back to the legacy file token when encrypted storage is unavailable', () => {
-    const localStorage = createMemoryStorage({
-      [LEGACY_TOKEN_KEY]: 'legacy-token'
-    })
-    const logger = createLogger()
-    const accessTokenStorage = createAccessTokenStorage({
-      conf: createConf({ 'security:cachedAccessTokenStorage': 'encrypted' }),
-      isDev: false,
-      localStorage,
-      logger,
-      safeStorage: createSafeStorage({ available: false })
+      safeStorage
     })
 
     expect(accessTokenStorage.get()).toEqual({
@@ -184,12 +160,28 @@ describe('access token storage', () => {
     })
     expect(localStorage.values[LEGACY_TOKEN_KEY]).toBe('legacy-token')
     expect(localStorage.values[ENCRYPTED_TOKEN_KEY]).toBeUndefined()
-    expect(logger.warn).toHaveBeenCalledWith(
-      '[auth] Encrypted cached access token storage unavailable: safeStorage encryption unavailable'
-    )
-    expect(logger.warn).toHaveBeenCalledWith(
-      '[auth] Falling back to local file for cached access token: safeStorage encryption unavailable'
-    )
+    expect(safeStorage.encryptString).not.toHaveBeenCalled()
+  })
+
+  it('reads the file token without probing safeStorage when no encrypted token exists', () => {
+    const localStorage = createMemoryStorage({
+      [LEGACY_TOKEN_KEY]: 'legacy-token'
+    })
+    const safeStorage = createSafeStorage({ available: false })
+    const accessTokenStorage = createAccessTokenStorage({
+      conf: createConf({ 'security:cachedAccessTokenStorage': 'encrypted' }),
+      isDev: false,
+      localStorage,
+      safeStorage
+    })
+
+    expect(accessTokenStorage.get()).toEqual({
+      status: true,
+      data: 'legacy-token'
+    })
+    expect(localStorage.values[LEGACY_TOKEN_KEY]).toBe('legacy-token')
+    expect(localStorage.values[ENCRYPTED_TOKEN_KEY]).toBeUndefined()
+    expect(safeStorage.isEncryptionAvailable).not.toHaveBeenCalled()
   })
 
   it('falls back to the legacy file on Linux when safeStorage selects basic_text', () => {
@@ -245,7 +237,7 @@ describe('access token storage', () => {
     })
   })
 
-  it('migrates a fallback file token after safeStorage becomes available', () => {
+  it('relocates a fallback token only when the token is updated', () => {
     const localStorage = createMemoryStorage()
     const safeStorage = createSafeStorage({ available: false })
     const accessTokenStorage = createAccessTokenStorage({
@@ -262,11 +254,19 @@ describe('access token storage', () => {
       status: true,
       data: 'token-1'
     })
+    expect(localStorage.values[LEGACY_TOKEN_KEY]).toBe('token-1')
+    expect(localStorage.values[ENCRYPTED_TOKEN_KEY]).toBeNull()
+    expect(safeStorage.encryptString).not.toHaveBeenCalled()
+
+    expect(accessTokenStorage.set('token-2')).toEqual({
+      status: true,
+      data: 'token-2'
+    })
     expect(localStorage.values[LEGACY_TOKEN_KEY]).toBeNull()
     expect(localStorage.values[ENCRYPTED_TOKEN_KEY]).toEqual({
       version: 1,
       provider: SAFE_STORAGE_PROVIDER,
-      data: Buffer.from('encrypted:token-1', 'utf8').toString('base64')
+      data: Buffer.from('encrypted:token-2', 'utf8').toString('base64')
     })
   })
 
