@@ -156,18 +156,22 @@ class FindInPage extends Component {
     const query = event.target.value
     this.cancelScheduledFind()
     this.lastSearchedQuery = ''
-    this.getBridge().window.stopFindInPage()
     this.setState({
       activeMatchOrdinal: 0,
       matches: 0,
       query
     })
 
-    if (query) this.scheduleFind(query)
+    if (query) {
+      this.scheduleFind(query)
+    } else {
+      this.getBridge().window.stopFindInPage()
+    }
   }
 
   handleResult (result) {
     if (!this.state.isOpen || !this.state.query || !result || result.finalUpdate === false) return
+    if (result.query !== this.state.query) return
     this.setState({
       activeMatchOrdinal: result.activeMatchOrdinal || 0,
       matches: result.matches || 0

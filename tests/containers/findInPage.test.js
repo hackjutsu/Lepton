@@ -102,7 +102,7 @@ describe('find in page', () => {
     })
 
     act(() => {
-      findResultListener({ activeMatchOrdinal: 2, finalUpdate: true, matches: 5 })
+      findResultListener({ activeMatchOrdinal: 2, finalUpdate: true, matches: 5, query: 'fixture' })
     })
 
     expect(container.querySelector('.find-in-page-count').textContent).toBe('2/5')
@@ -151,7 +151,7 @@ describe('find in page', () => {
     expect(container.querySelector('.find-in-page')).toBeNull()
   })
 
-  it('debounces typing and ignores incomplete native find results', () => {
+  it('debounces typing and ignores stale or incomplete native find results', () => {
     openWithShortcut()
 
     typeQuery('f')
@@ -159,7 +159,7 @@ describe('find in page', () => {
     typeQuery('fixture')
 
     expect(bridge.window.findInPage).not.toHaveBeenCalled()
-    expect(bridge.window.stopFindInPage).toHaveBeenCalledTimes(3)
+    expect(bridge.window.stopFindInPage).not.toHaveBeenCalled()
 
     act(() => {
       vi.runOnlyPendingTimers()
@@ -172,14 +172,40 @@ describe('find in page', () => {
     })
 
     act(() => {
-      findResultListener({ activeMatchOrdinal: 1, finalUpdate: false, matches: 2 })
+      findResultListener({ activeMatchOrdinal: 1, finalUpdate: true, matches: 2, query: 'fi' })
+      findResultListener({ activeMatchOrdinal: 1, finalUpdate: false, matches: 2, query: 'fixture' })
     })
     expect(container.querySelector('.find-in-page-count').textContent).toBe('0/0')
 
     act(() => {
-      findResultListener({ activeMatchOrdinal: 1, finalUpdate: true, matches: 7 })
+      findResultListener({ activeMatchOrdinal: 1, finalUpdate: true, matches: 7, query: 'fixture' })
     })
     expect(container.querySelector('.find-in-page-count').textContent).toBe('1/7')
+  })
+
+  it('does not clear native highlights for every backspace', () => {
+    openWithShortcut()
+    typeQuery('fixture')
+    act(() => {
+      vi.runOnlyPendingTimers()
+    })
+
+    typeQuery('fixtur')
+    typeQuery('fixtu')
+    typeQuery('fixt')
+
+    expect(bridge.window.stopFindInPage).not.toHaveBeenCalled()
+    expect(bridge.window.findInPage).toHaveBeenCalledTimes(1)
+
+    act(() => {
+      vi.runOnlyPendingTimers()
+    })
+
+    expect(bridge.window.findInPage).toHaveBeenCalledTimes(2)
+    expect(bridge.window.findInPage).toHaveBeenLastCalledWith('fixt', {
+      findNext: true,
+      forward: true
+    })
   })
 
   it('is limited to the snippet-reading surface', () => {

@@ -78,6 +78,7 @@ let authFlow = null
 let githubApi = null
 let operationType = 0
 let activeFindRequestId = null
+let activeFindQuery = ''
 
 const MACOS_TRAY_ICON_SIZE = 18
 
@@ -202,7 +203,8 @@ function createWindow (autoLogin) {
     mainWindow.webContents.send('lepton:window:found-in-page', {
       activeMatchOrdinal: result.activeMatchOrdinal,
       finalUpdate: result.finalUpdate,
-      matches: result.matches
+      matches: result.matches,
+      query: activeFindQuery
     })
   })
 
@@ -687,6 +689,7 @@ function setUpBridgeIpcHandlers () {
     if (!isMainWindowSender(event) || typeof text !== 'string' || text.length === 0 || text.length > 1000) return
     const findOptions = options && typeof options === 'object' ? options : {}
 
+    activeFindQuery = text
     activeFindRequestId = mainWindow.webContents.findInPage(text, {
       findNext: findOptions.findNext === true,
       forward: findOptions.forward !== false,
@@ -697,6 +700,7 @@ function setUpBridgeIpcHandlers () {
   ipcMain.on('lepton:window:stop-find-in-page', (event) => {
     if (!isMainWindowSender(event)) return
     activeFindRequestId = null
+    activeFindQuery = ''
     mainWindow.webContents.stopFindInPage('clearSelection')
   })
 
