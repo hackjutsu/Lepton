@@ -96,12 +96,14 @@ function createAccessTokenStorage ({
   function writeFileTokenFallback (token, unavailableReason) {
     logFileStorageFallback(unavailableReason)
 
-    const encryptedClear = localStorage.set(ENCRYPTED_TOKEN_KEY, null)
     const legacyWrite = localStorage.set(LEGACY_TOKEN_KEY, token)
+    if (!legacyWrite.status) return createResult(false, null, legacyWrite.error)
+
+    const encryptedClear = localStorage.set(ENCRYPTED_TOKEN_KEY, null)
     return createResult(
-      Boolean(encryptedClear.status && legacyWrite.status),
+      Boolean(encryptedClear.status),
       token,
-      encryptedClear.error || legacyWrite.error
+      encryptedClear.error
     )
   }
 

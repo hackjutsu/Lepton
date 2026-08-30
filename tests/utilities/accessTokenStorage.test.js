@@ -237,6 +237,41 @@ describe('access token storage', () => {
     })
   })
 
+  it('preserves the encrypted token when the fallback file write fails', () => {
+    const encryptedRecord = {
+      version: 1,
+      provider: SAFE_STORAGE_PROVIDER,
+      data: Buffer.from('encrypted:stale-token', 'utf8').toString('base64')
+    }
+    const localStorage = createMemoryStorage({
+      [ENCRYPTED_TOKEN_KEY]: encryptedRecord
+    })
+    const writeError = new Error('fallback write failed')
+    localStorage.set.mockImplementation((key, value) => {
+      if (key === LEGACY_TOKEN_KEY) {
+        return { status: false, data: null, error: writeError }
+      }
+      localStorage.values[key] = value
+      return { status: true, data: value }
+    })
+    const accessTokenStorage = createAccessTokenStorage({
+      conf: createConf({ 'security:cachedAccessTokenStorage': 'encrypted' }),
+      isDev: false,
+      localStorage,
+      safeStorage: createSafeStorage({ available: false })
+    })
+
+    expect(accessTokenStorage.set('current-token')).toEqual({
+      status: false,
+      data: null,
+      error: writeError
+    })
+    expect(localStorage.values[ENCRYPTED_TOKEN_KEY]).toEqual(encryptedRecord)
+    expect(localStorage.values[LEGACY_TOKEN_KEY]).toBeUndefined()
+    expect(localStorage.set).toHaveBeenCalledTimes(1)
+    expect(localStorage.set).toHaveBeenCalledWith(LEGACY_TOKEN_KEY, 'current-token')
+  })
+
   it('relocates a fallback token only when the token is updated', () => {
     const localStorage = createMemoryStorage()
     const safeStorage = createSafeStorage({ available: false })
