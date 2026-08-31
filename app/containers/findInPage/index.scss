@@ -27,10 +27,6 @@
   width: 220px;
 }
 
-.find-in-page-input:focus {
-  border-color: var(--accent-regular);
-}
-
 .find-in-page-input::placeholder {
   color: var(--text-secondary);
 }
