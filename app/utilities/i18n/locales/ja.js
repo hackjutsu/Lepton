@@ -105,6 +105,7 @@ module.exports = {
     deletionFailed: '削除に失敗しました',
     gistCreated: 'スニペットを作成しました',
     gistCreationFailed: 'スニペットの作成に失敗しました',
+    gistDraftSaved: '下書きをローカルに保存しました。接続が復旧したら再試行してください。',
     gistDeleted: 'スニペットを削除しました',
     gistUpdateFailed: 'スニペットの更新に失敗しました',
     gistUpdated: 'スニペットを更新しました',

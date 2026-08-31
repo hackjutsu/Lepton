@@ -105,6 +105,7 @@ module.exports = {
     deletionFailed: 'Suppression echouee',
     gistCreated: 'Extrait cree',
     gistCreationFailed: 'Creation de l extrait echouee',
+    gistDraftSaved: 'Votre brouillon a ete enregistre localement. Reessayez lorsque votre connexion sera retablie.',
     gistDeleted: 'L extrait a ete supprime',
     gistUpdateFailed: 'Mise a jour de l extrait echouee',
     gistUpdated: 'Extrait mis a jour',

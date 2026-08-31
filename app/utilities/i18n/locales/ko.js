@@ -105,6 +105,7 @@ module.exports = {
     deletionFailed: '삭제 실패',
     gistCreated: '스니펫이 생성되었습니다',
     gistCreationFailed: '스니펫 생성 실패',
+    gistDraftSaved: '초안이 로컬에 저장되었습니다. 연결이 복구되면 다시 시도하세요.',
     gistDeleted: '스니펫이 삭제되었습니다',
     gistUpdateFailed: '스니펫 업데이트 실패',
     gistUpdated: '스니펫이 업데이트되었습니다',

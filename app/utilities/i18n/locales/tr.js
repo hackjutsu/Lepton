@@ -105,6 +105,7 @@ module.exports = {
     deletionFailed: 'Silme başarısız',
     gistCreated: 'Kod parçası oluşturuldu',
     gistCreationFailed: 'Kod parçası oluşturulamadı',
+    gistDraftSaved: 'Taslağınız yerel olarak kaydedildi. Bağlantınız geri geldiğinde tekrar deneyin.',
     gistDeleted: 'Kod parçası silindi',
     gistUpdateFailed: 'Kod parçası güncellenemedi',
     gistUpdated: 'Kod parçası güncellendi',

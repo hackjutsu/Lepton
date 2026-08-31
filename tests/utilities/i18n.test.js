@@ -111,6 +111,9 @@ describe('i18n utilities', () => {
     expect(t('menu.submitGist')).toBe('Submit Snippet')
     expect(t('menu.syncGist')).toBe('Sync Snippet')
     expect(t('notification.gistCreated')).toBe('Snippet created')
+    expect(t('notification.gistDraftSaved')).toBe(
+      'Your draft was saved locally. Retry when your connection returns.'
+    )
     expect(t('snippet.deleteConfirmTitle')).toBe('Delete the snippet?')
   })
 

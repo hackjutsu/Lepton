@@ -28,6 +28,12 @@ import {
   CREATE_SINGLE_GIST,
   getGitHubApi,
 } from '../../utilities/githubApi'
+import {
+  clearNewGistDraft,
+  createNewGistDraft,
+  createNewGistWithDraft,
+  loadNewGistDraft,
+} from '../../utilities/newGistDraft'
 
 import './index.scss'
 
@@ -53,6 +59,25 @@ const kIsPrivate = conf.get('snippet:newSnippetPrivate')
 const hideProfilePhoto = conf.get('userPanel:hideProfilePhoto')
 
 class UserPanel extends Component {
+  constructor (props) {
+    super(props)
+    this.newGistInitialData = loadNewGistDraft(
+      electronBridge.localStorage,
+      this.getUserLogin(props)
+    ) || this.createEmptyNewGistData()
+  }
+
+  getUserLogin (props = this.props) {
+    const profile = props.userSession && props.userSession.profile
+    return profile && profile.login
+  }
+
+  createEmptyNewGistData () {
+    return createNewGistDraft({
+      private: kIsPrivate
+    })
+  }
+
   componentDidMount () {
     this.ipcSubscriptions = []
     subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'new-gist-renderer', () => {
@@ -74,6 +99,9 @@ class UserPanel extends Component {
     const isPublic = data.private === undefined ? true : !data.private
     const description = data.description.trim()
     const processedFiles = {}
+    const userLogin = this.getUserLogin()
+
+    this.newGistInitialData = createNewGistDraft(data)
 
     data.gistFiles.forEach((file) => {
       processedFiles[file.filename.trim()] = {
@@ -81,17 +109,38 @@ class UserPanel extends Component {
       }
     })
 
-    return getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
-      .catch((err) => {
-        notifyFailure(t('notification.gistCreationFailed'))
-        logger.error(JSON.stringify(err))
-      })
-      .then((response) => {
-        this.updateGistsStoreWithNewGist(response)
-      })
-      .finally(() => {
-        this.closeGistEditorModal()
-      })
+    return createNewGistWithDraft({
+      storage: electronBridge.localStorage,
+      userLogin,
+      data,
+      createGist: () => getGitHubApi(CREATE_SINGLE_GIST)(
+        this.props.accessToken,
+        description,
+        processedFiles,
+        isPublic
+      )
+    }).then((result) => {
+      if (result.status === 'failed') {
+        notifyFailure(
+          t('notification.gistCreationFailed'),
+          result.draftWrite && result.draftWrite.status ? t('notification.gistDraftSaved') : ''
+        )
+        logger.error(result.error && result.error.message
+          ? result.error.message
+          : String(result.error))
+        return
+      }
+
+      this.updateGistsStoreWithNewGist(result.gistDetails)
+      this.newGistInitialData = this.createEmptyNewGistData()
+
+      const draftClear = clearNewGistDraft(electronBridge.localStorage, userLogin)
+      if (!draftClear || !draftClear.status) {
+        logger.error('Failed to clear the saved new snippet draft')
+      }
+
+      this.closeGistEditorModal()
+    })
   }
 
   updateGistsStoreWithNewGist (gistDetails) {
@@ -159,16 +208,9 @@ class UserPanel extends Component {
   }
 
   renderGistEditorModalBody () {
-    const initialData = {
-      description: '',
-      private: kIsPrivate,
-      gists: [
-        { filename: '', content: '' }
-      ]
-    }
     return (
       <GistEditorForm
-        initialData={ initialData }
+        initialData={ this.newGistInitialData }
         formStyle={ NEW_GIST }
         handleCancel = { this.closeGistEditorModal.bind(this) }
         onSubmit={ this.handleCreateSingleGist.bind(this) }></GistEditorForm>

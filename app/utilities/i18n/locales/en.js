@@ -105,6 +105,7 @@ module.exports = {
     deletionFailed: 'Deletion failed',
     gistCreated: 'Snippet created',
     gistCreationFailed: 'Snippet creation failed',
+    gistDraftSaved: 'Your draft was saved locally. Retry when your connection returns.',
     gistDeleted: 'The snippet has been deleted',
     gistUpdateFailed: 'Snippet update failed',
     gistUpdated: 'Snippet updated',

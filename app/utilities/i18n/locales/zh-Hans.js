@@ -105,6 +105,7 @@ module.exports = {
     deletionFailed: '删除失败',
     gistCreated: '代码片段已创建',
     gistCreationFailed: '代码片段创建失败',
+    gistDraftSaved: '草稿已保存在本地。网络恢复后请重试。',
     gistDeleted: '代码片段已删除',
     gistUpdateFailed: '代码片段更新失败',
     gistUpdated: '代码片段已更新',

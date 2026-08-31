@@ -105,6 +105,7 @@ module.exports = {
     deletionFailed: 'No se pudo eliminar',
     gistCreated: 'Snippet creado',
     gistCreationFailed: 'No se pudo crear el snippet',
+    gistDraftSaved: 'Tu borrador se guardo localmente. Vuelve a intentarlo cuando se restablezca la conexion.',
     gistDeleted: 'El snippet se elimino',
     gistUpdateFailed: 'No se pudo actualizar el snippet',
     gistUpdated: 'Snippet actualizado',
