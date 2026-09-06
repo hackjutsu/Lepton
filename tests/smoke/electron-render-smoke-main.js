@@ -771,6 +771,70 @@ async function assertFixturePageFind (window) {
   }
 }
 
+async function assertFixtureNewDraftRecovery (window) {
+  if (process.env.LEPTON_RENDER_FIXTURE !== 'new-draft') return
+
+  const recoveryState = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const description = document.querySelector('.gist-editor-input-area')
+      const loadButton = Array.from(document.querySelectorAll('.new-gist-draft-actions button'))
+        .find(button => button.textContent.trim() === 'Load draft')
+      const initialState = {
+        description: description ? description.value : null,
+        hasHelper: document.body.innerText.includes('Submitting without loading the local draft will discard it.')
+      }
+
+      loadButton.click()
+      setTimeout(() => {
+        const loadedDescription = document.querySelector('.gist-editor-input-area')
+        const loadedFilename = document.querySelector('.gist-editor-filename-area')
+        const editor = document.querySelector('.CodeMirror')
+        const loadedState = {
+          content: editor && editor.CodeMirror ? editor.CodeMirror.getValue() : null,
+          description: loadedDescription ? loadedDescription.value : null,
+          filename: loadedFilename ? loadedFilename.value : null,
+          hasHelper: document.body.innerText.includes('Submitting without loading the local draft will discard it.'),
+          hasLoadedStatus: document.body.innerText.includes('Local draft loaded')
+        }
+        resolve({ initialState, loadedState })
+      }, 100)
+    })
+  `, true)
+
+  if (
+    recoveryState.initialState.description !== '' ||
+    !recoveryState.initialState.hasHelper ||
+    recoveryState.loadedState.description !== 'Recovered API helper' ||
+    recoveryState.loadedState.filename !== 'recovered.js' ||
+    recoveryState.loadedState.content !== 'const recovered = true' ||
+    recoveryState.loadedState.hasHelper ||
+    !recoveryState.loadedState.hasLoadedStatus
+  ) {
+    throw new Error(`Expected local draft load/drop flow to preserve normal editor content: ${JSON.stringify(recoveryState)}`)
+  }
+
+  await captureScreenshot(window, 'electron-render-new-draft-loaded.png')
+
+  const droppedState = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const dropButton = Array.from(document.querySelectorAll('.new-gist-draft-actions button'))
+        .find(button => button.textContent.trim() === 'Drop draft')
+      dropButton.click()
+      setTimeout(() => {
+        const description = document.querySelector('.gist-editor-input-area')
+        resolve({
+          description: description ? description.value : null,
+          hasCallout: Boolean(document.querySelector('.new-gist-draft-callout'))
+        })
+      }, 100)
+    })
+  `, true)
+
+  if (droppedState.description !== '' || droppedState.hasCallout) {
+    throw new Error(`Expected dropping a loaded local draft to reset the editor: ${JSON.stringify(droppedState)}`)
+  }
+}
+
 async function main () {
   let window
 
@@ -784,6 +848,10 @@ async function main () {
       assertFixtureRendererState(await getRendererState(window))
       await assertFixtureLoginModeSwitch(window)
       await assertFixturePageFind(window)
+      if (process.env.LEPTON_RENDER_FIXTURE === 'new-draft') {
+        await captureScreenshot(window, 'electron-render-new-draft-before-actions.png')
+      }
+      await assertFixtureNewDraftRecovery(window)
       await captureScreenshot(window, `electron-render-${process.env.LEPTON_RENDER_FIXTURE}-success.png`)
       console.log(`electron render fixture smoke test passed: ${process.env.LEPTON_RENDER_FIXTURE}`)
     } else {

@@ -49,6 +49,11 @@ const RENDER_FIXTURES = [
     text: 'New'
   },
   {
+    name: 'new-draft',
+    selector: '.new-gist-draft-callout',
+    text: 'Local draft available|Created Sep 6, 2026|Load draft|Drop draft|Submitting without loading the local draft will discard it.'
+  },
+  {
     name: 'about',
     selector: '.about-modal .modal-title',
     text: 'About'

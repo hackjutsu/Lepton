@@ -85,7 +85,21 @@
   }
 
   .control-button-group {
+    align-items: center;
+    display: flex;
     height: 45px;
+    justify-content: flex-end;
+  }
+
+  .gist-editor-footer-helper {
+    @extend .font-style-base;
+    align-items: center;
+    color: var(--text-secondary);
+    display: flex;
+    font-size: 12px;
+    gap: 5px;
+    margin-right: auto;
+    min-width: 0;
   }
 
   .gist-editor-customized-tag {

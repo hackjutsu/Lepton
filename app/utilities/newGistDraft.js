@@ -26,11 +26,17 @@ export function createNewGistDraft (data = {}) {
     }))
     : []
 
-  return {
+  const draft = {
     description: typeof data.description === 'string' ? data.description : '',
     private: Boolean(data.private),
     gists: gists.length ? gists : [{ filename: '', content: '' }]
   }
+
+  if (typeof data.createdAt === 'string' && !Number.isNaN(Date.parse(data.createdAt))) {
+    draft.createdAt = data.createdAt
+  }
+
+  return draft
 }
 
 function isNewGistDraft (draft) {
@@ -39,6 +45,8 @@ function isNewGistDraft (draft) {
     typeof draft === 'object' &&
     typeof draft.description === 'string' &&
     typeof draft.private === 'boolean' &&
+    typeof draft.createdAt === 'string' &&
+    !Number.isNaN(Date.parse(draft.createdAt)) &&
     Array.isArray(draft.gists) &&
     draft.gists.length &&
     draft.gists.every(file =>
@@ -59,11 +67,11 @@ export function loadNewGistDraft (storage, userLogin) {
   }
 }
 
-export function saveNewGistDraft (storage, userLogin, data) {
+export function saveNewGistDraft (storage, userLogin, data, createdAt = new Date().toISOString()) {
   try {
     return storage.set(
       getNewGistDraftStorageKey(userLogin),
-      createNewGistDraft(data)
+      createNewGistDraft(Object.assign({}, data, { createdAt }))
     )
   } catch (error) {
     return createStorageFailure(error)

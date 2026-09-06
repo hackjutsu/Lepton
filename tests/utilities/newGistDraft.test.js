@@ -25,6 +25,8 @@ function createMemoryStorage (initialValues = {}) {
 }
 
 describe('new snippet draft storage', () => {
+  const createdAt = '2026-09-06T21:35:00.000Z'
+
   it('normalizes editor submissions into restorable initial data', () => {
     expect(createNewGistDraft({
       description: 'network-safe snippet',
@@ -49,11 +51,12 @@ describe('new snippet draft storage', () => {
       gistFiles: [{ filename: 'draft.md', content: '# Draft' }]
     }
 
-    expect(saveNewGistDraft(storage, 'octocat', draft).status).toBe(true)
+    expect(saveNewGistDraft(storage, 'octocat', draft, createdAt).status).toBe(true)
     expect(loadNewGistDraft(storage, 'other-user')).toBeNull()
     expect(loadNewGistDraft(storage, 'octocat')).toEqual({
       description: 'octocat draft',
       private: false,
+      createdAt,
       gists: [{ filename: 'draft.md', content: '# Draft' }]
     })
   })
@@ -65,7 +68,7 @@ describe('new snippet draft storage', () => {
     saveNewGistDraft(storage, 'octocat', {
       description: 'saved before request',
       gistFiles: [{ filename: 'draft.txt', content: 'keep me' }]
-    })
+    }, createdAt)
 
     expect(storage.values[key]).toEqual(expect.objectContaining({
       description: 'saved before request'
@@ -98,6 +101,7 @@ describe('new snippet draft storage', () => {
     expect(loadNewGistDraft(storage, 'octocat')).toEqual({
       description: 'saved before request',
       private: false,
+      createdAt: expect.any(String),
       gists: [{ filename: 'draft.txt', content: 'keep me' }]
     })
   })

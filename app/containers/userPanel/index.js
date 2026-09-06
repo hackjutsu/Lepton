@@ -8,7 +8,7 @@ import Modal from '../compatModal'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
-import { t } from '../../utilities/i18n'
+import { getLocale, t } from '../../utilities/i18n'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -61,10 +61,15 @@ const hideProfilePhoto = conf.get('userPanel:hideProfilePhoto')
 class UserPanel extends Component {
   constructor (props) {
     super(props)
-    this.newGistInitialData = loadNewGistDraft(
+    const newGistDraft = loadNewGistDraft(
       electronBridge.localStorage,
       this.getUserLogin(props)
-    ) || this.createEmptyNewGistData()
+    )
+    this.newGistInitialData = this.createEmptyNewGistData()
+    this.state = {
+      newGistDraft,
+      newGistDraftLoaded: false
+    }
   }
 
   getUserLogin (props = this.props) {
@@ -128,6 +133,12 @@ class UserPanel extends Component {
         logger.error(result.error && result.error.message
           ? result.error.message
           : String(result.error))
+        if (result.draftWrite && result.draftWrite.status) {
+          this.setState({
+            newGistDraft: result.draftWrite.data,
+            newGistDraftLoaded: true
+          })
+        }
         return
       }
 
@@ -138,6 +149,11 @@ class UserPanel extends Component {
       if (!draftClear || !draftClear.status) {
         logger.error('Failed to clear the saved new snippet draft')
       }
+
+      this.setState({
+        newGistDraft: null,
+        newGistDraftLoaded: false
+      })
 
       this.closeGistEditorModal()
     })
@@ -208,12 +224,81 @@ class UserPanel extends Component {
   }
 
   renderGistEditorModalBody () {
+    const showDraftReplacementWarning = Boolean(
+      this.state.newGistDraft && !this.state.newGistDraftLoaded
+    )
+
     return (
       <GistEditorForm
         initialData={ this.newGistInitialData }
         formStyle={ NEW_GIST }
+        footerHelper={ showDraftReplacementWarning
+          ? t('editor.localDraftSubmitWarning')
+          : '' }
         handleCancel = { this.closeGistEditorModal.bind(this) }
         onSubmit={ this.handleCreateSingleGist.bind(this) }></GistEditorForm>
+    )
+  }
+
+  formatNewGistDraftCreatedAt () {
+    return new Intl.DateTimeFormat(getLocale(), {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    }).format(new Date(this.state.newGistDraft.createdAt))
+  }
+
+  handleLoadNewGistDraft () {
+    this.newGistInitialData = createNewGistDraft(this.state.newGistDraft)
+    this.setState({ newGistDraftLoaded: true })
+  }
+
+  handleDropNewGistDraft () {
+    const draftClear = clearNewGistDraft(
+      electronBridge.localStorage,
+      this.getUserLogin()
+    )
+    if (!draftClear || !draftClear.status) {
+      logger.error('Failed to drop the saved new snippet draft')
+      return
+    }
+
+    if (this.state.newGistDraftLoaded) {
+      this.newGistInitialData = this.createEmptyNewGistData()
+    }
+    this.setState({
+      newGistDraft: null,
+      newGistDraftLoaded: false
+    })
+  }
+
+  renderNewGistDraftCallout () {
+    if (!this.state.newGistDraft) return null
+
+    return (
+      <div className='new-gist-draft-callout' role='status'>
+        <span className='new-gist-draft-icon' aria-hidden='true'>◷</span>
+        <div className='new-gist-draft-summary'>
+          <strong>{ this.state.newGistDraftLoaded
+            ? t('editor.localDraftLoaded')
+            : t('editor.localDraftAvailable') }</strong>
+          <span>{ t('editor.localDraftCreatedAt', {
+            timestamp: this.formatNewGistDraftCreatedAt()
+          }) }</span>
+        </div>
+        <div className='new-gist-draft-actions'>
+          { !this.state.newGistDraftLoaded && (
+            <button type='button' onClick={ this.handleLoadNewGistDraft.bind(this) }>
+              { t('editor.loadLocalDraft') }
+            </button>
+          ) }
+          <button
+            className='drop-new-gist-draft'
+            type='button'
+            onClick={ this.handleDropNewGistDraft.bind(this) }>
+            { t('editor.dropLocalDraft') }
+          </button>
+        </div>
+      </div>
     )
   }
 
@@ -231,6 +316,7 @@ class UserPanel extends Component {
           <Modal.Title>{ t('userPanel.new') }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          { this.renderNewGistDraftCallout() }
           { this.renderGistEditorModalBody.bind(this)() }
         </Modal.Body>
       </Modal>
