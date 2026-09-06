@@ -69,6 +69,50 @@
 
 .new-modal {
   width: 98vw;
+
+  .new-gist-draft-callout {
+    align-items: center;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    color: var(--text-primary);
+    display: flex;
+    margin: 0 5px 15px;
+    min-height: 64px;
+    padding: 10px 14px;
+  }
+
+  .new-gist-draft-icon {
+    font-size: 26px;
+    line-height: 1;
+    margin-right: 12px;
+  }
+
+  .new-gist-draft-summary {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .new-gist-draft-actions {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 20px;
+
+    button {
+      background: transparent;
+      border: 0;
+      color: #4078C0;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .drop-new-gist-draft {
+      color: #B94A48;
+    }
+  }
 }
 
 /* Global setting affecting all dialogs (NEW/EDIT) if not overwritten. */

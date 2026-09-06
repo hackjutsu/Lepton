@@ -904,6 +904,9 @@ const renderFixture = getRenderFixture(getRenderFixtureName())
 if (renderFixture) {
   logger.info(`[render-fixture] Rendering ${renderFixture.name} with mock state`)
   SearchIndex.resetFuseIndex(renderFixture.searchIndexRecords)
+  Object.entries(renderFixture.localStorage || {}).forEach(([key, value]) => {
+    electronBridge.localStorage.set(key, value)
+  })
 }
 
 const reduxStore = renderFixture

@@ -8,7 +8,7 @@ import Modal from '../compatModal'
 import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
-import { t } from '../../utilities/i18n'
+import { getLocale, t } from '../../utilities/i18n'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -28,6 +28,12 @@ import {
   CREATE_SINGLE_GIST,
   getGitHubApi,
 } from '../../utilities/githubApi'
+import {
+  clearNewGistDraft,
+  createNewGistDraft,
+  createNewGistWithDraft,
+  loadNewGistDraft,
+} from '../../utilities/newGistDraft'
 
 import './index.scss'
 
@@ -53,6 +59,30 @@ const kIsPrivate = conf.get('snippet:newSnippetPrivate')
 const hideProfilePhoto = conf.get('userPanel:hideProfilePhoto')
 
 class UserPanel extends Component {
+  constructor (props) {
+    super(props)
+    const newGistDraft = loadNewGistDraft(
+      electronBridge.localStorage,
+      this.getUserLogin(props)
+    )
+    this.newGistInitialData = this.createEmptyNewGistData()
+    this.state = {
+      newGistDraft,
+      newGistDraftLoaded: false
+    }
+  }
+
+  getUserLogin (props = this.props) {
+    const profile = props.userSession && props.userSession.profile
+    return profile && profile.login
+  }
+
+  createEmptyNewGistData () {
+    return createNewGistDraft({
+      private: kIsPrivate
+    })
+  }
+
   componentDidMount () {
     this.ipcSubscriptions = []
     subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'new-gist-renderer', () => {
@@ -74,6 +104,9 @@ class UserPanel extends Component {
     const isPublic = data.private === undefined ? true : !data.private
     const description = data.description.trim()
     const processedFiles = {}
+    const userLogin = this.getUserLogin()
+
+    this.newGistInitialData = createNewGistDraft(data)
 
     data.gistFiles.forEach((file) => {
       processedFiles[file.filename.trim()] = {
@@ -81,17 +114,49 @@ class UserPanel extends Component {
       }
     })
 
-    return getGitHubApi(CREATE_SINGLE_GIST)(this.props.accessToken, description, processedFiles, isPublic)
-      .catch((err) => {
-        notifyFailure(t('notification.gistCreationFailed'))
-        logger.error(JSON.stringify(err))
+    return createNewGistWithDraft({
+      storage: electronBridge.localStorage,
+      userLogin,
+      data,
+      createGist: () => getGitHubApi(CREATE_SINGLE_GIST)(
+        this.props.accessToken,
+        description,
+        processedFiles,
+        isPublic
+      )
+    }).then((result) => {
+      if (result.status === 'failed') {
+        notifyFailure(
+          t('notification.gistCreationFailed'),
+          result.draftWrite && result.draftWrite.status ? t('notification.gistDraftSaved') : ''
+        )
+        logger.error(result.error && result.error.message
+          ? result.error.message
+          : String(result.error))
+        if (result.draftWrite && result.draftWrite.status) {
+          this.setState({
+            newGistDraft: result.draftWrite.data,
+            newGistDraftLoaded: true
+          })
+        }
+        return
+      }
+
+      this.updateGistsStoreWithNewGist(result.gistDetails)
+      this.newGistInitialData = this.createEmptyNewGistData()
+
+      const draftClear = clearNewGistDraft(electronBridge.localStorage, userLogin)
+      if (!draftClear || !draftClear.status) {
+        logger.error('Failed to clear the saved new snippet draft')
+      }
+
+      this.setState({
+        newGistDraft: null,
+        newGistDraftLoaded: false
       })
-      .then((response) => {
-        this.updateGistsStoreWithNewGist(response)
-      })
-      .finally(() => {
-        this.closeGistEditorModal()
-      })
+
+      this.closeGistEditorModal()
+    })
   }
 
   updateGistsStoreWithNewGist (gistDetails) {
@@ -159,19 +224,81 @@ class UserPanel extends Component {
   }
 
   renderGistEditorModalBody () {
-    const initialData = {
-      description: '',
-      private: kIsPrivate,
-      gists: [
-        { filename: '', content: '' }
-      ]
-    }
+    const showDraftReplacementWarning = Boolean(
+      this.state.newGistDraft && !this.state.newGistDraftLoaded
+    )
+
     return (
       <GistEditorForm
-        initialData={ initialData }
+        initialData={ this.newGistInitialData }
         formStyle={ NEW_GIST }
+        footerHelper={ showDraftReplacementWarning
+          ? t('editor.localDraftSubmitWarning')
+          : '' }
         handleCancel = { this.closeGistEditorModal.bind(this) }
         onSubmit={ this.handleCreateSingleGist.bind(this) }></GistEditorForm>
+    )
+  }
+
+  formatNewGistDraftCreatedAt () {
+    return new Intl.DateTimeFormat(getLocale(), {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    }).format(new Date(this.state.newGistDraft.createdAt))
+  }
+
+  handleLoadNewGistDraft () {
+    this.newGistInitialData = createNewGistDraft(this.state.newGistDraft)
+    this.setState({ newGistDraftLoaded: true })
+  }
+
+  handleDropNewGistDraft () {
+    const draftClear = clearNewGistDraft(
+      electronBridge.localStorage,
+      this.getUserLogin()
+    )
+    if (!draftClear || !draftClear.status) {
+      logger.error('Failed to drop the saved new snippet draft')
+      return
+    }
+
+    if (this.state.newGistDraftLoaded) {
+      this.newGistInitialData = this.createEmptyNewGistData()
+    }
+    this.setState({
+      newGistDraft: null,
+      newGistDraftLoaded: false
+    })
+  }
+
+  renderNewGistDraftCallout () {
+    if (!this.state.newGistDraft) return null
+
+    return (
+      <div className='new-gist-draft-callout' role='status'>
+        <span className='new-gist-draft-icon' aria-hidden='true'>◷</span>
+        <div className='new-gist-draft-summary'>
+          <strong>{ this.state.newGistDraftLoaded
+            ? t('editor.localDraftLoaded')
+            : t('editor.localDraftAvailable') }</strong>
+          <span>{ t('editor.localDraftCreatedAt', {
+            timestamp: this.formatNewGistDraftCreatedAt()
+          }) }</span>
+        </div>
+        <div className='new-gist-draft-actions'>
+          { !this.state.newGistDraftLoaded && (
+            <button type='button' onClick={ this.handleLoadNewGistDraft.bind(this) }>
+              { t('editor.loadLocalDraft') }
+            </button>
+          ) }
+          <button
+            className='drop-new-gist-draft'
+            type='button'
+            onClick={ this.handleDropNewGistDraft.bind(this) }>
+            { t('editor.dropLocalDraft') }
+          </button>
+        </div>
+      </div>
     )
   }
 
@@ -189,6 +316,7 @@ class UserPanel extends Component {
           <Modal.Title>{ t('userPanel.new') }</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          { this.renderNewGistDraftCallout() }
           { this.renderGistEditorModalBody.bind(this)() }
         </Modal.Body>
       </Modal>

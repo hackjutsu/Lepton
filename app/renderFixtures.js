@@ -1,5 +1,6 @@
 import { addLangPrefix as Prefixed } from './utilities/parser'
 import leptonLogoImage from './containers/aboutPage/logo-light.webp?inline'
+import { getNewGistDraftStorageKey } from './utilities/newGistDraft'
 import SearchIndex from './utilities/search'
 
 const FIXTURE_USER = {
@@ -295,6 +296,8 @@ function getFixtureOverrides (name) {
       return { logoutModalStatus: 'ON' }
     case 'new':
       return { gistNewModalStatus: 'ON' }
+    case 'new-draft':
+      return { gistNewModalStatus: 'ON' }
     case 'pinned-tags':
       return { pinnedTagsModalStatus: 'ON' }
     case 'php-html':
@@ -403,6 +406,19 @@ export function getRenderFixture (name) {
 
   return {
     initialSearchQuery,
+    localStorage: name === 'new-draft'
+      ? {
+        [getNewGistDraftStorageKey(FIXTURE_USER.login)]: {
+          createdAt: '2026-09-06T21:35:00.000Z',
+          description: 'Recovered API helper',
+          private: true,
+          gists: [{
+            filename: 'recovered.js',
+            content: 'const recovered = true'
+          }]
+        }
+      }
+      : null,
     name,
     searchIndexRecords,
     state: Object.assign({}, getBaseState(), stateOverrides)

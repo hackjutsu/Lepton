@@ -111,6 +111,15 @@ describe('i18n utilities', () => {
     expect(t('menu.submitGist')).toBe('Submit Snippet')
     expect(t('menu.syncGist')).toBe('Sync Snippet')
     expect(t('notification.gistCreated')).toBe('Snippet created')
+    expect(t('notification.gistDraftSaved')).toBe(
+      'Your draft was saved locally. Retry when your connection returns.'
+    )
+    expect(t('editor.localDraftCreatedAt', { timestamp: 'Sep 6, 2026, 2:35 PM' })).toBe(
+      'Created Sep 6, 2026, 2:35 PM'
+    )
+    expect(t('editor.localDraftSubmitWarning')).toBe(
+      'Submitting without loading the local draft will discard it.'
+    )
     expect(t('snippet.deleteConfirmTitle')).toBe('Delete the snippet?')
   })
 

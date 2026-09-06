@@ -169,7 +169,7 @@ class GistEditorForm extends Component {
   }
 
   render () {
-    const { handleCancel, formStyle } = this.props
+    const { footerHelper, handleCancel, formStyle } = this.props
     const { values, errors, touched, submitAttempted, submitting } = this.state
 
     return (
@@ -197,19 +197,25 @@ class GistEditorForm extends Component {
         }) }
         <hr/>
         <div className='control-button-group'>
-          <Button
-            className='gist-editor-control-button'
-            type='submit'
-            bsStyle='default'
-            disabled={ submitting }>
-            { t('editor.submit') }
-          </Button>
+          { footerHelper && (
+            <div className='gist-editor-footer-helper'>
+              <span aria-hidden='true'>ⓘ</span>
+              <span>{ footerHelper }</span>
+            </div>
+          ) }
           <Button
             className='gist-editor-control-button'
             onClick={ handleCancel }
             bsStyle='default'
             disabled={ submitting }>
             { t('editor.cancel') }
+          </Button>
+          <Button
+            className='gist-editor-control-button'
+            type='submit'
+            bsStyle='default'
+            disabled={ submitting }>
+            { t('editor.submit') }
           </Button>
         </div>
       </form>
