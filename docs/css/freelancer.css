@@ -327,6 +327,28 @@ header .intro-text .btn-outline {
 header .intro-text .btn-outline + .btn-outline {
   margin-left: 12px;
 }
+#portfolio {
+  position: relative;
+}
+#portfolio .star-history-badge {
+  display: block;
+  position: absolute;
+  top: 20px;
+  right: 28px;
+}
+#portfolio .star-history-badge img {
+  display: block;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+@media (max-width: 767px) {
+  #portfolio .star-history-badge {
+    position: static;
+    width: max-content;
+    margin: 0 auto 20px;
+  }
+}
 .btn-outline:hover,
 .btn-outline:focus,
 .btn-outline:active,
