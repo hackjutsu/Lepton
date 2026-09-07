@@ -40,6 +40,9 @@ const {
   clearGitHubAuthWindowStorageAndDestroy
 } = require('./app/utilities/auth/githubAuthWindow')
 const { applyDefaultZoomPercent } = require('./app/utilities/zoom')
+const {
+  isValidPreferenceValue
+} = require('./app/utilities/config/preferences')
 
 const logger = createMainLogger()
 const electronLocalStorage = createElectronLocalStorage({
@@ -79,8 +82,6 @@ let githubApi = null
 let operationType = 0
 
 const MACOS_TRAY_ICON_SIZE = 18
-
-const shortcuts = nconf.get('shortcuts')
 
 function getConfigPath() {
   if (process && process.env && process.env.XDG_CONFIG_HOME) {
@@ -345,6 +346,7 @@ function handleNonMacWindowClose (e, win) {
 }
 
 function setUpApplicationMenu () {
+  const shortcuts = nconf.get('shortcuts')
   // Create the Application's main menu
   let { buildMainMenuTemplate } = require('./app/utilities/menu/mainMenu')
   let gistMenu = {
@@ -414,8 +416,6 @@ function setUpApplicationMenu () {
 function setUpBridgeIpcHandlers () {
   const loggerMethods = new Set(['debug', 'error', 'info', 'warn'])
   const appPathNames = new Set(['appData', 'home', 'temp', 'userData'])
-  const writableConfigKeys = new Set(['i18n:locale'])
-
   function isAllowedConfigKey (key) {
     if (typeof key !== 'string' || key.length === 0) return false
     const rootKey = key.split(':')[0]
@@ -505,7 +505,7 @@ function setUpBridgeIpcHandlers () {
   })
 
   ipcMain.handle('lepton:config:set', (event, key, value) => {
-    if (!isMainWindowSender(event) || !writableConfigKeys.has(key)) {
+    if (!isMainWindowSender(event) || !isValidPreferenceValue(key, value)) {
       logger.warn(`[bridge] Rejected config write for "${key}"`)
       return undefined
     }
@@ -513,11 +513,29 @@ function setUpBridgeIpcHandlers () {
     const persistedValue = key === 'i18n:locale' ? configureI18n(value) : value
     nconf.set(key, persistedValue)
     writeConfigValue(key, persistedValue)
-    setUpApplicationMenu()
-    if (key !== 'i18n:locale' && mainWindow && !mainWindow.isDestroyed()) {
-      mainWindow.reload()
+    if (key === 'autoUpdate') autoUpdater.autoDownload = persistedValue
+    if (key === 'startAtLogin') {
+      applyStartAtLoginSetting({ app, enabled: persistedValue, logger })
     }
+    if (key === 'logger:level') logger.level = persistedValue
+    if (key === 'zoom:percent' && mainWindow && !mainWindow.isDestroyed()) {
+      applyDefaultZoomPercent({ webContents: mainWindow.webContents, percent: persistedValue, logger })
+    }
+    setUpApplicationMenu()
     return persistedValue
+  })
+
+  ipcMain.handle('lepton:dialog:show-message', (event, options = {}) => {
+    if (!isMainWindowSender(event)) return undefined
+    const title = typeof options.title === 'string' ? options.title.slice(0, 100) : appInfo.name
+    const message = typeof options.message === 'string' ? options.message.slice(0, 500) : ''
+    if (!message) return undefined
+    return dialog.showMessageBox(mainWindow, {
+      type: 'info',
+      title,
+      message,
+      buttons: ['OK']
+    })
   })
 
   ipcMain.on('lepton:account:get', (event) => {

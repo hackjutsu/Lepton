@@ -43,6 +43,9 @@ const leptonApi = {
     getAccessToken: () => ipcRenderer.sendSync('lepton:credentials:get-access-token'),
     setAccessToken: (token) => ipcRenderer.sendSync('lepton:credentials:set-access-token', token)
   },
+  dialog: {
+    showMessage: (options) => ipcRenderer.invoke('lepton:dialog:show-message', options)
+  },
   files: {
     ensureConfigFile: (defaults) => ipcRenderer.invoke('lepton:files:ensure-config', defaults)
   },
