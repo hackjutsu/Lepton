@@ -1,11 +1,13 @@
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)
+[![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
+[![lepton](https://snapcraft.io/lepton/badge.svg)](https://snapcraft.io/lepton)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ![](./docs/img/new_logo.png)
 
-[![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
-[![lepton](https://snapcraft.io/lepton/badge.svg)](https://snapcraft.io/lepton)
+[![Star History Rank](https://api.star-history.com/badge?repo=hackjutsu/Lepton&type=rank)](https://www.star-history.com/hackjutsu/lepton)
+
 
 **Lepton** is a lean code snippet manager powered by GitHub Gist. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
 
