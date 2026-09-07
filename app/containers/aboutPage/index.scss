@@ -6,19 +6,181 @@
     color: var(--text-secondary);
   }
 
-  .section-base {
-    height: 80vh;
-  }
-
-  .general-section {
-    @extend .section-base;
-  }
-
   .about-section {
-    @extend .section-base;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
     color: var(--text-secondary);
+  }
+
+  .modal-dialog {
+    width: min(780px, calc(100vw - 32px));
+  }
+
+  .modal-content {
+    display: flex;
+    max-height: calc(100vh - 40px);
+    flex-direction: column;
+  }
+
+  .modal-body {
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .settings-layout {
+    display: flex;
+    height: min(68vh, 540px);
+    min-height: 0;
+  }
+
+  .settings-tabs {
+    width: 145px;
+    flex: 0 0 145px;
+    padding: 16px 9px;
+    border-right: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+  }
+
+  .settings-tabs button {
+    width: 100%;
+    padding: 7px 9px;
+    border: 0;
+    background: transparent;
+    color: var(--text-secondary);
+    text-align: left;
+  }
+
+  .settings-tabs button:hover,
+  .settings-tabs button.active {
+    color: var(--text-primary);
+  }
+
+  .settings-tabs button.active {
+    font-weight: bold;
+  }
+
+  .settings-content {
+    min-width: 0;
+    min-height: 0;
+    flex: 1;
+    padding: 16px 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-color: color-mix(in srgb, var(--text-secondary) 48%, transparent) var(--bg-secondary);
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
+
+  .settings-content::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  .settings-content::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+
+  .settings-content::-webkit-scrollbar-thumb {
+    border: 2px solid var(--bg-secondary);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--text-secondary) 48%, transparent);
+  }
+
+  .preferences-section {
+    color: var(--text-secondary);
+  }
+
+  .preference-group {
+    margin-bottom: 12px;
+  }
+
+  .preference-group h4 {
+    margin: 0 0 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .preference-row,
+  .preference-checkbox {
+    display: flex;
+    min-height: 29px;
+    margin: 0;
+    align-items: center;
+    font-weight: normal;
+  }
+
+  .preference-row {
+    justify-content: space-between;
+  }
+
+  .preference-row select,
+  .preference-row > input {
+    width: 280px;
+    height: 26px;
+    padding: 2px 7px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+  }
+
+  .preference-row select {
+    padding-right: 34px;
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--text-secondary) 50%),
+      linear-gradient(135deg, var(--text-secondary) 50%, transparent 50%);
+    background-position:
+      calc(100% - 17px) 50%,
+      calc(100% - 12px) 50%;
+    background-repeat: no-repeat;
+    background-size: 5px 5px, 5px 5px;
+  }
+
+  .preference-checkbox input {
+    margin: 0 9px 0 0;
+  }
+
+  .preference-save-note {
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+    font-size: 12px;
+  }
+
+  .preference-error {
+    color: var(--accent-warning);
+  }
+
+  .preference-restart-notice {
+    color: var(--accent-warning);
+  }
+
+  .preferences-footer {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .preference-status {
+    padding-right: 14px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-align: left;
+  }
+
+  .preference-actions {
+    flex: none;
+  }
+
+  .modal-footer .btn + .btn {
+    margin-left: 7px;
   }
 
   .logo-section {
@@ -34,7 +196,7 @@
   }
 
   .contributor-section {
-    overflow: auto;
+    overflow: visible;
     min-height: 150px;
     border-radius: 5px;
     padding: 0 20px;
@@ -43,8 +205,8 @@
   }
 
   .license-section {
-    overflow: auto;
-    flex: auto;
+    overflow: visible;
+    flex: none;
     margin-bottom: 20px;
     border-radius: 5px;
     padding: 0 20px;
@@ -89,10 +251,6 @@
   }
   .setting-title-clickable:hover {
     cursor: pointer;
-  }
-
-  .modal-sm {
-    width: 375px;
   }
 
   .logo-sub {

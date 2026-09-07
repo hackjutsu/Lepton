@@ -34,6 +34,9 @@ function createUnavailableBridge () {
       getAccessToken: unavailableBridgeMethod,
       setAccessToken: unavailableBridgeMethod
     },
+    dialog: {
+      showMessage: unavailableBridgeMethod
+    },
     files: {
       ensureConfigFile: unavailableBridgeMethod
     },

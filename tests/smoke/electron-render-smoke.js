@@ -56,7 +56,8 @@ const RENDER_FIXTURES = [
   {
     name: 'about',
     selector: '.about-modal .modal-title',
-    text: 'About'
+    text: 'Settings|Preferences|Cancel|Apply|Save',
+    forbiddenSelector: '.preferences-section h3'
   },
   {
     name: 'dashboard',
