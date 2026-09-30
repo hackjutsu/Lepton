@@ -51,7 +51,7 @@
     "babel-loader": "^8.4.1",
     "check-outdated": "^2.11.0",
     "css-loader": "^5.0.0",
-    "electron": "^42.5.0",
+    "electron": "^42.10.0",
     "electron-builder": "^26.15.3",
     "eslint": "^7.11.0",
     "eslint-config-standard": "^16.0.0",
