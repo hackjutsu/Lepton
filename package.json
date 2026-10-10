@@ -94,7 +94,7 @@
     "highlightjs-solidity": "^1.0.6",
     "human-readable-time": "^0.3.0",
     "katex": "^0.17.0",
-    "markdown-it": "^14.2.0",
+    "markdown-it": "^14.3.2",
     "markdown-it-emoji": "^3.0.0",
     "markdown-it-task-lists": "^2.1.1",
     "nconf": "^0.11.4",
