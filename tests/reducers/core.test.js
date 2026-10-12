@@ -18,6 +18,7 @@ import {
   removeAccessToken,
   selectGist,
   updateAccessToken,
+  updateGistFilters,
   updateGists,
   updateGistTags,
   updateLoginStatus,
@@ -26,6 +27,7 @@ import {
   updateUserSession
 } from '../../app/actions'
 import activeGist from '../../app/reducers/reducer_active_gist'
+import activeGistFilters from '../../app/reducers/reducer_active_gist_filters'
 import accessToken from '../../app/reducers/reducer_token'
 import gistTags from '../../app/reducers/reducer_gist_tags'
 import gists from '../../app/reducers/reducer_gists'
@@ -67,6 +69,24 @@ describe('core reducers', () => {
 
     expect(gistTags(undefined, updateGistTags({ JavaScript: 2 }))).toEqual({ JavaScript: 2 })
     expect(gistTags({ JavaScript: 2 }, logoutUserSession())).toBeNull()
+  })
+
+  it('tracks structured gist filters and clears them on logout', () => {
+    const selectedFilters = {
+      language: 'lang@JavaScript',
+      tags: ['ui', 'smoke']
+    }
+
+    expect(activeGistFilters(undefined, { type: '@@INIT' })).toEqual({
+      language: 'lang@All',
+      tags: []
+    })
+    expect(activeGistFilters(undefined, updateGistFilters(selectedFilters)))
+      .toEqual(selectedFilters)
+    expect(activeGistFilters(selectedFilters, logoutUserSession())).toEqual({
+      language: 'lang@All',
+      tags: []
+    })
   })
 
   it('tracks update alert visibility', () => {

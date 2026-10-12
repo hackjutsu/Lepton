@@ -90,6 +90,23 @@ const RENDER_FIXTURES = [
     text: 'Shortcuts'
   },
   {
+    name: 'multi-filter',
+    selector: '.active-layout',
+    text: 'JavaScript|#ui|#smoke|React 19 render fixture',
+    activeFilters: '#JavaScript|#smoke|#ui',
+    filterClicks: '#JavaScript|#ui|#smoke',
+    snippetCount: 1,
+    snippetTitles: 'React 19 render fixture'
+  },
+  {
+    name: 'multi-filter-empty',
+    selector: '.active-layout',
+    text: 'JavaScript|#backend|No result found...',
+    activeFilters: '#JavaScript|#backend',
+    filterClicks: '#JavaScript|#backend',
+    snippetCount: 0
+  },
+  {
     name: 'immersive',
     selector: '.snippet-panel-immersive .snippet-box',
     text: 'React 19 render fixture'
@@ -161,6 +178,10 @@ function runSmokeProcess (tempHome, options) {
       ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
       LEPTON_SMOKE_ARTIFACT_DIR: tempHome.root,
       LEPTON_SMOKE_AFTER_SWITCH_TEXT: options.switchText || '',
+      LEPTON_SMOKE_EXPECTED_ACTIVE_FILTERS: options.activeFilters || '',
+      LEPTON_SMOKE_EXPECTED_SNIPPET_COUNT: options.snippetCount === undefined ? '' : String(options.snippetCount),
+      LEPTON_SMOKE_EXPECTED_SNIPPET_TITLES: options.snippetTitles || '',
+      LEPTON_SMOKE_FILTER_CLICKS: options.filterClicks || '',
       LEPTON_SMOKE_FORBIDDEN_SELECTOR: options.forbiddenSelector || '',
       LEPTON_SMOKE_FORBIDDEN_TEXT: options.forbiddenText || '',
       LEPTON_SMOKE_SWITCH_LOGIN_MODE: options.switchLoginMode ? '1' : '',
@@ -222,10 +243,14 @@ async function main () {
   for (const fixture of RENDER_FIXTURES) {
     await runSmokeProcess(createTempHome('en'), {
       expectedSelector: fixture.selector,
+      activeFilters: fixture.activeFilters,
+      filterClicks: fixture.filterClicks,
       forbiddenText: fixture.forbiddenText,
       expectedText: fixture.text,
       forbiddenSelector: fixture.forbiddenSelector,
       renderFixture: fixture.name,
+      snippetCount: fixture.snippetCount,
+      snippetTitles: fixture.snippetTitles,
       switchLoginMode: fixture.switchLoginMode,
       switchText: fixture.switchText
     })

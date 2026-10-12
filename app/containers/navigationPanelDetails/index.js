@@ -2,9 +2,11 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { descriptionParser } from '../../utilities/parser'
 import electronBridge from '../../utilities/electronBridge'
+import { getFilteredGistIds } from '../../utilities/gistFilters'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
 import React, { Component } from 'react'
 import TagBadges from '../tagBadges'
+import { t } from '../../utilities/i18n'
 import {
   getRegularTagsForGist,
   shouldColorTags,
@@ -83,19 +85,22 @@ class NavigationPanelDetails extends Component {
   }
 
   renderSnippetThumbnails () {
-    const { gists, gistTags, activeGistTag } = this.props
+    const { gists, gistTags, activeGistFilters } = this.props
     const snippetThumbnails = []
+    const filteredGistIds = getFilteredGistIds(gistTags, activeGistFilters)
 
-    // When user has no gists, the default active language tag will be 'All' with
-    // an empty array.
-    if (!gistTags || !gistTags[activeGistTag] || gistTags[activeGistTag].length === 0) {
+    if (filteredGistIds.length === 0) {
       return (
-        <div className='snippet-thumnail'></div>
+        <li className='snippet-thumnail-list-item snippet-thumnail-empty'
+          aria-live='polite'
+          role='status'>
+          <div className='snippet-thumnail'>{ t('search.noResults') }</div>
+        </li>
       )
     }
 
     const rawGists = []
-    gistTags[activeGistTag].forEach((gistId) => {
+    filteredGistIds.forEach((gistId) => {
       // During the synchronization, gists will be updated before the gistTags,
       // which introduces an interval where a gist exists in gistTags but not in
       // the gists. This guard makes sure we push the gist only when it is already
@@ -160,7 +165,7 @@ function mapStateToProps (state) {
   return {
     gists: state.gists,
     gistTags: state.gistTags,
-    activeGistTag: state.activeGistTag,
+    activeGistFilters: state.activeGistFilters,
     activeGist: state.activeGist,
     scrollRequestStatus: state.scrollRequestStatus
   }

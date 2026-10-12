@@ -1,4 +1,5 @@
 import { addLangPrefix as Prefixed } from './utilities/parser'
+import { createDefaultGistFilters } from './utilities/gistFilters'
 import leptonLogoImage from './containers/aboutPage/logo-light.webp?inline'
 import { getNewGistDraftStorageKey } from './utilities/newGistDraft'
 import SearchIndex from './utilities/search'
@@ -240,7 +241,7 @@ function getBaseState () {
     aboutModalStatus: 'OFF',
     accessToken: 'fixture-token',
     activeGist: 'fixture-gist-1',
-    activeGistTag: Prefixed('All'),
+    activeGistFilters: createDefaultGistFilters(),
     authWindowStatus: 'OFF',
     dashboardModalStatus: 'OFF',
     fileExpandStatus: {},
@@ -300,15 +301,25 @@ function getFixtureOverrides (name) {
       return { gistNewModalStatus: 'ON' }
     case 'pinned-tags':
       return { pinnedTagsModalStatus: 'ON' }
+    case 'multi-filter':
+      return {}
+    case 'multi-filter-empty':
+      return {}
     case 'php-html':
       return {
         activeGist: 'fixture-gist-5',
-        activeGistTag: Prefixed('PHP')
+        activeGistFilters: {
+          language: Prefixed('PHP'),
+          tags: []
+        }
       }
     case 'jupyter-notebook':
       return {
         activeGist: 'fixture-gist-6',
-        activeGistTag: Prefixed('Jupyter Notebook')
+        activeGistFilters: {
+          language: Prefixed('Jupyter Notebook'),
+          tags: []
+        }
       }
     case 'login-error-log':
       return {

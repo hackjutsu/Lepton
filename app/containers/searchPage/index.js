@@ -5,14 +5,12 @@ import Modal from '../compatModal'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
 import { formatRelativeTime } from '../../utilities/relativeTime'
-import {
-  addLangPrefix as Prefixed,
-  descriptionParser,
-} from '../../utilities/parser'
+import { createDefaultGistFilters } from '../../utilities/gistFilters'
+import { descriptionParser } from '../../utilities/parser'
 import {
   fetchSingleGist,
   selectGist,
-  selectGistTag,
+  updateGistFilters,
   updatescrollRequestStatus,
   updateSearchWindowStatus,
 } from '../../actions'
@@ -106,7 +104,7 @@ class SearchPage extends Component {
   handleSnippetClicked (gistId) {
     const {
       gists,
-      selectGistTag,
+      updateGistFilters,
       selectGist,
       updateSearchWindowStatus,
       updatescrollRequestStatus,
@@ -124,7 +122,7 @@ class SearchPage extends Component {
     logger.info('[Dispatch] selectGist ' + gistId)
     selectGist(gistId)
 
-    selectGistTag(Prefixed('All'))
+    updateGistFilters(createDefaultGistFilters())
     updateSearchWindowStatus('OFF')
   }
 
@@ -407,7 +405,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    selectGistTag: selectGistTag,
+    updateGistFilters: updateGistFilters,
     selectGist: selectGist,
     fetchSingleGist: fetchSingleGist,
     updateSearchWindowStatus: updateSearchWindowStatus,

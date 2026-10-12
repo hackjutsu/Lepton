@@ -7,11 +7,11 @@ import Modal from '../compatModal'
 import React, { Component } from 'react'
 import { t } from '../../utilities/i18n'
 import UserPanel from '../userPanel'
-import { getNextActiveGistTag } from './tags'
+import { getNextActiveGistFilters, isGistFilterActive } from './tags'
 import {
   fetchSingleGist,
   selectGist,
-  selectGistTag,
+  updateGistFilters,
   updatePinnedTags,
   updatePinnedTagsModalStatus
 } from '../../actions'
@@ -45,21 +45,39 @@ class NavigationPanel extends Component {
   }
 
   handleClicked (key) {
-    const { selectGistTag, updateActiveGistAfterClicked, gists, gistTags, activeGistTag } = this.props
-    const nextTag = getNextActiveGistTag(key, activeGistTag)
-    selectGistTag(nextTag)
-    updateActiveGistAfterClicked(gists, gistTags, nextTag)
+    const {
+      activeGist,
+      activeGistFilters,
+      gists,
+      gistTags,
+      updateActiveGistAfterClicked,
+      updateGistFilters
+    } = this.props
+    const nextFilters = getNextActiveGistFilters(key, activeGistFilters)
+    updateGistFilters(nextFilters)
+    updateActiveGistAfterClicked(gists, gistTags, nextFilters, activeGist)
+  }
+
+  handleTagKeyDown (key, event) {
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    this.handleClicked(key)
   }
 
   renderPinnedTags () {
-    const { pinnedTags, gistTags, activeGistTag } = this.props
+    const { pinnedTags, gistTags, activeGistFilters } = this.props
     const pinnedTagList = []
 
     pinnedTags.forEach(tag => {
       if (gistTags[tag]) {
+        const isActive = isGistFilterActive(tag, activeGistFilters)
         pinnedTagList.push(
           <div key={ tag }>
-            <a className={ tag === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
+            <a className={ isActive ? 'active-gist-tag' : 'gist-tag' }
+              aria-pressed={ isActive }
+              role='button'
+              tabIndex={ 0 }
+              onKeyDown={ this.handleTagKeyDown.bind(this, tag) }
               onClick={ this.handleClicked.bind(this, tag) }>
               #{ tag.startsWith('lang@') ? Resolved(tag) : tag }
             </a>
@@ -72,7 +90,7 @@ class NavigationPanel extends Component {
   } // renderPinnedTags
 
   renderLangTags () {
-    const { gistTags, activeGistTag } = this.props
+    const { gistTags, activeGistFilters } = this.props
     const langTagList = []
 
     Object.keys(gistTags)
@@ -81,9 +99,14 @@ class NavigationPanel extends Component {
       })
       .sort()
       .forEach(prefixedLang => {
+        const isActive = isGistFilterActive(prefixedLang, activeGistFilters)
         langTagList.push(
           <div key={ prefixedLang }>
-            <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
+            <a className={ isActive ? 'active-gist-tag' : 'gist-tag' }
+              aria-pressed={ isActive }
+              role='button'
+              tabIndex={ 0 }
+              onKeyDown={ this.handleTagKeyDown.bind(this, prefixedLang) }
               onClick={ this.handleClicked.bind(this, prefixedLang) }>
               { '#' + Resolved(prefixedLang) }
             </a>
@@ -95,7 +118,7 @@ class NavigationPanel extends Component {
   } // renderLangTags()
 
   renderCustomTags () {
-    const { gistTags, activeGistTag } = this.props
+    const { gistTags, activeGistFilters } = this.props
     const customTagList = []
 
     Object.keys(gistTags)
@@ -103,12 +126,17 @@ class NavigationPanel extends Component {
         return !tag.startsWith('lang@')
       })
       .sort()
-      .forEach(prefixedLang => {
+      .forEach(tag => {
+        const isActive = isGistFilterActive(tag, activeGistFilters)
         customTagList.push(
-          <div key={ prefixedLang }>
-            <a className={ prefixedLang === activeGistTag ? 'active-gist-tag' : 'gist-tag' }
-              onClick={ this.handleClicked.bind(this, prefixedLang) }>
-              { '#' + Resolved(prefixedLang) }
+          <div key={ tag }>
+            <a className={ isActive ? 'active-gist-tag' : 'gist-tag' }
+              aria-pressed={ isActive }
+              role='button'
+              tabIndex={ 0 }
+              onKeyDown={ this.handleTagKeyDown.bind(this, tag) }
+              onClick={ this.handleClicked.bind(this, tag) }>
+              { '#' + Resolved(tag) }
             </a>
           </div>
         )
@@ -332,16 +360,17 @@ function mapStateToProps (state) {
     gistTags: state.gistTags,
     pinnedTags: state.pinnedTags,
     userSession: state.userSession,
-    activeGistTag: state.activeGistTag,
+    activeGist: state.activeGist,
+    activeGistFilters: state.activeGistFilters,
     pinnedTagsModalStatus: state.pinnedTagsModalStatus
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
-    selectGistTag: selectGistTag,
     selectGist: selectGist,
     fetchSingleGist: fetchSingleGist,
+    updateGistFilters: updateGistFilters,
     updatePinnedTags: updatePinnedTags,
     updatePinnedTagsModalStatus: updatePinnedTagsModalStatus
   }, dispatch)

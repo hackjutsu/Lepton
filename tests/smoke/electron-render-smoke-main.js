@@ -135,6 +135,14 @@ async function getRendererState (window) {
       const languageSelector = document.querySelector('[data-role="language-selector"]')
       const languageSelectorLabel = document.querySelector('.login-language-selector')
       const loginModeSwitch = document.querySelector('.login-mode-switch')
+      const tagSections = Array.from(document.querySelectorAll('.tag-section-list > .tag-section'))
+      const filterSections = [tagSections[0], tagSections[2]].filter(Boolean)
+      const activeFilterLabels = filterSections.flatMap(section =>
+        Array.from(section.querySelectorAll('[aria-pressed="true"]'))
+          .map(filter => filter.innerText.trim())
+      )
+      const snippetTitles = Array.from(document.querySelectorAll('.snippet-thumnail-description'))
+        .map(snippet => snippet.innerText.trim())
       const images = Array.from(document.images).map(image => {
         const bounds = image.getBoundingClientRect()
         return {
@@ -159,6 +167,8 @@ async function getRendererState (window) {
         hasForbiddenSelector: forbiddenSelector ? Boolean(document.querySelector(forbiddenSelector)) : false,
         hasLeptonBridge: Boolean(window.lepton),
         hasLeptonConfigBridge: Boolean(window.lepton && window.lepton.config && window.lepton.config.get),
+        activeFilterLabels,
+        snippetTitles,
         processType: typeof process,
         requireType: typeof require,
         languageOptions: languageSelector
@@ -470,6 +480,29 @@ function assertFixtureRendererState (state) {
     throw new Error(`Expected fixture UI text "${missingText}" was not visible. Body text: ${state.bodyText}`)
   }
 
+  const expectedActiveFilters = (process.env.LEPTON_SMOKE_EXPECTED_ACTIVE_FILTERS || '')
+    .split('|')
+    .filter(Boolean)
+    .sort()
+  if (expectedActiveFilters.length > 0) {
+    const activeFilterLabels = [...state.activeFilterLabels].sort()
+    if (JSON.stringify(activeFilterLabels) !== JSON.stringify(expectedActiveFilters)) {
+      throw new Error(`Expected exact active gist filters ${JSON.stringify(expectedActiveFilters)}, received ${JSON.stringify(activeFilterLabels)}`)
+    }
+  }
+
+  const expectedSnippetTitles = (process.env.LEPTON_SMOKE_EXPECTED_SNIPPET_TITLES || '')
+    .split('|')
+    .filter(Boolean)
+  if (expectedSnippetTitles.length > 0 && JSON.stringify(state.snippetTitles) !== JSON.stringify(expectedSnippetTitles)) {
+    throw new Error(`Expected exact snippet titles ${JSON.stringify(expectedSnippetTitles)}, received ${JSON.stringify(state.snippetTitles)}`)
+  }
+
+  const expectedSnippetCount = process.env.LEPTON_SMOKE_EXPECTED_SNIPPET_COUNT
+  if (expectedSnippetCount !== '' && state.snippetTitles.length !== Number(expectedSnippetCount)) {
+    throw new Error(`Expected ${expectedSnippetCount} snippet thumbnails, received ${state.snippetTitles.length}`)
+  }
+
   assertForbiddenFixtureTextAbsent(state)
   assertForbiddenFixtureSelectorAbsent(state)
 }
@@ -485,6 +518,40 @@ function assertForbiddenFixtureTextAbsent (state) {
 function assertForbiddenFixtureSelectorAbsent (state) {
   if (!state.hasForbiddenSelector) return
   throw new Error(`Forbidden fixture selector was visible: ${process.env.LEPTON_SMOKE_FORBIDDEN_SELECTOR}`)
+}
+
+async function applyFixtureFilterClicks (window) {
+  const filterClicks = (process.env.LEPTON_SMOKE_FILTER_CLICKS || '').split('|').filter(Boolean)
+  if (filterClicks.length === 0) return
+
+  const result = await window.webContents.executeJavaScript(`
+    (async () => {
+      const labels = ${JSON.stringify((process.env.LEPTON_SMOKE_FILTER_CLICKS || '').split('|').filter(Boolean))}
+      const missingLabels = []
+
+      for (const label of labels) {
+        const sections = Array.from(document.querySelectorAll('.tag-section-list > .tag-section'))
+        const controls = [sections[0], sections[2]]
+          .filter(Boolean)
+          .flatMap(section => Array.from(section.querySelectorAll('[role="button"]')))
+        const control = controls.find(candidate => candidate.innerText.trim() === label)
+        if (!control) {
+          missingLabels.push(label)
+          continue
+        }
+        control.click()
+        await new Promise(resolve => setTimeout(resolve, 50))
+      }
+
+      return { missingLabels }
+    })()
+  `, true)
+
+  if (result.missingLabels.length > 0) {
+    throw new Error(`Unable to click fixture filters: ${JSON.stringify(result.missingLabels)}`)
+  }
+
+  await wait(250)
 }
 
 async function assertFixtureLoginModeSwitch (window) {
@@ -845,6 +912,7 @@ async function main () {
 
     if (process.env.LEPTON_RENDER_FIXTURE) {
       await waitForFixtureUi(window)
+      await applyFixtureFilterClicks(window)
       assertFixtureRendererState(await getRendererState(window))
       await assertFixtureLoginModeSwitch(window)
       await assertFixturePageFind(window)
