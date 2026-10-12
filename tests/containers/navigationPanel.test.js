@@ -37,17 +37,59 @@ describe('navigation panel tag helpers', () => {
     })
   })
 
-  it('toggles several custom tags independently', () => {
-    const withSecondTag = getNextActiveGistFilters('smoke', {
+  it('keeps language selection single-select when Shift is held', () => {
+    expect(getNextActiveGistFilters(Prefixed('Python'), {
+      language: Prefixed('JavaScript'),
+      tags: ['ui', 'smoke']
+    }, { extendSelection: true })).toEqual({
+      language: Prefixed('Python'),
+      tags: ['ui', 'smoke']
+    })
+  })
+
+  it('replaces the selected custom tag on a regular click', () => {
+    expect(getNextActiveGistFilters('smoke', {
+      language: Prefixed('JavaScript'),
+      tags: ['ui']
+    })).toEqual({
+      language: Prefixed('JavaScript'),
+      tags: ['smoke']
+    })
+  })
+
+  it('deselects the only active custom tag on a regular click', () => {
+    expect(getNextActiveGistFilters('ui', {
+      language: Prefixed('JavaScript'),
+      tags: ['ui']
+    })).toEqual({
+      language: Prefixed('JavaScript'),
+      tags: []
+    })
+  })
+
+  it('collapses a multi-selection on a regular click', () => {
+    expect(getNextActiveGistFilters('ui', {
+      language: Prefixed('JavaScript'),
+      tags: ['ui', 'smoke']
+    })).toEqual({
       language: Prefixed('JavaScript'),
       tags: ['ui']
     })
+  })
+
+  it('extends and reduces custom tag selection with Shift', () => {
+    const withSecondTag = getNextActiveGistFilters('smoke', {
+      language: Prefixed('JavaScript'),
+      tags: ['ui']
+    }, { extendSelection: true })
 
     expect(withSecondTag).toEqual({
       language: Prefixed('JavaScript'),
       tags: ['ui', 'smoke']
     })
-    expect(getNextActiveGistFilters('ui', withSecondTag)).toEqual({
+    expect(getNextActiveGistFilters('ui', withSecondTag, {
+      extendSelection: true
+    })).toEqual({
       language: Prefixed('JavaScript'),
       tags: ['smoke']
     })

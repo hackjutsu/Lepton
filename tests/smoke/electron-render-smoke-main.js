@@ -521,25 +521,29 @@ function assertForbiddenFixtureSelectorAbsent (state) {
 }
 
 async function applyFixtureFilterClicks (window) {
-  const filterClicks = (process.env.LEPTON_SMOKE_FILTER_CLICKS || '').split('|').filter(Boolean)
-  if (filterClicks.length === 0) return
+  const filterActions = JSON.parse(process.env.LEPTON_SMOKE_FILTER_ACTIONS || '[]')
+  if (filterActions.length === 0) return
 
   const result = await window.webContents.executeJavaScript(`
     (async () => {
-      const labels = ${JSON.stringify((process.env.LEPTON_SMOKE_FILTER_CLICKS || '').split('|').filter(Boolean))}
+      const actions = ${JSON.stringify(filterActions)}
       const missingLabels = []
 
-      for (const label of labels) {
+      for (const action of actions) {
         const sections = Array.from(document.querySelectorAll('.tag-section-list > .tag-section'))
         const controls = [sections[0], sections[2]]
           .filter(Boolean)
           .flatMap(section => Array.from(section.querySelectorAll('[role="button"]')))
-        const control = controls.find(candidate => candidate.innerText.trim() === label)
+        const control = controls.find(candidate => candidate.innerText.trim() === action.label)
         if (!control) {
-          missingLabels.push(label)
+          missingLabels.push(action.label)
           continue
         }
-        control.click()
+        control.dispatchEvent(new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          shiftKey: Boolean(action.shiftKey)
+        }))
         await new Promise(resolve => setTimeout(resolve, 50))
       }
 

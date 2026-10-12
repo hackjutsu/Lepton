@@ -44,7 +44,7 @@ class NavigationPanel extends Component {
     }
   }
 
-  handleClicked (key) {
+  handleClicked (key, event) {
     const {
       activeGist,
       activeGistFilters,
@@ -53,7 +53,9 @@ class NavigationPanel extends Component {
       updateActiveGistAfterClicked,
       updateGistFilters
     } = this.props
-    const nextFilters = getNextActiveGistFilters(key, activeGistFilters)
+    const nextFilters = getNextActiveGistFilters(key, activeGistFilters, {
+      extendSelection: Boolean(event && event.shiftKey)
+    })
     updateGistFilters(nextFilters)
     updateActiveGistAfterClicked(gists, gistTags, nextFilters, activeGist)
   }
@@ -61,7 +63,7 @@ class NavigationPanel extends Component {
   handleTagKeyDown (key, event) {
     if (event.key !== 'Enter' && event.key !== ' ') return
     event.preventDefault()
-    this.handleClicked(key)
+    this.handleClicked(key, event)
   }
 
   renderPinnedTags () {

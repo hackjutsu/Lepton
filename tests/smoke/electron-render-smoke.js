@@ -94,7 +94,12 @@ const RENDER_FIXTURES = [
     selector: '.active-layout',
     text: 'JavaScript|#ui|#smoke|React 19 render fixture',
     activeFilters: '#JavaScript|#smoke|#ui',
-    filterClicks: '#JavaScript|#ui|#smoke',
+    filterActions: [
+      { label: '#JavaScript' },
+      { label: '#backend' },
+      { label: '#ui' },
+      { label: '#smoke', shiftKey: true }
+    ],
     snippetCount: 1,
     snippetTitles: 'React 19 render fixture'
   },
@@ -103,7 +108,10 @@ const RENDER_FIXTURES = [
     selector: '.active-layout',
     text: 'JavaScript|#backend|No result found...',
     activeFilters: '#JavaScript|#backend',
-    filterClicks: '#JavaScript|#backend',
+    filterActions: [
+      { label: '#JavaScript' },
+      { label: '#backend' }
+    ],
     snippetCount: 0
   },
   {
@@ -181,7 +189,7 @@ function runSmokeProcess (tempHome, options) {
       LEPTON_SMOKE_EXPECTED_ACTIVE_FILTERS: options.activeFilters || '',
       LEPTON_SMOKE_EXPECTED_SNIPPET_COUNT: options.snippetCount === undefined ? '' : String(options.snippetCount),
       LEPTON_SMOKE_EXPECTED_SNIPPET_TITLES: options.snippetTitles || '',
-      LEPTON_SMOKE_FILTER_CLICKS: options.filterClicks || '',
+      LEPTON_SMOKE_FILTER_ACTIONS: JSON.stringify(options.filterActions || []),
       LEPTON_SMOKE_FORBIDDEN_SELECTOR: options.forbiddenSelector || '',
       LEPTON_SMOKE_FORBIDDEN_TEXT: options.forbiddenText || '',
       LEPTON_SMOKE_SWITCH_LOGIN_MODE: options.switchLoginMode ? '1' : '',
@@ -244,7 +252,7 @@ async function main () {
     await runSmokeProcess(createTempHome('en'), {
       expectedSelector: fixture.selector,
       activeFilters: fixture.activeFilters,
-      filterClicks: fixture.filterClicks,
+      filterActions: fixture.filterActions,
       forbiddenText: fixture.forbiddenText,
       expectedText: fixture.text,
       forbiddenSelector: fixture.forbiddenSelector,

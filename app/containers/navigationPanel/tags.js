@@ -3,7 +3,11 @@ import {
   normalizeGistFilters
 } from '../../utilities/gistFilters'
 
-export function getNextActiveGistFilters (clickedTag, activeGistFilters) {
+export function getNextActiveGistFilters (
+  clickedTag,
+  activeGistFilters,
+  { extendSelection = false } = {}
+) {
   const filters = normalizeGistFilters(activeGistFilters)
 
   if (clickedTag.startsWith('lang@')) {
@@ -14,9 +18,16 @@ export function getNextActiveGistFilters (clickedTag, activeGistFilters) {
     })
   }
 
-  const tags = filters.tags.includes(clickedTag)
-    ? filters.tags.filter(tag => tag !== clickedTag)
-    : [...filters.tags, clickedTag]
+  let tags
+  if (extendSelection) {
+    tags = filters.tags.includes(clickedTag)
+      ? filters.tags.filter(tag => tag !== clickedTag)
+      : [...filters.tags, clickedTag]
+  } else {
+    tags = filters.tags.length === 1 && filters.tags[0] === clickedTag
+      ? []
+      : [clickedTag]
+  }
 
   return Object.assign({}, filters, { tags })
 }
