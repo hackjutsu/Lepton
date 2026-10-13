@@ -12,7 +12,8 @@ const {
   SAFE_STORAGE_PROVIDER,
   createAccessTokenStorage,
   getConfiguredStorageMode,
-  getEffectiveStorageMode
+  getEffectiveStorageMode,
+  getScopedTokenKeys
 } = require('../../app/utilities/accessTokenStorage')
 const { createElectronLocalStorage } = require('../../app/utilities/electronLocalStorage')
 
@@ -352,5 +353,74 @@ describe('access token storage', () => {
     })
     expect(localStorage.values[LEGACY_TOKEN_KEY]).toBeNull()
     expect(localStorage.values[ENCRYPTED_TOKEN_KEY]).toBeNull()
+  })
+
+  it('isolates cached credentials by provider scope', () => {
+    const localStorage = createMemoryStorage()
+    const accessTokenStorage = createAccessTokenStorage({
+      conf: createConf({ 'security:cachedAccessTokenStorage': 'encrypted' }),
+      isDev: false,
+      localStorage,
+      safeStorage: createSafeStorage()
+    })
+
+    expect(accessTokenStorage.set('github-token', 'github:https://github.com').status).toBe(true)
+    expect(accessTokenStorage.set('gitlab-token', 'gitlab:https://gitlab.com').status).toBe(true)
+
+    expect(accessTokenStorage.get('github:https://github.com').data).toBe('github-token')
+    expect(accessTokenStorage.get('gitlab:https://gitlab.com').data).toBe('gitlab-token')
+
+    expect(accessTokenStorage.set(null, 'gitlab:https://gitlab.com').status).toBe(true)
+    expect(accessTokenStorage.get('github:https://github.com').data).toBe('github-token')
+    expect(accessTokenStorage.get('gitlab:https://gitlab.com').data).toBeNull()
+  })
+
+  it('keeps suffix-colliding provider scopes isolated across file-storage restarts', () => {
+    const userDataPath = mkdtempSync(join(tmpdir(), 'lepton-scoped-token-'))
+    const tenantScope = 'gitlab:https://gitlab.example/tenant'
+    const jsonTenantScope = 'gitlab:https://gitlab.example/tenant.json'
+
+    try {
+      const createStorage = () => createAccessTokenStorage({
+        conf: createConf({ 'security:cachedAccessTokenStorage': 'file' }),
+        isDev: true,
+        localStorage: createElectronLocalStorage({ getUserDataPath: () => userDataPath }),
+        safeStorage: createSafeStorage()
+      })
+
+      const initialStorage = createStorage()
+      expect(initialStorage.set('tenant-token', tenantScope).status).toBe(true)
+      expect(initialStorage.set('json-tenant-token', jsonTenantScope).status).toBe(true)
+
+      const reopenedStorage = createStorage()
+      expect(reopenedStorage.get(tenantScope).data).toBe('tenant-token')
+      expect(reopenedStorage.get(jsonTenantScope).data).toBe('json-tenant-token')
+
+      expect(reopenedStorage.set(null, tenantScope).status).toBe(true)
+      expect(reopenedStorage.get(tenantScope).data).toBeNull()
+      expect(reopenedStorage.get(jsonTenantScope).data).toBe('json-tenant-token')
+    } finally {
+      rmSync(userDataPath, { recursive: true, force: true })
+    }
+  })
+
+  it('preserves legacy keys for an omitted scope and rejects unsafe scopes', () => {
+    expect(getScopedTokenKeys()).toEqual({
+      encrypted: ENCRYPTED_TOKEN_KEY,
+      legacy: LEGACY_TOKEN_KEY
+    })
+    expect(() => getScopedTokenKeys('gitlab:\u0000example')).toThrow('Invalid access token storage scope')
+  })
+
+  it('encodes provider scopes so URL paths cannot collapse local storage keys', () => {
+    expect(getScopedTokenKeys('gitlab:https://gitlab.example.com/team')).toEqual({
+      encrypted: 'encrypted-token:gitlab%3Ahttps%3A%2F%2Fgitlab.example.com%2Fteam',
+      legacy: 'token:gitlab%3Ahttps%3A%2F%2Fgitlab.example.com%2Fteam'
+    })
+  })
+
+  it('preserves case-sensitive provider paths in credential scopes', () => {
+    expect(getScopedTokenKeys('gitlab:https://gitlab.example.com/Team'))
+      .not.toEqual(getScopedTokenKeys('gitlab:https://gitlab.example.com/team'))
   })
 })

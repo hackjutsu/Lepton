@@ -1,42 +1,23 @@
-import electronBridge from '../electronBridge'
+import { getSnippetApi, getSnippetProvider } from '../snippetApi'
+import githubOperations from './operations'
 
-export const EXCHANGE_ACCESS_TOKEN = 'EXCHANGE_ACCESS_TOKEN'
-export const GET_ALL_GISTS = 'GET_ALL_GISTS'
-export const GET_ALL_GISTS_V1 = 'GET_ALL_GISTS_V1'
-export const GET_SINGLE_GIST = 'GET_SINGLE_GIST'
-export const GET_USER_PROFILE = 'GET_USER_PROFILE'
-export const CREATE_SINGLE_GIST = 'CREATE_SINGLE_GIST'
-export const EDIT_SINGLE_GIST = 'EDIT_SINGLE_GIST'
-export const DELETE_SINGLE_GIST = 'DELETE_SINGLE_GIST'
+export const GET_ALL_GISTS_V1 = githubOperations.GET_ALL_GISTS_V1
 
-const GITHUB_API_BRIDGE_RESPONSE = '__leptonGitHubApiBridgeResponse'
+export {
+  EXCHANGE_ACCESS_TOKEN,
+  GET_ALL_GISTS,
+  GET_SINGLE_GIST,
+  GET_USER_PROFILE,
+  CREATE_SINGLE_GIST,
+  EDIT_SINGLE_GIST,
+  DELETE_SINGLE_GIST
+} from '../snippetApi'
 
 export function getGitHubApi (selection) {
-  return (...args) => electronBridge.github.request(selection, args)
-    .then(unwrapGitHubApiBridgeResponse)
-}
+  const activeProvider = getSnippetProvider()
+  const githubProvider = activeProvider.type === 'github'
+    ? activeProvider
+    : { type: 'github' }
 
-function unwrapGitHubApiBridgeResponse (response) {
-  if (!response || response[GITHUB_API_BRIDGE_RESPONSE] !== true) {
-    return response
-  }
-
-  if (response.ok) {
-    return response.data
-  }
-
-  throw createGitHubApiBridgeError(response.error)
-}
-
-function createGitHubApiBridgeError (payload = {}) {
-  const error = new Error(payload.message || 'GitHub API request failed')
-
-  error.name = payload.name || 'GitHubApiBridgeError'
-  Object.keys(payload).forEach(key => {
-    if (payload[key] !== undefined) {
-      error[key] = payload[key]
-    }
-  })
-
-  return error
+  return getSnippetApi(selection, githubProvider)
 }

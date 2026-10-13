@@ -27,6 +27,10 @@ const { configureI18n, t } = require('./app/utilities/i18n')
 const { createAccessTokenStorage } = require('./app/utilities/accessTokenStorage')
 const { createElectronLocalStorage } = require('./app/utilities/electronLocalStorage')
 const {
+  createProviderAccessPolicy,
+  isCredentialStorageKey
+} = require('./app/utilities/providerAccessPolicy')
+const {
   getUpdateCheckDecision,
   getUpdateNotificationDecision
 } = require('./app/utilities/updatePolicy')
@@ -41,7 +45,9 @@ const {
 } = require('./app/utilities/auth/githubAuthWindow')
 const { applyDefaultZoomPercent } = require('./app/utilities/zoom')
 const {
-  isValidPreferenceValue
+  isSecretConfigKey,
+  isValidPreferenceValue,
+  preferenceRequiresRestart
 } = require('./app/utilities/config/preferences')
 
 const logger = createMainLogger()
@@ -55,6 +61,7 @@ const accessTokenStorage = createAccessTokenStorage({
   localStorage: electronLocalStorage,
   logger
 })
+const providerAccessPolicy = createProviderAccessPolicy({ conf: nconf })
 
 const { autoUpdater } = require("electron-updater")
 autoUpdater.logger = logger
@@ -78,7 +85,7 @@ for (const key of Object.getOwnPropertyNames(defaultConfig)) {
 let mainWindow = null
 let tray = null
 let authFlow = null
-let githubApi = null
+let snippetApi = null
 let operationType = 0
 
 const MACOS_TRAY_ICON_SIZE = 18
@@ -417,7 +424,7 @@ function setUpBridgeIpcHandlers () {
   const loggerMethods = new Set(['debug', 'error', 'info', 'warn'])
   const appPathNames = new Set(['appData', 'home', 'temp', 'userData'])
   function isAllowedConfigKey (key) {
-    if (typeof key !== 'string' || key.length === 0) return false
+    if (typeof key !== 'string' || key.length === 0 || isSecretConfigKey(key)) return false
     const rootKey = key.split(':')[0]
     return Object.prototype.hasOwnProperty.call(defaultConfig, rootKey)
   }
@@ -461,17 +468,24 @@ function setUpBridgeIpcHandlers () {
     return true
   }
 
-  function getGitHubApiBridge () {
-    if (!githubApi) {
-      const { createGitHubApi } = require('./app/utilities/githubApi/core')
-    githubApi = createGitHubApi({
-      conf: nconf,
-      gitHubApiBaseUrl: process.env.LEPTON_TEST_GITHUB_API_BASE_URL,
-      oauthAccessTokenUrl: process.env.LEPTON_TEST_GITHUB_OAUTH_ACCESS_TOKEN_URL,
-      logger
-    })
+  function getSnippetApiBridge () {
+    if (!snippetApi) {
+      const { createSnippetApi } = require('./app/utilities/snippetApi/core')
+      snippetApi = createSnippetApi({
+        conf: nconf,
+        logger,
+        providerOptions: {
+          github: {
+            gitHubApiBaseUrl: process.env.LEPTON_TEST_GITHUB_API_BASE_URL,
+            oauthAccessTokenUrl: process.env.LEPTON_TEST_GITHUB_OAUTH_ACCESS_TOKEN_URL
+          },
+          gitlab: {
+            gitLabApiBaseUrl: process.env.LEPTON_TEST_GITLAB_API_BASE_URL
+          }
+        }
+      })
     }
-    return githubApi
+    return snippetApi
   }
 
   function writeConfigValue (key, value) {
@@ -505,7 +519,7 @@ function setUpBridgeIpcHandlers () {
   })
 
   ipcMain.handle('lepton:config:set', (event, key, value) => {
-    if (!isMainWindowSender(event) || !isValidPreferenceValue(key, value)) {
+    if (!isMainWindowSender(event) || isSecretConfigKey(key) || !isValidPreferenceValue(key, value)) {
       logger.warn(`[bridge] Rejected config write for "${key}"`)
       return undefined
     }
@@ -523,6 +537,19 @@ function setUpBridgeIpcHandlers () {
     }
     setUpApplicationMenu()
     return persistedValue
+  })
+
+  ipcMain.handle('lepton:config:set-for-restart', (event, key, value) => {
+    if (!isMainWindowSender(event) ||
+      isSecretConfigKey(key) ||
+      !preferenceRequiresRestart(key) ||
+      !isValidPreferenceValue(key, value)) {
+      logger.warn(`[bridge] Rejected restart config write for "${key}"`)
+      return undefined
+    }
+
+    writeConfigValue(key, value)
+    return value
   })
 
   ipcMain.handle('lepton:dialog:show-message', (event, options = {}) => {
@@ -579,7 +606,7 @@ function setUpBridgeIpcHandlers () {
   })
 
   ipcMain.on('lepton:local-storage:get', (event, key) => {
-    if (!isMainWindowSender(event) || typeof key !== 'string') {
+    if (!isMainWindowSender(event) || typeof key !== 'string' || isCredentialStorageKey(key)) {
       event.returnValue = { status: false, data: null }
       return
     }
@@ -587,27 +614,27 @@ function setUpBridgeIpcHandlers () {
   })
 
   ipcMain.on('lepton:local-storage:set', (event, key, value) => {
-    if (!isMainWindowSender(event) || typeof key !== 'string') {
+    if (!isMainWindowSender(event) || typeof key !== 'string' || isCredentialStorageKey(key)) {
       event.returnValue = { status: false }
       return
     }
     event.returnValue = electronLocalStorage.set(key, value)
   })
 
-  ipcMain.on('lepton:credentials:get-access-token', (event) => {
-    if (!isMainWindowSender(event)) {
+  ipcMain.on('lepton:credentials:get-access-token', (event, scope) => {
+    if (!isMainWindowSender(event) || !providerAccessPolicy.canReadCredential(scope)) {
       event.returnValue = { status: false, data: null }
       return
     }
-    event.returnValue = accessTokenStorage.get()
+    event.returnValue = accessTokenStorage.get(scope)
   })
 
-  ipcMain.on('lepton:credentials:set-access-token', (event, token) => {
-    if (!isMainWindowSender(event)) {
+  ipcMain.on('lepton:credentials:set-access-token', (event, token, scope) => {
+    if (!isMainWindowSender(event) || !providerAccessPolicy.canWriteCredential(token, scope)) {
       event.returnValue = { status: false }
       return
     }
-    event.returnValue = accessTokenStorage.set(token)
+    event.returnValue = accessTokenStorage.set(token, scope)
   })
 
   ipcMain.on('lepton:renderer-store:get', (event, configName, defaults) => {
@@ -631,22 +658,25 @@ function setUpBridgeIpcHandlers () {
     logger[method](...args)
   })
 
-  ipcMain.handle('lepton:github-api:request', async (event, selection, args = []) => {
+  ipcMain.handle('lepton:snippet-api:request', async (event, provider, selection, args = []) => {
     if (!isMainWindowSender(event) || typeof selection !== 'string' || !Array.isArray(args)) {
-      return createGitHubApiBridgeResponse(null, createGitHubApiBridgeError(new Error('Invalid GitHub API bridge request')))
+      return createSnippetApiBridgeResponse(null, createSnippetApiBridgeError(new Error('Invalid snippet API bridge request')))
     }
 
     try {
-      const request = getGitHubApiBridge().getGitHubApi(selection)
+      if (!providerAccessPolicy.isActiveProvider(provider)) {
+        throw new Error('Snippet provider does not match the active configuration')
+      }
+      const request = getSnippetApiBridge().getSnippetApi(provider, selection)
       if (typeof request !== 'function') {
-        throw new Error(`Unsupported GitHub API selection: ${selection}`)
+        throw new Error(`Unsupported snippet API selection: ${selection}`)
       }
 
-      return createGitHubApiBridgeResponse(await request(...args))
+      return createSnippetApiBridgeResponse(await request(...args))
     } catch (error) {
-      const serializedError = createGitHubApiBridgeError(error)
-      logger.error('[bridge] GitHub API request failed: ' + JSON.stringify(serializedError))
-      return createGitHubApiBridgeResponse(null, serializedError)
+      const serializedError = createSnippetApiBridgeError(error)
+      logger.error('[bridge] Snippet API request failed: ' + JSON.stringify(serializedError))
+      return createSnippetApiBridgeResponse(null, serializedError)
     }
   })
 
@@ -995,25 +1025,25 @@ function describeGitHubAuthWindow (authWindow) {
   })
 }
 
-function createGitHubApiBridgeResponse (data, error) {
+function createSnippetApiBridgeResponse (data, error) {
   return {
-    __leptonGitHubApiBridgeResponse: true,
+    __leptonSnippetApiBridgeResponse: true,
     ok: !error,
     data,
     error
   }
 }
 
-function createGitHubApiBridgeError (error) {
+function createSnippetApiBridgeError (error) {
   if (!error || typeof error !== 'object') {
     return {
-      message: String(error || 'GitHub API request failed'),
+      message: String(error || 'Snippet API request failed'),
       name: 'Error'
     }
   }
 
   return removeUndefinedProperties({
-    message: error.message || 'GitHub API request failed',
+    message: error.message || 'Snippet API request failed',
     name: error.name || 'Error',
     status: error.status,
     statusCode: error.statusCode,

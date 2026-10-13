@@ -92,18 +92,21 @@ See [Configuration](configuration.md#options) for all proxy-related options.
 
 ## Enable GitHub Enterprise
 
-Create a GitHub personal access token with the `gist` scope enabled. Then add your GitHub Enterprise host and token to `.leptonrc`:
+Create a GitHub personal access token with the `gist` scope enabled. Then add your GitHub Enterprise host to `.leptonrc`:
 
 ```json
 {
   "enterprise": {
     "enable": true,
     "host": "github.example.com",
-    "token": "token_with_gist_scope",
     "avatarUrl": ""
   }
 }
 ```
+
+Restart Lepton, select GitHub, and paste the token into the login screen. Lepton
+caches it for that exact Enterprise host, so changing hosts cannot reuse the
+credential accidentally.
 
 See [Configuration](configuration.md#options) for the full `enterprise` option list.
 

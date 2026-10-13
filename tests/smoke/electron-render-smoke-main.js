@@ -1,4 +1,5 @@
 const fs = require('fs')
+const crypto = require('crypto')
 const path = require('path')
 const { app, BrowserWindow } = require('electron')
 
@@ -143,6 +144,8 @@ async function getRendererState (window) {
       )
       const snippetTitles = Array.from(document.querySelectorAll('.snippet-thumnail-description'))
         .map(snippet => snippet.innerText.trim())
+      const providerSelector = document.querySelector('[aria-label="Snippet provider"]')
+      const gitLabHostInput = document.querySelector('[aria-label="GitLab instance host"]')
       const images = Array.from(document.images).map(image => {
         const bounds = image.getBoundingClientRect()
         return {
@@ -184,6 +187,8 @@ async function getRendererState (window) {
               title: loginModeSwitch.getAttribute('title') || ''
             }
           : null,
+        providerType: providerSelector ? providerSelector.value : '',
+        gitLabHost: gitLabHostInput ? gitLabHostInput.value : '',
         images,
         appBounds: appBounds ? {
           width: appBounds.width,
@@ -275,6 +280,7 @@ function assertLoginRendererState (state) {
     throw new Error(`Expected app container and login modal to exist: ${JSON.stringify(state)}`)
   }
 
+  const expectedProvider = process.env.LEPTON_SMOKE_EXPECTED_PROVIDER || 'github'
   const expectedTexts = (process.env.LEPTON_SMOKE_EXPECTED_TEXT || 'Login|GitHub Login').split('|')
   const missingText = expectedTexts.find(text => !state.bodyText.includes(text))
   if (missingText) {
@@ -284,6 +290,20 @@ function assertLoginRendererState (state) {
   const expectedLocales = ['en', 'es', 'fr', 'ja', 'ko', 'zh-Hans', 'zh-Hant']
   if (expectedLocales.some(locale => !state.languageOptions.includes(locale))) {
     throw new Error(`Expected language selector options were not visible: ${JSON.stringify(state.languageOptions)}`)
+  }
+
+  if (state.providerType !== expectedProvider) {
+    throw new Error(`Expected ${expectedProvider} provider to be selected: ${JSON.stringify(state)}`)
+  }
+
+  if (expectedProvider === 'gitlab') {
+    if (state.loginModeSwitch) {
+      throw new Error(`Expected GitLab login to stay in token-only mode: ${JSON.stringify(state)}`)
+    }
+    if (!state.gitLabHost) {
+      throw new Error(`Expected GitLab instance host control to be visible: ${JSON.stringify(state)}`)
+    }
+    return
   }
 
   if (!state.loginModeSwitch) {
@@ -308,6 +328,132 @@ function assertLoginRendererState (state) {
 
   if (!state.languageSelectorTooltip) {
     throw new Error(`Expected compact language selector to expose a custom tooltip: ${JSON.stringify(state)}`)
+  }
+}
+
+async function assertLoginProviderSwitch (window) {
+  if (process.env.LEPTON_SMOKE_SWITCH_PROVIDER !== '1') return
+
+  const result = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const providerSelector = document.querySelector('[aria-label="Snippet provider"]')
+      if (!providerSelector) {
+        resolve({ reason: 'missing provider selector' })
+        return
+      }
+
+      providerSelector.value = 'gitlab'
+      providerSelector.dispatchEvent(new Event('change', { bubbles: true }))
+
+      const controlsDeadline = Date.now() + 3000
+      function updateGitLabHost () {
+        const gitLabHostInput = document.querySelector('[aria-label="GitLab instance host"]')
+        if ((!gitLabHostInput || gitLabHostInput.disabled) && Date.now() < controlsDeadline) {
+          setTimeout(updateGitLabHost, 100)
+          return
+        }
+        const gitLabState = {
+          hasHost: Boolean(gitLabHostInput),
+          initialHost: gitLabHostInput ? gitLabHostInput.value : null,
+          hasModeSwitch: Boolean(document.querySelector('.login-mode-switch')),
+          hasTokenLogin: document.body.innerText.includes('GitLab Token Login'),
+          persistedProvider: window.lepton.config.get('provider:type')
+        }
+
+        if (gitLabHostInput) {
+          const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+          gitLabHostInput.focus()
+          valueSetter.call(gitLabHostInput, 'gitlab.smoke.test')
+          gitLabHostInput.dispatchEvent(new Event('input', { bubbles: true }))
+          gitLabHostInput.dispatchEvent(new FocusEvent('focusout', { bubbles: true }))
+        }
+
+        const hostDeadline = Date.now() + 3000
+        function finishProviderSwitch () {
+          const persistedHost = window.lepton.config.get('gitlab:host')
+          if (persistedHost !== 'https://gitlab.smoke.test' && Date.now() < hostDeadline) {
+            setTimeout(finishProviderSwitch, 100)
+            return
+          }
+          const activeProviderSelector = document.querySelector('[aria-label="Snippet provider"]')
+          gitLabState.persistedHost = persistedHost
+          activeProviderSelector.value = 'github'
+          activeProviderSelector.dispatchEvent(new Event('change', { bubbles: true }))
+
+          setTimeout(() => resolve({
+            gitLabState,
+            restored: {
+              hasGitHubLogin: document.body.innerText.includes('GitHub Login'),
+              hasModeSwitch: Boolean(document.querySelector('.login-mode-switch')),
+              persistedProvider: window.lepton.config.get('provider:type')
+            }
+          }), 300)
+        }
+        finishProviderSwitch()
+      }
+      updateGitLabHost()
+    })
+  `, true)
+
+  if (
+    !result.gitLabState ||
+    !result.gitLabState.hasHost ||
+    result.gitLabState.initialHost !== 'https://gitlab.com' ||
+    result.gitLabState.hasModeSwitch ||
+    !result.gitLabState.hasTokenLogin ||
+    result.gitLabState.persistedProvider !== 'gitlab' ||
+    result.gitLabState.persistedHost !== 'https://gitlab.smoke.test'
+  ) {
+    throw new Error(`Expected provider selector to persist a token-only GitLab login: ${JSON.stringify(result)}`)
+  }
+
+  if (
+    !result.restored ||
+    !result.restored.hasGitHubLogin ||
+    !result.restored.hasModeSwitch ||
+    result.restored.persistedProvider !== 'github'
+  ) {
+    throw new Error(`Expected provider selector to restore GitHub OAuth login: ${JSON.stringify(result)}`)
+  }
+}
+
+async function assertProviderBridgeIsolation (window) {
+  const activeProviderType = process.env.LEPTON_SMOKE_EXPECTED_PROVIDER || 'github'
+  const inactiveProvider = activeProviderType === 'gitlab'
+    ? { type: 'github', baseUrl: 'https://github.com' }
+    : { type: 'gitlab', baseUrl: 'https://attacker.example' }
+  const inactiveScope = `${inactiveProvider.type}:${inactiveProvider.baseUrl}`
+  const inactiveTokenKey = `token:${encodeURIComponent(inactiveScope)}`
+  const scopedStorageAlias = `scoped-v1-${crypto.createHash('sha256')
+    .update('lepton-scoped-storage-v1\0')
+    .update(inactiveTokenKey)
+    .digest('hex')}`
+
+  const result = await window.webContents.executeJavaScript(`
+    (async () => {
+      const provider = ${JSON.stringify(inactiveProvider)}
+      const scope = ${JSON.stringify(inactiveScope)}
+      const scopedStorageAlias = ${JSON.stringify(scopedStorageAlias)}
+      return {
+        secretConfigParentRead: window.lepton.config.get('enterprise'),
+        secretConfigRead: window.lepton.config.get('enterprise:token'),
+        secretConfigWrite: await window.lepton.config.set('enterprise:token', 'inactive-provider-token'),
+        secretConfigRestartWrite: await window.lepton.config.setForRestart('enterprise:token', 'inactive-provider-token'),
+        credentialRead: window.lepton.credentials.getAccessToken(scope),
+        credentialWrite: window.lepton.credentials.setAccessToken('inactive-provider-token', scope),
+        rawStorageRead: window.lepton.localStorage.get('token:' + encodeURIComponent(scope)),
+        rawScopedAliasWrite: window.lepton.localStorage.set(scopedStorageAlias, 'inactive-provider-token'),
+        snippetRequest: await window.lepton.snippets.request(provider, 'GET_USER_PROFILE', ['inactive-provider-token'])
+      }
+    })()
+  `, true)
+
+  if (result.secretConfigParentRead !== undefined || result.secretConfigRead !== undefined ||
+    result.secretConfigWrite !== undefined ||
+    result.secretConfigRestartWrite !== undefined || result.credentialRead.status ||
+    result.credentialWrite.status || result.rawStorageRead.status || result.rawScopedAliasWrite.status ||
+    !result.snippetRequest || result.snippetRequest.ok !== false) {
+    throw new Error(`Expected main-process provider boundaries to reject inactive credentials and API requests: ${JSON.stringify(result)}`)
   }
 }
 
@@ -929,10 +1075,18 @@ async function main () {
     } else {
       await waitForLoginUi(window)
       assertLoginRendererState(await getRendererState(window))
-      await assertLoginHeaderTooltips(window)
-      await assertLoginModeSwitchKeepsModalHeight(window)
+      await assertProviderBridgeIsolation(window)
+      await assertLoginProviderSwitch(window)
+      if ((process.env.LEPTON_SMOKE_EXPECTED_PROVIDER || 'github') === 'github') {
+        await assertLoginHeaderTooltips(window)
+        await assertLoginModeSwitchKeepsModalHeight(window)
+      } else {
+        await captureScreenshot(window, 'electron-render-gitlab-login-success.png')
+      }
       await assertLoginLocaleSwitchRendersInPlace(window)
-      await captureScreenshot(window, 'electron-render-smoke-success.png')
+      if (process.env.LEPTON_SMOKE_EXPECTED_PROVIDER !== 'gitlab') {
+        await captureScreenshot(window, 'electron-render-smoke-success.png')
+      }
       console.log('electron render smoke test passed')
     }
 

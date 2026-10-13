@@ -1,5 +1,12 @@
 const fs = require('fs')
 const path = require('path')
+const { getStorageFilePath } = require('../../app/utilities/electronLocalStorage')
+const canonicalGitHubScope = 'github:https://github.com'
+const scopedProfileKey = `profile:${encodeURIComponent(canonicalGitHubScope)}`
+const scopedTokenKey = `token:${encodeURIComponent(canonicalGitHubScope)}`
+const gitLabScope = 'gitlab:https://gitlab.example.test'
+const gitLabProfileKey = `profile:${encodeURIComponent(gitLabScope)}`
+const gitLabTokenKey = `token:${encodeURIComponent(gitLabScope)}`
 const { app, BrowserWindow } = require('electron')
 
 const repoRoot = path.resolve(__dirname, '../..')
@@ -208,6 +215,84 @@ async function submitToken (window, token) {
   }
 }
 
+async function submitGitLabToken (window, token) {
+  await waitForCondition(
+    window,
+    [
+      "Boolean(document.querySelector('.login-modal'))",
+      "Boolean(document.querySelector('[aria-label=\"GitLab personal access token\"]'))",
+      "document.body && document.body.innerText.includes('GitLab Token Login')"
+    ].join(' && '),
+    'GitLab token login form'
+  )
+
+  const result = await window.webContents.executeJavaScript(`
+    (() => {
+      const input = document.querySelector('[aria-label="GitLab personal access token"]')
+      const button = Array.from(document.querySelectorAll('button'))
+        .find(candidate => candidate.innerText.trim() === 'GitLab Token Login')
+      if (!input || !button || button.disabled) {
+        return { submitted: false, hasInput: Boolean(input), hasButton: Boolean(button) }
+      }
+
+      const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+      valueSetter.call(input, ${JSON.stringify(token)})
+      input.dispatchEvent(new Event('input', { bubbles: true }))
+      input.dispatchEvent(new Event('change', { bubbles: true }))
+      button.click()
+      return { submitted: true }
+    })()
+  `, true)
+
+  if (!result.submitted) {
+    throw new Error(`Unable to submit GitLab token login: ${JSON.stringify(result)}`)
+  }
+}
+
+async function submitGitLabTokenAfterHostEdit (window, host, token) {
+  await waitForCondition(
+    window,
+    [
+      "Boolean(document.querySelector('[aria-label=\"GitLab instance host\"]:not(:disabled)'))",
+      "Boolean(document.querySelector('[aria-label=\"GitLab personal access token\"]'))"
+    ].join(' && '),
+    'interactive GitLab host and token controls'
+  )
+
+  const result = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const hostInput = document.querySelector('[aria-label="GitLab instance host"]')
+      const tokenInput = document.querySelector('[aria-label="GitLab personal access token"]')
+      const button = Array.from(document.querySelectorAll('button'))
+        .find(candidate => candidate.innerText.trim() === 'GitLab Token Login')
+      if (!hostInput || !tokenInput || !button) {
+        resolve({ submitted: false, reason: 'missing-control' })
+        return
+      }
+
+      const valueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+      hostInput.focus()
+      valueSetter.call(hostInput, ${JSON.stringify(host)})
+      hostInput.dispatchEvent(new Event('input', { bubbles: true }))
+      valueSetter.call(tokenInput, ${JSON.stringify(token)})
+      tokenInput.dispatchEvent(new Event('input', { bubbles: true }))
+
+      setTimeout(() => {
+        button.focus()
+        setTimeout(() => {
+          const disabled = button.disabled
+          button.click()
+          resolve({ submitted: !disabled, disabled })
+        }, 0)
+      }, 0)
+    })
+  `, true)
+
+  if (!result.submitted) {
+    throw new Error(`Unable to submit GitLab token immediately after editing its host: ${JSON.stringify(result)}`)
+  }
+}
+
 async function waitForInitialLogin (window) {
   await waitForCondition(
     window,
@@ -246,8 +331,7 @@ async function waitForActiveUser (window, login) {
 }
 
 function storagePath (key) {
-  const fileName = path.basename(key, '.json') + '.json'
-  return path.join(app.getPath('userData'), 'storage', encodeURIComponent(fileName))
+  return getStorageFilePath(app.getPath('userData'), key)
 }
 
 function readStorageValue (key) {
@@ -258,17 +342,17 @@ function readStorageValue (key) {
   }
 }
 
-async function waitForCachedCredentialClear () {
+async function waitForCachedCredentialClear (tokenKey = scopedTokenKey, profileKey = scopedProfileKey) {
   const deadline = Date.now() + 10000
 
   while (Date.now() < deadline) {
-    if (readStorageValue('token') === null && readStorageValue('profile') === null) return
+    if (readStorageValue(tokenKey) === null && readStorageValue(profileKey) === null) return
     await wait(100)
   }
 
   throw new Error(`Timed out waiting for cached credential clear: ${JSON.stringify({
-    token: readStorageValue('token'),
-    profile: readStorageValue('profile')
+    token: readStorageValue(tokenKey),
+    profile: readStorageValue(profileKey)
   })}`)
 }
 
@@ -338,6 +422,68 @@ async function runScenario (window) {
       await waitForInitialLogin(window)
       await submitToken(window, 'manual-bad-token')
       await assertInitialLoginAfterInvalidCredential(window)
+      return
+    case 'gitlab-token-success':
+      await submitGitLabToken(window, 'gitlab-good-token')
+      await waitForActiveUser(window, 'gitlab-user')
+      if (readStorageValue(gitLabTokenKey) !== 'gitlab-good-token' ||
+        readStorageValue(gitLabProfileKey) !== 'gitlab-user') {
+        throw new Error('GitLab credentials were not cached under the configured provider scope')
+      }
+      return
+    case 'gitlab-edited-host-token-success':
+      await submitGitLabTokenAfterHostEdit(window, 'gitlab.example.test', 'gitlab-good-token')
+      await waitForActiveUser(window, 'gitlab-user')
+      if (await window.webContents.executeJavaScript("window.lepton.config.get('gitlab:host')", true) !== 'https://gitlab.example.test') {
+        throw new Error('GitLab host edit was not persisted before token login')
+      }
+      return
+    case 'gitlab-invalid-host':
+      await waitForCondition(
+        window,
+        [
+          "Boolean(document.querySelector('.login-modal'))",
+          "Boolean(document.querySelector('[aria-label=\"GitLab personal access token\"]'))",
+          "document.body && document.body.innerText.includes('Enter a valid HTTP or HTTPS GitLab instance.')"
+        ].join(' && '),
+        'invalid GitLab host warning'
+      )
+      await submitGitLabToken(window, 'must-not-leak')
+      await wait(500)
+      if (await window.webContents.executeJavaScript("Boolean(document.querySelector('.active-layout'))", true)) {
+        throw new Error('Invalid GitLab host unexpectedly started a session')
+      }
+      return
+    case 'gitlab-blank-host':
+      await waitForCondition(
+        window,
+        [
+          "Boolean(document.querySelector('.login-modal'))",
+          "Boolean(document.querySelector('[aria-label=\"GitLab personal access token\"]'))",
+          "document.body && document.body.innerText.includes('Enter a GitLab instance host.')",
+          "document.querySelector('[aria-label=\"GitLab instance host\"]').value === ''"
+        ].join(' && '),
+        'blank GitLab host warning',
+        5000
+      )
+      await submitGitLabToken(window, 'must-not-leak')
+      await wait(500)
+      if (await window.webContents.executeJavaScript("Boolean(document.querySelector('.active-layout'))", true)) {
+        throw new Error('Blank GitLab host unexpectedly started a session')
+      }
+      return
+    case 'gitlab-cached-token-invalid':
+      await waitForCachedCredentialClear(gitLabTokenKey, gitLabProfileKey)
+      await waitForCondition(
+        window,
+        [
+          "Boolean(document.querySelector('.login-modal'))",
+          "Boolean(document.querySelector('[aria-label=\"GitLab personal access token\"]'))",
+          `document.body && document.body.innerText.includes(${JSON.stringify(invalidTokenMessage)})`,
+          "Array.from(document.querySelectorAll('button')).some(button => button.innerText.trim() === 'GitLab Token Login' && !button.disabled)"
+        ].join(' && '),
+        'retryable GitLab login after invalid cached token'
+      )
       return
     case 'cached-token-success':
       await waitForActiveUser(window, 'cached-user')

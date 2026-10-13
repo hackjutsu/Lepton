@@ -25,12 +25,31 @@ import {
 } from './utilities/parser'
 
 import {
-  getGitHubApi,
+  getSnippetApi,
+  getSnippetProvider,
+  refreshSnippetProvider,
   GET_ALL_GISTS,
   GET_SINGLE_GIST,
   GET_USER_PROFILE,
   EXCHANGE_ACCESS_TOKEN
-} from './utilities/githubApi'
+} from './utilities/snippetApi'
+import {
+  getProviderConfigError,
+  getProviderStorageKey
+} from './utilities/snippetProvider'
+import { migrateLegacyGitHubAccountStorage } from './utilities/accountStorageMigration'
+import {
+  getProviderCacheKeys,
+  readProviderCachedUserInfo
+} from './utilities/providerCredentialCache'
+import {
+  advanceSessionGeneration,
+  assertSessionGenerationCurrent,
+  createStaleSessionError,
+  getSessionGeneration,
+  isSessionGenerationCurrent,
+  isStaleSessionError
+} from './utilities/sessionGeneration'
 
 import RootReducer from './reducers'
 import {
@@ -60,6 +79,7 @@ import {
 import { notifySuccess, notifyFailure } from './utilities/notifier'
 import { configureI18n, t } from './utilities/i18n'
 import { shouldDownloadAllSnippets } from './utilities/config'
+import { cloneSnippetTagMap } from './utilities/snippetTags'
 
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
@@ -81,6 +101,7 @@ const CONFIG_OPTIONS = {
   scopes: ['gist']
 }
 const GIST_DETAIL_SYNC_CONCURRENCY = 5
+const LEGACY_PROFILE_STORAGE_KEY = 'profile'
 const LOGIN_STATUS = {
   openingOAuthWindow: 'Opening OAuth...',
   waitingGitHubAuthorization: 'Awaiting auth...',
@@ -106,9 +127,21 @@ function getRenderFixtureName () {
 
 function launchAuthWindow (token) {
   logger.debug('[auth] launchAuthWindow called ' + JSON.stringify({ hasCachedCredential: Boolean(token) }))
+  const provider = getSnippetProvider()
+  const providerConfigError = getProviderConfigError(conf)
+  if (providerConfigError) {
+    updateLoginStatusUserError(providerConfigError)
+    return
+  }
+
   if (token) {
     logger.debug('[auth] Starting session with cached credential')
-    initUserSession(token)
+    initUserSession(token, { provider })
+    return
+  }
+
+  if (provider.type !== 'github') {
+    updateLoginStatusUserError('Enter a GitLab personal access token.')
     return
   }
 
@@ -130,7 +163,7 @@ function launchAuthWindow (token) {
   updateLoginStatusInfo(LOGIN_STATUS.waitingGitHubAuthorization)
 
   gitHubLogin
-    .then(handleAuthResult)
+    .then(result => handleAuthResult(result, provider))
     .catch((err) => {
       updateAuthWindowStatusOff()
       updateLoginStatusFailure()
@@ -139,7 +172,7 @@ function launchAuthWindow (token) {
     })
 }
 
-function handleAuthResult (result) {
+function handleAuthResult (result, provider) {
   updateAuthWindowStatusOff()
   logger.debug('[auth] GitHub OAuth result received: ' + JSON.stringify(describeGitHubAuthResult(result)))
 
@@ -161,7 +194,7 @@ function handleAuthResult (result) {
     }))
 
     updateLoginStatusInfo(LOGIN_STATUS.exchangingOAuthCode)
-    getGitHubApi(EXCHANGE_ACCESS_TOKEN)(
+    getSnippetApi(EXCHANGE_ACCESS_TOKEN, provider)(
       CONFIG_OPTIONS.client_id, CONFIG_OPTIONS.client_secret, result.code)
       .then((payload) => {
         logger.debug('[auth] OAuth credential exchange succeeded ' + JSON.stringify({
@@ -169,9 +202,14 @@ function handleAuthResult (result) {
           credentialType: payload && payload.token_type,
           scope: payload && payload.scope
         }))
-        return initUserSession(payload.access_token, { freshOAuthToken: true })
+        assertSnippetProviderCurrent(provider)
+        return initUserSession(payload.access_token, { freshOAuthToken: true, provider })
       })
       .catch((err) => {
+        if (isStaleSessionError(err)) {
+          logger.info('[auth] Ignoring OAuth result because the snippet provider changed')
+          return
+        }
         logger.warn('[auth] OAuth credential exchange failed; returning to login modal')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
         updateLoginStatusFailure()
@@ -374,12 +412,30 @@ function clearSyncSnapshot () {
   }
 }
 
-function reSyncUserGists () {
-  const { userSession, accessToken } = reduxStore.getState()
-  updateUserGists(userSession.profile.login, accessToken)
+function assertSnippetProviderCurrent (provider) {
+  if (getProviderStorageKey(provider) !== getProviderStorageKey(getSnippetProvider())) {
+    throw createStaleSessionError()
+  }
 }
 
-function downloadGistDetailsAfterListSync (gistList, token) {
+function refreshActiveSnippetProvider () {
+  advanceSessionGeneration()
+  return refreshSnippetProvider()
+}
+
+function reSyncUserGists () {
+  const { userSession, accessToken } = reduxStore.getState()
+  const provider = getSnippetProvider()
+  updateUserGists(
+    userSession.profile.login,
+    accessToken,
+    provider,
+    getSessionGeneration()
+  )
+}
+
+function downloadGistDetailsAfterListSync (gistList, token, provider, sessionGeneration) {
+  assertSessionGenerationCurrent(sessionGeneration)
   if (!shouldDownloadAllSnippets(conf)) {
     return Promise.resolve({})
   }
@@ -393,8 +449,10 @@ function downloadGistDetailsAfterListSync (gistList, token) {
   updateSnippetDownloadStatus(downloaded, total)
   logger.info(`[sync] Downloading details for ${total} snippets`)
   return Promise.map(gistList, gist => {
-    return getGitHubApi(GET_SINGLE_GIST)(token, gist.id)
+    assertSessionGenerationCurrent(sessionGeneration)
+    return getSnippetApi(GET_SINGLE_GIST, provider)(token, gist.id)
       .then(details => {
+        assertSessionGenerationCurrent(sessionGeneration)
         downloaded += 1
         updateSnippetDownloadStatus(downloaded, total)
         return {
@@ -404,6 +462,7 @@ function downloadGistDetailsAfterListSync (gistList, token) {
       })
   }, { concurrency: GIST_DETAIL_SYNC_CONCURRENCY })
     .then((downloadedGists) => {
+      assertSessionGenerationCurrent(sessionGeneration)
       const detailsById = {}
       downloadedGists.forEach(gist => {
         detailsById[gist.id] = gist.details
@@ -412,12 +471,19 @@ function downloadGistDetailsAfterListSync (gistList, token) {
     })
 }
 
-function updateUserGists (userLoginId, token) {
+function updateUserGists (
+  userLoginId,
+  token,
+  provider = getSnippetProvider(),
+  sessionGeneration = getSessionGeneration()
+) {
+  assertSessionGenerationCurrent(sessionGeneration)
   reduxStore.dispatch(updateGistSyncStatus('IN_PROGRESS'))
   updateLoginStatusInfo(LOGIN_STATUS.syncingSnippetIndex)
-  return getGitHubApi(GET_ALL_GISTS)(token, userLoginId)
+  return getSnippetApi(GET_ALL_GISTS, provider)(token, userLoginId)
     .then((gistList) => {
-      return downloadGistDetailsAfterListSync(gistList, token)
+      assertSessionGenerationCurrent(sessionGeneration)
+      return downloadGistDetailsAfterListSync(gistList, token, provider, sessionGeneration)
         .then(downloadedGistDetails => {
           return {
             downloadedGistDetails: downloadedGistDetails,
@@ -426,11 +492,12 @@ function updateUserGists (userLoginId, token) {
         })
     })
     .then(({ gistList, downloadedGistDetails }) => {
+      assertSessionGenerationCurrent(sessionGeneration)
       const preGists = reduxStore.getState().gists
       const gists = {}
-      const rawGistTags = {}
+      const rawGistTags = Object.create(null)
       rawGistTags[Prefixed('All')] = new Set()
-      const gistTags = {}
+      const gistTags = cloneSnippetTagMap()
       const fuseSearchIndex = []
 
       gistList.forEach((gist) => {
@@ -452,7 +519,7 @@ function updateUserGists (userLoginId, token) {
           }
 
           // update the custom tags
-          const customTags = parseCustomTags(descriptionParser(gist.description).customTags)
+          const customTags = parseCustomTags(descriptionParser(gist).customTags)
           customTags.forEach(tag => {
             if (Object.prototype.hasOwnProperty.call(rawGistTags, tag)) {
               rawGistTags[tag].add(gist.id)
@@ -507,6 +574,10 @@ function updateUserGists (userLoginId, token) {
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
     })
     .catch(err => {
+      if (isStaleSessionError(err) || !isSessionGenerationCurrent(sessionGeneration)) {
+        logger.info('[sync] Ignoring results from an inactive snippet session')
+        throw createStaleSessionError()
+      }
       notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '04' }))
       logger.error('The request has failed: ' + err)
       reduxStore.dispatch(updateGistSyncStatus('DONE'))
@@ -517,6 +588,13 @@ function updateUserGists (userLoginId, token) {
 
 /** Start: User session management **/
 function initUserSession (token, options = {}) {
+  const provider = options.provider || getSnippetProvider()
+  try {
+    assertSnippetProviderCurrent(provider)
+  } catch (error) {
+    return Promise.reject(error)
+  }
+  const sessionGeneration = advanceSessionGeneration()
   logger.debug('[auth] initUserSession called ' + JSON.stringify({ hasCredential: Boolean(token) }))
   reduxStore.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   updateLoginStatusInfo(options.freshOAuthToken
@@ -524,22 +602,35 @@ function initUserSession (token, options = {}) {
     : LOGIN_STATUS.loadingGitHubProfile)
   initAccessToken(token)
   let newProfile = null
-  getGitHubApi(GET_USER_PROFILE)(token)
+  return getSnippetApi(GET_USER_PROFILE, provider)(token)
     .then((profile) => {
+      assertSessionGenerationCurrent(sessionGeneration)
+      assertSnippetProviderCurrent(provider)
       logger.debug('[auth] GET_USER_PROFILE succeeded ' + JSON.stringify(describeGitHubProfile(profile)))
       newProfile = profile
-      return updateUserGists(profile.login, token)
+      return updateUserGists(profile.login, token, provider, sessionGeneration)
     })
     .then(() => {
+      assertSessionGenerationCurrent(sessionGeneration)
+      assertSnippetProviderCurrent(provider)
       logger.debug('-----> before updateLocalStorage')
       updateLocalStorage({
         token: token,
         profile: newProfile.login
-      })
+      }, provider)
       logger.debug('-----> after updateLocalStorage')
 
+      const accountStorageKey = newProfile.storageKey || newProfile.login
+      migrateLegacyGitHubAccountStorage({
+        provider,
+        login: newProfile.login,
+        accountKey: accountStorageKey,
+        localPref,
+        localStorage: electronBridge.localStorage
+      })
+
       logger.debug('-----> before syncLocalPref')
-      syncLocalPref(newProfile.login)
+      syncLocalPref(accountStorageKey)
       logger.debug('-----> after syncLocalPref')
 
       electronBridge.window.setTitle(`${newProfile.login} | Lepton`) // update the app title
@@ -551,11 +642,15 @@ function initUserSession (token, options = {}) {
       ipcRenderer.send('session-ready')
     })
     .catch((err) => {
+      if (isStaleSessionError(err) || !isSessionGenerationCurrent(sessionGeneration)) {
+        logger.info('[auth] Ignoring results from an inactive snippet session')
+        return
+      }
       logger.debug('-----> Failure with ' + JSON.stringify(err))
       logger.error('The request has failed: \n' + JSON.stringify(err))
       if (isUnauthorizedGitHubError(err)) {
         logger.warn('[auth] GitHub rejected the active credential with 401; clearing cached auth and returning to login modal')
-        clearCachedUserInfo()
+        clearCachedUserInfo(provider)
         updateLoginStatusUserError(LOGIN_STATUS.tokenInvalid)
         logger.info('[Dispatch] updateUserSession INACTIVE')
         reduxStore.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
@@ -579,15 +674,26 @@ function isUnauthorizedGitHubError (err) {
 /** End: User session management **/
 
 /** Start: Local storage management **/
-function updateLocalStorage (data) {
+function updateLocalStorage (data, provider = getSnippetProvider()) {
+  if (!data.token) advanceSessionGeneration()
   try {
+    const cache = getProviderCacheKeys(provider)
     logger.debug('[auth] Caching credential metadata ' + JSON.stringify({ hasCredential: Boolean(data.token) }))
-    let rst = electronBridge.credentials.setAccessToken(data.token)
+    const rst = electronBridge.credentials.setAccessToken(data.token, cache.credentialScope)
     logger.debug(`[auth] [${rst.status}] Cached credential`)
 
     logger.debug(`-----> Caching profile ${data.profile}`)
-    rst = electronBridge.localStorage.set('profile', data.profile)
-    logger.debug(`-----> [${rst.status}] Cached profile ${data.profile}`)
+    const profileResult = electronBridge.localStorage.set(cache.profileKey, data.profile)
+    logger.debug(`-----> [${profileResult.status}] Cached profile ${data.profile}`)
+
+    if (rst.status && profileResult.status) {
+      const legacyCredentialResult = electronBridge.credentials.setAccessToken(null)
+      const legacyProfileResult = electronBridge.localStorage.set(LEGACY_PROFILE_STORAGE_KEY, null)
+      logger.debug('[auth] Ambiguous legacy cache cleanup after scoped sign-in ' + JSON.stringify({
+        credentialStatus: legacyCredentialResult.status,
+        profileStatus: legacyProfileResult.status
+      }))
+    }
 
     logger.debug('-----> User info is cached.')
   } catch (e) {
@@ -595,13 +701,15 @@ function updateLocalStorage (data) {
   }
 }
 
-function clearCachedUserInfo () {
+function clearCachedUserInfo (provider = getSnippetProvider()) {
+  advanceSessionGeneration()
   try {
+    const cache = getProviderCacheKeys(provider)
     logger.debug('[auth] Clearing cached credential metadata after unauthorized response')
-    const credentialClear = electronBridge.credentials.setAccessToken(null)
+    const credentialClear = electronBridge.credentials.setAccessToken(null, cache.credentialScope)
     logger.debug(`[auth] [${credentialClear.status}] Cleared cached credential`)
 
-    const profileClear = electronBridge.localStorage.set('profile', null)
+    const profileClear = electronBridge.localStorage.set(cache.profileKey, null)
     logger.debug(`[auth] [${profileClear.status}] Cleared cached profile`)
   } catch (e) {
     logger.error(`-----> Failed to clear cached user info. ${JSON.stringify(e)}`)
@@ -613,22 +721,24 @@ function clearCachedUserInfo () {
 
 function getCachedUserInfo () {
   logger.debug('-----> Inside getCachedUserInfo')
-  const cachedProfile = electronBridge.localStorage.get('profile')
-  logger.debug(`-----> [${cachedProfile.status}] cachedProfile is ${cachedProfile.data}`)
-  const cachedToken = electronBridge.credentials.getAccessToken()
-  logger.debug('[auth] Cached credential lookup ' + JSON.stringify({
-    status: cachedToken.status,
-    hasCredential: Boolean(cachedToken.data)
-  }))
-
-  if (cachedProfile.status && cachedToken.status) {
-    return {
-      token: cachedToken.data,
-      profile: cachedProfile.data
-    }
+  const provider = getSnippetProvider()
+  const providerConfigError = getProviderConfigError(conf)
+  if (providerConfigError) {
+    logger.warn('[auth] Ignoring cached credentials because the snippet provider configuration is invalid')
+    return null
   }
 
-  return null
+  const cache = getProviderCacheKeys(provider)
+  const cachedUserInfo = readProviderCachedUserInfo({
+    provider: cache.provider,
+    credentials: electronBridge.credentials,
+    localStorage: electronBridge.localStorage
+  })
+  logger.debug('[auth] Cached credential lookup ' + JSON.stringify({
+    hasCredential: Boolean(cachedUserInfo && cachedUserInfo.token),
+    source: 'provider'
+  }))
+  return cachedUserInfo
 }
 
 function syncLocalPref (userName) {
@@ -917,8 +1027,12 @@ createRoot(document.getElementById('container')).render(
       initialSearchQuery = { renderFixture ? renderFixture.initialSearchQuery : undefined }
       localPref = { localPref }
       updateLocalStorage = { updateLocalStorage }
+      getCachedUserInfo = { getCachedUserInfo }
       loggedInUserInfo = { getCachedUserInfo() }
       launchAuthWindow = { launchAuthWindow }
+      provider = { getSnippetProvider() }
+      onProviderChange = { refreshActiveSnippetProvider }
+      onGitLabHostChange = { refreshActiveSnippetProvider }
       reSyncUserGists = { reSyncUserGists }
       updateAboutModalStatus = { updateAboutModalStatus }
       updateDashboardModalStatus = { updateDashboardModalStatus }

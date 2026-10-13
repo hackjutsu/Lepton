@@ -1,5 +1,13 @@
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
+
+const SCOPED_STORAGE_KEY_PATTERNS = [
+  /^(?:token|encrypted-token|profile):/,
+  /^new-gist-draft-(?:github|gitlab)%3A/,
+  /^legacy-account-storage-migration-/
+]
+const SCOPED_STORAGE_HASH_DOMAIN = 'lepton-scoped-storage-v1\0'
 
 function createErrorObject (error) {
   return {
@@ -28,8 +36,22 @@ function getStorageDir (userDataPath) {
 function getStorageFilePath (userDataPath, key) {
   validateStorageKey(key)
 
-  const fileName = path.basename(key, '.json') + '.json'
+  const fileName = isScopedStorageKey(key)
+    ? getScopedStorageFileName(key)
+    : path.basename(key, '.json') + '.json'
   return path.join(getStorageDir(userDataPath), encodeURIComponent(fileName))
+}
+
+function isScopedStorageKey (key) {
+  return SCOPED_STORAGE_KEY_PATTERNS.some(pattern => pattern.test(key))
+}
+
+function getScopedStorageFileName (key) {
+  const digest = crypto.createHash('sha256')
+    .update(SCOPED_STORAGE_HASH_DOMAIN)
+    .update(key)
+    .digest('hex')
+  return `scoped-v1-${digest}.json`
 }
 
 function createElectronLocalStorage ({ getUserDataPath }) {

@@ -17,7 +17,6 @@ import {
 } from '../../utilities/parser'
 import {
   logoutUserSession,
-  removeAccessToken,
   selectGist,
   updateGistFilters,
   updateGistNewModeStatus,
@@ -27,14 +26,19 @@ import {
 } from '../../actions/index'
 import {
   CREATE_SINGLE_GIST,
-  getGitHubApi,
-} from '../../utilities/githubApi'
+  getSnippetApi,
+} from '../../utilities/snippetApi'
+import {
+  getSessionGeneration,
+  isSessionGenerationCurrent
+} from '../../utilities/sessionGeneration'
 import {
   clearNewGistDraft,
   createNewGistDraft,
   createNewGistWithDraft,
   loadNewGistDraft,
 } from '../../utilities/newGistDraft'
+import { cloneSnippetTagMap } from '../../utilities/snippetTags'
 
 import './index.scss'
 
@@ -75,7 +79,7 @@ class UserPanel extends Component {
 
   getUserLogin (props = this.props) {
     const profile = props.userSession && props.userSession.profile
-    return profile && profile.login
+    return profile && (profile.storageKey || profile.login)
   }
 
   createEmptyNewGistData () {
@@ -102,9 +106,10 @@ class UserPanel extends Component {
   }
 
   handleCreateSingleGist (data) {
+    const sessionGeneration = getSessionGeneration()
     const isPublic = data.private === undefined ? true : !data.private
     const description = data.description.trim()
-    const processedFiles = {}
+    const processedFiles = Object.create(null)
     const userLogin = this.getUserLogin()
 
     this.newGistInitialData = createNewGistDraft(data)
@@ -119,13 +124,20 @@ class UserPanel extends Component {
       storage: electronBridge.localStorage,
       userLogin,
       data,
-      createGist: () => getGitHubApi(CREATE_SINGLE_GIST)(
+      createGist: () => getSnippetApi(CREATE_SINGLE_GIST)(
         this.props.accessToken,
         description,
         processedFiles,
         isPublic
       )
     }).then((result) => {
+      if (result.status === 'created') {
+        const draftClear = clearNewGistDraft(electronBridge.localStorage, userLogin)
+        if (!draftClear || !draftClear.status) {
+          logger.error('Failed to clear the saved new snippet draft')
+        }
+      }
+      if (!isSessionGenerationCurrent(sessionGeneration)) return
       if (result.status === 'failed') {
         notifyFailure(
           t('notification.gistCreationFailed'),
@@ -146,11 +158,6 @@ class UserPanel extends Component {
       this.updateGistsStoreWithNewGist(result.gistDetails)
       this.newGistInitialData = this.createEmptyNewGistData()
 
-      const draftClear = clearNewGistDraft(electronBridge.localStorage, userLogin)
-      if (!draftClear || !draftClear.status) {
-        logger.error('Failed to clear the saved new snippet draft')
-      }
-
       this.setState({
         newGistDraft: null,
         newGistDraftLoaded: false
@@ -162,7 +169,7 @@ class UserPanel extends Component {
 
   updateGistsStoreWithNewGist (gistDetails) {
     const {
-      gistTags,
+      gistTags: currentGistTags,
       updateSingleGist,
       updateGistTags,
       updateGistFilters,
@@ -172,10 +179,14 @@ class UserPanel extends Component {
 
     const gistId = gistDetails.id
     const files = gistDetails.files
+    const gistTags = cloneSnippetTagMap(currentGistTags)
 
     // update the language tags
     const langs = new Set()
 
+    if (!Object.prototype.hasOwnProperty.call(gistTags, Prefixed('All'))) {
+      gistTags[Prefixed('All')] = []
+    }
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
       const language = files[filename].language || 'Other'
@@ -191,7 +202,7 @@ class UserPanel extends Component {
     })
 
     // update the custom tags
-    const customTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
+    const customTags = parseCustomTags(descriptionParser(gistDetails).customTags)
     customTags.forEach(tag => {
       if (Object.prototype.hasOwnProperty.call(gistTags, tag)) {
         gistTags[tag].unshift(gistDetails.id)
@@ -388,7 +399,7 @@ class UserPanel extends Component {
       token: null,
       profile: null
     })
-    removeAccessToken()
+    this.props.searchIndex.resetFuseIndex([])
     electronBridge.window.setTitle('Lepton') // update the app title
     ipcRenderer.send('session-destroyed')
   }
@@ -400,7 +411,7 @@ class UserPanel extends Component {
     }
 
     let avatarUrl = profile.avatar_url
-    if (conf.get('enterprise:enable')) {
+    if (conf.get('enterprise:enable') && profile.providerType !== 'gitlab') {
       avatarUrl = defaultImage
     }
 
