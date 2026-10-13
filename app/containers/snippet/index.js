@@ -15,6 +15,7 @@ import { t } from '../../utilities/i18n'
 import { formatRelativeTime } from '../../utilities/relativeTime'
 import TagBadges from '../tagBadges'
 import { toggleMarkdownTaskListItem } from '../../utilities/markdown/taskList'
+import { createDefaultGistFilters, getFilteredGistIds } from '../../utilities/gistFilters'
 import {
   getRegularTagsForGist,
   shouldColorTags
@@ -25,8 +26,8 @@ import {
   parseCustomTags,
 } from '../../utilities/parser'
 import {
-  selectGistTag,
   updateFileExpandStatus,
+  updateGistFilters,
   updateGistDeleteModeStatus,
   updateGistEditModeStatus,
   updateGistRawModal,
@@ -205,8 +206,8 @@ class Snippet extends Component {
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
     const {
-      gists, activeGist, gistTags, activeGistTag, updateSingleGist,
-      updateGistTags, selectGistTag, searchIndex
+      gists, activeGist, activeGistFilters, gistTags, updateSingleGist,
+      updateGistFilters, updateGistTags, searchIndex
     } = this.props
 
     const gistId = gistDetails.id
@@ -294,13 +295,11 @@ class Snippet extends Component {
     logger.info('[Dispatch] updateGistTags')
     updateGistTags(gistTags)
 
-    // If the previous active language tag is no longer valid, for example,
-    // user deletes all cpp files inside a gist when C++ tag is the ative tag,
-    // or the gist array for the preivous active language tag is empty, we
-    // choose to fall back to 'All'.
-    if (!gistTags[activeGistTag] || !gistTags[activeGistTag].includes(gistId)) {
-      logger.info('[Dispatch] selectGistTag')
-      selectGistTag(Prefixed('All'))
+    // Keep the edited snippet visible if it no longer satisfies the active
+    // language and tag filters.
+    if (!getFilteredGistIds(gistTags, activeGistFilters).includes(gistId)) {
+      logger.info('[Dispatch] updateGistFilters')
+      updateGistFilters(createDefaultGistFilters())
     }
     // logger.info('[Dispatch] selectGist')
     // this.props.selectGist(gistId)
@@ -620,7 +619,7 @@ class Snippet extends Component {
 function mapStateToProps (state) {
   return {
     gists: state.gists,
-    activeGistTag: state.activeGistTag,
+    activeGistFilters: state.activeGistFilters,
     activeGist: state.activeGist,
     userSession: state.userSession,
     accessToken: state.accessToken,
@@ -637,7 +636,7 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     updateSingleGist: updateSingleGist,
     updateGistTags: updateGistTags,
-    selectGistTag: selectGistTag,
+    updateGistFilters: updateGistFilters,
     updateGistEditModeStatus: updateGistEditModeStatus,
     updateGistDeleteModeStatus: updateGistDeleteModeStatus,
     updateGistRawModal: updateGistRawModal,

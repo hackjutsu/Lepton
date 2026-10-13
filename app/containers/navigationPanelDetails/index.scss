@@ -61,6 +61,19 @@
     text-overflow: ellipsis;
   }
 
+  .snippet-thumnail-empty {
+    color: var(--text-secondary);
+    cursor: default;
+
+    .snippet-thumnail {
+      padding: 11px;
+    }
+
+    &:hover {
+      background: var(--bg-primary);
+    }
+  }
+
   .active-snippet-thumnail-base {
     @extend .font-style-base;
     padding: 6px;

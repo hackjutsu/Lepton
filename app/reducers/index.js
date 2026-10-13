@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import aboutModalStatus from './reducer_about_modal'
 import accessToken from './reducer_token'
 import activeGist from './reducer_active_gist'
-import activeGistTag from './reducer_active_gist_tag'
+import activeGistFilters from './reducer_active_gist_filters'
 import authWindowStatus from './reducer_auth_window_status'
 import dashboardModalStatus from './reducer_dashboard_modal'
 import fileExpandStatus from './reducer_file_expand_status'
@@ -29,7 +29,7 @@ const rootReducer = combineReducers({
   aboutModalStatus,
   accessToken,
   activeGist,
-  activeGistTag,
+  activeGistFilters,
   authWindowStatus,
   dashboardModalStatus,
   fileExpandStatus,

@@ -9,6 +9,7 @@ import { notifySuccess, notifyFailure } from '../../utilities/notifier'
 import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { getLocale, t } from '../../utilities/i18n'
+import { createDefaultGistFilters } from '../../utilities/gistFilters'
 import {
   addLangPrefix as Prefixed,
   descriptionParser,
@@ -18,7 +19,7 @@ import {
   logoutUserSession,
   removeAccessToken,
   selectGist,
-  selectGistTag,
+  updateGistFilters,
   updateGistNewModeStatus,
   updateGistTags,
   updateLogoutModalStatus,
@@ -164,7 +165,7 @@ class UserPanel extends Component {
       gistTags,
       updateSingleGist,
       updateGistTags,
-      selectGistTag,
+      updateGistFilters,
       selectGist,
       searchIndex
     } = this.props
@@ -178,6 +179,7 @@ class UserPanel extends Component {
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
       const language = files[filename].language || 'Other'
+      if (langs.has(language)) return
       langs.add(language)
       const prefixedLang = Prefixed(language)
       if (Object.prototype.hasOwnProperty.call(gistTags, prefixedLang)) {
@@ -211,8 +213,8 @@ class UserPanel extends Component {
     logger.info('[Dispatch] updateGistTags')
     updateGistTags(gistTags)
 
-    logger.info('[Dispatch] selectGistTag')
-    selectGistTag(Prefixed('All'))
+    logger.info('[Dispatch] updateGistFilters')
+    updateGistFilters(createDefaultGistFilters())
 
     logger.info('[Dispatch] selectGist')
     selectGist(gistId)
@@ -471,7 +473,7 @@ function mapDispatchToProps (dispatch) {
     logoutUserSession: logoutUserSession,
     updateSingleGist: updateSingleGist,
     updateGistTags: updateGistTags,
-    selectGistTag: selectGistTag,
+    updateGistFilters: updateGistFilters,
     selectGist: selectGist,
     updateGistNewModeStatus: updateGistNewModeStatus,
     updateLogoutModalStatus: updateLogoutModalStatus

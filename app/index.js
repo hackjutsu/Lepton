@@ -13,6 +13,12 @@ import SearchIndex from './utilities/search'
 import Store from './utilities/store'
 import { getRenderFixture } from './renderFixtures'
 import {
+  areGistFiltersEqual,
+  createDefaultGistFilters,
+  getActiveGistIdForFilters,
+  pruneGistFilters
+} from './utilities/gistFilters'
+import {
   addLangPrefix as Prefixed,
   parseCustomTags,
   descriptionParser
@@ -31,7 +37,7 @@ import {
   updateGists,
   updateSyncTime,
   updateGistTags,
-  selectGistTag,
+  updateGistFilters,
   updateAccessToken,
   updateUserSession,
   fetchSingleGist,
@@ -89,7 +95,7 @@ const LOGIN_STATUS = {
 }
 
 let preSyncSnapshot = {
-  activeGistTag: null,
+  activeGistFilters: createDefaultGistFilters(),
   activeGist: null
 }
 
@@ -306,33 +312,22 @@ function updateGistTagsAfterSync (gistTags) {
 }
 /** End: Language tags management **/
 
-/** Start: Active language tag management **/
-function getEffectiveActiveGistTagAfterSync (gistTags, newActiveTag) {
-  // The active language tag could be invalid if the specific language tag no
-  // long exists after synchronization. However, if it is still valid, we should
-  // keep it.
-  if (!gistTags || !gistTags[preSyncSnapshot.activeGistTag]) {
-    return newActiveTag
+/** Start: Active gist filter management **/
+function updateActiveGistFiltersAfterSync (gistTags) {
+  const effectiveFilters = pruneGistFilters(preSyncSnapshot.activeGistFilters, gistTags)
+  if (!areGistFiltersEqual(effectiveFilters, preSyncSnapshot.activeGistFilters)) {
+    logger.info('[Dispatch] updateGistFilters')
+    reduxStore.dispatch(updateGistFilters(effectiveFilters))
   }
-  return preSyncSnapshot.activeGistTag
+  return effectiveFilters
 }
-
-function updateActiveGistTagAfterSync (gistTags, newActiveTagCandidate) {
-  // The active language tag could be invalid if the specific language tag no
-  // long exists after synchronization. We should get the effective active tag
-  // by calling getEffectiveActiveGistTagAfterSync()
-  const effectiveGistTag = getEffectiveActiveGistTagAfterSync(gistTags, newActiveTagCandidate)
-  if (effectiveGistTag !== preSyncSnapshot.activeGistTag) {
-    logger.info('[Dispatch] selectGistTag')
-    reduxStore.dispatch(selectGistTag(newActiveTagCandidate))
-  }
-}
-/** End: Active language tag management **/
+/** End: Active gist filter management **/
 
 /** Start: Active gist management **/
 function updateActiveGistBase (gists, activeGist) {
-  if (!gists || !activeGist) {
-    // user has no gists
+  if (!gists || !activeGist || !gists[activeGist]) {
+    logger.info('[Dispatch] selectGist null')
+    reduxStore.dispatch(selectGist(null))
     return
   }
 
@@ -344,21 +339,17 @@ function updateActiveGistBase (gists, activeGist) {
   reduxStore.dispatch(selectGist(activeGist))
 }
 
-function updateActiveGistAfterSync (gists, gistTags, newActiveTagCandidate) {
-  let activeGist = preSyncSnapshot.activeGist
-  if (!activeGist || !gists[activeGist]) {
-    // If the previous active gist is not set or is deleted, we should reset it.
-    const effectiveGistTag = getEffectiveActiveGistTagAfterSync(gistTags, newActiveTagCandidate)
-    const gistListForActiveGistTag = gistTags[effectiveGistTag]
-    activeGist = gistListForActiveGistTag[0] // reset the active gist
-  }
+function updateActiveGistAfterSync (gists, gistTags, activeGistFilters) {
+  const previousActiveGist = gists && gists[preSyncSnapshot.activeGist]
+    ? preSyncSnapshot.activeGist
+    : null
+  const activeGist = getActiveGistIdForFilters(gistTags, activeGistFilters, previousActiveGist)
   updateActiveGistBase(gists, activeGist)
 }
 
-function updateActiveGistAfterClicked (gists, gistTags, newActiveTag) {
-  const gistListForActiveGistTag = gistTags[newActiveTag]
-  const activeGist = gistListForActiveGistTag[0] // reset the active gist
-  updateActiveGistBase(gists, activeGist)
+function updateActiveGistAfterClicked (gists, gistTags, activeGistFilters, activeGist) {
+  const nextActiveGist = getActiveGistIdForFilters(gistTags, activeGistFilters, activeGist)
+  updateActiveGistBase(gists, nextActiveGist)
 }
 /** End: Active gist management **/
 
@@ -371,14 +362,14 @@ function updateGistStoreAfterSync (gists) {
 function takeSyncSnapshot () {
   const state = reduxStore.getState()
   preSyncSnapshot = {
-    activeGistTag: state.activeGistTag,
+    activeGistFilters: state.activeGistFilters,
     activeGist: state.activeGist
   }
 }
 
 function clearSyncSnapshot () {
   preSyncSnapshot = {
-    activeGistTag: Prefixed('All'),
+    activeGistFilters: createDefaultGistFilters(),
     activeGist: null
   }
 }
@@ -438,7 +429,6 @@ function updateUserGists (userLoginId, token) {
       const preGists = reduxStore.getState().gists
       const gists = {}
       const rawGistTags = {}
-      const activeTagCandidate = Prefixed('All')
       rawGistTags[Prefixed('All')] = new Set()
       const gistTags = {}
       const fuseSearchIndex = []
@@ -506,8 +496,8 @@ function updateUserGists (userLoginId, token) {
       setSyncTime(humanReadableSyncTime)
       updateGistStoreAfterSync(gists)
       updateGistTagsAfterSync(gistTags)
-      updateActiveGistTagAfterSync(gistTags, activeTagCandidate)
-      updateActiveGistAfterSync(gists, gistTags, activeTagCandidate)
+      const activeGistFilters = updateActiveGistFiltersAfterSync(gistTags)
+      updateActiveGistAfterSync(gists, gistTags, activeGistFilters)
 
       // clean up the snapshot for the previous state
       clearSyncSnapshot()
