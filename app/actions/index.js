@@ -1,8 +1,12 @@
-import { getGitHubApi, GET_SINGLE_GIST } from '../utilities/githubApi'
+import { getSnippetApi, GET_SINGLE_GIST } from '../utilities/snippetApi'
 import { notifyFailure } from '../utilities/notifier'
 import electronBridge from '../utilities/electronBridge'
 import SearchIndex from '../utilities/search'
 import { t } from '../utilities/i18n'
+import {
+  getSessionGeneration,
+  isSessionGenerationCurrent
+} from '../utilities/sessionGeneration'
 
 const logger = electronBridge.logger
 
@@ -234,8 +238,10 @@ export function updateLogoutModalStatus (status) {
 export function fetchSingleGist (oldGist, id) {
   return (dispatch, getState) => {
     const state = getState()
-    return getGitHubApi(GET_SINGLE_GIST)(state.accessToken, id)
+    const sessionGeneration = getSessionGeneration()
+    return getSnippetApi(GET_SINGLE_GIST)(state.accessToken, id)
       .then((details) => {
+        if (!isSessionGenerationCurrent(sessionGeneration)) return
         const newGist = Object.assign({}, oldGist, { details: details })
         const newGistWithId = {}
         newGistWithId[id] = newGist
@@ -243,6 +249,7 @@ export function fetchSingleGist (oldGist, id) {
         SearchIndex.updateFuseIndex(SearchIndex.buildSearchRecord(newGist))
       })
       .catch((err) => {
+        if (!isSessionGenerationCurrent(sessionGeneration)) return
         logger.error('The request has failed: ' + err)
         notifyFailure(t('notification.syncFailed'), t('notification.networkFailure', { code: '01' }))
       })

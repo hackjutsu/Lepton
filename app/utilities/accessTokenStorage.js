@@ -4,6 +4,32 @@ const SAFE_STORAGE_PROVIDER = 'electron-safeStorage'
 const DEFAULT_STORAGE_MODE = 'auto'
 const STORAGE_MODES = new Set(['auto', 'encrypted', 'file'])
 
+function getScopedTokenKeys (scope) {
+  if (scope === undefined || scope === null || scope === '') {
+    return {
+      encrypted: ENCRYPTED_TOKEN_KEY,
+      legacy: LEGACY_TOKEN_KEY
+    }
+  }
+
+  if (typeof scope !== 'string' || !scope.trim() || scope.length > 500 || hasUnsafeScopeCharacter(scope)) {
+    throw new Error('Invalid access token storage scope')
+  }
+
+  const normalizedScope = encodeURIComponent(scope.trim())
+  return {
+    encrypted: `${ENCRYPTED_TOKEN_KEY}:${normalizedScope}`,
+    legacy: `${LEGACY_TOKEN_KEY}:${normalizedScope}`
+  }
+}
+
+function hasUnsafeScopeCharacter (scope) {
+  return Array.from(scope).some(character => {
+    const code = character.charCodeAt(0)
+    return code <= 31 || code === 127
+  })
+}
+
 function createResult (status, data, error) {
   const result = { status, data }
   if (error) result.error = error
@@ -88,18 +114,18 @@ function createAccessTokenStorage ({
     logWarn(logger, `[auth] Falling back to local file for cached access token: ${unavailableReason}`)
   }
 
-  function readFileTokenFallback (unavailableReason) {
+  function readFileTokenFallback (unavailableReason, keys) {
     logFileStorageFallback(unavailableReason)
-    return localStorage.get(LEGACY_TOKEN_KEY)
+    return localStorage.get(keys.legacy)
   }
 
-  function writeFileTokenFallback (token, unavailableReason) {
+  function writeFileTokenFallback (token, unavailableReason, keys) {
     logFileStorageFallback(unavailableReason)
 
-    const legacyWrite = localStorage.set(LEGACY_TOKEN_KEY, token)
+    const legacyWrite = localStorage.set(keys.legacy, token)
     if (!legacyWrite.status) return createResult(false, null, legacyWrite.error)
 
-    const encryptedClear = localStorage.set(ENCRYPTED_TOKEN_KEY, null)
+    const encryptedClear = localStorage.set(keys.encrypted, null)
     return createResult(
       Boolean(encryptedClear.status),
       token,
@@ -107,14 +133,14 @@ function createAccessTokenStorage ({
     )
   }
 
-  function clearEncryptedToken () {
-    const encryptedClear = localStorage.set(ENCRYPTED_TOKEN_KEY, null)
-    const legacyClear = localStorage.set(LEGACY_TOKEN_KEY, null)
+  function clearEncryptedToken (keys) {
+    const encryptedClear = localStorage.set(keys.encrypted, null)
+    const legacyClear = localStorage.set(keys.legacy, null)
     return createResult(Boolean(encryptedClear.status && legacyClear.status), null, encryptedClear.error || legacyClear.error)
   }
 
-  function writeEncryptedToken (token) {
-    if (!hasTokenValue(token)) return clearEncryptedToken()
+  function writeEncryptedToken (token, keys) {
+    if (!hasTokenValue(token)) return clearEncryptedToken(keys)
 
     let encryptedToken
     try {
@@ -124,7 +150,7 @@ function createAccessTokenStorage ({
       return createResult(false, null, error)
     }
 
-    const writeResult = localStorage.set(ENCRYPTED_TOKEN_KEY, {
+    const writeResult = localStorage.set(keys.encrypted, {
       version: 1,
       provider: SAFE_STORAGE_PROVIDER,
       data: encryptedToken.toString('base64')
@@ -132,7 +158,7 @@ function createAccessTokenStorage ({
 
     if (!writeResult.status) return createResult(false, null, writeResult.error)
 
-    const legacyClear = localStorage.set(LEGACY_TOKEN_KEY, null)
+    const legacyClear = localStorage.set(keys.legacy, null)
     if (!legacyClear.status) {
       logWarn(logger, '[auth] Failed to clear legacy cached access token after encrypted write')
     }
@@ -155,30 +181,44 @@ function createAccessTokenStorage ({
     }
   }
 
-  function getEncryptedToken () {
-    const encryptedToken = localStorage.get(ENCRYPTED_TOKEN_KEY)
+  function getEncryptedToken (keys) {
+    const encryptedToken = localStorage.get(keys.encrypted)
     if (encryptedToken.status && encryptedToken.data) {
       const unavailableReason = ensureEncryptedStorageAvailable()
-      if (unavailableReason) return readFileTokenFallback(unavailableReason)
+      if (unavailableReason) return readFileTokenFallback(unavailableReason, keys)
       return readEncryptedTokenRecord(encryptedToken.data)
     }
 
-    return localStorage.get(LEGACY_TOKEN_KEY)
+    return localStorage.get(keys.legacy)
   }
 
   return {
-    get () {
-      if (getMode() === 'file') return localStorage.get(LEGACY_TOKEN_KEY)
-      return getEncryptedToken()
+    get (scope) {
+      let keys
+      try {
+        keys = getScopedTokenKeys(scope)
+      } catch (error) {
+        return createResult(false, null, error)
+      }
+
+      if (getMode() === 'file') return localStorage.get(keys.legacy)
+      return getEncryptedToken(keys)
     },
 
-    set (token) {
-      if (!hasTokenValue(token)) return clearEncryptedToken()
-      if (getMode() === 'file') return localStorage.set(LEGACY_TOKEN_KEY, token)
+    set (token, scope) {
+      let keys
+      try {
+        keys = getScopedTokenKeys(scope)
+      } catch (error) {
+        return createResult(false, null, error)
+      }
+
+      if (!hasTokenValue(token)) return clearEncryptedToken(keys)
+      if (getMode() === 'file') return localStorage.set(keys.legacy, token)
 
       const unavailableReason = ensureEncryptedStorageAvailable()
-      if (unavailableReason) return writeFileTokenFallback(token, unavailableReason)
-      return writeEncryptedToken(token)
+      if (unavailableReason) return writeFileTokenFallback(token, unavailableReason, keys)
+      return writeEncryptedToken(token, keys)
     }
   }
 }
@@ -188,6 +228,7 @@ module.exports = {
   LEGACY_TOKEN_KEY,
   SAFE_STORAGE_PROVIDER,
   createAccessTokenStorage,
+  getScopedTokenKeys,
   getConfiguredStorageMode,
   getEffectiveStorageMode,
   getSafeStorageUnavailableReason

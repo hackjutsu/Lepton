@@ -65,7 +65,57 @@ function SplitPaneDivider (props) {
   )
 }
 
-class AppContainer extends Component {
+export class AppContainer extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      loggedInUserInfo: props.loggedInUserInfo,
+      provider: props.provider
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.userSession.activeStatus !== this.props.userSession.activeStatus) {
+      this.refreshCachedUserInfo()
+    }
+  }
+
+  refreshCachedUserInfo () {
+    if (!this.props.getCachedUserInfo) return
+    const loggedInUserInfo = this.props.getCachedUserInfo()
+    if (loggedInUserInfo !== this.state.loggedInUserInfo) {
+      this.setState({ loggedInUserInfo })
+    }
+  }
+
+  handleProviderChange (value) {
+    return Promise.resolve(this.props.onProviderChange(value))
+      .then(provider => {
+        this.setState({
+          loggedInUserInfo: this.props.getCachedUserInfo(),
+          provider
+        })
+        return provider
+      })
+  }
+
+  handleGitLabHostChange (value) {
+    return Promise.resolve(this.props.onGitLabHostChange(value))
+      .then(provider => {
+        this.setState({
+          loggedInUserInfo: this.props.getCachedUserInfo(),
+          provider
+        })
+        return provider
+      })
+  }
+
+  handleLocalStorageUpdate (data) {
+    const result = this.props.updateLocalStorage(data)
+    this.refreshCachedUserInfo()
+    return result
+  }
+
   renderFindInPage () {
     if (!isFindInPageAvailable(this.props)) return null
     return <FindInPage />
@@ -138,7 +188,6 @@ class AppContainer extends Component {
 
   renderActiveNormalSection () {
     const {
-      updateLocalStorage,
       updateActiveGistAfterClicked,
       reSyncUserGists,
       localPref,
@@ -154,7 +203,7 @@ class AppContainer extends Component {
         <NavigationPanel
           localPref = { localPref }
           searchIndex = { searchIndex }
-          updateLocalStorage = { updateLocalStorage }
+          updateLocalStorage = { this.handleLocalStorageUpdate.bind(this) }
           updateActiveGistAfterClicked = { updateActiveGistAfterClicked }
           reSyncUserGists = { reSyncUserGists } />
         <SplitPane className='content-split-pane' direction='horizontal' divider={ SplitPaneDivider } dividerClassName='minimal'>
@@ -192,11 +241,17 @@ class AppContainer extends Component {
   }
 
   renderInactiveSection () {
-    const { loggedInUserInfo, launchAuthWindow } = this.props
+    const {
+      launchAuthWindow
+    } = this.props
+    const { loggedInUserInfo, provider } = this.state
     return (
       <LoginPage
         loggedInUserInfo = { loggedInUserInfo }
-        launchAuthWindow = { launchAuthWindow } />
+        launchAuthWindow = { launchAuthWindow }
+        onGitLabHostChange = { this.handleGitLabHostChange.bind(this) }
+        onProviderChange = { this.handleProviderChange.bind(this) }
+        provider = { provider } />
     )
   }
 

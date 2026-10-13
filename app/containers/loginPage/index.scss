@@ -16,6 +16,10 @@
     perspective: 1200px;
   }
 
+  &.login-modal-gitlab .modal-dialog {
+    width: 360px;
+  }
+
   .modal-content {
     animation: login-modal-fade-in 180ms ease-out;
     background: transparent;
@@ -30,6 +34,11 @@
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transition: opacity 180ms ease-in;
+  }
+
+  &.login-modal-gitlab .modal-content {
+    height: 500px;
+    margin-top: 60px;
   }
 
   .login-modal-card {
@@ -190,10 +199,19 @@
     margin: 5px;
   }
 
+  .profile-image-modal-compact {
+    height: 160px;
+    width: 160px;
+  }
+
   .login-modal-body {
     height: 394px;
     overflow: hidden;
     perspective: 900px;
+  }
+
+  &.login-modal-gitlab .login-modal-body {
+    height: 439px;
   }
 
   .login-modal-body-content {
@@ -202,6 +220,45 @@
 
   .button-group-modal {
     margin: 20px 20px 0px 20px;
+  }
+
+  &.login-modal-gitlab .button-group-modal {
+    margin-top: 12px;
+  }
+
+  .login-provider-controls {
+    margin-bottom: 8px;
+  }
+
+  .login-provider-field {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin: 0 0 6px;
+    text-align: left;
+    width: 100%;
+  }
+
+  .login-provider-field > span {
+    color: #666;
+    flex: 0 0 58px;
+    font-size: 12px;
+    font-weight: normal;
+  }
+
+  .login-provider-field .form-control {
+    flex: 1 1 auto;
+    height: 30px;
+    min-width: 0;
+    padding-bottom: 4px;
+    padding-top: 4px;
+  }
+
+  .login-provider-error {
+    color: #a94442;
+    font-size: 11px;
+    margin: -1px 0 6px 66px;
+    text-align: left;
   }
 
   .modal-button {

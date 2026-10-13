@@ -1,15 +1,19 @@
 import { describe, expect, it, vi } from 'vitest'
 import githubApiCore from '../../app/utilities/githubApi/core'
+import githubFetchAdapter from '../../app/utilities/githubApi/fetchAdapter'
+import snippetOperations from '../../app/utilities/snippetApi/operations'
 
 const {
-  CREATE_SINGLE_GIST,
-  DELETE_SINGLE_GIST,
-  EXCHANGE_ACCESS_TOKEN,
-  GET_ALL_GISTS,
-  GET_SINGLE_GIST,
-  GET_USER_PROFILE,
   createGitHubApi
 } = githubApiCore
+const {
+  CREATE_SNIPPET,
+  DELETE_SNIPPET,
+  EXCHANGE_ACCESS_TOKEN,
+  GET_SNIPPET,
+  GET_USER_PROFILE,
+  LIST_SNIPPETS
+} = snippetOperations
 
 const logger = {
   debug: () => {},
@@ -84,12 +88,28 @@ function loadGitHubApi ({
 }
 
 describe('GitHub API utility', () => {
+  it('keeps GitHub error labels on the legacy fetch-adapter import', async () => {
+    const request = githubFetchAdapter.createFetchRequest(() => Promise.resolve(createJsonResponse({
+      message: 'Bad credentials'
+    }, {
+      status: 401,
+      statusText: 'Unauthorized'
+    })))
+
+    await expect(request({
+      uri: 'https://api.github.com/user',
+      json: true
+    })).rejects.toMatchObject({
+      message: 'GitHub API request failed with status 401 Unauthorized'
+    })
+  })
+
   it('builds the OAuth access-token exchange request', async () => {
     const { api, fetch } = loadGitHubApi({
       fetchImpl: () => Promise.resolve(createJsonResponse({ access_token: 'token-1' }))
     })
 
-    await api.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
+    await api.getRequest(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
 
     expect(fetch).toHaveBeenCalledTimes(1)
 
@@ -117,7 +137,7 @@ describe('GitHub API utility', () => {
       fetchImpl: fetch
     })
 
-    await mockApi.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
+    await mockApi.getRequest(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code')
 
     const [url] = fetch.mock.calls[0]
     expect(url).toBe('http://127.0.0.1:9999/login/oauth/access_token')
@@ -134,11 +154,11 @@ describe('GitHub API utility', () => {
       fetchImpl: fetch
     })
 
-    await api.getGitHubApi(GET_USER_PROFILE)('token-1')
+    await api.getRequest(GET_USER_PROFILE)('token-1')
     expect(fetch.mock.calls[0][0]).toBe('http://127.0.0.1:9999/api/user')
 
     fetch.mockClear()
-    await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+    await api.getRequest(LIST_SNIPPETS)('token-1', 'octo')
     expect(fetch.mock.calls[0][0]).toBe('http://127.0.0.1:9999/api/users/octo/gists?per_page=100&page=1')
   })
 
@@ -150,7 +170,7 @@ describe('GitHub API utility', () => {
       }))
     })
 
-    await expect(api.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code'))
+    await expect(api.getRequest(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code'))
       .rejects.toMatchObject({
         name: 'OAuthTokenExchangeError',
         errorDescription: 'The client credentials are incorrect.',
@@ -165,7 +185,7 @@ describe('GitHub API utility', () => {
       fetchImpl: () => Promise.resolve(createTextResponse('<html>nope</html>'))
     })
 
-    await expect(api.getGitHubApi(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code'))
+    await expect(api.getRequest(EXCHANGE_ACCESS_TOKEN)('client-id', 'client-secret', 'auth-code'))
       .rejects.toMatchObject({
         name: 'ResponseParseError',
         error: {
@@ -183,7 +203,7 @@ describe('GitHub API utility', () => {
       fetchImpl: () => Promise.resolve(createJsonResponse({ login: 'octo' }))
     })
 
-    const result = await api.getGitHubApi(GET_USER_PROFILE)('token-1')
+    const result = await api.getRequest(GET_USER_PROFILE)('token-1')
 
     expect(fetch).toHaveBeenCalledTimes(1)
 
@@ -197,7 +217,12 @@ describe('GitHub API utility', () => {
       'User-Agent': 'lepton-snippet-app',
       Authorization: 'token token-1'
     }))
-    expect(result).toEqual({ login: 'octo' })
+    expect(result).toEqual(expect.objectContaining({
+      login: 'octo',
+      providerType: 'github',
+      providerBaseUrl: 'https://ghe.example.test',
+      storageKey: 'github:https://ghe.example.test:octo'
+    }))
   })
 
   it('relies on Electron session fetch when proxy configuration is enabled', async () => {
@@ -208,7 +233,7 @@ describe('GitHub API utility', () => {
       }
     })
 
-    await api.getGitHubApi(GET_SINGLE_GIST)('token-1', 'gist-1')
+    await api.getRequest(GET_SNIPPET)('token-1', 'gist-1')
 
     expect(fetch).toHaveBeenCalledTimes(1)
 
@@ -227,7 +252,7 @@ describe('GitHub API utility', () => {
       fetchImpl: () => Promise.resolve(createJsonResponse({ id: 'gist-1' }))
     })
 
-    const result = await api.getGitHubApi(CREATE_SINGLE_GIST)('token-1', 'description', files, false)
+    const result = await api.getRequest(CREATE_SNIPPET)('token-1', 'description', files, false)
 
     const [url, init] = fetch.mock.calls[0]
     expect(url).toBe('https://api.github.com/gists')
@@ -245,7 +270,11 @@ describe('GitHub API utility', () => {
       'User-Agent': 'lepton-snippet-app',
       Authorization: 'token token-1'
     }))
-    expect(result).toEqual({ id: 'gist-1' })
+    expect(result).toEqual(expect.objectContaining({
+      id: 'gist-1',
+      providerType: 'github',
+      providerBaseUrl: 'https://github.com'
+    }))
   })
 
   it('handles empty delete responses', async () => {
@@ -256,7 +285,7 @@ describe('GitHub API utility', () => {
       }))
     })
 
-    const result = await api.getGitHubApi(DELETE_SINGLE_GIST)('token-1', 'gist-1')
+    const result = await api.getRequest(DELETE_SNIPPET)('token-1', 'gist-1')
 
     const [url, init] = fetch.mock.calls[0]
     expect(url).toBe('https://api.github.com/gists/gist-1')
@@ -291,7 +320,7 @@ describe('GitHub API utility', () => {
       }
     })
 
-    const result = await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+    const result = await api.getRequest(LIST_SNIPPETS)('token-1', 'octo')
 
     expect(fetch).toHaveBeenCalledTimes(2)
     expect(fetch.mock.calls[0][0]).toBe('https://api.github.com/users/octo/gists?per_page=100&page=1')
@@ -306,11 +335,17 @@ describe('GitHub API utility', () => {
       ]))
     })
 
-    const result = await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+    const result = await api.getRequest(LIST_SNIPPETS)('token-1', 'octo')
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch.mock.calls[0][0]).toBe('https://api.github.com/users/octo/gists?per_page=100&page=1')
-    expect(result).toEqual([{ id: 'single-page', updated_at: '2022-01-01T00:00:00Z' }])
+    expect(result).toEqual([
+      expect.objectContaining({
+        id: 'single-page',
+        updated_at: '2022-01-01T00:00:00Z',
+        providerType: 'github'
+      })
+    ])
   })
 
   it('uses the authenticated gists endpoint when snippet downloadAll is enabled', async () => {
@@ -321,7 +356,7 @@ describe('GitHub API utility', () => {
       fetchImpl: () => Promise.resolve(createJsonResponse([]))
     })
 
-    await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+    await api.getRequest(LIST_SNIPPETS)('token-1', 'octo')
 
     expect(fetch).toHaveBeenCalledTimes(1)
 
@@ -341,7 +376,7 @@ describe('GitHub API utility', () => {
       fetchImpl: () => Promise.resolve(createJsonResponse([]))
     })
 
-    await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+    await api.getRequest(LIST_SNIPPETS)('token-1', 'octo')
 
     expect(fetch).toHaveBeenCalledTimes(1)
     expect(fetch.mock.calls[0][0]).toBe('https://api.github.com/users/octo/gists?per_page=100&page=1')
@@ -364,13 +399,19 @@ describe('GitHub API utility', () => {
       }
     })
 
-    const result = await api.getGitHubApi(GET_ALL_GISTS)('token-1', 'octo')
+    const result = await api.getRequest(LIST_SNIPPETS)('token-1', 'octo')
 
     expect(fetch).toHaveBeenCalledTimes(3)
     expect(fetch.mock.calls[0][0]).toBe('https://api.github.com/users/octo/gists?per_page=100&page=1')
     expect(fetch.mock.calls[1][0]).toBe('https://api.github.com/users/octo/gists?per_page=100&page=1')
     expect(fetch.mock.calls[2][0]).toBe('https://api.github.com/users/octo/gists?per_page=100&page=2')
-    expect(result).toEqual([{ id: 'fallback', updated_at: '2023-01-01T00:00:00Z' }])
+    expect(result).toEqual([
+      expect.objectContaining({
+        id: 'fallback',
+        updated_at: '2023-01-01T00:00:00Z',
+        providerType: 'github'
+      })
+    ])
   })
 
   it('rejects non-successful responses with request-compatible status fields', async () => {
@@ -386,7 +427,7 @@ describe('GitHub API utility', () => {
       }))
     })
 
-    await expect(api.getGitHubApi(GET_USER_PROFILE)('token-1')).rejects.toMatchObject({
+    await expect(api.getRequest(GET_USER_PROFILE)('token-1')).rejects.toMatchObject({
       name: 'StatusCodeError',
       status: 401,
       statusCode: 401,

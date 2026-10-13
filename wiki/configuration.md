@@ -31,6 +31,12 @@ The file is not generated automatically. Create it if you want to override the d
   "security": {
     "cachedAccessTokenStorage": "auto"
   },
+  "provider": {
+    "type": "github"
+  },
+  "gitlab": {
+    "host": "gitlab.com"
+  },
   "proxy": {
     "enable": false,
     "address": "socks://localhost:1080"
@@ -53,7 +59,6 @@ The file is not generated automatically. Create it if you want to override the d
   "enterprise": {
     "enable": false,
     "host": "",
-    "token": "",
     "avatarUrl": ""
   },
   "notifications": {
@@ -91,8 +96,10 @@ The file is not generated automatically. Create it if you want to override the d
 | | `boringAvatarVariant` | `beam` | Variant used when `avatar.type` is `boring`. |
 | `userPanel` | `hideProfilePhoto` | `false` | Hide the profile photo in the user panel. |
 | `logger` | `level` | `info` | Logging level. Use `info` for normal use or `debug` when collecting diagnostic logs. |
-| `security` | `cachedAccessTokenStorage` | `auto` | Cached GitHub OAuth token storage. Supported values: `auto`, `encrypted`, `file`. `auto` uses file storage in development builds and Electron safeStorage in packaged builds. When safeStorage is unavailable, token updates fall back to the legacy plaintext `<userData>/storage/token.json` file. Cached tokens stay in the location where they were written until the token is updated again. |
-| `proxy` | `enable` | `false` | Route GitHub API requests and Electron sessions through a proxy. |
+| `security` | `cachedAccessTokenStorage` | `auto` | Cached provider token storage. Supported values: `auto`, `encrypted`, `file`. `auto` uses file storage in development builds and Electron safeStorage in packaged builds. When safeStorage is unavailable, token updates fall back to a plaintext file under `<userData>/storage`. Cached tokens are isolated by provider and host. |
+| `provider` | `type` | `github` | Snippet provider. Supported values: `github` and `gitlab`. The provider can also be selected on the login screen. |
+| `gitlab` | `host` | `gitlab.com` | GitLab host for personal snippets, such as `gitlab.com` or `gitlab.example.com`. HTTPS is used when no URL scheme is supplied. |
+| `proxy` | `enable` | `false` | Route provider API requests and Electron sessions through a proxy. |
 | | `address` | `socks://localhost:1080` | Proxy address. Supports normal proxy URLs, Chromium proxy rule lists, and `pac+https://...` PAC URLs. |
 | `snippet` | `sorting` | `updated_at` | Snippet order. Supported values: `updated_at`, `created_at`, `description`. |
 | | `sortingReverse` | `true` | Reverse the configured snippet order. |
@@ -105,7 +112,6 @@ The file is not generated automatically. Create it if you want to override the d
 | | `validateFilename` | `true` | Validate snippet filenames before saving. |
 | `enterprise` | `enable` | `false` | Enable GitHub Enterprise mode. |
 | | `host` | `""` | GitHub Enterprise host, for example `github.example.com`. |
-| | `token` | `""` | Personal access token with the `gist` scope. This remains plain `.leptonrc` configuration and is not affected by `security.cachedAccessTokenStorage`. |
 | | `avatarUrl` | `""` | Optional avatar image URL for GitHub Enterprise users. |
 | `notifications` | `success` | `true` | Show notifications for successful actions. |
 | | `failure` | `true` | Show notifications for failed actions. |
@@ -118,7 +124,16 @@ The file is not generated automatically. Create it if you want to override the d
 | | `keyImmersiveMode` | `CommandOrControl+I` | Toggle immersive mode. |
 | | `keyAboutPage` | `CommandOrControl+,` | Open the About page. |
 | | `keyDashboard` | `CommandOrControl+D` | Open the dashboard. |
-| | `keySyncGists` | `CommandOrControl+R` | Sync snippets with GitHub Gist. |
+| | `keySyncGists` | `CommandOrControl+R` | Sync snippets with the selected provider. |
+
+Cached credentials and new-snippet drafts are isolated by provider, host, and
+account. Ambiguous legacy credentials are ignored, and legacy unscoped draft
+contents are left untouched rather than assigned automatically to a same-named
+account on another host.
+
+## GitLab Personal Snippets
+
+Select GitLab on the login screen, enter the GitLab.com or self-managed instance host, and sign in with a personal access token that has the `api` scope. Lepton supports personal snippets, including multi-file create, edit, and delete operations. GitLab OAuth and project snippets are not currently supported.
 
 ## Debug Logging
 

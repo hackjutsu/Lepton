@@ -126,7 +126,10 @@ class NavigationPanelDetails extends Component {
       // for null, '' and undefined
       const rawDescription = gist.brief.description || firstFilename
 
-      const { title, description, customTags } = descriptionParser(rawDescription)
+      const descriptionSource = gist.brief.providerTitle !== undefined
+        ? gist.brief
+        : rawDescription
+      const { title, description, customTags } = descriptionParser(descriptionSource)
       const thumbnailTitle = title.length > 0 ? title : description
       const gistId = gist.brief.id
       snippetThumbnails.push(

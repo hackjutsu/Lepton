@@ -4,10 +4,14 @@ const os = require('os')
 const path = require('path')
 const { spawn } = require('child_process')
 const electronPath = require('electron')
+const { getStorageFilePath } = require('../../app/utilities/electronLocalStorage')
 
 const repoRoot = path.resolve(__dirname, '../..')
 const bundlePath = path.join(repoRoot, 'bundle', 'app.bundle.js')
 const smokeMainPath = path.join(__dirname, 'electron-login-flow-smoke-main.js')
+const canonicalGitHubScope = 'github:https://github.com'
+const scopedProfileKey = `profile:${encodeURIComponent(canonicalGitHubScope)}`
+const scopedTokenKey = `token:${encodeURIComponent(canonicalGitHubScope)}`
 
 const transparentGif = 'data:image/gif;base64,R0lGODlhAQABAAAAACw='
 
@@ -26,6 +30,33 @@ const scenarios = [
   },
   {
     name: 'manual-token-invalid'
+  },
+  {
+    name: 'gitlab-token-success',
+    providerType: 'gitlab'
+  },
+  {
+    name: 'gitlab-edited-host-token-success',
+    providerType: 'gitlab',
+    editGitLabHost: true
+  },
+  {
+    name: 'gitlab-invalid-host',
+    providerType: 'gitlab',
+    invalidGitLabHost: true
+  },
+  {
+    name: 'gitlab-blank-host',
+    providerType: 'gitlab',
+    blankGitLabHost: true
+  },
+  {
+    name: 'gitlab-cached-token-invalid',
+    providerType: 'gitlab',
+    cachedUserInfo: {
+      profile: 'gitlab-user',
+      token: 'gitlab-bad-token'
+    }
   },
   {
     name: 'cached-token-success',
@@ -55,7 +86,7 @@ function createTempHome (scenario) {
   const userData = path.join(root, 'user-data')
   fs.mkdirSync(configHome, { recursive: true })
   fs.mkdirSync(userData, { recursive: true })
-  fs.writeFileSync(path.join(configHome, '.leptonrc'), JSON.stringify({
+  const config = {
     autoUpdate: false,
     i18n: {
       locale: 'en'
@@ -70,25 +101,40 @@ function createTempHome (scenario) {
     security: {
       cachedAccessTokenStorage: 'file'
     }
-  }))
+  }
+  if (scenario.providerType === 'gitlab') {
+    config.provider = { type: 'gitlab' }
+    config.gitlab = {
+      host: scenario.invalidGitLabHost
+        ? 'file:///tmp/private-gitlab'
+        : scenario.blankGitLabHost
+          ? ''
+          : scenario.editGitLabHost ? 'gitlab.com' : 'https://gitlab.example.test'
+    }
+  }
+  fs.writeFileSync(path.join(configHome, '.leptonrc'), JSON.stringify(config))
 
   if (scenario.cachedUserInfo) {
-    seedCachedUserInfo(userData, scenario.cachedUserInfo)
+    seedCachedUserInfo(userData, scenario.cachedUserInfo, scenario.providerType)
   }
 
   return { configHome, root, userData }
 }
 
-function seedCachedUserInfo (userData, cachedUserInfo) {
-  const storageDir = path.join(userData, 'storage')
-  fs.mkdirSync(storageDir, { recursive: true })
-  writeStorageValue(storageDir, 'profile', cachedUserInfo.profile)
-  writeStorageValue(storageDir, 'token', cachedUserInfo.token)
+function seedCachedUserInfo (userData, cachedUserInfo, providerType) {
+  fs.mkdirSync(path.join(userData, 'storage'), { recursive: true })
+  const profileKey = providerType === 'gitlab'
+    ? `profile:${encodeURIComponent('gitlab:https://gitlab.example.test')}`
+    : scopedProfileKey
+  const tokenKey = providerType === 'gitlab'
+    ? `token:${encodeURIComponent('gitlab:https://gitlab.example.test')}`
+    : scopedTokenKey
+  writeStorageValue(userData, profileKey, cachedUserInfo.profile)
+  writeStorageValue(userData, tokenKey, cachedUserInfo.token)
 }
 
-function writeStorageValue (storageDir, key, value) {
-  const fileName = path.basename(key, '.json') + '.json'
-  fs.writeFileSync(path.join(storageDir, encodeURIComponent(fileName)), JSON.stringify(value), 'utf8')
+function writeStorageValue (userDataPath, key, value) {
+  fs.writeFileSync(getStorageFilePath(userDataPath, key), JSON.stringify(value), 'utf8')
 }
 
 function createProfile (login) {
@@ -205,6 +251,29 @@ function startMockGitHubServer (scenario) {
           return
         }
 
+        if (url.pathname === '/api/v4/user') {
+          if (request.headers['private-token'] !== 'gitlab-good-token') {
+            writeJson(response, 401, { message: '401 Unauthorized' })
+            return
+          }
+          writeJson(response, 200, {
+            id: 23,
+            username: 'gitlab-user',
+            avatar_url: transparentGif,
+            web_url: 'https://gitlab.example.test/gitlab-user'
+          })
+          return
+        }
+
+        if (url.pathname === '/api/v4/snippets') {
+          if (request.headers['private-token'] !== 'gitlab-good-token') {
+            writeJson(response, 401, { message: '401 Unauthorized' })
+            return
+          }
+          writeJson(response, 200, [], { 'x-next-page': '' })
+          return
+        }
+
         if (url.pathname === '/api/gists' || /^\/api\/users\/[^/]+\/gists$/.test(url.pathname)) {
           const token = extractAuthToken(request)
           if (!token || token.endsWith('bad-token')) {
@@ -263,6 +332,7 @@ function runSmokeProcess (tempHome, server, scenario) {
       LEPTON_TEST_GITHUB_API_BASE_URL: `${server.baseUrl}/api`,
       LEPTON_TEST_GITHUB_OAUTH_ACCESS_TOKEN_URL: `${server.baseUrl}/login/oauth/access_token`,
       LEPTON_TEST_GITHUB_OAUTH_AUTHORIZE_URL: `${server.baseUrl}/login/oauth/authorize`,
+      LEPTON_TEST_GITLAB_API_BASE_URL: server.baseUrl,
       XDG_CONFIG_HOME: tempHome.configHome
     })
 
@@ -309,6 +379,10 @@ async function runScenario (scenario) {
 
   try {
     await runSmokeProcess(tempHome, server, scenario)
+    if ((scenario.invalidGitLabHost || scenario.blankGitLabHost) &&
+      server.requests.some(request => request.pathname.startsWith('/api/v4/'))) {
+      throw new Error(`Invalid GitLab host must not make API requests: ${JSON.stringify(server.requests)}`)
+    }
   } finally {
     await server.close()
   }
@@ -316,8 +390,15 @@ async function runScenario (scenario) {
 
 async function main () {
   assertBuiltBundleExists()
+  const scenarioFilter = process.env.LEPTON_LOGIN_FLOW_ONLY
+  const selectedScenarios = scenarioFilter
+    ? scenarios.filter(scenario => scenario.name === scenarioFilter)
+    : scenarios
+  if (selectedScenarios.length === 0) {
+    throw new Error(`Unknown login-flow scenario: ${scenarioFilter}`)
+  }
 
-  for (const scenario of scenarios) {
+  for (const scenario of selectedScenarios) {
     await runScenario(scenario)
   }
 }

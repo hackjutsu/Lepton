@@ -1,6 +1,21 @@
 const { Promise } = require('bluebird')
-const { createFetchRequest } = require('./fetchAdapter')
+const { GET_ALL_GISTS_V1 } = require('./operations')
+const { createFetchRequest } = require('../snippetApi/fetchAdapter')
+const {
+  CREATE_SNIPPET,
+  DELETE_SNIPPET,
+  EXCHANGE_ACCESS_TOKEN,
+  GET_SNIPPET,
+  GET_USER_PROFILE,
+  LIST_SNIPPETS,
+  UPDATE_SNIPPET
+} = require('../snippetApi/operations')
+const { createProviderAdapter } = require('../snippetApi/providerAdapter')
 const { shouldDownloadAllSnippets } = require('../config')
+const {
+  getAccountStorageKey,
+  normalizeProviderConfig
+} = require('../snippetProvider')
 
 const TAG = '[REST] '
 const kTimeoutUnit = 10 * 1000 // ms
@@ -8,35 +23,22 @@ const userAgent = 'lepton-snippet-app'
 const GISTS_PER_PAGE = 100
 const EMPTY_PAGE_ERROR_MESSAGE = 'page empty (Not an error)'
 
-const EXCHANGE_ACCESS_TOKEN = 'EXCHANGE_ACCESS_TOKEN'
-const GET_ALL_GISTS = 'GET_ALL_GISTS'
-const GET_ALL_GISTS_V1 = 'GET_ALL_GISTS_V1'
-const GET_SINGLE_GIST = 'GET_SINGLE_GIST'
-const GET_USER_PROFILE = 'GET_USER_PROFILE'
-const CREATE_SINGLE_GIST = 'CREATE_SINGLE_GIST'
-const EDIT_SINGLE_GIST = 'EDIT_SINGLE_GIST'
-const DELETE_SINGLE_GIST = 'DELETE_SINGLE_GIST'
-
 function createGitHubApi ({
   conf,
   gitHubApiBaseUrl,
   logger,
   oauthAccessTokenUrl,
-  fetchImpl
+  fetchImpl,
+  provider
 } = {}) {
   const apiLogger = logger || {
     debug: () => {},
     error: () => {},
     info: () => {}
   }
-  const apiRequest = createFetchRequest(fetchImpl)
-  let gitHubHostApi = 'api.github.com'
-
-  if (conf && conf.get('enterprise:enable')) {
-    const gitHubHost = conf.get('enterprise:host')
-    gitHubHostApi = `${gitHubHost}/api/v3`
-  }
-  const apiBaseUrl = normalizeBaseUrl(gitHubApiBaseUrl || `https://${gitHubHostApi}`)
+  const normalizedProvider = resolveGitHubProvider({ conf, provider })
+  const apiRequest = createFetchRequest(fetchImpl, { serviceName: 'GitHub' })
+  const apiBaseUrl = normalizeBaseUrl(gitHubApiBaseUrl || getGitHubApiBaseUrl(normalizedProvider))
   const accessTokenUrl = oauthAccessTokenUrl || 'https://github.com/login/oauth/access_token'
 
   function exchangeAccessToken (clientId, clientSecret, authCode) {
@@ -253,36 +255,125 @@ function createGitHubApi ({
     })
   }
 
-  function getGitHubApi (selection) {
-    switch (selection) {
-      case EXCHANGE_ACCESS_TOKEN:
-        return exchangeAccessToken
-      case GET_ALL_GISTS:
-        return getAllGistsV2
-      case GET_ALL_GISTS_V1:
-        return getAllGistsV1
-      case GET_SINGLE_GIST:
-        return getSingleGist
-      case GET_USER_PROFILE:
-        return getUserProfile
-      case CREATE_SINGLE_GIST:
-        return createSingleGist
-      case EDIT_SINGLE_GIST:
-        return editSingleGist
-      case DELETE_SINGLE_GIST:
-        return deleteSingleGist
-      default:
-        apiLogger.debug(TAG + 'Not implemented yet.')
-    }
+  const requests = {
+    [EXCHANGE_ACCESS_TOKEN]: exchangeAccessToken,
+    [LIST_SNIPPETS]: createNormalizedRequest(LIST_SNIPPETS, getAllGistsV2),
+    [GET_ALL_GISTS_V1]: createNormalizedRequest(GET_ALL_GISTS_V1, getAllGistsV1),
+    [GET_SNIPPET]: createNormalizedRequest(GET_SNIPPET, getSingleGist),
+    [GET_USER_PROFILE]: createNormalizedRequest(GET_USER_PROFILE, getUserProfile),
+    [CREATE_SNIPPET]: createNormalizedRequest(CREATE_SNIPPET, createSingleGist),
+    [UPDATE_SNIPPET]: createNormalizedRequest(UPDATE_SNIPPET, editSingleGist),
+    [DELETE_SNIPPET]: deleteSingleGist
   }
 
-  return {
-    getGitHubApi
+  function createNormalizedRequest (operation, request) {
+    return (...args) => Promise.resolve(request(...args))
+      .then(result => normalizeGitHubResponse(operation, result, normalizedProvider))
   }
+
+  return createProviderAdapter('github', requests)
 }
 
 function normalizeBaseUrl (baseUrl) {
   return String(baseUrl || '').replace(/\/+$/, '')
+}
+
+function resolveGitHubProvider ({ conf, provider }) {
+  if (provider) {
+    const normalizedProvider = normalizeProviderConfig(provider)
+    if (normalizedProvider.type !== 'github') {
+      throw new Error(`Expected GitHub provider, received ${normalizedProvider.type}`)
+    }
+    return normalizedProvider
+  }
+
+  const enterpriseEnabled = conf && typeof conf.get === 'function' && conf.get('enterprise:enable')
+  return normalizeProviderConfig({
+    type: 'github',
+    baseUrl: enterpriseEnabled ? conf.get('enterprise:host') : undefined
+  })
+}
+
+function normalizeGitHubResponse (operation, result, provider) {
+  switch (operation) {
+    case GET_USER_PROFILE:
+      return normalizeGitHubProfile(result, provider)
+    case LIST_SNIPPETS:
+    case GET_ALL_GISTS_V1:
+      return Array.isArray(result)
+        ? result.map(snippet => normalizeGitHubSnippet(snippet, provider))
+        : result
+    case GET_SNIPPET:
+    case CREATE_SNIPPET:
+    case UPDATE_SNIPPET:
+      return normalizeGitHubSnippet(result, provider)
+    default:
+      return result
+  }
+}
+
+function normalizeGitHubProfile (profile, provider) {
+  if (!profile || typeof profile !== 'object') return profile
+  const normalizedProvider = normalizeProviderConfig(provider)
+  const login = profile.login
+
+  return Object.assign({}, profile, {
+    provider: normalizedProvider.type,
+    providerType: normalizedProvider.type,
+    providerBaseUrl: normalizedProvider.baseUrl,
+    starred_url: getGitHubStarredUrl(normalizedProvider, login),
+    storageKey: getAccountStorageKey(normalizedProvider, login)
+  })
+}
+
+function normalizeGitHubSnippet (snippet, provider) {
+  if (!snippet || typeof snippet !== 'object') return snippet
+  const normalizedProvider = normalizeProviderConfig(provider)
+  const login = snippet.owner && snippet.owner.login
+  const storageKey = getAccountStorageKey(normalizedProvider, login)
+  const files = Object.create(null)
+
+  Object.keys(snippet.files || {}).forEach(filename => {
+    const file = snippet.files[filename] || {}
+    files[filename] = Object.assign({}, file, {
+      html_url: file.html_url || getGitHubFileUrl(snippet.html_url, file.filename || filename),
+      provider: normalizedProvider.type,
+      providerType: normalizedProvider.type,
+      providerBaseUrl: normalizedProvider.baseUrl,
+      storageKey
+    })
+  })
+
+  return Object.assign({}, snippet, {
+    history_url: snippet.history_url || (snippet.html_url ? `${snippet.html_url}/revisions` : null),
+    files,
+    provider: normalizedProvider.type,
+    providerType: normalizedProvider.type,
+    providerBaseUrl: normalizedProvider.baseUrl,
+    storageKey
+  })
+}
+
+function getGitHubApiBaseUrl (provider) {
+  const parsedUrl = new URL(provider.baseUrl)
+  if (parsedUrl.hostname === 'github.com' && parsedUrl.pathname === '/') {
+    return 'https://api.github.com'
+  }
+  return `${provider.baseUrl}/api/v3`
+}
+
+function getGitHubStarredUrl (provider, login) {
+  if (!login) return null
+  const parsedUrl = new URL(provider.baseUrl)
+  const gistHost = parsedUrl.hostname === 'github.com'
+    ? 'gist.github.com'
+    : `gist.${parsedUrl.host}`
+  return `${parsedUrl.protocol}//${gistHost}/${encodeURIComponent(login)}/starred`
+}
+
+function getGitHubFileUrl (snippetUrl, filename) {
+  if (!snippetUrl || !filename) return null
+  return `${snippetUrl}#file-${String(filename).replace(/\./g, '-').toLowerCase()}`
 }
 
 function validateOAuthAccessTokenResponse (payload) {
@@ -329,13 +420,9 @@ function removeUndefinedProperties (value) {
 }
 
 module.exports = {
-  CREATE_SINGLE_GIST,
-  DELETE_SINGLE_GIST,
-  EDIT_SINGLE_GIST,
-  EXCHANGE_ACCESS_TOKEN,
-  GET_ALL_GISTS,
   GET_ALL_GISTS_V1,
-  GET_SINGLE_GIST,
-  GET_USER_PROFILE,
-  createGitHubApi
+  createGitHubApi,
+  getGitHubApiBaseUrl,
+  normalizeGitHubProfile,
+  normalizeGitHubSnippet
 }

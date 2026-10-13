@@ -28,7 +28,7 @@ class NavigationPanel extends Component {
     super(props)
     const { localPref, userSession } = this.props
 
-    const userName = userSession.profile.login
+    const userName = userSession.profile.storageKey || userSession.profile.login
     let activeSection = -1
     if (localPref && localPref.get(userName)) {
       const cachedActiveSession = localPref.get(userName).activeSection
@@ -166,7 +166,7 @@ class NavigationPanel extends Component {
     })
 
     // Saving the activeSection to local preference
-    const userName = userSession.profile.login
+    const userName = userSession.profile.storageKey || userSession.profile.login
     logger.debug(`-----> Saving new tag activeSection ${nextActiveSection}`)
     localPref.set(userName,
       Object.assign({}, localPref.get(userName), { activeSection: nextActiveSection }))
@@ -175,19 +175,23 @@ class NavigationPanel extends Component {
   renderTagSection () {
     const { userSession } = this.props
     const { activeSection } = this.state
-
-    let gitHubHost = 'github.com'
-    if (conf.get('enterprise:enable')) {
-      gitHubHost = conf.get('enterprise:host')
+    let starredUrl = userSession.profile.starred_url
+    if (!starredUrl && userSession.profile.providerType !== 'gitlab') {
+      const gitHubHost = conf.get('enterprise:enable')
+        ? conf.get('enterprise:host')
+        : 'github.com'
+      starredUrl = `https://gist.${gitHubHost}/${userSession.profile.login}/starred`
     }
 
     return (
       <div className='gist-tag-section'>
-        <div className='starred-tag-section'>
-          <div className='tag-section-content'>
-            <a className='gist-tag' href={ `https://gist.${gitHubHost}/${userSession.profile.login}/starred` }>{ t('navigation.starred') }</a>
+        { starredUrl
+          ? <div className='starred-tag-section'>
+            <div className='tag-section-content'>
+              <a className='gist-tag' href={ starredUrl }>{ t('navigation.starred') }</a>
+            </div>
           </div>
-        </div>
+          : null }
         <div className='tag-section-list'>
           <div
             className={
@@ -303,7 +307,7 @@ class NavigationPanel extends Component {
     this.closePinnedTagsModal()
 
     // Saving the pinnedTags to local preference
-    const userName = userSession.profile.login
+    const userName = userSession.profile.storageKey || userSession.profile.login
     localPref.set(userName, Object.assign({}, localPref.get(userName), { pinnedTags }))
   }
 

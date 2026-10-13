@@ -11,10 +11,20 @@ const HASHTAG_REGEX = /(^|[^\p{L}\p{M}\p{N}_])#([\p{L}\p{M}\p{N}_]+)/gu
      tags: '#tags: tag1, tag2, tag3'
    } */
 export function descriptionParser (payload) {
-  const rawDescription = payload || 'No description'
-  const regexForTitle = rawDescription.match(/\[.*\]/)
-  const rawTitle = (regexForTitle && regexForTitle[0]) || ''
-  const title = ((rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length - 1)) || ''
+  const isSnippet = payload && typeof payload === 'object'
+  const hasStructuredMetadata = isSnippet &&
+    typeof payload.providerTitle === 'string' &&
+    typeof payload.providerDescription === 'string'
+  const rawDescription = hasStructuredMetadata
+    ? payload.providerDescription
+    : (isSnippet ? payload.description : payload) || 'No description'
+  const regexForTitle = hasStructuredMetadata ? null : rawDescription.match(/\[.*\]/)
+  const rawTitle = hasStructuredMetadata
+    ? payload.providerTitle
+    : (regexForTitle && regexForTitle[0]) || ''
+  const title = hasStructuredMetadata
+    ? rawTitle
+    : ((rawTitle.length > 0) && rawTitle.substring(1, regexForTitle[0].length - 1)) || ''
 
   let tagStyle = 'legacy'
   let customTags = parseCustomTagsLegacy(rawDescription)
@@ -26,7 +36,8 @@ export function descriptionParser (payload) {
   const descriptionLength = tagStyle === 'legacy'
     ? rawDescription.length - customTags.length
     : rawDescription.length
-  const description = rawDescription.substring(rawTitle.length, descriptionLength)
+  const descriptionStart = hasStructuredMetadata ? 0 : rawTitle.length
+  const description = rawDescription.substring(descriptionStart, descriptionLength)
 
   return { title, description, customTags }
 }

@@ -13,13 +13,37 @@ import logoLightImage from './logo-light.webp'
 import React, { Component } from 'react'
 import ThemeManager, { isDarkTheme } from '../../utilities/themeManager'
 import { getSupportedLocales, t } from '../../utilities/i18n'
-import { preferenceRequiresRestart } from '../../utilities/config/preferences'
+import {
+  isValidPreferenceValue,
+  preferenceRequiresRestart
+} from '../../utilities/config/preferences'
+import { normalizeProviderConfig } from '../../utilities/snippetProvider'
 
 import './index.scss'
 
 const conf = electronBridge.config
 const { configFilePath, logFilePath } = electronBridge.globals.getPaths()
 const themeManager = new ThemeManager()
+
+function hasValidProviderPreferences (values) {
+  if (values['provider:type'] === 'gitlab' &&
+    !isValidPreferenceValue('gitlab:host', values['gitlab:host'])) {
+    return false
+  }
+
+  if (values['enterprise:enable']) {
+    const enterpriseHost = values['enterprise:host']
+    if (typeof enterpriseHost !== 'string' || !enterpriseHost.trim()) return false
+
+    try {
+      normalizeProviderConfig({ type: 'github', baseUrl: enterpriseHost })
+    } catch {
+      return false
+    }
+  }
+
+  return true
+}
 
 const preferenceGroups = [
   {
@@ -91,11 +115,23 @@ const preferenceGroups = [
     ]
   },
   {
+    title: 'Snippet provider',
+    fields: [
+      { key: 'provider:type', label: 'Provider', type: 'select', options: [['github', 'GitHub'], ['gitlab', 'GitLab']] },
+      {
+        key: 'gitlab:host',
+        label: 'GitLab instance host',
+        type: 'text',
+        placeholder: 'gitlab.com',
+        visibleWhen: values => values['provider:type'] === 'gitlab'
+      }
+    ]
+  },
+  {
     title: 'GitHub Enterprise',
     fields: [
       { key: 'enterprise:enable', label: 'Enable GitHub Enterprise', type: 'checkbox' },
       { key: 'enterprise:host', label: 'Host', type: 'text', placeholder: 'github.example.com' },
-      { key: 'enterprise:token', label: 'Personal access token', type: 'password' },
       { key: 'enterprise:avatarUrl', label: 'Avatar URL', type: 'text' }
     ]
   },
@@ -181,11 +217,27 @@ class AboutPage extends Component {
     const changedKeys = this.getChangedPreferenceKeys()
     if (changedKeys.length === 0) {
       if (closeAfterSave) this.handleCloseButtonClicked()
-      return
+      return Promise.resolve(false)
+    }
+
+    if (changedKeys.some(key => !isValidPreferenceValue(key, this.state.values[key])) ||
+      !hasValidProviderPreferences(this.state.values)) {
+      this.setState({
+        error: 'Could not save preferences to .leptonrc.',
+        restartNotice: '',
+        saveNotice: '',
+        saving: false
+      })
+      return Promise.resolve(false)
     }
 
     this.setState({ error: '', restartNotice: '', saveNotice: '', saving: true })
-    Promise.all(changedKeys.map(key => electronBridge.config.set(key, this.state.values[key])))
+    return Promise.all(changedKeys.map(key => {
+      const setPreference = preferenceRequiresRestart(key)
+        ? electronBridge.config.setForRestart
+        : electronBridge.config.set
+      return setPreference(key, this.state.values[key])
+    }))
       .then(persistedValues => {
         if (persistedValues.some(value => value === undefined)) throw new Error('Preference was rejected')
 
@@ -215,6 +267,7 @@ class AboutPage extends Component {
           saveNotice: '',
           saving: false
         })
+        return false
       })
   }
 
@@ -270,7 +323,9 @@ class AboutPage extends Component {
         { preferenceGroups.map(group => (
           <section className='preference-group' key={ group.title }>
             <h4>{ group.title }</h4>
-            { group.fields.map(this.renderPreferenceField.bind(this)) }
+            { group.fields
+              .filter(field => !field.visibleWhen || field.visibleWhen(this.state.values))
+              .map(this.renderPreferenceField.bind(this)) }
           </section>
         )) }
         <div className='preference-save-note'>Save or Apply writes these changes to <code>.leptonrc</code>.</div>

@@ -9,7 +9,7 @@
 [![Star History Rank](https://api.star-history.com/badge?repo=hackjutsu/Lepton&type=rank)](https://www.star-history.com/hackjutsu/lepton)
 
 
-**Lepton** is a lean code snippet manager powered by GitHub Gist. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
+**Lepton** is a lean code snippet manager for GitHub Gist and GitLab personal snippets. [Check out the latest release.](https://github.com/hackjutsu/Lepton/releases)
 
 ## Features
 - Unlimited public/secret snippets
@@ -18,6 +18,7 @@
 - Markdown/JupyterNotebook
 - [GitHub Enterprise](wiki/faq.md#enable-github-enterprise)
 - GitHub token
+- GitLab.com and self-managed GitLab personal snippets (personal access token)
 - Immersive mode
 - [Customizable](wiki/configuration.md)
 - Built-in themes
@@ -49,7 +50,7 @@
 | Edit Snippet   | `Cmd/Ctrl + E` | Edit a snippet      |
 | Delete Snippet   | `Cmd/Ctrl + Del` | Delete selected snippet      |
 | Submit         | `Cmd/Ctrl + S` | Submit the changes from the editor      |
-| Sync           | `Cmd/Ctrl + R` | Sync snippets with GitHub Gist   |
+| Sync           | `Cmd/Ctrl + R` | Sync snippets with the selected provider   |
 | Immersive Mode | `Cmd/Ctrl + I` |  Toggle the [Immersive mode](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/immersive.png)    |
 | Dashboard      | `Cmd/Ctrl + D` |  Toggle the [dashboard](https://github.com/hackjutsu/Lepton/blob/master/docs/img/portfolio/dashboard.png)     |
 | About Page     | `Cmd/Ctrl + ,` |  Toggle the [About page](https://github.com/hackjutsu/Lepton/blob/dev/docs/img/portfolio/about.png)    |
@@ -67,6 +68,7 @@ Lepton's can be customized by `<home_dir>/.leptonrc`! You can find its exact pat
 - Proxy
 - Shortcuts
 - Zoom
+- Snippet provider (`github` or `gitlab`)
 - Enterprise
 - Notifications
 - Interface language (`i18n.locale`: `en`, `es`, `fr`, `ja`, `ko`, `tr`, `zh-Hans`, or `zh-Hant`)
