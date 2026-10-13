@@ -906,6 +906,196 @@ async function assertFixtureNewDraftRecovery (window) {
   }
 }
 
+async function assertFixtureImagePreferences (window) {
+  if (process.env.LEPTON_RENDER_FIXTURE !== 'about') return
+
+  const result = await window.webContents.executeJavaScript(`
+    new Promise(resolve => {
+      const maxSize = document.querySelector('[data-preference-key="editor:imageMaxSizeKB"]')
+      const getButton = text => Array.from(document.querySelectorAll('.preferences-footer button'))
+        .find(button => button.textContent.trim() === text)
+      const setInputValue = value => {
+        const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
+        setter.call(maxSize, value)
+        maxSize.dispatchEvent(new Event('input', { bubbles: true }))
+      }
+
+      if (!maxSize) {
+        resolve({ reason: 'missing image size preference' })
+        return
+      }
+
+      const initial = {
+        maxDisabled: maxSize.disabled,
+        maxValue: maxSize.value
+      }
+      setInputValue('63')
+
+      setTimeout(() => {
+        const invalid = {
+          applyDisabled: getButton('Apply').disabled,
+          cancelDisabled: getButton('Cancel').disabled,
+          hasError: document.body.innerText.includes('Maximum image size must be a whole number from 64 to 700 KB.'),
+          saveDisabled: getButton('Save').disabled
+        }
+        setInputValue('64')
+
+        setTimeout(() => {
+          resolve({
+            initial,
+            invalid,
+            valid: {
+              applyDisabled: getButton('Apply').disabled,
+              maxValue: maxSize.value,
+              saveDisabled: getButton('Save').disabled
+            }
+          })
+        }, 100)
+      }, 100)
+    })
+  `, true)
+
+  if (
+    result.reason ||
+    result.initial.maxDisabled ||
+    result.initial.maxValue !== '512' ||
+    !result.invalid.hasError ||
+    !result.invalid.applyDisabled ||
+    !result.invalid.saveDisabled ||
+    result.invalid.cancelDisabled ||
+    result.valid.maxValue !== '64' ||
+    result.valid.applyDisabled ||
+    result.valid.saveDisabled
+  ) {
+    throw new Error(`Expected image attachment preferences to validate and enable correctly: ${JSON.stringify(result)}`)
+  }
+}
+
+async function assertFixtureImageAttachments (window) {
+  if (process.env.LEPTON_RENDER_FIXTURE !== 'image-attachments') return
+
+  const result = await window.webContents.executeJavaScript(`
+    (async () => {
+      const waitFor = async predicate => {
+        const deadline = Date.now() + 5000
+        while (Date.now() <= deadline) {
+          const value = predicate()
+          if (value) return value
+          await new Promise(resolve => setTimeout(resolve, 50))
+        }
+        return null
+      }
+      const directImage = document.querySelector('.image-file-view .image-file-preview img')
+      const markdownImage = document.querySelector('.lepton-markdown-sibling-image')
+      const base64Button = document.querySelector('.image-file-view-toolbar button:nth-child(2)')
+      const initial = {
+        directComplete: Boolean(directImage && directImage.complete && directImage.naturalWidth > 0),
+        directSource: directImage ? directImage.getAttribute('src') : '',
+        markdownComplete: Boolean(markdownImage && markdownImage.complete && markdownImage.naturalWidth > 0),
+        markdownSource: markdownImage ? markdownImage.getAttribute('src') : '',
+        renderPressed: document.querySelector('.image-file-view-toolbar button:first-child')
+          ? document.querySelector('.image-file-view-toolbar button:first-child').getAttribute('aria-pressed')
+          : null
+      }
+
+      if (!base64Button) {
+        return { initial, reason: 'missing Base64 toggle' }
+      }
+
+      base64Button.click()
+      const textarea = await waitFor(() => document.querySelector('.image-file-view .image-file-base64'))
+      const renderButton = document.querySelector('.image-file-view-toolbar button:first-child')
+      const base64State = {
+        contentLength: textarea ? textarea.value.length : 0,
+        pressed: base64Button.getAttribute('aria-pressed')
+      }
+
+      if (renderButton) renderButton.click()
+      const restoredImage = await waitFor(() => document.querySelector('.image-file-view .image-file-preview img'))
+
+      const markdownRow = Array.from(document.querySelectorAll('.edit-modal .gist-editor-gist-file'))
+        .find(row => {
+          const filename = row.querySelector('.gist-editor-filename-area')
+          return filename && filename.value === 'notes.md'
+        })
+      const editorElement = markdownRow && markdownRow.querySelector('.CodeMirror-scroll')
+      if (!editorElement || !directImage || typeof DataTransfer === 'undefined') {
+        return { base64State, initial, reason: 'missing editor drop target', restored: Boolean(restoredImage) }
+      }
+
+      const binary = atob(directImage.getAttribute('src').split(',')[1])
+      const bytes = Uint8Array.from(binary, character => character.charCodeAt(0))
+      const imageFile = new File([bytes], 'dropped-logo.webp', { type: 'image/webp' })
+      const imageTransfer = new DataTransfer()
+      imageTransfer.items.add(imageFile)
+      const editorBounds = editorElement.getBoundingClientRect()
+      editorElement.dispatchEvent(new DragEvent('drop', {
+        bubbles: true,
+        cancelable: true,
+        clientX: editorBounds.left + 24,
+        clientY: editorBounds.top + 24,
+        dataTransfer: imageTransfer
+      }))
+
+      const droppedInput = await waitFor(() => Array.from(document.querySelectorAll('.edit-modal .gist-editor-filename-area'))
+        .find(input => input.value === 'dropped-logo.webp'))
+      const markdownEditor = markdownRow.querySelector('.CodeMirror').CodeMirror
+      const markdownReference = await waitFor(() => markdownEditor.getValue().includes('![dropped-logo](dropped-logo.webp)'))
+
+      const dropZone = document.querySelector('.edit-modal .image-attachment-drop-zone')
+      if (!dropZone) {
+        return {
+          base64State,
+          initial,
+          reason: 'missing configured image drop zone',
+          restored: Boolean(restoredImage)
+        }
+      }
+      const largeTransfer = new DataTransfer()
+      largeTransfer.items.add(new File([new Uint8Array((64 * 1024) + 1)], 'too-large.png', { type: 'image/png' }))
+      dropZone.dispatchEvent(new DragEvent('drop', {
+        bubbles: true,
+        cancelable: true,
+        dataTransfer: largeTransfer
+      }))
+      const sizeError = await waitFor(() => {
+        const error = document.querySelector('.edit-modal .image-attachment-error')
+        return error && error.textContent.includes('too-large.png') && error.textContent.includes('64')
+      })
+
+      const visibleImage = document.querySelector('.edit-modal .image-file-view')
+      if (visibleImage) visibleImage.scrollIntoView({ block: 'center' })
+
+      return {
+        base64State,
+        droppedFilename: droppedInput ? droppedInput.value : null,
+        initial,
+        markdownReference: Boolean(markdownReference),
+        restored: Boolean(restoredImage && restoredImage.complete && restoredImage.naturalWidth > 0),
+        sizeError: Boolean(sizeError)
+      }
+    })()
+  `, true)
+
+  if (
+    result.reason ||
+    !result.initial.directComplete ||
+    !result.initial.markdownComplete ||
+    !result.initial.directSource.startsWith('data:image/webp;base64,') ||
+    !result.initial.markdownSource.startsWith('data:image/webp;base64,') ||
+    result.initial.renderPressed !== 'true' ||
+    !result.base64State ||
+    result.base64State.pressed !== 'true' ||
+    result.base64State.contentLength <= 0 ||
+    !result.restored ||
+    result.droppedFilename !== 'dropped-logo.webp' ||
+    !result.markdownReference ||
+    !result.sizeError
+  ) {
+    throw new Error(`Expected image attachment render/Base64 flow to work: ${JSON.stringify(result)}`)
+  }
+}
+
 async function main () {
   let window
 
@@ -924,6 +1114,8 @@ async function main () {
         await captureScreenshot(window, 'electron-render-new-draft-before-actions.png')
       }
       await assertFixtureNewDraftRecovery(window)
+      await assertFixtureImagePreferences(window)
+      await assertFixtureImageAttachments(window)
       await captureScreenshot(window, `electron-render-${process.env.LEPTON_RENDER_FIXTURE}-success.png`)
       console.log(`electron render fixture smoke test passed: ${process.env.LEPTON_RENDER_FIXTURE}`)
     } else {

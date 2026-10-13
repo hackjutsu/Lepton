@@ -150,6 +150,8 @@ import './index.scss'
 import electronBridge from '../../utilities/electronBridge'
 import { getEditorTheme } from '../../utilities/themeManager'
 
+const { getFilesFromTransfer } = require('../../utilities/imageAttachments')
+
 const conf = electronBridge.config
 
 const highlightTheme = getEditorTheme(conf.get('theme'))
@@ -229,11 +231,19 @@ class CodeMirrorEditor extends Component {
 }
 
 class GistEditor extends Component {
+  constructor (props) {
+    super(props)
+    this.handleImageDrop = this.handleImageDrop.bind(this)
+    this.handleImagePaste = this.handleImagePaste.bind(this)
+  }
+
   componentDidMount () {
     const { filename } = this.props
 
     this.CodeMirror = this.editor.getCodeMirrorInstance()
     this.setMode(filename)
+    this.editor.getCodeMirror().on('drop', this.handleImageDrop)
+    this.editor.getCodeMirror().on('paste', this.handleImagePaste)
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -242,6 +252,55 @@ class GistEditor extends Component {
     if (prevProps.filename !== filename) {
       this.setMode(filename)
     }
+  }
+
+  componentWillUnmount () {
+    if (!this.editor) return
+    const codeMirror = this.editor.getCodeMirror()
+    if (!codeMirror) return
+    codeMirror.off('drop', this.handleImageDrop)
+    codeMirror.off('paste', this.handleImagePaste)
+  }
+
+  handleImageDrop (codeMirror, event) {
+    const insertionPosition = codeMirror.coordsChar({
+      left: event.clientX,
+      top: event.clientY
+    }, 'window')
+    this.handleImageTransfer(codeMirror, event, event.dataTransfer, insertionPosition)
+  }
+
+  handleImagePaste (codeMirror, event) {
+    this.handleImageTransfer(codeMirror, event, event.clipboardData, null)
+  }
+
+  handleImageTransfer (codeMirror, event, transfer, insertionPosition) {
+    if (!this.props.onImageFiles) return
+    const files = getFilesFromTransfer(transfer)
+    if (!files.length) return
+
+    event.preventDefault()
+    event.stopPropagation()
+    const insertMarkdown = /\.(md|markdown)$/i.test(this.props.filename || '')
+
+    Promise.resolve(this.props.onImageFiles(files))
+      .then(filenames => {
+        if (!insertMarkdown || !this.editor || !filenames || !filenames.length) return
+        const references = filenames.map(filename => {
+          const label = filename
+            .replace(/\.[^.]+$/, '')
+            .replace(/\\/g, '\\\\')
+            .replace(/\[/g, '\\[')
+            .replace(/]/g, '\\]')
+          return `![${label}](${encodeURIComponent(filename)})`
+        }).join('\n')
+        if (insertionPosition) {
+          codeMirror.replaceRange(references, insertionPosition)
+        } else {
+          codeMirror.replaceSelection(references)
+        }
+      })
+      .catch(() => {})
   }
 
   setMode (filename) {
@@ -254,8 +313,11 @@ class GistEditor extends Component {
   }
 
   render () {
-    const { value, placeholder } = this.props
-    const options = Object.assign({}, defaultOptions, { placeholder })
+    const { value, placeholder, readOnly } = this.props
+    const options = Object.assign({}, defaultOptions, {
+      placeholder,
+      readOnly: Boolean(readOnly)
+    })
 
     return (
       <CodeMirrorEditor

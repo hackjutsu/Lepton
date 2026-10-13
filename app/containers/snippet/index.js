@@ -5,6 +5,7 @@ import { Button, ProgressBar } from 'react-bootstrap'
 import electronBridge from '../../utilities/electronBridge'
 import Autolinker from 'autolinker'
 import CodeArea from '../codeArea'
+import ImageFileView from '../imageFileView'
 import Panel, { Collapse } from '../compatPanel'
 import HumanReadableTime from 'human-readable-time'
 import Modal from '../compatModal'
@@ -13,6 +14,7 @@ import React, { Component } from 'react'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 import { formatRelativeTime } from '../../utilities/relativeTime'
+import { buildGistFilesPatch } from '../../utilities/gistFilesPatch'
 import TagBadges from '../tagBadges'
 import { toggleMarkdownTaskListItem } from '../../utilities/markdown/taskList'
 import { createDefaultGistFilters, getFilteredGistIds } from '../../utilities/gistFilters'
@@ -48,6 +50,12 @@ import openInWebIcon from './ei-share.svg'
 import secretIcon from './lock.svg'
 import tagsIcon from './tags.svg'
 import trashIcon from './ei-trash.svg'
+
+const {
+  getRenderableImageSource,
+  isImageAttachmentFile,
+  isNativeBinaryImage
+} = require('../../utilities/imageAttachments')
 
 const clipboard = electronBridge.clipboard
 const conf = electronBridge.config
@@ -140,20 +148,8 @@ class Snippet extends Component {
   handleGistEditorFormSubmit (data) {
     const { gists, activeGist, accessToken } = this.props
     const description = data.description.trim()
-    const processedFiles = {}
-
-    data.gistFiles.forEach((file) => {
-      processedFiles[file.filename.trim()] = {
-        content: file.content
-      }
-    })
-
     const activeSnippet = gists[activeGist]
-    for (const preFile in activeSnippet.details.files) {
-      if (!processedFiles[preFile]) {
-        processedFiles[preFile] = null
-      }
-    }
+    const processedFiles = buildGistFilesPatch(data.gistFiles, activeSnippet.details.files)
 
     // In the past, we close the dialog after getting response from the server
     // both for the “create” and “edit” actions. However, the state change for
@@ -228,6 +224,7 @@ class Snippet extends Component {
       // leave a space in between to help tokenization
       filenameRecords += ', ' + filename
       const file = files[filename]
+      if (isImageAttachmentFile(Object.assign({ filename }, file))) return
       const language = file.language || 'Other'
       newLangs.add(language)
       const prefixedLang = Prefixed(language)
@@ -535,11 +532,9 @@ class Snippet extends Component {
       const fileList = activeSnippet.details.files
       for (const key in fileList) {
         const gistFile = fileList[key]
+        const normalizedGistFile = Object.assign({ filename: key }, gistFile)
 
-        fileArray.push(Object.assign({
-          filename: gistFile.filename,
-          content: gistFile.content
-        }))
+        fileArray.push(normalizedGistFile)
 
         const expandStatusKey = activeGist + '-' + key
         // undefined should be treated as the default value as explained above
@@ -582,12 +577,21 @@ class Snippet extends Component {
             </div>
             <Collapse in={ isExpanded }>
               <div className='collapsable-code-area'>
-                <CodeArea
-                  filename={gistFile.filename}
-                  content={gistFile.content}
-                  language={gistFile.language}
-                  kTabLength={kTabLength}
-                  onMarkdownTaskListItemToggle={ this.handleMarkdownTaskListItemToggle.bind(this, activeSnippet, gistFile) }/>
+                { getRenderableImageSource(normalizedGistFile) || isNativeBinaryImage(normalizedGistFile)
+                  ? <ImageFileView
+                    filename={ normalizedGistFile.filename }
+                    content={ normalizedGistFile.content }
+                    encoding={ normalizedGistFile.encoding }
+                    rawUrl={ normalizedGistFile.raw_url }
+                    size={ normalizedGistFile.size }
+                    truncated={ normalizedGistFile.truncated } />
+                  : <CodeArea
+                    filename={normalizedGistFile.filename}
+                    content={gistFile.content}
+                    language={gistFile.language}
+                    kTabLength={kTabLength}
+                    siblingFiles={ fileList }
+                    onMarkdownTaskListItemToggle={ this.handleMarkdownTaskListItemToggle.bind(this, activeSnippet, gistFile) }/> }
               </div>
             </Collapse>
           </div>

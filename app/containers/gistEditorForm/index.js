@@ -1,11 +1,13 @@
 import electronBridge from '../../utilities/electronBridge'
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 import GistEditor from '../gistEditor'
+import ImageFileView from '../imageFileView'
 import Panel from '../compatPanel'
 import React, { Component } from 'react'
 import {
   copyValues,
   createFormState,
+  appendImageAttachments,
   getGistFileEditorKey,
   getInitialValuesKey,
   getSubmitValues,
@@ -17,10 +19,17 @@ import {
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
 import validFilename from 'valid-filename'
-
 import tipsIcon from './ei-question.svg'
 
 import './index.scss'
+
+const { normalizeImageMaxSizeKB } = require('../../utilities/config/preferences')
+const {
+  createBase64ImageAttachment,
+  getFilesFromTransfer,
+  getRenderableImageSource,
+  isNativeBinaryImage
+} = require('../../utilities/imageAttachments')
 
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
@@ -45,6 +54,9 @@ class GistEditorForm extends Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
     this.handlePrivateChange = this.handlePrivateChange.bind(this)
     this.addFile = this.addFile.bind(this)
+    this.addImageFiles = this.addImageFiles.bind(this)
+    this.handleImageDrop = this.handleImageDrop.bind(this)
+    this.handleImagePickerChange = this.handleImagePickerChange.bind(this)
   }
 
   componentDidMount () {
@@ -59,7 +71,10 @@ class GistEditorForm extends Component {
     const nextInitialValuesKey = getInitialValuesKey(this.props.initialData)
 
     if (nextInitialValuesKey !== this.state.initialValuesKey) {
-      this.setState(createFormState(this.props.initialData))
+      this.setState(Object.assign(createFormState(this.props.initialData), {
+        imageError: '',
+        imageProcessing: false
+      }))
     }
   }
 
@@ -76,8 +91,8 @@ class GistEditorForm extends Component {
     return {
       description: valideNotEmptyContent(values.description),
       gistFiles: values.gistFiles.map(file => ({
-        filename: validateFilename(file.filename),
-        content: valideNotEmptyContent(file.content)
+        filename: file._nativeBinary ? null : validateFilename(file.filename),
+        content: file._nativeBinary ? null : valideNotEmptyContent(file.content)
       }))
     }
   }
@@ -128,6 +143,90 @@ class GistEditorForm extends Component {
     })
   }
 
+  getImageAttachmentSettings () {
+    const configuredMaxSizeKB = conf.get('editor:imageMaxSizeKB')
+    const maxSizeKB = normalizeImageMaxSizeKB(configuredMaxSizeKB)
+    if (configuredMaxSizeKB !== maxSizeKB) {
+      const invalidValueKey = `${typeof configuredMaxSizeKB}:${String(configuredMaxSizeKB)}`
+      if (this.lastInvalidImageMaxSizeKey !== invalidValueKey) {
+        logger.warn(`[Image Attachments] Invalid editor:imageMaxSizeKB value; using ${maxSizeKB} KB`)
+        this.lastInvalidImageMaxSizeKey = invalidValueKey
+      }
+    } else {
+      this.lastInvalidImageMaxSizeKey = null
+    }
+    return { maxSizeKB }
+  }
+
+  formatImageError (error) {
+    const details = error && error.details ? error.details : {}
+    if (error && error.code === 'too-large') {
+      return t('editor.imageTooLarge', {
+        filename: details.filename,
+        max: details.maxSizeKB,
+        size: details.sizeKB
+      })
+    }
+    if (error && error.code === 'read-failed') {
+      return t('editor.imageReadFailed', { filename: details.filename })
+    }
+    return t('editor.imageUnsupported', { filename: details.filename || t('editor.imageFallbackName') })
+  }
+
+  addImageFiles (fileList) {
+    const files = Array.from(fileList || [])
+    const { maxSizeKB } = this.getImageAttachmentSettings()
+    if (!files.length || this.imageProcessing) return Promise.resolve([])
+
+    this.imageProcessing = true
+    this.setState({ imageError: '', imageProcessing: true })
+    const pending = files.map(file => {
+      return createBase64ImageAttachment(file, maxSizeKB)
+        .then(attachment => ({ attachment }))
+        .catch(error => ({ error }))
+    })
+
+    return Promise.all(pending)
+      .then(results => {
+        if (!this.isMountedFlag) return []
+        const attachments = results.filter(result => result.attachment).map(result => result.attachment)
+        const firstError = results.find(result => result.error)
+
+        return new Promise(resolve => {
+          let filenames = []
+          this.setState(state => {
+            const values = copyValues(state.values)
+            if (attachments.length) {
+              const appended = appendImageAttachments(values.gistFiles, attachments)
+              values.gistFiles = appended.gistFiles
+              filenames = appended.filenames
+            }
+            return {
+              values,
+              errors: this.validateValues(values),
+              imageError: firstError ? this.formatImageError(firstError.error) : ''
+            }
+          }, () => resolve(filenames))
+        })
+      })
+      .finally(() => {
+        this.imageProcessing = false
+        if (this.isMountedFlag) this.setState({ imageProcessing: false })
+      })
+  }
+
+  handleImageDrop (event) {
+    preventDefault(event)
+    event.stopPropagation()
+    return this.addImageFiles(getFilesFromTransfer(event.dataTransfer))
+  }
+
+  handleImagePickerChange (event) {
+    const files = Array.from(event.target.files || [])
+    event.target.value = ''
+    return this.addImageFiles(files)
+  }
+
   removeFile (event, index) {
     preventDefault(event)
     this.updateValues(values => {
@@ -140,6 +239,7 @@ class GistEditorForm extends Component {
 
   handleSubmit (event) {
     if (event) preventDefault(event)
+    if (this.state.imageProcessing) return
 
     const errors = this.validateValues(this.state.values)
     if (hasValidationErrors(errors)) {
@@ -170,7 +270,8 @@ class GistEditorForm extends Component {
 
   render () {
     const { footerHelper, handleCancel, formStyle } = this.props
-    const { values, errors, touched, submitAttempted, submitting } = this.state
+    const { values, errors, touched, submitAttempted, submitting, imageError, imageProcessing } = this.state
+    const imageSettings = this.getImageAttachmentSettings()
 
     return (
       <form className='gist-editor-form' onSubmit={ this.handleSubmit }>
@@ -193,7 +294,13 @@ class GistEditorForm extends Component {
           onRemoveFile: this.removeFile.bind(this),
           onFileChange: this.handleFileChange.bind(this),
           onFieldBlur: this.touchField.bind(this),
-          onPrivateChange: this.handlePrivateChange
+          onPrivateChange: this.handlePrivateChange,
+          imageError,
+          imageMaxSizeKB: imageSettings.maxSizeKB,
+          imageProcessing,
+          onImageDrop: this.handleImageDrop,
+          onImageFiles: this.addImageFiles,
+          onImagePickerChange: this.handleImagePickerChange
         }) }
         <hr/>
         <div className='control-button-group'>
@@ -207,14 +314,14 @@ class GistEditorForm extends Component {
             className='gist-editor-control-button'
             onClick={ handleCancel }
             bsStyle='default'
-            disabled={ submitting }>
+            disabled={ submitting || imageProcessing }>
             { t('editor.cancel') }
           </Button>
           <Button
             className='gist-editor-control-button'
             type='submit'
             bsStyle='default'
-            disabled={ submitting }>
+            disabled={ submitting || imageProcessing }>
             { t('editor.submit') }
           </Button>
         </div>
@@ -239,13 +346,14 @@ const validateFilename = value => {
   }
 }
 
-const renderTitleInputField = ({ value, placeholder, type, touched, error, warning, onChange, onBlur }) => (
+const renderTitleInputField = ({ value, placeholder, type, touched, error, warning, disabled, onChange, onBlur }) => (
   <div className='title-input-field'>
     <input
       className='gist-editor-filename-area'
       value={ value }
       placeholder={ placeholder }
       type={ type }
+      disabled={ disabled }
       onChange={ onChange }
       onBlur={ onBlur }/>
     { touched && ((error && <span className='error-msg'>{ error }</span>) ||
@@ -288,13 +396,23 @@ const renderDescriptionField = ({ value, type, touched, error, warning, onChange
   )
 }
 
-const renderContentField = ({ value, type, touched, error, warning, filename, onChange }) => (
+const renderContentField = ({ file, type, touched, error, warning, onChange, onImageFiles }) => (
   <div>
-    <GistEditor
-      filename={ filename }
-      value={ value }
-      onChange={ onChange }
-      type={ type }/>
+    { getRenderableImageSource(file) || isNativeBinaryImage(file)
+      ? <ImageFileView
+        filename={ file.filename }
+        content={ file.content }
+        encoding={ file.encoding }
+        rawUrl={ file.raw_url }
+        size={ file.size }
+        truncated={ file.truncated } />
+      : <GistEditor
+        filename={ file.filename }
+        value={ file.content }
+        onChange={ onChange }
+        onImageFiles={ file._nativeBinary ? null : onImageFiles }
+        readOnly={ file._nativeBinary }
+        type={ type }/> }
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>
@@ -318,6 +436,7 @@ function renderGistFileHeader ({
       { renderTitleInputField({
         value: file.filename,
         type: 'text',
+        disabled: file._nativeBinary,
         placeholder: t('editor.filenamePlaceholder'),
         error: fileErrors.filename,
         touched: shouldShowError(touched, submitAttempted, fieldName),
@@ -342,7 +461,13 @@ const renderGistFiles = ({
   onRemoveFile,
   onFileChange,
   onFieldBlur,
-  onPrivateChange
+  onPrivateChange,
+  imageError,
+  imageMaxSizeKB,
+  imageProcessing,
+  onImageDrop,
+  onImageFiles,
+  onImagePickerChange
 }) => (
   <ListGroup className='gist-editor-section'>
     { files.map((file, index) => {
@@ -365,15 +490,15 @@ const renderGistFiles = ({
             }) }</Panel.Heading>
             <Panel.Body>
               { renderContentField({
-                value: file.content,
+                file,
                 type: 'text',
-                filename: file.filename,
                 error: fileErrors.content,
                 touched: shouldShowError(touched, submitAttempted, contentFieldName),
                 onChange: value => {
                   onFileChange(index, 'content', value)
                   onFieldBlur(contentFieldName)
-                }
+                },
+                onImageFiles
               }) }
             </Panel.Body>
           </Panel>
@@ -398,6 +523,24 @@ const renderGistFiles = ({
         <span>{ t('editor.secret') }</span>
       </label>
     </div>
+    <label
+      className={ `image-attachment-drop-zone${imageProcessing ? ' is-processing' : ''}` }
+      onDragOver={ preventDefault }
+      onDrop={ onImageDrop }>
+      <input
+        type='file'
+        accept='.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp'
+        multiple
+        disabled={ imageProcessing }
+        onChange={ onImagePickerChange } />
+      <span className='image-attachment-drop-title'>
+        { imageProcessing ? t('editor.imageProcessing') : t('editor.imageDropLabel') }
+      </span>
+      <span className='image-attachment-drop-hint'>
+        { t('editor.imageDropHint', { size: imageMaxSizeKB }) }
+      </span>
+    </label>
+    { imageError ? <div className='image-attachment-error' role='alert'>{ imageError }</div> : null }
   </ListGroup>
 )
 

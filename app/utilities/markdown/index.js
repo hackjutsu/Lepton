@@ -5,6 +5,8 @@ import { full as MdEmoji } from 'markdown-it-emoji'
 import MdTaskList from 'markdown-it-task-lists'
 import sanitizeHtml, { sanitizeInlineHtml } from './sanitizeHtml'
 
+const { resolveSiblingImageSource } = require('../imageAttachments')
+
 const htmlTagPattern = /<[!/a-z].*?>/ig
 const punctuationPattern = /[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~]/g
 const taskListCheckboxPattern = /^<input class="task-list-item-checkbox"( checked="")?type="checkbox">$/
@@ -91,6 +93,26 @@ Md.renderer.rules.heading_open = (tokens, idx, options, env, self) => {
 
   tokens[idx].attrSet('id', headingId)
   return self.renderToken(tokens, idx, options)
+}
+
+const defaultImageRenderer = Md.renderer.rules.image
+Md.renderer.rules.image = (tokens, idx, options, env, self) => {
+  const token = tokens[idx]
+  const source = token.attrGet('src') || ''
+  const resolvedSource = resolveSiblingImageSource(source, env && env.siblingFiles)
+
+  if (resolvedSource) {
+    token.attrSet('src', resolvedSource)
+    token.attrJoin('class', 'lepton-markdown-sibling-image')
+  } else if (!/^https?:\/\//i.test(source)) {
+    const sourceIndex = token.attrIndex('src')
+    if (sourceIndex >= 0) token.attrs.splice(sourceIndex, 1)
+    token.attrJoin('class', 'lepton-markdown-missing-image')
+  }
+
+  return defaultImageRenderer
+    ? defaultImageRenderer(tokens, idx, options, env, self)
+    : self.renderToken(tokens, idx, options)
 }
 
 export default Md

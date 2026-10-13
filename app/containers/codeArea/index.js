@@ -101,8 +101,8 @@ export default class CodeArea extends Component {
     }
   }
 
-  createMarkdownCodeBlock (content) {
-    return `<div class='markdown-section'>${Markdown.render(content)}</div>`
+  createMarkdownCodeBlock (content, siblingFiles) {
+    return `<div class='markdown-section'>${Markdown.render(content, { siblingFiles })}</div>`
   }
 
   createAsciiDocCodeBlock (content, language, kTabLength) {
@@ -143,7 +143,7 @@ export default class CodeArea extends Component {
     return `<pre><code><table class='code-table' style='tab-size: ${kTabLength};'>${contentTable}</table></code></pre>`
   }
 
-  renderCodeArea (filename, content, lang, kTabLength) {
+  renderCodeArea (filename, content, lang, kTabLength, siblingFiles) {
     const language = adaptedLanguage(filename, lang)
     let htmlContent = ''
     switch (language) {
@@ -151,7 +151,7 @@ export default class CodeArea extends Component {
         htmlContent = this.createJupyterNotebookCodeBlock(content, language, kTabLength)
         break
       case 'Markdown':
-        htmlContent = this.createMarkdownCodeBlock(content)
+        htmlContent = this.createMarkdownCodeBlock(content, siblingFiles)
         break
       case 'AsciiDoc':
         htmlContent = this.createAsciiDocCodeBlock(content, language, kTabLength)
@@ -167,7 +167,7 @@ export default class CodeArea extends Component {
   }
 
   render () {
-    const { filename, content, language, kTabLength } = this.props
-    return this.renderCodeArea(filename, content, language, kTabLength)
+    const { filename, content, language, kTabLength, siblingFiles } = this.props
+    return this.renderCodeArea(filename, content, language, kTabLength, siblingFiles)
   }
 }

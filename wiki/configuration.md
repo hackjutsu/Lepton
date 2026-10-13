@@ -48,7 +48,8 @@ The file is not generated automatically. Create it if you want to override the d
   },
   "editor": {
     "tabSize": 4,
-    "validateFilename": true
+    "validateFilename": true,
+    "imageMaxSizeKB": 512
   },
   "enterprise": {
     "enable": false,
@@ -103,6 +104,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `colored` | `false` | Render custom tags with stable color badges. |
 | `editor` | `tabSize` | `4` | Tab size in spaces. |
 | | `validateFilename` | `true` | Validate snippet filenames before saving. |
+| | `imageMaxSizeKB` | `512` | Maximum decoded size for each newly added PNG, JPEG, GIF, or WebP image, in KB. Supported values are whole numbers from `64` through `700`; images are stored as Base64 text with their original suffix, increasing the stored size by roughly one third. |
 | `enterprise` | `enable` | `false` | Enable GitHub Enterprise mode. |
 | | `host` | `""` | GitHub Enterprise host, for example `github.example.com`. |
 | | `token` | `""` | Personal access token with the `gist` scope. This remains plain `.leptonrc` configuration and is not affected by `security.cachedAccessTokenStorage`. |

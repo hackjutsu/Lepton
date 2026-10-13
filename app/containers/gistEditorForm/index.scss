@@ -210,6 +210,66 @@
     z-index: 20;
   }
 
+  .image-attachment-drop-zone {
+    @extend .font-style-base;
+    display: flex;
+    min-height: 62px;
+    margin-top: 12px;
+    padding: 10px 14px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px dashed var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    cursor: pointer;
+    text-align: center;
+
+    &:hover,
+    &:focus-within {
+      border-color: #4078C0;
+      color: var(--text-primary);
+    }
+
+    &.is-processing {
+      cursor: progress;
+      opacity: .7;
+    }
+
+    input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    input:disabled {
+      cursor: progress;
+    }
+  }
+
+  .image-attachment-drop-title {
+    color: var(--text-primary);
+    font-weight: bold;
+  }
+
+  .image-attachment-drop-hint {
+    margin-top: 3px;
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+
+  .image-attachment-error {
+    @extend .font-style-base;
+    padding: 7px 2px 0;
+    color: var(--accent-warning);
+    font-size: 12px;
+    font-weight: bold;
+  }
+
   hr {
     margin-top: 20px;
     margin-bottom: 20px;
