@@ -393,6 +393,50 @@
      display: block;
      margin: 0 auto;
    }
+
+   .lepton-markdown-image-placeholder {
+     display: flex;
+     max-width: 80%;
+     margin: 12px auto;
+     padding: 14px;
+     border: 1px dashed var(--border-color);
+     border-radius: 4px;
+     align-items: center;
+     flex-direction: column;
+     gap: 4px;
+     background: var(--bg-secondary);
+     color: var(--text-secondary);
+     text-align: center;
+   }
+
+   .lepton-markdown-image-placeholder-message {
+     color: var(--accent-warning);
+     font-weight: bold;
+   }
+
+   .lepton-markdown-image-placeholder-alt {
+     color: var(--text-primary);
+   }
+
+   .lepton-markdown-image-placeholder-reference {
+     font-family: Consolas, Menlo, Monaco, "Courier New", monospace;
+     font-size: 12px;
+   }
+
+   .lepton-markdown-image-open {
+     margin-top: 4px;
+     padding: 4px 10px;
+     border: 1px solid var(--border-color);
+     border-radius: 3px;
+     background: var(--bg-primary);
+     color: var(--text-primary);
+     cursor: pointer;
+
+     &:hover,
+     &:focus-visible {
+       background: var(--md-inline-code-background);
+     }
+   }
  }
 
 .markdown-section.asciidoc-section {
