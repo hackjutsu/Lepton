@@ -37,7 +37,9 @@ const FILES = {
       '- exercises markdown rendering',
       '- keeps GitHub out of smoke tests',
       '',
-      '![Lepton fixture](lepton-logo.webp)'
+      '[![Lepton fixture](lepton-logo.webp)](https://example.com/full-size)',
+      '',
+      '![Missing fixture](missing-image.png)'
     ].join('\n')
   },
   'lepton-logo.webp': {

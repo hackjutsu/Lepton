@@ -65,7 +65,9 @@ describe('markdown utility', () => {
     )
 
     expect(html).toContain(`src="data:image/png;base64,${pngBase64}"`)
-    expect(html).toContain('class="lepton-markdown-sibling-image"')
+    expect(html).toContain('class="lepton-markdown-image lepton-markdown-sibling-image"')
+    expect(html).toContain('data-lepton-image-filename="my image.png"')
+    expect(html).toContain('data-lepton-image-reference="my image.png"')
     expect(html).toContain('alt="Fixture"')
     expect(html).toContain('title="Sibling image"')
   })
@@ -76,7 +78,9 @@ describe('markdown utility', () => {
     })
 
     expect(html).toContain('src="https://example.com/image.png"')
+    expect(html).toContain('class="lepton-markdown-image"')
     expect(html).not.toContain('lepton-markdown-sibling-image')
+    expect(html).not.toContain('data-lepton-image-filename')
   })
 
   it.each([
@@ -94,6 +98,41 @@ describe('markdown utility', () => {
 
     expect(html).not.toContain(`src="${source}"`)
     expect(html).not.toContain('data:image/png')
+  })
+
+  it('marks an invalid sibling as actionable without exposing it as an image source', () => {
+    const html = Markdown.render('![Broken](broken.png)', {
+      siblingFiles: {
+        'broken.png': { filename: 'broken.png', content: 'not-base64' }
+      }
+    })
+
+    expect(html).toContain('class="lepton-markdown-image lepton-markdown-missing-image"')
+    expect(html).toContain('data-lepton-image-filename="broken.png"')
+    expect(html).toContain('data-lepton-image-reference="broken.png"')
+    expect(html).not.toContain('src=')
+  })
+
+  it('keeps a missing sibling non-actionable while retaining its safe reference', () => {
+    const html = Markdown.render('![Missing](missing.png)', { siblingFiles: {} })
+
+    expect(html).toContain('data-lepton-image-reference="missing.png"')
+    expect(html).not.toContain('data-lepton-image-filename')
+    expect(html).not.toContain('src=')
+  })
+
+  it('escapes generated sibling filename attributes', () => {
+    const html = Markdown.render('![Quoted](quote%22name.png)', {
+      siblingFiles: {
+        'quote"name.png': {
+          filename: 'quote"name.png',
+          content: pngBase64
+        }
+      }
+    })
+
+    expect(html).toContain('data-lepton-image-filename="quote&quot;name.png"')
+    expect(html).not.toContain('data-lepton-image-filename="quote"name.png"')
   })
 
   it('does not grant raw HTML images access to sibling Base64 data', () => {

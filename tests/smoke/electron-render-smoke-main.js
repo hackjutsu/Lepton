@@ -985,33 +985,100 @@ async function assertFixtureImageAttachments (window) {
         }
         return null
       }
-      const directImage = document.querySelector('.image-file-view .image-file-preview img')
+      const imageRow = Array.from(document.querySelectorAll('.edit-modal .gist-editor-gist-file'))
+        .find(row => {
+          const filename = row.querySelector('.gist-editor-filename-area')
+          return filename && filename.value === 'lepton-logo.webp'
+        })
+      const directView = imageRow && imageRow.querySelector('.image-file-view')
+      const directImage = directView && directView.querySelector('.image-file-preview img')
       const markdownImage = document.querySelector('.lepton-markdown-sibling-image')
-      const base64Button = document.querySelector('.image-file-view-toolbar button:nth-child(2)')
+      const missingPlaceholder = await waitFor(() => Array.from(document.querySelectorAll('.lepton-markdown-image-placeholder'))
+        .find(placeholder => placeholder.textContent.includes('Missing fixture') && placeholder.textContent.includes('missing-image.png')))
+      const base64Button = directView && directView.querySelector('.image-file-view-toolbar button:nth-child(2)')
+      const renderButton = directView && directView.querySelector('.image-file-view-toolbar button:first-child')
       const initial = {
         directComplete: Boolean(directImage && directImage.complete && directImage.naturalWidth > 0),
         directSource: directImage ? directImage.getAttribute('src') : '',
         markdownComplete: Boolean(markdownImage && markdownImage.complete && markdownImage.naturalWidth > 0),
         markdownSource: markdownImage ? markdownImage.getAttribute('src') : '',
-        renderPressed: document.querySelector('.image-file-view-toolbar button:first-child')
-          ? document.querySelector('.image-file-view-toolbar button:first-child').getAttribute('aria-pressed')
-          : null
+        missingHasOpenAction: Boolean(missingPlaceholder && missingPlaceholder.querySelector('.lepton-markdown-image-open')),
+        missingPlaceholder: Boolean(missingPlaceholder),
+        renderPressed: renderButton ? renderButton.getAttribute('aria-pressed') : null
       }
 
-      if (!base64Button) {
-        return { initial, reason: 'missing Base64 toggle' }
+      if (!base64Button || !renderButton || !directImage) {
+        return { initial, reason: 'missing direct image controls' }
+      }
+
+      directImage.dispatchEvent(new Event('error', { bubbles: true }))
+      const directFailure = await waitFor(() => directView.querySelector('.image-file-error'))
+      const retryButton = directView.querySelector('.image-file-retry')
+      const directFailureState = {
+        base64Disabled: base64Button.disabled,
+        hasMessage: Boolean(directFailure && directFailure.textContent.includes('cannot be rendered')),
+        hasRetry: Boolean(retryButton),
+        renderDisabled: renderButton.disabled
       }
 
       base64Button.click()
-      const textarea = await waitFor(() => document.querySelector('.image-file-view .image-file-base64'))
-      const renderButton = document.querySelector('.image-file-view-toolbar button:first-child')
+      const textarea = await waitFor(() => directView.querySelector('.image-file-base64'))
       const base64State = {
         contentLength: textarea ? textarea.value.length : 0,
         pressed: base64Button.getAttribute('aria-pressed')
       }
 
-      if (renderButton) renderButton.click()
-      const restoredImage = await waitFor(() => document.querySelector('.image-file-view .image-file-preview img'))
+      renderButton.click()
+      const restoredByRender = await waitFor(() => {
+        const image = directView.querySelector('.image-file-preview img')
+        return image && image.complete && image.naturalWidth > 0 ? image : null
+      })
+      if (restoredByRender) {
+        restoredByRender.dispatchEvent(new Event('error', { bubbles: true }))
+      }
+      const retryAfterSecondFailure = await waitFor(() => directView.querySelector('.image-file-retry'))
+      if (retryAfterSecondFailure) retryAfterSecondFailure.click()
+      const restoredByRetry = await waitFor(() => {
+        const image = directView.querySelector('.image-file-preview img')
+        return image && image.complete && image.naturalWidth > 0 ? image : null
+      })
+
+      const imageSection = document.querySelector('[data-gist-filename="lepton-logo.webp"]')
+      const imageHeader = imageSection && imageSection.querySelector('.file-expand')
+      if (imageHeader && imageHeader.classList.contains('is-expanded')) imageHeader.click()
+      const collapsedBeforeOpen = await waitFor(() => imageHeader && !imageHeader.classList.contains('is-expanded'))
+
+      const currentMarkdownImage = document.querySelector('.lepton-markdown-sibling-image')
+      if (currentMarkdownImage) currentMarkdownImage.dispatchEvent(new Event('error', { bubbles: true }))
+      const markdownFailure = await waitFor(() => document.querySelector('.lepton-markdown-image-open[data-lepton-image-filename="lepton-logo.webp"]'))
+      const markdownFailureState = {
+        hasAlt: Boolean(markdownFailure && markdownFailure.parentElement.textContent.includes('Lepton fixture')),
+        hasFilename: Boolean(markdownFailure && markdownFailure.parentElement.textContent.includes('lepton-logo.webp')),
+        hasOpenAction: Boolean(markdownFailure),
+        insideLink: Boolean(markdownFailure && markdownFailure.closest('a'))
+      }
+      if (markdownFailure) markdownFailure.click()
+      const openedFromMarkdown = await waitFor(() => imageHeader &&
+        imageHeader.classList.contains('is-expanded') &&
+        document.activeElement === imageHeader)
+
+      const markdownSection = document.querySelector('.markdown-section')
+      const externalLinkNode = document.createElement('a')
+      const externalImageNode = document.createElement('img')
+      externalLinkNode.setAttribute('href', 'https://example.com/details')
+      externalImageNode.className = 'lepton-markdown-image'
+      externalImageNode.setAttribute('alt', 'External fixture')
+      externalImageNode.setAttribute('src', restoredByRetry ? restoredByRetry.getAttribute('src') : '')
+      externalLinkNode.appendChild(externalImageNode)
+      if (markdownSection) markdownSection.appendChild(externalLinkNode)
+      externalImageNode.dispatchEvent(new Event('error', { bubbles: true }))
+      const externalFallback = await waitFor(() => Array.from(document.querySelectorAll('.lepton-markdown-image-placeholder'))
+        .find(placeholder => placeholder.textContent.includes('External fixture')))
+      const externalLink = externalFallback && externalFallback.closest('a')
+      const externalLinkedFailure = {
+        hasOpenAction: Boolean(externalFallback && externalFallback.querySelector('.lepton-markdown-image-open')),
+        preservedLink: Boolean(externalLink && externalLink.getAttribute('href') === 'https://example.com/details')
+      }
 
       const markdownRow = Array.from(document.querySelectorAll('.edit-modal .gist-editor-gist-file'))
         .find(row => {
@@ -1019,11 +1086,11 @@ async function assertFixtureImageAttachments (window) {
           return filename && filename.value === 'notes.md'
         })
       const editorElement = markdownRow && markdownRow.querySelector('.CodeMirror-scroll')
-      if (!editorElement || !directImage || typeof DataTransfer === 'undefined') {
-        return { base64State, initial, reason: 'missing editor drop target', restored: Boolean(restoredImage) }
+      if (!editorElement || !restoredByRetry || typeof DataTransfer === 'undefined') {
+        return { base64State, initial, reason: 'missing editor drop target', restored: Boolean(restoredByRetry) }
       }
 
-      const binary = atob(directImage.getAttribute('src').split(',')[1])
+      const binary = atob(restoredByRetry.getAttribute('src').split(',')[1])
       const bytes = Uint8Array.from(binary, character => character.charCodeAt(0))
       const imageFile = new File([bytes], 'dropped-logo.webp', { type: 'image/webp' })
       const imageTransfer = new DataTransfer()
@@ -1048,7 +1115,7 @@ async function assertFixtureImageAttachments (window) {
           base64State,
           initial,
           reason: 'missing configured image drop zone',
-          restored: Boolean(restoredImage)
+          restored: Boolean(restoredByRetry)
         }
       }
       const largeTransfer = new DataTransfer()
@@ -1063,15 +1130,29 @@ async function assertFixtureImageAttachments (window) {
         return error && error.textContent.includes('too-large.png') && error.textContent.includes('64')
       })
 
-      const visibleImage = document.querySelector('.edit-modal .image-file-view')
+      const finalImageRow = Array.from(document.querySelectorAll('.edit-modal .gist-editor-gist-file'))
+        .find(row => {
+          const filename = row.querySelector('.gist-editor-filename-area')
+          return filename && filename.value === 'lepton-logo.webp'
+        })
+      const visibleImage = finalImageRow && finalImageRow.querySelector('.image-file-view')
+      const finalImage = visibleImage && visibleImage.querySelector('.image-file-preview img')
+      if (finalImage) finalImage.dispatchEvent(new Event('error', { bubbles: true }))
+      const finalFailureVisible = await waitFor(() => visibleImage && visibleImage.querySelector('.image-file-error .image-file-retry'))
       if (visibleImage) visibleImage.scrollIntoView({ block: 'center' })
 
       return {
         base64State,
+        collapsedBeforeOpen: Boolean(collapsedBeforeOpen),
+        directFailureState,
         droppedFilename: droppedInput ? droppedInput.value : null,
+        externalLinkedFailure,
+        finalFailureVisible: Boolean(finalFailureVisible),
         initial,
+        markdownFailureState,
         markdownReference: Boolean(markdownReference),
-        restored: Boolean(restoredImage && restoredImage.complete && restoredImage.naturalWidth > 0),
+        openedFromMarkdown: Boolean(openedFromMarkdown),
+        restored: Boolean(restoredByRetry && restoredByRetry.complete && restoredByRetry.naturalWidth > 0),
         sizeError: Boolean(sizeError)
       }
     })()
@@ -1081,16 +1162,34 @@ async function assertFixtureImageAttachments (window) {
     result.reason ||
     !result.initial.directComplete ||
     !result.initial.markdownComplete ||
+    !result.initial.missingPlaceholder ||
+    result.initial.missingHasOpenAction ||
     !result.initial.directSource.startsWith('data:image/webp;base64,') ||
     !result.initial.markdownSource.startsWith('data:image/webp;base64,') ||
     result.initial.renderPressed !== 'true' ||
     !result.base64State ||
     result.base64State.pressed !== 'true' ||
     result.base64State.contentLength <= 0 ||
+    !result.directFailureState ||
+    !result.directFailureState.hasMessage ||
+    !result.directFailureState.hasRetry ||
+    result.directFailureState.renderDisabled ||
+    result.directFailureState.base64Disabled ||
     !result.restored ||
+    !result.collapsedBeforeOpen ||
+    !result.markdownFailureState ||
+    !result.markdownFailureState.hasAlt ||
+    !result.markdownFailureState.hasFilename ||
+    !result.markdownFailureState.hasOpenAction ||
+    result.markdownFailureState.insideLink ||
+    !result.openedFromMarkdown ||
+    !result.externalLinkedFailure ||
+    !result.externalLinkedFailure.preservedLink ||
+    result.externalLinkedFailure.hasOpenAction ||
     result.droppedFilename !== 'dropped-logo.webp' ||
     !result.markdownReference ||
-    !result.sizeError
+    !result.sizeError ||
+    !result.finalFailureVisible
   ) {
     throw new Error(`Expected image attachment render/Base64 flow to work: ${JSON.stringify(result)}`)
   }

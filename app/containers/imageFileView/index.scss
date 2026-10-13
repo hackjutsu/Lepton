@@ -67,7 +67,27 @@
 }
 
 .image-file-error {
+  display: flex;
+  min-height: 180px;
   padding: 32px 14px;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
   color: var(--accent-warning);
   text-align: center;
+}
+
+.image-file-retry {
+  padding: 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--bg-secondary);
+  }
 }

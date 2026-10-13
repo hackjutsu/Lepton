@@ -26,7 +26,14 @@ export default class ImageFileView extends Component {
   }
 
   setMode (mode) {
-    this.setState({ mode })
+    this.setState(state => ({
+      imageFailed: mode === 'render' ? false : state.imageFailed,
+      mode
+    }))
+  }
+
+  retryImage () {
+    this.setState({ imageFailed: false, mode: 'render' })
   }
 
   render () {
@@ -40,7 +47,8 @@ export default class ImageFileView extends Component {
       truncated
     }
     const inspected = inspectImageFile(file)
-    const canRender = inspected.valid && Boolean(inspected.source) && !this.state.imageFailed
+    const hasRenderableSource = inspected.valid && Boolean(inspected.source)
+    const canRender = hasRenderableSource && !this.state.imageFailed
     const canShowBase64 = typeof content === 'string' && content.length > 0
     const mode = this.state.mode === 'base64' && canShowBase64 ? 'base64' : 'render'
 
@@ -51,7 +59,7 @@ export default class ImageFileView extends Component {
             type='button'
             className={ mode === 'render' ? 'active' : '' }
             aria-pressed={ mode === 'render' }
-            disabled={ !canRender }
+            disabled={ !hasRenderableSource }
             onClick={ this.setMode.bind(this, 'render') }>
             { t('editor.imageRender') }
           </button>
@@ -80,7 +88,17 @@ export default class ImageFileView extends Component {
                 src={ inspected.source }
                 onError={ () => this.setState({ imageFailed: true }) } />
             </div>
-            : <div className='image-file-error'>{ t('editor.imageUnavailable') }</div> }
+            : <div className='image-file-error'>
+              <span role='status'>{ t('editor.imageUnavailable') }</span>
+              { hasRenderableSource
+                ? <button
+                  type='button'
+                  className='image-file-retry'
+                  onClick={ this.retryImage.bind(this) }>
+                  { t('editor.imageRetry') }
+                </button>
+                : null }
+            </div> }
       </div>
     )
   }

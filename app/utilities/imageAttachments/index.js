@@ -277,8 +277,8 @@ function containsControlCharacters (value) {
   })
 }
 
-function resolveSiblingImageSource (source, files) {
-  if (typeof source !== 'string' || !source || !files) return null
+function getSafeSiblingFilename (source) {
+  if (typeof source !== 'string' || !source) return null
   const trimmed = source.trim()
   if (!trimmed || trimmed.startsWith('/') || trimmed.startsWith('\\')) return null
   if (/^[A-Za-z][A-Za-z0-9+.-]*:/.test(trimmed) || trimmed.startsWith('//')) return null
@@ -301,8 +301,26 @@ function resolveSiblingImageSource (source, files) {
     return null
   }
 
+  return filename
+}
+
+function resolveSiblingImageReference (source, files) {
+  const filename = getSafeSiblingFilename(source)
+  if (!filename) return null
+
   const file = getSiblingFile(files, filename)
-  return file ? getRenderableImageSource(Object.assign({ filename }, file)) : null
+  return {
+    filename,
+    file,
+    source: file
+      ? getRenderableImageSource(Object.assign({}, file, { filename }))
+      : null
+  }
+}
+
+function resolveSiblingImageSource (source, files) {
+  const reference = resolveSiblingImageReference(source, files)
+  return reference ? reference.source : null
 }
 
 module.exports = {
@@ -321,5 +339,6 @@ module.exports = {
   isNativeBinaryImage,
   isSupportedImageFilename,
   normalizeBase64Content,
+  resolveSiblingImageReference,
   resolveSiblingImageSource
 }

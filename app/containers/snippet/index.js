@@ -66,6 +66,11 @@ const kIsExpanded = conf.get('snippet:expanded')
 const kTabLength = conf.get('editor:tabSize')
 
 class Snippet extends Component {
+  constructor (props) {
+    super(props)
+    this.fileNodes = Object.create(null)
+  }
+
   componentDidMount () {
     this.ipcSubscriptions = []
     subscribeIpc(ipcRenderer, this.ipcSubscriptions, 'edit-gist-renderer', () => {
@@ -509,16 +514,56 @@ class Snippet extends Component {
     const { activeGist, fileExpandStatus, updateFileExpandStatus } = this.props
 
     const key = activeGist + '-' + filename
-    if (fileExpandStatus[key] === undefined) {
+    const nextFileExpandStatus = Object.assign({}, fileExpandStatus)
+    if (nextFileExpandStatus[key] === undefined) {
       // If the file is clicked for the first time, it has no records in the
       // fileExpandStatus list. Therefore, its value is undefined. We consider
       // it in the default status(either expanded or collapsed, depending on
       // settings in .leptonrc).
-      fileExpandStatus[key] = !kIsExpanded
+      nextFileExpandStatus[key] = !kIsExpanded
     } else {
-      fileExpandStatus[key] = !fileExpandStatus[key]
+      nextFileExpandStatus[key] = !nextFileExpandStatus[key]
     }
-    updateFileExpandStatus(fileExpandStatus)
+    updateFileExpandStatus(nextFileExpandStatus)
+  }
+
+  setFileNode (filename, node) {
+    if (node) {
+      this.fileNodes[filename] = node
+    } else {
+      delete this.fileNodes[filename]
+    }
+  }
+
+  handleSiblingImageOpen (filename) {
+    const {
+      activeGist,
+      fileExpandStatus,
+      gists,
+      updateFileExpandStatus
+    } = this.props
+    const activeSnippet = gists[activeGist]
+    const files = activeSnippet && activeSnippet.details && activeSnippet.details.files
+    if (!files || !Object.prototype.hasOwnProperty.call(files, filename)) return
+
+    const key = activeGist + '-' + filename
+    updateFileExpandStatus(Object.assign({}, fileExpandStatus, { [key]: true }))
+
+    const node = this.fileNodes[filename]
+    if (!node) return
+    const focusFile = () => {
+      if (typeof node.scrollIntoView === 'function') {
+        node.scrollIntoView({ block: 'center' })
+      }
+      const header = node.querySelector('.file-expand')
+      if (header) header.focus()
+    }
+    const view = node.ownerDocument && node.ownerDocument.defaultView
+    if (view && typeof view.requestAnimationFrame === 'function') {
+      view.requestAnimationFrame(focusFile)
+    } else {
+      setTimeout(focusFile, 0)
+    }
   }
 
   render () {
@@ -546,7 +591,10 @@ class Snippet extends Component {
         }
 
         fileHtmlArray.push(
-          <div key={ key }>
+          <div
+            key={ key }
+            data-gist-filename={ key }
+            ref={ node => this.setFileNode(key, node) }>
             <hr/>
             <div className={ gistFile.language === 'Markdown' ? 'file-header-md' : 'file-header' }>
               <a href='#'
@@ -591,6 +639,7 @@ class Snippet extends Component {
                     language={gistFile.language}
                     kTabLength={kTabLength}
                     siblingFiles={ fileList }
+                    onSiblingImageOpen={ this.handleSiblingImageOpen.bind(this) }
                     onMarkdownTaskListItemToggle={ this.handleMarkdownTaskListItemToggle.bind(this, activeSnippet, gistFile) }/> }
               </div>
             </Collapse>

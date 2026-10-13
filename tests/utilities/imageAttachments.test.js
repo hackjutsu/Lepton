@@ -10,6 +10,7 @@ const {
   isBase64TextImage,
   isNativeBinaryFile,
   isNativeBinaryImage,
+  resolveSiblingImageReference,
   resolveSiblingImageSource
 } = require('../../app/utilities/imageAttachments')
 
@@ -159,5 +160,42 @@ describe('image attachment utilities', () => {
     expect(resolveSiblingImageSource('file:my%20image.png', files)).toBe(null)
     expect(resolveSiblingImageSource('javascript:alert(1)', files)).toBe(null)
     expect(resolveSiblingImageSource('https://example.com/image.png', files)).toBe(null)
+  })
+
+  it('returns safe sibling metadata even when the image content cannot render', () => {
+    const corruptFile = {
+      filename: 'wrong-name.jpg',
+      content: 'not-base64'
+    }
+    const files = {
+      'corrupt.png': corruptFile,
+      'image.png': {
+        filename: 'wrong-name.jpg',
+        content: toBase64(FIXTURES.png)
+      }
+    }
+
+    expect(resolveSiblingImageReference('corrupt.png', files)).toEqual({
+      filename: 'corrupt.png',
+      file: corruptFile,
+      source: null
+    })
+    expect(resolveSiblingImageReference('missing.png', files)).toEqual({
+      filename: 'missing.png',
+      file: null,
+      source: null
+    })
+    expect(resolveSiblingImageReference('image.png', files).source)
+      .toBe(`data:image/png;base64,${toBase64(FIXTURES.png)}`)
+  })
+
+  it.each([
+    '../image.png',
+    '%2Fimage.png',
+    'file:image.png',
+    '//example.com/image.png',
+    'https://example.com/image.png'
+  ])('does not expose unsafe or external sibling metadata: %s', source => {
+    expect(resolveSiblingImageReference(source, {})).toBe(null)
   })
 })

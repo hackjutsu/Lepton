@@ -5,7 +5,7 @@ import { full as MdEmoji } from 'markdown-it-emoji'
 import MdTaskList from 'markdown-it-task-lists'
 import sanitizeHtml, { sanitizeInlineHtml } from './sanitizeHtml'
 
-const { resolveSiblingImageSource } = require('../imageAttachments')
+const { resolveSiblingImageReference } = require('../imageAttachments')
 
 const htmlTagPattern = /<[!/a-z].*?>/ig
 const punctuationPattern = /[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~]/g
@@ -99,10 +99,18 @@ const defaultImageRenderer = Md.renderer.rules.image
 Md.renderer.rules.image = (tokens, idx, options, env, self) => {
   const token = tokens[idx]
   const source = token.attrGet('src') || ''
-  const resolvedSource = resolveSiblingImageSource(source, env && env.siblingFiles)
+  const reference = resolveSiblingImageReference(source, env && env.siblingFiles)
 
-  if (resolvedSource) {
-    token.attrSet('src', resolvedSource)
+  token.attrJoin('class', 'lepton-markdown-image')
+  if (reference) {
+    token.attrSet('data-lepton-image-reference', reference.filename)
+    if (reference.file) {
+      token.attrSet('data-lepton-image-filename', reference.filename)
+    }
+  }
+
+  if (reference && reference.source) {
+    token.attrSet('src', reference.source)
     token.attrJoin('class', 'lepton-markdown-sibling-image')
   } else if (!/^https?:\/\//i.test(source)) {
     const sourceIndex = token.attrIndex('src')
