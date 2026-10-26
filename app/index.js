@@ -61,6 +61,11 @@ import { notifySuccess, notifyFailure } from './utilities/notifier'
 import { configureI18n, t } from './utilities/i18n'
 import { shouldDownloadAllSnippets } from './utilities/config'
 
+const {
+  isImageAttachmentFile,
+  isSupportedImageFilename
+} = require('./utilities/imageAttachments')
+
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
 const conf = electronBridge.config
@@ -435,20 +440,28 @@ function updateUserGists (userLoginId, token) {
 
       gistList.forEach((gist) => {
         const langs = new Set()
+        const detailedFiles = downloadedGistDetails[gist.id] && downloadedGistDetails[gist.id].files
 
         Object.keys(gist.files).forEach(filename => {
           const file = gist.files[filename]
-          const language = file.language || 'Other'
-          langs.add(language)
+          const detailedFile = detailedFiles && detailedFiles[filename]
+          const isImageAttachment = detailedFile
+            ? isImageAttachmentFile(Object.assign({ filename }, detailedFile))
+            : isSupportedImageFilename(filename)
           rawGistTags[Prefixed('All')].add(gist.id)
 
-          // update the language tags
-          const prefixedLang = Prefixed(language)
-          if (Object.prototype.hasOwnProperty.call(rawGistTags, prefixedLang)) {
-            rawGistTags[prefixedLang].add(gist.id)
-          } else {
-            rawGistTags[prefixedLang] = new Set()
-            rawGistTags[prefixedLang].add(gist.id)
+          if (!isImageAttachment) {
+            const language = file.language || 'Other'
+            langs.add(language)
+
+            // update the language tags
+            const prefixedLang = Prefixed(language)
+            if (Object.prototype.hasOwnProperty.call(rawGistTags, prefixedLang)) {
+              rawGistTags[prefixedLang].add(gist.id)
+            } else {
+              rawGistTags[prefixedLang] = new Set()
+              rawGistTags[prefixedLang].add(gist.id)
+            }
           }
 
           // update the custom tags

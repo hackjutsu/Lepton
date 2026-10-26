@@ -14,13 +14,13 @@ function assertBuiltBundleExists () {
   }
 }
 
-function createTempHome (locale = 'en') {
+function createTempHome (locale = 'en', configOverrides = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-smoke-'))
   const configHome = path.join(root, 'config')
   const userData = path.join(root, 'user-data')
   fs.mkdirSync(configHome, { recursive: true })
   fs.mkdirSync(userData, { recursive: true })
-  fs.writeFileSync(path.join(configHome, '.leptonrc'), JSON.stringify({
+  fs.writeFileSync(path.join(configHome, '.leptonrc'), JSON.stringify(Object.assign({
     autoUpdate: false,
     i18n: {
       locale
@@ -28,7 +28,7 @@ function createTempHome (locale = 'en') {
     logger: {
       level: 'error'
     }
-  }))
+  }, configOverrides)))
   return { configHome, root, userData }
 }
 
@@ -37,6 +37,11 @@ const RENDER_FIXTURES = [
     name: 'active',
     selector: '.active-layout .snippet-box',
     text: 'React 19 render fixture'
+  },
+  {
+    name: 'image-attachments',
+    selector: '.image-file-view .image-file-preview img',
+    text: 'lepton-logo.webp|Render|Base64'
   },
   {
     name: 'edit',
@@ -56,7 +61,7 @@ const RENDER_FIXTURES = [
   {
     name: 'about',
     selector: '.about-modal .modal-title',
-    text: 'Settings|Preferences|Cancel|Apply|Save',
+    text: 'Settings|Preferences|Maximum image size (KB)|Cancel|Apply|Save',
     forbiddenSelector: '.preferences-section h3'
   },
   {
@@ -249,7 +254,14 @@ async function main () {
   })
 
   for (const fixture of RENDER_FIXTURES) {
-    await runSmokeProcess(createTempHome('en'), {
+    const configOverrides = fixture.name === 'image-attachments'
+      ? {
+        editor: {
+          imageMaxSizeKB: 64
+        }
+      }
+      : {}
+    await runSmokeProcess(createTempHome('en', configOverrides), {
       expectedSelector: fixture.selector,
       activeFilters: fixture.activeFilters,
       filterActions: fixture.filterActions,

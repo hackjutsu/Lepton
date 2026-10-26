@@ -100,6 +100,54 @@ describe('search utility', () => {
     ])
   })
 
+  it('keeps image filenames searchable without indexing Base64 payloads', () => {
+    const imageContent = Buffer.from([
+      0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
+      ...Buffer.from('distinctiveImagePayload')
+    ]).toString('base64')
+    SearchIndex.resetFuseIndex([
+      SearchIndex.buildSearchRecord({
+        id: 'gist-image',
+        description: 'Screenshot',
+        files: {
+          'architecture.png': {
+            language: null,
+            content: imageContent
+          }
+        }
+      })
+    ])
+    SearchIndex.initFuseSearch()
+
+    expect(SearchIndex.fuseSearch('architecture')).toEqual([
+      expect.objectContaining({ id: 'gist-image' })
+    ])
+    expect(SearchIndex.fuseSearch('distinctiveimagepayload')).toEqual([])
+    expect(SearchIndex.buildSearchRecord({
+      id: 'gist-image',
+      files: { 'architecture.png': { content: imageContent } }
+    })).toMatchObject({ language: '', files: [] })
+  })
+
+  it('does not index GitHub binary transport content but keeps invalid PNG text searchable', () => {
+    const record = SearchIndex.buildSearchRecord({
+      id: 'gist-images',
+      files: {
+        'native.bin': {
+          encoding: 'base64',
+          content: 'bmF0aXZlLWJpbmFyeS1uZWVkbGU='
+        },
+        'notes.png': {
+          content: 'plain text needle'
+        }
+      }
+    })
+
+    expect(record.files).toEqual([
+      expect.objectContaining({ filename: 'notes.png', content: 'plain text needle' })
+    ])
+  })
+
   it('adds and updates indexed items', () => {
     SearchIndex.addToFuseIndex(SearchIndex.buildSearchRecord({
       id: 'gist-1',

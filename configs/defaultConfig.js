@@ -39,7 +39,8 @@ module.exports = {
     },
     "editor": {
         "tabSize": 4,
-        "validateFilename": true
+        "validateFilename": true,
+        "imageMaxSizeKB": 512
     },
     "enterprise": {
         "enable": false,

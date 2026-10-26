@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  appendImageAttachments,
   copyValues,
   createFormState,
   getGistFileEditorKey,
@@ -107,6 +108,72 @@ describe('gist editor form state helpers', () => {
         { filename: 'app.js', content: 'console.log(1)' }
       ]
     })
+  })
+
+  it('preserves native binary metadata and submit markers without making it editable', () => {
+    const values = getInitialValues({
+      gists: [{
+        filename: 'photo.png',
+        content: 'iVBORw0KGgoAAAANSUhEUg==',
+        encoding: 'base64',
+        raw_url: 'https://gist.example/raw/photo.png',
+        size: 16,
+        truncated: false,
+        type: 'image/png'
+      }]
+    })
+
+    expect(values.gistFiles[0]).toMatchObject({
+      filename: 'photo.png',
+      encoding: 'base64',
+      raw_url: 'https://gist.example/raw/photo.png',
+      size: 16,
+      truncated: false,
+      type: 'image/png',
+      _nativeBinary: true,
+      _originalFilename: 'photo.png'
+    })
+    expect(getSubmitValues(values).gistFiles[0]).toMatchObject({
+      filename: 'photo.png',
+      _nativeBinary: true,
+      _originalFilename: 'photo.png'
+    })
+  })
+
+  it('protects native GitHub binary files regardless of their suffix', () => {
+    const values = getInitialValues({
+      gists: [{
+        filename: 'archive.bin',
+        content: 'AAECAw==',
+        encoding: 'base64'
+      }]
+    })
+
+    expect(values.gistFiles[0]).toMatchObject({
+      filename: 'archive.bin',
+      _nativeBinary: true,
+      _originalFilename: 'archive.bin'
+    })
+    expect(getSubmitValues(values).gistFiles[0]).toMatchObject({
+      _nativeBinary: true,
+      _originalFilename: 'archive.bin'
+    })
+  })
+
+  it('replaces the untouched blank row and creates collision-safe image filenames', () => {
+    const first = appendImageAttachments(
+      [{ filename: '', content: '', _editorId: 'blank' }],
+      [{ filename: 'diagram.png', content: 'first', _imageAttachment: true }]
+    )
+    const second = appendImageAttachments(
+      first.gistFiles,
+      [{ filename: 'DIAGRAM.PNG', content: 'second', _imageAttachment: true }]
+    )
+
+    expect(first.filenames).toEqual(['diagram.png'])
+    expect(first.gistFiles).toHaveLength(1)
+    expect(second.filenames).toEqual(['DIAGRAM-2.PNG'])
+    expect(second.gistFiles.map(file => file.filename)).toEqual(['diagram.png', 'DIAGRAM-2.PNG'])
   })
 
   it('marks all editable fields touched after a failed submit', () => {

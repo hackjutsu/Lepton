@@ -13,7 +13,13 @@ import logoLightImage from './logo-light.webp'
 import React, { Component } from 'react'
 import ThemeManager, { isDarkTheme } from '../../utilities/themeManager'
 import { getSupportedLocales, t } from '../../utilities/i18n'
-import { preferenceRequiresRestart } from '../../utilities/config/preferences'
+import {
+  MAX_IMAGE_MAX_SIZE_KB,
+  MIN_IMAGE_MAX_SIZE_KB,
+  isValidPreferenceValue,
+  normalizeImageMaxSizeKB,
+  preferenceRequiresRestart
+} from '../../utilities/config/preferences'
 
 import './index.scss'
 
@@ -73,7 +79,17 @@ const preferenceGroups = [
     title: 'Editor',
     fields: [
       { key: 'editor:tabSize', label: 'Tab size', type: 'select', numeric: true, options: [[2, '2'], [4, '4'], [8, '8']] },
-      { key: 'editor:validateFilename', label: 'Validate filenames', type: 'checkbox' }
+      { key: 'editor:validateFilename', label: 'Validate filenames', type: 'checkbox' },
+      {
+        key: 'editor:imageMaxSizeKB',
+        label: 'Maximum image size (KB)',
+        type: 'number',
+        numeric: true,
+        min: MIN_IMAGE_MAX_SIZE_KB,
+        max: MAX_IMAGE_MAX_SIZE_KB,
+        step: 1,
+        validationError: `Maximum image size must be a whole number from ${MIN_IMAGE_MAX_SIZE_KB} to ${MAX_IMAGE_MAX_SIZE_KB} KB.`
+      }
     ]
   },
   {
@@ -154,10 +170,12 @@ class AboutPage extends Component {
   }
 
   loadPreferences () {
-    return preferenceGroups.reduce((values, group) => {
+    const values = preferenceGroups.reduce((values, group) => {
       group.fields.forEach(field => { values[field.key] = conf.get(field.key) })
       return values
     }, {})
+    values['editor:imageMaxSizeKB'] = normalizeImageMaxSizeKB(values['editor:imageMaxSizeKB'])
+    return values
   }
 
   updatePreference (field, event) {
@@ -181,6 +199,12 @@ class AboutPage extends Component {
     const changedKeys = this.getChangedPreferenceKeys()
     if (changedKeys.length === 0) {
       if (closeAfterSave) this.handleCloseButtonClicked()
+      return
+    }
+
+    const validationError = this.getPreferenceValidationError()
+    if (validationError) {
+      this.setState({ error: validationError, restartNotice: '', saveNotice: '' })
       return
     }
 
@@ -228,12 +252,23 @@ class AboutPage extends Component {
     this.handleCloseButtonClicked()
   }
 
+  getPreferenceValidationError () {
+    const fields = preferenceGroups.flatMap(group => group.fields)
+    const invalidField = fields.find(field => !isValidPreferenceValue(field.key, this.state.values[field.key]))
+    if (!invalidField) return ''
+    return invalidField.validationError || `Invalid value for ${invalidField.label}.`
+  }
+
   renderPreferenceField (field) {
     const value = this.state.values[field.key]
     if (field.type === 'checkbox') {
       return (
         <label className='preference-checkbox' key={ field.key }>
-          <input type='checkbox' checked={ Boolean(value) } onChange={ this.updatePreference.bind(this, field) } />
+          <input
+            data-preference-key={ field.key }
+            type='checkbox'
+            checked={ Boolean(value) }
+            onChange={ this.updatePreference.bind(this, field) } />
           <span>{ field.label }</span>
         </label>
       )
@@ -243,7 +278,10 @@ class AboutPage extends Component {
       return (
         <label className='preference-row' key={ field.key }>
           <span>{ field.label }</span>
-          <select value={ value } onChange={ this.updatePreference.bind(this, field) }>
+          <select
+            data-preference-key={ field.key }
+            value={ value }
+            onChange={ this.updatePreference.bind(this, field) }>
             { field.options.map(option => <option key={ option[0] } value={ option[0] }>{ option[1] }</option>) }
           </select>
         </label>
@@ -254,8 +292,10 @@ class AboutPage extends Component {
       <label className='preference-row' key={ field.key }>
         <span>{ field.label }</span>
         <input
+          data-preference-key={ field.key }
           max={ field.max }
           min={ field.min }
+          step={ field.step }
           placeholder={ field.placeholder }
           type={ field.type }
           value={ value === undefined ? '' : value }
@@ -380,14 +420,15 @@ class AboutPage extends Component {
       return <Button onClick={ this.handleCloseButtonClicked.bind(this) }>Close</Button>
     }
 
-    const disabled = this.state.saving
+    const validationError = this.getPreferenceValidationError()
+    const disabled = this.state.saving || Boolean(validationError)
     const hasChanges = this.getChangedPreferenceKeys().length > 0
     const applied = !hasChanges && !disabled && Boolean(this.state.saveNotice || this.state.restartNotice)
     return (
       <div className='preferences-footer'>
         <div className='preference-status' aria-live='polite'>
           { this.state.saving ? 'Applying changes…' : null }
-          { !this.state.saving && this.state.error ? <span className='preference-error'>{ this.state.error }</span> : null }
+          { !this.state.saving && (this.state.error || validationError) ? <span className='preference-error'>{ this.state.error || validationError }</span> : null }
           { !this.state.saving && this.state.restartNotice ? <span className='preference-restart-notice'>{ this.state.restartNotice }</span> : null }
           { !this.state.saving && this.state.saveNotice ? this.state.saveNotice : null }
         </div>
@@ -395,7 +436,7 @@ class AboutPage extends Component {
           { applied
             ? <Button bsStyle='primary' onClick={ this.handleCloseButtonClicked.bind(this) }>Close</Button>
             : <div>
-              <Button disabled={ disabled } onClick={ this.cancelPreferences.bind(this) }>Cancel</Button>
+              <Button disabled={ this.state.saving } onClick={ this.cancelPreferences.bind(this) }>Cancel</Button>
               <Button disabled={ disabled || !hasChanges } onClick={ this.applyPreferences.bind(this, false) }>Apply</Button>
               <Button bsStyle='primary' disabled={ disabled || !hasChanges } onClick={ this.applyPreferences.bind(this, true) }>Save</Button>
             </div> }

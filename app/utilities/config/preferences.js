@@ -1,5 +1,9 @@
 const { getSupportedLocales } = require('../i18n')
 
+const DEFAULT_IMAGE_MAX_SIZE_KB = 512
+const MIN_IMAGE_MAX_SIZE_KB = 64
+const MAX_IMAGE_MAX_SIZE_KB = 700
+
 const THEMES = [
   'light',
   'dark',
@@ -68,7 +72,8 @@ const preferenceMetadata = {
   ...metadataForKeys([
     'window:closeToTray', 'window:minimizeToTray', 'security:cachedAccessTokenStorage',
     'snippet:sorting', 'snippet:sortingReverse', 'snippet:downloadAll',
-    'tag:showInSnippetList', 'tag:colored', 'editor:validateFilename',
+    'tag:showInSnippetList', 'tag:colored', 'editor:imageMaxSizeKB',
+    'editor:validateFilename',
     'notifications:success', 'notifications:failure'
   ], APPLY_MODES.NEXT_USE),
   ...metadataForKeys([
@@ -99,6 +104,9 @@ function isValidPreferenceValue (key, value) {
   if (key === 'editor:tabSize') {
     return Number.isInteger(value) && [2, 4, 8].includes(value)
   }
+  if (key === 'editor:imageMaxSizeKB') {
+    return Number.isInteger(value) && value >= MIN_IMAGE_MAX_SIZE_KB && value <= MAX_IMAGE_MAX_SIZE_KB
+  }
   if (key === 'zoom:percent') return Number.isInteger(value) && value >= 50 && value <= 300
   if (key === 'avatar:type') return ['github', 'boring'].includes(value)
   if (key === 'avatar:boringAvatarVariant') return ['beam', 'marble', 'pixel', 'sunset', 'ring', 'bauhaus'].includes(value)
@@ -108,9 +116,19 @@ function isValidPreferenceValue (key, value) {
   return false
 }
 
+function normalizeImageMaxSizeKB (value) {
+  return isValidPreferenceValue('editor:imageMaxSizeKB', value)
+    ? value
+    : DEFAULT_IMAGE_MAX_SIZE_KB
+}
+
 module.exports = {
   APPLY_MODES,
+  DEFAULT_IMAGE_MAX_SIZE_KB,
+  MAX_IMAGE_MAX_SIZE_KB,
+  MIN_IMAGE_MAX_SIZE_KB,
   isValidPreferenceValue,
+  normalizeImageMaxSizeKB,
   preferenceMetadata,
   preferenceRequiresRestart,
   THEMES,

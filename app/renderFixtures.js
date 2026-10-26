@@ -4,11 +4,15 @@ import leptonLogoImage from './containers/aboutPage/logo-light.webp?inline'
 import { getNewGistDraftStorageKey } from './utilities/newGistDraft'
 import SearchIndex from './utilities/search'
 
+const { isSupportedImageFilename } = require('./utilities/imageAttachments')
+
 const FIXTURE_USER = {
   avatar_url: leptonLogoImage,
   html_url: 'https://github.com/lepton-fixture',
   login: 'lepton-fixture'
 }
+
+const leptonLogoBase64 = leptonLogoImage.split(',')[1]
 
 const FILES = {
   'hello.js': {
@@ -31,8 +35,18 @@ const FILES = {
       '# Render fixture',
       '',
       '- exercises markdown rendering',
-      '- keeps GitHub out of smoke tests'
+      '- keeps GitHub out of smoke tests',
+      '',
+      '[![Lepton fixture](lepton-logo.webp)](https://example.com/full-size)',
+      '',
+      '![Missing fixture](missing-image.png)'
     ].join('\n')
+  },
+  'lepton-logo.webp': {
+    filename: 'lepton-logo.webp',
+    language: null,
+    raw_url: 'https://gist.githubusercontent.com/lepton-fixture/mock/raw/lepton-logo.webp',
+    content: leptonLogoBase64
   },
   'styles.css': {
     filename: 'styles.css',
@@ -140,7 +154,9 @@ function createGist (id, description, isPublic, files, updatedAt) {
   }
 
   return {
-    langs: new Set(Object.keys(files).map(filename => files[filename].language || 'Other')),
+    langs: new Set(Object.keys(files)
+      .filter(filename => !isSupportedImageFilename(filename))
+      .map(filename => files[filename].language || 'Other')),
     brief: gist,
     details: gist
   }
@@ -405,6 +421,8 @@ function getFixtureOverrides (name) {
       }
     case 'active':
       return {}
+    case 'image-attachments':
+      return { gistEditModalStatus: 'ON' }
     default:
       return null
   }
