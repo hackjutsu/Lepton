@@ -1088,6 +1088,9 @@ async function main () {
         await captureScreenshot(window, 'electron-render-smoke-success.png')
       }
       console.log('electron render smoke test passed')
+      if (process.env.LEPTON_SMOKE_LOGIN_LAYOUT === '1') {
+        await require('./login-layout')(window, captureScreenshot)
+      }
     }
 
     app.exit(0)

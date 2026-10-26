@@ -540,6 +540,7 @@ const LANGUAGE_BY_EXTENSION = {
   h: 'C',
   hpp: 'C++',
   html: 'HTML',
+  ipynb: 'Jupyter Notebook',
   java: 'Java',
   js: 'JavaScript',
   json: 'JSON',

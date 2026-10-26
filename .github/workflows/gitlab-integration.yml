@@ -1,0 +1,31 @@
+name: GitLab API integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      gitlab_image:
+        description: Official GitLab CE image tag (pin a release to reproduce a customer version)
+        required: true
+        default: gitlab/gitlab-ce:latest
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  gitlab-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      # The integration runner uses only Node built-ins and the production
+      # CommonJS API adapter. No npm install or repository secrets are needed.
+      - name: Verify against disposable GitLab
+        env:
+          LEPTON_GITLAB_TEST_IMAGE: ${{ inputs.gitlab_image }}
+        run: npm run test:gitlab-local

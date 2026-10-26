@@ -176,3 +176,72 @@ For the snap package, Electron may report `~/snap/lepton/current` as the home di
 ## Questions Or Issues
 
 Open issues and feature requests at https://github.com/hackjutsu/Lepton/issues.
+
+## Verifying GitLab support without an account
+
+The optional `GitLab API integration` GitHub Actions workflow runs a real,
+throwaway GitLab CE server on an isolated Linux runner. Once this workflow is
+on the default branch, open **Actions → GitLab API integration → Run workflow**
+and select the branch to test. No GitLab.com account, customer data, repository
+secrets, or personal access token is required.
+
+The same check can run on a machine with Node.js 24 and an amd64 Linux Docker
+engine (allow 6 GiB of available memory and several minutes for first startup):
+
+```sh
+npm run test:gitlab-local
+```
+
+On Apple Silicon, a dedicated Colima profile can run the official amd64 image
+using Rosetta (install Apple's Rosetta first if it is not already available):
+
+```sh
+brew install colima docker
+colima start lepton-gitlab --cpu 4 --memory 8 --disk 40 --vm-type vz --vz-rosetta --mount none --ssh-config=false --activate=false
+DOCKER_CONTEXT=colima-lepton-gitlab npm run test:gitlab-local
+colima stop lepton-gitlab
+```
+
+This profile shares no host folders and does not replace the active Docker
+context. The test explicitly selects `linux/amd64` for GitLab's official image.
+
+The runner uses the official `gitlab/gitlab-ce:latest` image by default and
+prints its resolved image ID. Set `LEPTON_GITLAB_TEST_IMAGE` to an official
+release tag to reproduce a particular GitLab version. The first run downloads
+a large image; the downloaded image remains cached after the test.
+
+The container exposes HTTP only on `127.0.0.1` at a temporary port. It creates
+an ordinary test user and a one-day `api` token kept in process memory, then
+uses Lepton's production API adapter to verify profile authentication,
+private multi-file snippet creation, listing, raw content retrieval, nested
+paths, task-list edits that preserve other files, file creation/rename/deletion,
+Unicode content, and final deletion. It removes its temporary snippet on
+failure and removes the container and its anonymous volumes on completion or
+normal interruption. A forced process kill or Docker failure can prevent
+cleanup; the uniquely named `lepton-gitlab-test-*` container identifies the test.
+No existing GitLab server or account is contacted. Container setup and token
+output are not printed.
+
+This verifies real GitLab API behavior, but does not replace an interactive
+Electron login/CRUD check, GitLab.com-specific policy checks, or verification
+of a customer's self-managed version and proxy configuration. The separate
+`npm run test:login-flow` command covers Electron login with a mocked server.
+
+For real Electron-to-GitLab end-to-end verification, run
+`DOCKER_CONTEXT=colima-lepton-gitlab npm run test:gitlab-e2e` with the Colima
+profile running (or omit `DOCKER_CONTEXT` for your normal Docker engine).
+This builds and launches the actual app with isolated configuration and user
+data, drives UI controls, and checks persisted results on the disposable
+server. It covers login, private/public creation, multi-file edits and removal,
+Markdown tasks, raw/copy/share, metadata/content search, tags and pins, external
+updates and sync, rich-format rendering, preferences, immersive mode, restart,
+lazy loading, failed-save draft recovery, deletion, and logout/login.
+App-menu commands are exercised; native OS accelerator delivery is not covered.
+Screenshots remain in the printed temporary artifact directory; credentials and
+user-data directories are removed. Linux requires a display (for example Xvfb).
+
+For login spacing, `npm run test:login-layout` exercises both providers, GitHub
+OAuth/token modes, GitLab host errors, all eight interface locales, the minimum
+window size, and 100%, 150%, and 300% zoom. It checks outer margins, control
+padding, horizontal overflow, and whether the submit button is reachable by
+scrolling, and captures screenshots at the minimum window size.

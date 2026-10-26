@@ -4,6 +4,8 @@ const path = require('path')
 const { spawn } = require('child_process')
 const electronPath = require('electron')
 
+if (process.argv.includes('--login-layout')) process.env.LEPTON_SMOKE_LOGIN_LAYOUT = '1'
+
 const repoRoot = path.resolve(__dirname, '../..')
 const bundlePath = path.join(repoRoot, 'bundle', 'app.bundle.js')
 const smokeMainPath = path.join(__dirname, 'electron-render-smoke-main.js')
@@ -217,7 +219,7 @@ function runSmokeProcess (tempHome, options) {
     const timeout = setTimeout(() => {
       child.kill('SIGKILL')
       reject(new Error(`Electron render smoke test timed out.\n${output}`))
-    }, 45000)
+    }, process.env.LEPTON_SMOKE_LOGIN_LAYOUT === '1' ? 120000 : 45000)
 
     child.stdout.on('data', data => {
       const text = data.toString()
@@ -246,6 +248,15 @@ function runSmokeProcess (tempHome, options) {
 
 async function main () {
   assertBuiltBundleExists()
+  if (process.env.LEPTON_SMOKE_LOGIN_LAYOUT === '1') {
+    for (const type of ['github', 'gitlab']) {
+      await runSmokeProcess(createTempHome('en', { provider: { type } }), {
+        expectedProvider: type,
+        expectedText: type === 'gitlab' ? 'Login|GitLab Token Login' : 'Login|GitHub Login'
+      })
+    }
+    return
+  }
   await runSmokeProcess(createTempHome('en'), {
     expectedText: 'Login|GitHub Login',
     switchProvider: true

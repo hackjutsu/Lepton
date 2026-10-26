@@ -10,10 +10,14 @@
     -webkit-user-select: none;
     -webkit-app-region: drag;
     background: #808080;
+    padding: 24px;
   }
 
   .modal-dialog {
+    margin: 0 auto;
+    max-width: 100%;
     perspective: 1200px;
+    width: 300px;
   }
 
   &.login-modal-gitlab .modal-dialog {
@@ -26,7 +30,8 @@
     border: 0;
     box-shadow: none;
     height: 455px;
-    margin-top: 100px;
+    margin-top: clamp(0px, calc((100dvh - 503px) / 2), 76px);
+    max-height: calc(100dvh - 48px);
     opacity: 1;
     overflow: visible;
     -webkit-transform: translateZ(0);
@@ -38,7 +43,7 @@
 
   &.login-modal-gitlab .modal-content {
     height: 500px;
-    margin-top: 60px;
+    margin-top: clamp(0px, calc((100dvh - 548px) / 2), 36px);
   }
 
   .login-modal-card {
@@ -65,9 +70,12 @@
     border: 1px solid rgba(0, 0, 0, .2);
     border-radius: 6px;
     box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+    display: flex;
+    flex-direction: column;
     height: 100%;
     left: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     position: absolute;
     top: 0;
     -webkit-transform-style: preserve-3d;
@@ -86,6 +94,7 @@
   }
 
   .modal-header {
+    flex-shrink: 0;
     position: relative;
   }
 
@@ -195,23 +204,24 @@
 
   .profile-image-modal {
     width: 200px;
-    height: 200px;
+    height: auto;
+    max-width: calc(100% - 10px);
     margin: 5px;
   }
 
   .profile-image-modal-compact {
-    height: 160px;
     width: 160px;
   }
 
-  .login-modal-body {
-    height: 394px;
-    overflow: hidden;
-    perspective: 900px;
+  .login-modal-body-content > a > svg {
+    height: auto;
+    max-width: 100%;
   }
 
-  &.login-modal-gitlab .login-modal-body {
-    height: 439px;
+  .login-modal-body {
+    flex: 0 0 auto;
+    min-height: 0;
+    perspective: 900px;
   }
 
   .login-modal-body-content {
@@ -219,7 +229,7 @@
   }
 
   .button-group-modal {
-    margin: 20px 20px 0px 20px;
+    margin: 20px clamp(0px, calc((100vw - 320px) / 2), 20px) 0;
   }
 
   &.login-modal-gitlab .button-group-modal {
@@ -241,9 +251,10 @@
 
   .login-provider-field > span {
     color: #666;
-    flex: 0 0 58px;
+    flex: 0 0 78px;
     font-size: 12px;
     font-weight: normal;
+    overflow-wrap: anywhere;
   }
 
   .login-provider-field .form-control {
@@ -257,12 +268,15 @@
   .login-provider-error {
     color: #a94442;
     font-size: 11px;
-    margin: -1px 0 6px 66px;
+    margin: -1px 0 6px 86px;
     text-align: left;
+    overflow-wrap: anywhere;
   }
 
   .modal-button {
     @extend .modal-button-base;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .modal-button:focus {
@@ -293,9 +307,7 @@
     line-height: 16px;
     margin: 14px 10px 18px 10px;
     min-height: 16px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
   }
 
   .login-status-line a {
@@ -307,6 +319,21 @@
     color: #a94442;
   }
 
+}
+
+@media (max-width: 400px) {
+  .login-modal .login-provider-field {
+    display: block;
+  }
+
+  .login-modal .login-provider-field > span {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .login-modal .login-provider-error {
+    margin-left: 0;
+  }
 }
 
 @keyframes login-modal-fade-in {

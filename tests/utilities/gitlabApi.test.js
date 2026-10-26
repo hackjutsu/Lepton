@@ -275,6 +275,14 @@ describe('GitLab personal snippets API utility', () => {
     expect(fetch.mock.calls[0][1].headers['PRIVATE-TOKEN']).toBe('pat-1')
   })
 
+  it('identifies notebook files for rich rendering', () => {
+    const snippet = gitlabApiCore.normalizeGitLabSnippet(createSnippet({
+      files: [{ path: 'demo.ipynb', raw_url: createRawFileUrl('demo.ipynb') }]
+    }), { type: 'gitlab', baseUrl: 'https://gitlab.example.test' }, 'https://gitlab.example.test/api/v4')
+
+    expect(snippet.files['demo.ipynb'].language).toBe('Jupyter Notebook')
+  })
+
   it('preserves structured metadata and internal visibility', () => {
     const { normalizeGitLabSnippet } = gitlabApiCore
     const snippet = normalizeGitLabSnippet(createSnippet({
