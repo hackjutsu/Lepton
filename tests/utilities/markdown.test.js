@@ -2,8 +2,21 @@ import { describe, expect, it } from 'vitest'
 
 import Markdown from '../../app/utilities/markdown'
 
+const { createMarkdownImageReference } = require('../../app/utilities/imageAttachments')
+
 describe('markdown utility', () => {
   const pngBase64 = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00]).toString('base64')
+
+  it.each(['diagram(.png', 'diagram).png', 'diagram [draft].png', 'diagram #1.png'])(
+    'renders an inserted image reference with punctuation in its filename: %s', filename => {
+      const html = Markdown.render(createMarkdownImageReference(filename), {
+        siblingFiles: { [filename]: { filename, content: pngBase64 } }
+      })
+
+      expect(html).toContain(`src="data:image/png;base64,${pngBase64}"`)
+      expect(html).toContain('lepton-markdown-sibling-image')
+    }
+  )
 
   it('renders GitHub-style emoji shortcodes as unicode emoji', () => {
     const html = Markdown.render('Ship it :tada: :rocket:')

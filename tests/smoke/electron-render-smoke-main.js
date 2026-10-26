@@ -1118,6 +1118,47 @@ async function assertFixtureImageAttachments (window) {
           restored: Boolean(restoredByRetry)
         }
       }
+      const findImportedRow = filename => Array.from(document.querySelectorAll('.edit-modal .gist-editor-gist-file'))
+        .find(row => row.querySelector('.gist-editor-filename-area').value === filename)
+      const textContent = 'const message = "hello café"'
+      const mixedTransfer = new DataTransfer()
+      mixedTransfer.items.add(new File([textContent], 'imported.js', { type: 'text/javascript' }))
+      mixedTransfer.items.add(new File([bytes], 'imported.webp', { type: 'image/webp' }))
+      dropZone.dispatchEvent(new DragEvent('drop', {
+        bubbles: true, cancelable: true, dataTransfer: mixedTransfer
+      }))
+      const mixedImported = await waitFor(() => findImportedRow('imported.js') && findImportedRow('imported.webp'))
+      const importedEditor = mixedImported && findImportedRow('imported.js').querySelector('.CodeMirror').CodeMirror
+      const textPreserved = importedEditor && importedEditor.getValue() === textContent
+      if (importedEditor) importedEditor.setValue('const edited = true')
+      const textEditable = await waitFor(() => importedEditor && importedEditor.getValue() === 'const edited = true')
+
+      const picker = dropZone.querySelector('input[type="file"]')
+      const pickerTransfer = new DataTransfer()
+      pickerTransfer.items.add(new File(['print(42)'], 'imported.js', { type: 'text/plain' }))
+      picker.files = pickerTransfer.files
+      picker.dispatchEvent(new Event('change', { bubbles: true }))
+      const pickerImported = await waitFor(() => findImportedRow('imported-2.js'))
+      const pickerContent = pickerImported && pickerImported.querySelector('.CodeMirror').CodeMirror.getValue()
+
+      const binaryTransfer = new DataTransfer()
+      binaryTransfer.items.add(new File([new Uint8Array([0, 1, 2])], 'archive.zip'))
+      dropZone.dispatchEvent(new DragEvent('drop', {
+        bubbles: true, cancelable: true, dataTransfer: binaryTransfer
+      }))
+      const binaryRejected = await waitFor(() => {
+        const error = document.querySelector('.edit-modal .image-attachment-error')
+        return error && error.textContent.includes('archive.zip') && !findImportedRow('archive.zip')
+      })
+
+      const createButton = Array.from(dropZone.querySelectorAll('button')).find(button => button.textContent === 'Create file')
+      if (createButton) createButton.click()
+      const blankFocused = await waitFor(() => document.activeElement.matches('.gist-editor-filename-area') && document.activeElement.value === '')
+      const fileImport = {
+        mixedImported: Boolean(mixedImported), textPreserved, textEditable: Boolean(textEditable),
+        pickerContent, binaryRejected: Boolean(binaryRejected), blankFocused: Boolean(blankFocused)
+      }
+
       const largeTransfer = new DataTransfer()
       largeTransfer.items.add(new File([new Uint8Array((64 * 1024) + 1)], 'too-large.png', { type: 'image/png' }))
       dropZone.dispatchEvent(new DragEvent('drop', {
@@ -1142,6 +1183,7 @@ async function assertFixtureImageAttachments (window) {
       if (visibleImage) visibleImage.scrollIntoView({ block: 'center' })
 
       return {
+        fileImport,
         base64State,
         collapsedBeforeOpen: Boolean(collapsedBeforeOpen),
         directFailureState,
@@ -1188,6 +1230,13 @@ async function assertFixtureImageAttachments (window) {
     result.externalLinkedFailure.hasOpenAction ||
     result.droppedFilename !== 'dropped-logo.webp' ||
     !result.markdownReference ||
+    !result.fileImport ||
+    !result.fileImport.mixedImported ||
+    !result.fileImport.textPreserved ||
+    !result.fileImport.textEditable ||
+    result.fileImport.pickerContent !== 'print(42)' ||
+    !result.fileImport.binaryRejected ||
+    !result.fileImport.blankFocused ||
     !result.sizeError ||
     !result.finalFailureVisible
   ) {

@@ -212,19 +212,18 @@
 
   .image-attachment-drop-zone {
     @extend .font-style-base;
-    display: flex;
-    min-height: 62px;
-    margin-top: 12px;
-    padding: 10px 14px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    min-height: 64px;
+    margin-top: 8px;
+    padding: 10px 12px;
     position: relative;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
     border: 1px dashed var(--border-color);
     border-radius: 4px;
-    background: var(--bg-secondary);
-    cursor: pointer;
-    text-align: center;
+    background: transparent;
+    text-align: left;
 
     &:hover,
     &:focus-within {
@@ -237,6 +236,32 @@
       opacity: .7;
     }
 
+  }
+
+  .file-import-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    gap: 8px;
+
+    .btn {
+      font-size: 12px;
+      padding: 4px 8px;
+    }
+  }
+
+  .file-picker-button {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+
+    &:focus-within {
+      outline: 2px solid #4078C0;
+      outline-offset: 2px;
+    }
+
     input {
       position: absolute;
       inset: 0;
@@ -245,21 +270,30 @@
       cursor: pointer;
       opacity: 0;
     }
-
-    input:disabled {
-      cursor: progress;
-    }
   }
 
   .image-attachment-drop-title {
-    color: var(--text-primary);
-    font-weight: bold;
+    color: var(--text-secondary);
+    font-weight: normal;
   }
 
   .image-attachment-drop-hint {
     margin-top: 3px;
     color: var(--text-secondary);
     font-size: 12px;
+  }
+
+  @media (max-width: 700px) {
+    .image-attachment-drop-zone {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .file-import-actions {
+      grid-column: 1;
+      grid-row: auto;
+      justify-content: flex-start;
+      margin-top: 8px;
+    }
   }
 
   .image-attachment-error {

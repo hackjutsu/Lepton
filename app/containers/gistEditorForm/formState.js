@@ -125,8 +125,8 @@ export function createFormState (initialData) {
   return {
     values: getInitialValues(initialData),
     errors: {},
-    imageError: '',
-    imageProcessing: false,
+    fileError: '',
+    fileProcessing: false,
     touched: {},
     submitAttempted: false,
     submitting: false,

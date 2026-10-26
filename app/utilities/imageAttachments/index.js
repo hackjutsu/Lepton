@@ -245,12 +245,26 @@ function createUniqueFilename (filename, existingFilenames) {
   return candidate
 }
 
-function getFilesFromTransfer (transfer) {
+function createMarkdownImageReference (filename) {
+  const label = filename
+    .replace(/\.[^.]+$/, '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\[/g, '\\[')
+    .replace(/]/g, '\\]')
+  // encodeURIComponent leaves parentheses intact, but Markdown uses them to
+  // delimit the destination. Escape them even when the filename is unbalanced.
+  const destination = encodeURIComponent(filename)
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+  return `![${label}](${destination})`
+}
+
+function getFilesFromTransfer (transfer, imagesOnly = true) {
   if (!transfer) return []
   const files = Array.from(transfer.files || [])
   if (files.length) {
     return files.filter(file => {
-      return isSupportedImageFilename(file.name) || (typeof file.type === 'string' && file.type.startsWith('image/'))
+      return !imagesOnly || isSupportedImageFilename(file.name) || (typeof file.type === 'string' && file.type.startsWith('image/'))
     })
   }
 
@@ -258,7 +272,7 @@ function getFilesFromTransfer (transfer) {
     .filter(item => item.kind === 'file' && typeof item.getAsFile === 'function')
     .map(item => item.getAsFile())
     .filter(file => file && (
-      isSupportedImageFilename(file.name) || (typeof file.type === 'string' && file.type.startsWith('image/'))
+      !imagesOnly || isSupportedImageFilename(file.name) || (typeof file.type === 'string' && file.type.startsWith('image/'))
     ))
 }
 
@@ -328,6 +342,7 @@ module.exports = {
   ImageAttachmentError,
   createBase64ImageAttachment,
   createUniqueFilename,
+  createMarkdownImageReference,
   getDecodedSize,
   getFilesFromTransfer,
   getImageTypeForFilename,

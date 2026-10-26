@@ -163,3 +163,7 @@ For the snap package, Electron may report `~/snap/lepton/current` as the home di
 ## Questions Or Issues
 
 Open issues and feature requests at https://github.com/hackjutsu/Lepton/issues.
+
+### Importing files
+
+In the New/Edit dialog, drop code, UTF-8 text files, or supported images into the file area, or use **Choose files** to select multiple files. Text files up to 700 KB are imported as editable snippet files with their filenames and content preserved. Images use the configured image limit above. Duplicate filenames receive a numbered suffix. Unsupported binary files and non-UTF-8 text are rejected. Use **Create file** to focus an empty editor or add a new blank file. Dropping files into a code editor also imports them; images dropped or pasted into a Markdown editor additionally insert image references.

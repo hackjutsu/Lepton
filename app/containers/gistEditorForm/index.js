@@ -25,11 +25,12 @@ import './index.scss'
 
 const { normalizeImageMaxSizeKB } = require('../../utilities/config/preferences')
 const {
-  createBase64ImageAttachment,
   getFilesFromTransfer,
   getRenderableImageSource,
   isNativeBinaryImage
 } = require('../../utilities/imageAttachments')
+
+const { createFileAttachment } = require('../../utilities/fileImports')
 
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
@@ -54,9 +55,9 @@ class GistEditorForm extends Component {
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this)
     this.handlePrivateChange = this.handlePrivateChange.bind(this)
     this.addFile = this.addFile.bind(this)
-    this.addImageFiles = this.addImageFiles.bind(this)
-    this.handleImageDrop = this.handleImageDrop.bind(this)
-    this.handleImagePickerChange = this.handleImagePickerChange.bind(this)
+    this.addFiles = this.addFiles.bind(this)
+    this.handleFileDrop = this.handleFileDrop.bind(this)
+    this.handleFilePickerChange = this.handleFilePickerChange.bind(this)
   }
 
   componentDidMount () {
@@ -72,8 +73,8 @@ class GistEditorForm extends Component {
 
     if (nextInitialValuesKey !== this.state.initialValuesKey) {
       this.setState(Object.assign(createFormState(this.props.initialData), {
-        imageError: '',
-        imageProcessing: false
+        fileError: '',
+        fileProcessing: false
       }))
     }
   }
@@ -137,9 +138,19 @@ class GistEditorForm extends Component {
 
   addFile (event) {
     preventDefault(event)
-    this.updateValues(values => {
-      values.gistFiles.push(normalizeGistFile())
-      return values
+    this.setState(state => {
+      const values = copyValues(state.values)
+      if (!values.gistFiles.some(file => !file.filename && !file.content)) {
+        values.gistFiles.push(normalizeGistFile())
+      }
+      return { values, errors: this.validateValues(values) }
+    }, () => {
+      const index = this.state.values.gistFiles.findIndex(file => !file.filename && !file.content)
+      const field = this.formNode.querySelectorAll('.gist-editor-filename-area')[index]
+      if (field) {
+        field.scrollIntoView({ block: 'center' })
+        field.focus()
+      }
     })
   }
 
@@ -158,7 +169,7 @@ class GistEditorForm extends Component {
     return { maxSizeKB }
   }
 
-  formatImageError (error) {
+  formatFileError (error) {
     const details = error && error.details ? error.details : {}
     if (error && error.code === 'too-large') {
       return t('editor.imageTooLarge', {
@@ -167,21 +178,24 @@ class GistEditorForm extends Component {
         size: details.sizeKB
       })
     }
+    if (error && error.code === 'unsupported-file') {
+      return t('editor.fileUnsupported', { filename: details.filename })
+    }
     if (error && error.code === 'read-failed') {
-      return t('editor.imageReadFailed', { filename: details.filename })
+      return t('editor.fileReadFailed', { filename: details.filename })
     }
     return t('editor.imageUnsupported', { filename: details.filename || t('editor.imageFallbackName') })
   }
 
-  addImageFiles (fileList) {
+  addFiles (fileList) {
     const files = Array.from(fileList || [])
     const { maxSizeKB } = this.getImageAttachmentSettings()
-    if (!files.length || this.imageProcessing) return Promise.resolve([])
+    if (!files.length || this.fileProcessing) return Promise.resolve([])
 
-    this.imageProcessing = true
-    this.setState({ imageError: '', imageProcessing: true })
+    this.fileProcessing = true
+    this.setState({ fileError: '', fileProcessing: true })
     const pending = files.map(file => {
-      return createBase64ImageAttachment(file, maxSizeKB)
+      return createFileAttachment(file, maxSizeKB)
         .then(attachment => ({ attachment }))
         .catch(error => ({ error }))
     })
@@ -199,32 +213,32 @@ class GistEditorForm extends Component {
             if (attachments.length) {
               const appended = appendImageAttachments(values.gistFiles, attachments)
               values.gistFiles = appended.gistFiles
-              filenames = appended.filenames
+              filenames = appended.filenames.filter((filename, index) => attachments[index]._imageAttachment)
             }
             return {
               values,
               errors: this.validateValues(values),
-              imageError: firstError ? this.formatImageError(firstError.error) : ''
+              fileError: firstError ? this.formatFileError(firstError.error) : ''
             }
           }, () => resolve(filenames))
         })
       })
       .finally(() => {
-        this.imageProcessing = false
-        if (this.isMountedFlag) this.setState({ imageProcessing: false })
+        this.fileProcessing = false
+        if (this.isMountedFlag) this.setState({ fileProcessing: false })
       })
   }
 
-  handleImageDrop (event) {
+  handleFileDrop (event) {
     preventDefault(event)
     event.stopPropagation()
-    return this.addImageFiles(getFilesFromTransfer(event.dataTransfer))
+    return this.addFiles(getFilesFromTransfer(event.dataTransfer, false))
   }
 
-  handleImagePickerChange (event) {
+  handleFilePickerChange (event) {
     const files = Array.from(event.target.files || [])
     event.target.value = ''
-    return this.addImageFiles(files)
+    return this.addFiles(files)
   }
 
   removeFile (event, index) {
@@ -239,7 +253,7 @@ class GistEditorForm extends Component {
 
   handleSubmit (event) {
     if (event) preventDefault(event)
-    if (this.state.imageProcessing) return
+    if (this.state.fileProcessing) return
 
     const errors = this.validateValues(this.state.values)
     if (hasValidationErrors(errors)) {
@@ -270,11 +284,11 @@ class GistEditorForm extends Component {
 
   render () {
     const { footerHelper, handleCancel, formStyle } = this.props
-    const { values, errors, touched, submitAttempted, submitting, imageError, imageProcessing } = this.state
+    const { values, errors, touched, submitAttempted, submitting, fileError, fileProcessing } = this.state
     const imageSettings = this.getImageAttachmentSettings()
 
     return (
-      <form className='gist-editor-form' onSubmit={ this.handleSubmit }>
+      <form ref={ node => { this.formNode = node } } className='gist-editor-form' onSubmit={ this.handleSubmit }>
         { renderDescriptionField({
           value: values.description,
           type: 'text',
@@ -295,12 +309,12 @@ class GistEditorForm extends Component {
           onFileChange: this.handleFileChange.bind(this),
           onFieldBlur: this.touchField.bind(this),
           onPrivateChange: this.handlePrivateChange,
-          imageError,
+          fileError,
           imageMaxSizeKB: imageSettings.maxSizeKB,
-          imageProcessing,
-          onImageDrop: this.handleImageDrop,
-          onImageFiles: this.addImageFiles,
-          onImagePickerChange: this.handleImagePickerChange
+          fileProcessing,
+          onFileDrop: this.handleFileDrop,
+          onImageFiles: this.addFiles,
+          onFilePickerChange: this.handleFilePickerChange
         }) }
         <hr/>
         <div className='control-button-group'>
@@ -314,14 +328,14 @@ class GistEditorForm extends Component {
             className='gist-editor-control-button'
             onClick={ handleCancel }
             bsStyle='default'
-            disabled={ submitting || imageProcessing }>
+            disabled={ submitting || fileProcessing }>
             { t('editor.cancel') }
           </Button>
           <Button
             className='gist-editor-control-button'
             type='submit'
             bsStyle='default'
-            disabled={ submitting || imageProcessing }>
+            disabled={ submitting || fileProcessing }>
             { t('editor.submit') }
           </Button>
         </div>
@@ -462,12 +476,12 @@ const renderGistFiles = ({
   onFileChange,
   onFieldBlur,
   onPrivateChange,
-  imageError,
+  fileError,
   imageMaxSizeKB,
-  imageProcessing,
-  onImageDrop,
+  fileProcessing,
+  onFileDrop,
   onImageFiles,
-  onImagePickerChange
+  onFilePickerChange
 }) => (
   <ListGroup className='gist-editor-section'>
     { files.map((file, index) => {
@@ -505,12 +519,34 @@ const renderGistFiles = ({
         </ListGroupItem>
       )
     }) }
+    <div
+      className={ `image-attachment-drop-zone${fileProcessing ? ' is-processing' : ''}` }
+      onDragOver={ preventDefault }
+      onDrop={ onFileDrop }
+      aria-busy={ fileProcessing }>
+      <span className='image-attachment-drop-title'>
+        { fileProcessing ? t('editor.fileProcessing') : t('editor.fileDropLabel') }
+      </span>
+      <span className='image-attachment-drop-hint'>
+        { t('editor.fileDropHint', { size: imageMaxSizeKB }) }
+      </span>
+      <div className='file-import-actions'>
+        <label className='file-picker-button btn btn-default'>
+          <input
+            type='file'
+            aria-label={ t('editor.chooseFiles') }
+            multiple
+            disabled={ fileProcessing }
+            onChange={ onFilePickerChange } />
+          { t('editor.chooseFiles') }
+        </label>
+        <Button type='button' onClick={ onAddFile } disabled={ fileProcessing }>
+          { t('editor.createFile') }
+        </Button>
+      </div>
+    </div>
+    { fileError ? <div className='image-attachment-error' role='alert'>{ fileError }</div> : null }
     <div>
-      <a href='#'
-        className='gist-editor-customized-tag'
-        onClick={ onAddFile }>
-        { t('editor.addFile') }
-      </a>
       <label className='gist-editor-privacy-checkbox'>
         <input
           className='gist-editor-privacy-input'
@@ -523,24 +559,7 @@ const renderGistFiles = ({
         <span>{ t('editor.secret') }</span>
       </label>
     </div>
-    <label
-      className={ `image-attachment-drop-zone${imageProcessing ? ' is-processing' : ''}` }
-      onDragOver={ preventDefault }
-      onDrop={ onImageDrop }>
-      <input
-        type='file'
-        accept='.png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp'
-        multiple
-        disabled={ imageProcessing }
-        onChange={ onImagePickerChange } />
-      <span className='image-attachment-drop-title'>
-        { imageProcessing ? t('editor.imageProcessing') : t('editor.imageDropLabel') }
-      </span>
-      <span className='image-attachment-drop-hint'>
-        { t('editor.imageDropHint', { size: imageMaxSizeKB }) }
-      </span>
-    </label>
-    { imageError ? <div className='image-attachment-error' role='alert'>{ imageError }</div> : null }
+
   </ListGroup>
 )
 

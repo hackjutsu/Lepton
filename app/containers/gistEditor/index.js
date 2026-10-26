@@ -150,7 +150,7 @@ import './index.scss'
 import electronBridge from '../../utilities/electronBridge'
 import { getEditorTheme } from '../../utilities/themeManager'
 
-const { getFilesFromTransfer } = require('../../utilities/imageAttachments')
+const { createMarkdownImageReference, getFilesFromTransfer } = require('../../utilities/imageAttachments')
 
 const conf = electronBridge.config
 
@@ -276,7 +276,7 @@ class GistEditor extends Component {
 
   handleImageTransfer (codeMirror, event, transfer, insertionPosition) {
     if (!this.props.onImageFiles) return
-    const files = getFilesFromTransfer(transfer)
+    const files = getFilesFromTransfer(transfer, event.type !== 'drop')
     if (!files.length) return
 
     event.preventDefault()
@@ -286,14 +286,7 @@ class GistEditor extends Component {
     Promise.resolve(this.props.onImageFiles(files))
       .then(filenames => {
         if (!insertMarkdown || !this.editor || !filenames || !filenames.length) return
-        const references = filenames.map(filename => {
-          const label = filename
-            .replace(/\.[^.]+$/, '')
-            .replace(/\\/g, '\\\\')
-            .replace(/\[/g, '\\[')
-            .replace(/]/g, '\\]')
-          return `![${label}](${encodeURIComponent(filename)})`
-        }).join('\n')
+        const references = filenames.map(createMarkdownImageReference).join('\n')
         if (insertionPosition) {
           codeMirror.replaceRange(references, insertionPosition)
         } else {
