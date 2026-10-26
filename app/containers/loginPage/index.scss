@@ -99,10 +99,8 @@
   }
 
   .login-modal-title {
-    overflow: hidden;
     padding-right: 74px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
   }
 
   .login-header-actions {
@@ -237,12 +235,17 @@
   }
 
   .login-provider-controls {
+    display: grid;
+    grid-template-columns: fit-content(35%) minmax(0, 1fr);
+    column-gap: 8px;
     margin-bottom: 8px;
   }
 
   .login-provider-field {
     align-items: center;
-    display: flex;
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
     gap: 8px;
     margin: 0 0 6px;
     text-align: left;
@@ -251,24 +254,44 @@
 
   .login-provider-field > span {
     color: #666;
-    flex: 0 0 78px;
     font-size: 12px;
     font-weight: normal;
     overflow-wrap: anywhere;
+    text-align: right;
   }
 
-  .login-provider-field .form-control {
-    flex: 1 1 auto;
-    height: 30px;
+  .button-group-modal .form-control {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    color: #555;
+    font-size: 14px;
+    font-weight: normal;
+    height: 34px;
+    line-height: 20px;
     min-width: 0;
-    padding-bottom: 4px;
-    padding-top: 4px;
+    padding: 6px 10px;
+  }
+
+  .button-group-modal .form-control:focus {
+    border-color: #66afe9;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+  }
+
+  .login-provider-field select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    padding-right: 36px;
   }
 
   .login-provider-error {
     color: #a94442;
     font-size: 11px;
-    margin: -1px 0 6px 86px;
+    grid-column: 2;
+    margin: -1px 0 6px;
     text-align: left;
     overflow-wrap: anywhere;
   }
@@ -322,6 +345,10 @@
 }
 
 @media (max-width: 400px) {
+  .login-modal .login-provider-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .login-modal .login-provider-field {
     display: block;
   }
@@ -329,10 +356,11 @@
   .login-modal .login-provider-field > span {
     display: block;
     margin-bottom: 4px;
+    text-align: left;
   }
 
   .login-modal .login-provider-error {
-    margin-left: 0;
+    grid-column: 1;
   }
 }
 

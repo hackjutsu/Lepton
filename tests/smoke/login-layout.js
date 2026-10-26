@@ -48,7 +48,23 @@ module.exports = async function verifyLoginLayout (window, captureScreenshot) {
             const controls = [...face.querySelectorAll('.button-group-modal button, .button-group-modal input, .button-group-modal select')]
             const last = controls.at(-1).getBoundingClientRect()
             const bounds = body.getBoundingClientRect()
+            const inputs = [...face.querySelectorAll('.button-group-modal .form-control')]
+            const inputStyles = inputs.map(control => {
+              const style = getComputedStyle(control)
+              return [style.height, style.fontSize, style.fontWeight, style.paddingTop, style.paddingBottom, style.borderRadius].join('|')
+            })
+            const fields = [...face.querySelectorAll('.login-provider-field')]
             return {
+              consistentInputs: inputStyles.every(style => style === inputStyles[0]),
+              labelsFit: fields.every(field => {
+                const label = field.querySelector('span')
+                return label.scrollWidth <= label.clientWidth + 1 && label.scrollHeight <= label.clientHeight + 1
+              }),
+              labelGaps: fields.map(field => {
+                const label = field.querySelector('span').getBoundingClientRect()
+                const input = field.querySelector('.form-control').getBoundingClientRect()
+                return innerWidth > 400 ? input.left - label.right : input.top - label.bottom
+              }),
               margins: [card.left, card.top, innerWidth - card.right, innerHeight - card.bottom],
               overflowX: body.scrollWidth - body.clientWidth,
               controlsPadded: controls.every(control => {
@@ -67,9 +83,13 @@ module.exports = async function verifyLoginLayout (window, captureScreenshot) {
           assert.ok(result.controlsPadded, context)
           assert.ok(result.bottomPadding >= 14, context)
           assert.ok(result.visibleButton, context)
+          assert.ok(result.consistentInputs, context)
+          assert.ok(result.labelsFit, context)
+          assert.ok(result.labelGaps.every(gap => gap >= 3 && gap <= 9), context)
           checked++
-          if (locale === 'fr' && zoom === 1 && width === 636) {
-            await captureScreenshot(window, `login-layout-${provider}-${mode}-minimum.png`)
+          if (zoom === 1 && width === 636) {
+            await evaluate("document.querySelector('.login-modal-face-front').scrollTop = 0")
+            await captureScreenshot(window, `login-layout-${provider}-${mode}-${locale}-minimum.png`)
           }
         }
       }
