@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import {
   adaptedLanguage,
-  highlightContent
+  highlightContent,
+  splitHighlightedLines
 } from '../../app/containers/codeArea/highlighting'
 
 const cSource = '#include<stdio.h>\n\nint main(void) {\n    printf("Hello World\\n");\n    return 0;\n}'
@@ -13,6 +14,36 @@ const typedReturnPythonSource = [
 ].join('\n')
 
 describe('CodeArea syntax highlighting', () => {
+  it.each(['"""', "'''"])('preserves multiline Python strings delimited by %s', quote => {
+    const source = `message = ${quote}first\nsecond\nthird${quote}\nprint(message)`
+    const lines = splitHighlightedLines(highlightContent(source, 'python'))
+
+    expect(lines).toHaveLength(4)
+    expect(lines[1]).toBe('<span class="hljs-string">second</span>')
+    expect(lines[2]).toMatch(/^<span class="hljs-string">third.*<\/span>$/)
+    expect(lines[3]).not.toContain('hljs-string')
+  })
+
+  it('preserves multiline comments and stops highlighting after the closing delimiter', () => {
+    const lines = splitHighlightedLines(highlightContent('/* first\nsecond\n*/\nint answer = 42;', 'c'))
+    expect(lines[1]).toBe('<span class="hljs-comment">second</span>')
+    expect(lines[2]).toBe('<span class="hljs-comment">*/</span>')
+    expect(lines[3]).not.toContain('hljs-comment')
+  })
+
+  it('preserves nested scopes, escaped text, CRLF, blank lines and trailing newlines', () => {
+    const html = '<span class="outer">a<span class="inner">&lt;b&gt;\r\n\r\nc</span>d\r\ne</span>\r\n'
+    expect(splitHighlightedLines(html)).toEqual([
+      '<span class="outer">a<span class="inner">&lt;b&gt;</span></span>',
+      '<span class="outer"><span class="inner"></span></span>',
+      '<span class="outer"><span class="inner">c</span>d</span>',
+      '<span class="outer">e</span>',
+      ''
+    ])
+    expect(splitHighlightedLines('')).toEqual([''])
+    expect(splitHighlightedLines('plain\n\ntext\n')).toEqual(['plain', '', 'text', ''])
+  })
+
   it('normalizes GitHub language names for Highlight.js', () => {
     expect(adaptedLanguage('main.c', 'C')).toBe('c')
     expect(adaptedLanguage('main.cpp', 'C++')).toBe('cpp')
