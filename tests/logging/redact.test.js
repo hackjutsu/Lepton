@@ -24,6 +24,8 @@ function expectNoSecret (value) {
   expect(serialized).not.toContain('github_pat_abc123')
   expect(serialized).not.toContain('plain-secret')
   expect(serialized).not.toContain('header-secret')
+  expect(serialized).not.toContain('glpat-abc_DEF-123')
+  expect(serialized).not.toContain('gitlab-header-secret')
 }
 
 describe('logging redaction', () => {
@@ -32,6 +34,9 @@ describe('logging redaction', () => {
       .toBe(`Getting profile with token ${REDACTED_VALUE}`)
     expect(redactSensitiveData('ghp_abc123')).toBe(REDACTED_VALUE)
     expect(redactSensitiveData('github_pat_abc123')).toBe(REDACTED_VALUE)
+    expect(redactSensitiveData('glpat-abc_DEF-123')).toBe(REDACTED_VALUE)
+    expect(redactSensitiveData('PRIVATE-TOKEN: gitlab-header-secret'))
+      .toBe(`PRIVATE-TOKEN: ${REDACTED_VALUE}`)
     expect(redactSensitiveData(`with token ${REDACTED_VALUE}`))
       .toBe(`with token ${REDACTED_VALUE}`)
   })
@@ -43,7 +48,9 @@ describe('logging redaction', () => {
         access_token: 'ghp_abc123',
         client_secret: 'plain-secret',
         headers: {
-          Authorization: 'token header-secret'
+          Authorization: 'token header-secret',
+          'PRIVATE-TOKEN': 'glpat-abc_DEF-123',
+          private_token: 'gitlab-header-secret'
         }
       },
       message: 'with token plain-secret'
@@ -55,6 +62,8 @@ describe('logging redaction', () => {
     expect(redacted.nested.access_token).toBe(REDACTED_VALUE)
     expect(redacted.nested.client_secret).toBe(REDACTED_VALUE)
     expect(redacted.nested.headers.Authorization).toBe(REDACTED_VALUE)
+    expect(redacted.nested.headers['PRIVATE-TOKEN']).toBe(REDACTED_VALUE)
+    expect(redacted.nested.headers.private_token).toBe(REDACTED_VALUE)
     expect(redacted.message).toBe(`with token ${REDACTED_VALUE}`)
     expectNoSecret(redacted)
   })

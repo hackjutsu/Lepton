@@ -1,12 +1,13 @@
 const REDACTED_VALUE = '[REDACTED]'
 
-const SECRET_KEY_PATTERN = /^(authorization|client_secret|token|access_token)$/i
+const SECRET_KEY_PATTERN = /^(authorization|client_secret|token|access_token|private[-_]token)$/i
 const TOKEN_PATTERNS = [
   /github_pat_[A-Za-z0-9_]+/g,
   /gh[pousr]_[A-Za-z0-9_]+/g,
+  /glpat-[A-Za-z0-9_-]+/g,
   /((?:with|cached|new|access|Caching|Cached)\s+token\s+)[^"',\s}\][]+/gi,
   /(cachedToken\s+is\s+)[^"',\s}\][]+/gi,
-  /((?:token|access_token|client_secret|Authorization)["']?\s*[:=]\s*["']?)[^"',\s}\][]+/gi,
+  /((?:token|access_token|client_secret|private[-_]token|Authorization)["']?\s*[:=]\s*["']?)[^"',\s}\][]+/gi,
   /((?:Authorization|authorization)["']?\s*[:=]\s*["']?token\s+)[^"',\s}\][]+/gi
 ]
 const LOG_METHODS = [

@@ -18,7 +18,9 @@ import {
 } from './formState'
 import { subscribeIpc, unsubscribeIpc } from '../../utilities/ipcSubscriptions'
 import { t } from '../../utilities/i18n'
-import validFilename from 'valid-filename'
+import { getSnippetProvider } from '../../utilities/snippetApi'
+import { isValidSnippetFilePath } from '../../utilities/snippetFilePath'
+
 import tipsIcon from './ei-question.svg'
 
 import './index.scss'
@@ -92,7 +94,7 @@ class GistEditorForm extends Component {
     return {
       description: valideNotEmptyContent(values.description),
       gistFiles: values.gistFiles.map(file => ({
-        filename: file._nativeBinary ? null : validateFilename(file.filename),
+        filename: file._nativeBinary ? null : validateFilename(file.filename, getSnippetProvider().type),
         content: file._nativeBinary ? null : valideNotEmptyContent(file.content)
       }))
     }
@@ -346,7 +348,7 @@ class GistEditorForm extends Component {
 
 const valideNotEmptyContent = value => value ? null : t('editor.required')
 
-const validateFilename = value => {
+const validateFilename = (value, providerType) => {
   // empty filename is not allowed
   if (!value) {
     return t('editor.required')
@@ -355,7 +357,7 @@ const validateFilename = value => {
   // validate filename according to the .leptonrc configs
   if (!conf.get('editor').validateFilename) {
     logger.info('[Filename Validation] According to the config, filename validation has been skipped')
-  } else if (!validFilename(value)) {
+  } else if (!isValidSnippetFilePath(value, providerType)) {
     return t('editor.invalidFilename')
   }
 }

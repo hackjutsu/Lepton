@@ -32,6 +32,8 @@ import accessToken from '../../app/reducers/reducer_token'
 import gistTags from '../../app/reducers/reducer_gist_tags'
 import gists from '../../app/reducers/reducer_gists'
 import loginStatus from '../../app/reducers/reducer_login_status'
+import pinnedTags from '../../app/reducers/reducer_pinned_tags'
+import syncTime from '../../app/reducers/reducer_sync_time'
 import updateAvailableBarStatus from '../../app/reducers/reducer_update_available_bar_status'
 import userSession from '../../app/reducers/reducer_user_session'
 
@@ -48,6 +50,7 @@ describe('core reducers', () => {
     expect(accessToken(undefined, { type: '@@INIT' })).toBeNull()
     expect(accessToken(null, updateAccessToken('token-1'))).toBe('token-1')
     expect(accessToken('token-1', removeAccessToken())).toBeNull()
+    expect(accessToken('token-1', logoutUserSession())).toBeNull()
   })
 
   it('tracks gist collection replacement and single-gist updates', () => {
@@ -61,6 +64,7 @@ describe('core reducers', () => {
         a: { id: 'a', description: 'first' },
         b: { id: 'b', description: 'second' }
       })
+    expect(gists(initial, logoutUserSession())).toEqual({})
   })
 
   it('clears active gist and tags on logout', () => {
@@ -69,6 +73,8 @@ describe('core reducers', () => {
 
     expect(gistTags(undefined, updateGistTags({ JavaScript: 2 }))).toEqual({ JavaScript: 2 })
     expect(gistTags({ JavaScript: 2 }, logoutUserSession())).toBeNull()
+    expect(pinnedTags(['JavaScript'], logoutUserSession())).toEqual([])
+    expect(syncTime('moments ago', logoutUserSession())).toBeNull()
   })
 
   it('tracks structured gist filters and clears them on logout', () => {

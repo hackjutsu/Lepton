@@ -39,8 +39,13 @@ import {
 import {
   DELETE_SINGLE_GIST,
   EDIT_SINGLE_GIST,
-  getGitHubApi,
-} from '../../utilities/githubApi'
+  getSnippetApi,
+} from '../../utilities/snippetApi'
+import {
+  getSessionGeneration,
+  isSessionGenerationCurrent
+} from '../../utilities/sessionGeneration'
+import { cloneSnippetTagMap } from '../../utilities/snippetTags'
 
 import './index.scss'
 
@@ -98,15 +103,12 @@ class Snippet extends Component {
 
   handleDeleteClicked () {
     const { accessToken, activeGist } = this.props
-    getGitHubApi(DELETE_SINGLE_GIST)(
+    const sessionGeneration = getSessionGeneration()
+    return getSnippetApi(DELETE_SINGLE_GIST)(
       accessToken,
       activeGist)
-      .catch(err => {
-        logger.error('Failed to delete the snippet ' + activeGist)
-        logger.error(JSON.stringify(err))
-        notifyFailure(t('notification.deletionFailed'), t('notification.networkFailure', { code: '02' }))
-      })
       .then(data => {
+        if (!isSessionGenerationCurrent(sessionGeneration)) return
         logger.info('The snippet ' + activeGist + ' has been deleted.')
         notifySuccess(t('notification.gistDeleted'))
 
@@ -116,8 +118,14 @@ class Snippet extends Component {
         // simple.
         this.props.reSyncUserGists()
       })
+      .catch(err => {
+        if (!isSessionGenerationCurrent(sessionGeneration)) return
+        logger.error('Failed to delete the snippet ' + activeGist)
+        logger.error(JSON.stringify(err))
+        notifyFailure(t('notification.deletionFailed'), t('notification.networkFailure', { code: '02' }))
+      })
       .finally(() => {
-        this.closeDeleteModal()
+        if (isSessionGenerationCurrent(sessionGeneration)) this.closeDeleteModal()
       })
   }
 
@@ -152,6 +160,7 @@ class Snippet extends Component {
 
   handleGistEditorFormSubmit (data) {
     const { gists, activeGist, accessToken } = this.props
+    const sessionGeneration = getSessionGeneration()
     const description = data.description.trim()
     const activeSnippet = gists[activeGist]
     const processedFiles = buildGistFilesPatch(data.gistFiles, activeSnippet.details.files)
@@ -164,29 +173,32 @@ class Snippet extends Component {
     // response, which provides better user experience.
     this.closeGistEditorModal()
 
-    return getGitHubApi(EDIT_SINGLE_GIST)(
+    return getSnippetApi(EDIT_SINGLE_GIST)(
       accessToken,
       activeGist,
       description,
       processedFiles)
+      .then((response) => {
+        if (!isSessionGenerationCurrent(sessionGeneration)) return
+        this.updateGistsStoreWithUpdatedGist(response)
+      })
       .catch((err) => {
+        if (!isSessionGenerationCurrent(sessionGeneration)) return
         notifyFailure(t('notification.gistUpdateFailed'))
         logger.error(JSON.stringify(err))
-      })
-      .then((response) => {
-        this.updateGistsStoreWithUpdatedGist(response)
       })
   }
 
   handleMarkdownTaskListItemToggle (activeSnippet, gistFile, taskIndex, checked) {
     const { accessToken, activeGist } = this.props
+    const sessionGeneration = getSessionGeneration()
     const updatedContent = toggleMarkdownTaskListItem(gistFile.content, taskIndex, checked)
 
     if (updatedContent === gistFile.content) {
       return Promise.resolve()
     }
 
-    return getGitHubApi(EDIT_SINGLE_GIST)(
+    return getSnippetApi(EDIT_SINGLE_GIST)(
       accessToken,
       activeGist,
       activeSnippet.details.description,
@@ -196,27 +208,31 @@ class Snippet extends Component {
         }
       })
       .catch((err) => {
+        if (!isSessionGenerationCurrent(sessionGeneration)) return
         notifyFailure(t('notification.gistUpdateFailed'))
         logger.error(JSON.stringify(err))
         throw err
       })
       .then((response) => {
+        if (!response || !isSessionGenerationCurrent(sessionGeneration)) return
         this.updateGistsStoreWithUpdatedGist(response)
       })
   }
 
   updateGistsStoreWithUpdatedGist (gistDetails) {
     const {
-      gists, activeGist, activeGistFilters, gistTags, updateSingleGist,
-      updateGistFilters, updateGistTags, searchIndex
+      gists, activeGist, activeGistFilters, gistTags: currentGistTags,
+      updateSingleGist, updateGistFilters, updateGistTags, searchIndex
     } = this.props
 
+    const activeSnippet = gists[activeGist]
+    gistDetails = mergeCachedFileDetails(gistDetails, activeSnippet.details)
     const gistId = gistDetails.id
     const files = gistDetails.files
+    const gistTags = cloneSnippetTagMap(currentGistTags)
 
-    const activeSnippet = gists[activeGist]
     const preLangs = activeSnippet.langs
-    const preCustomTags = parseCustomTags(descriptionParser(activeSnippet.brief.description).customTags)
+    const preCustomTags = parseCustomTags(descriptionParser(activeSnippet.brief).customTags)
 
     // Adding files in an eidt could introduce some changes to the gistTags.
     // 1) if a gist has a new language, we should add the gist id to this
@@ -250,6 +266,7 @@ class Snippet extends Component {
     preLangs.forEach(language => {
       if (!newLangs.has(language)) {
         const prefixedLang = Prefixed(language)
+        if (!Object.prototype.hasOwnProperty.call(gistTags, prefixedLang)) return
         gistTags[prefixedLang] = gistTags[prefixedLang].filter(value => {
           return value !== gistId
         })
@@ -260,7 +277,7 @@ class Snippet extends Component {
     })
 
     // We update the custom tags with the similar reasons mentioned above
-    const newCustomTags = parseCustomTags(descriptionParser(gistDetails.description).customTags)
+    const newCustomTags = parseCustomTags(descriptionParser(gistDetails).customTags)
     newCustomTags.forEach(tag => {
       if (Object.prototype.hasOwnProperty.call(gistTags, tag)) {
         if (!gistTags[tag].includes(gistId)) {
@@ -273,6 +290,7 @@ class Snippet extends Component {
     })
 
     preCustomTags.forEach(tag => {
+      if (!Object.prototype.hasOwnProperty.call(gistTags, tag)) return
       if (!newCustomTags.includes(tag)) {
         gistTags[tag] = gistTags[tag].filter(value => {
           return value !== gistId
@@ -358,7 +376,9 @@ class Snippet extends Component {
   }
 
   handleCopyGistLinkClicked (snippet, file) {
-    const link = snippet.details.html_url + '#file-' + file.filename.replace(/\./g, '-').toLowerCase()
+    const link = file.html_url || (snippet.details.providerType === 'gitlab'
+      ? snippet.details.html_url
+      : snippet.details.html_url + '#file-' + file.filename.replace(/\./g, '-').toLowerCase())
     clipboard.writeText(link)
     notifySuccess(t('notification.copied'), t('notification.linkCopied'))
   }
@@ -417,6 +437,14 @@ class Snippet extends Component {
   }
 
   renderPanelHeader (activeSnippet) {
+    const isInternal = activeSnippet.brief.providerType === 'gitlab' &&
+      activeSnippet.brief.visibility === 'internal'
+    const historyUrl = activeSnippet.brief.history_url !== undefined
+      ? activeSnippet.brief.history_url
+      : activeSnippet.brief.providerType === 'gitlab'
+        ? null
+        : activeSnippet.brief.html_url + '/revisions'
+
     return (
       <div className='header-table'>
         <div className='line'>
@@ -425,7 +453,9 @@ class Snippet extends Component {
               ? t('snippet.publicGist')
               : [
                 <div key='icon'className='secret-icon' dangerouslySetInnerHTML={{ __html: secretIcon }} />,
-                <span key='description' >{ t('snippet.secretGist') }</span>
+                <span key='description' >
+                  { isInternal ? t('snippet.internalGist') : t('snippet.secretGist') }
+                </span>
               ]
             }
           </div>
@@ -441,11 +471,13 @@ class Snippet extends Component {
               href={ activeSnippet.brief.html_url }>
               <div dangerouslySetInnerHTML={{ __html: openInWebIcon }} />
             </a>
-            <a className='snippet-control'
-              title={ t('snippet.revisions') }
-              href={ activeSnippet.brief.html_url + '/revisions' }>
-              <div dangerouslySetInnerHTML={{ __html: eyeIcon }} />
-            </a>
+            { historyUrl
+              ? <a className='snippet-control'
+                title={ t('snippet.revisions') }
+                href={ historyUrl }>
+                <div dangerouslySetInnerHTML={{ __html: eyeIcon }} />
+              </a>
+              : null }
             {
               this.props.immersiveMode === 'OFF'
                 ? <a className='snippet-control'
@@ -463,7 +495,7 @@ class Snippet extends Component {
   }
 
   renderSnippetDescription (gist) {
-    const { title, description, customTags } = descriptionParser(gist.brief.description)
+    const { title, description, customTags } = descriptionParser(gist.brief)
     const tags = getRegularTagsForGist(gist.brief.id, customTags, this.props.gistTags)
     const useColoredTags = shouldColorTags(conf)
 
@@ -570,6 +602,8 @@ class Snippet extends Component {
     const { gists, activeGist, fileExpandStatus } = this.props
     const activeSnippet = gists[activeGist]
     if (!activeSnippet) return null
+    const isInternal = activeSnippet.brief.providerType === 'gitlab' &&
+      activeSnippet.brief.visibility === 'internal'
 
     const fileHtmlArray = []
     const fileArray = []
@@ -651,7 +685,7 @@ class Snippet extends Component {
     return (
       <div className='snippet-box'>
         <Panel className='snippet-code'
-          bsStyle={ activeSnippet.brief.public ? 'default' : 'danger' }>
+          bsStyle={ isInternal ? 'warning' : activeSnippet.brief.public ? 'default' : 'danger' }>
           <Panel.Heading>{ this.renderPanelHeader(activeSnippet) }</Panel.Heading>
           <Panel.Body>
             <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet) }</div>
@@ -667,6 +701,34 @@ class Snippet extends Component {
       </div>
     )
   }
+}
+
+function mergeCachedFileDetails (gistDetails, cachedDetails) {
+  const files = gistDetails && gistDetails.files
+  const cachedFiles = cachedDetails && cachedDetails.files
+  if (!files || !cachedFiles) return gistDetails
+
+  let didMerge = false
+  const mergedFiles = Object.create(null)
+
+  Object.keys(files).forEach(filename => {
+    const file = files[filename]
+    const cachedFile = cachedFiles[filename]
+    const hasContent = file && typeof file.content === 'string'
+    const hasCachedContent = cachedFile && typeof cachedFile.content === 'string'
+
+    if (!hasContent && hasCachedContent) {
+      mergedFiles[filename] = Object.assign({}, cachedFile, file)
+      didMerge = true
+      return
+    }
+
+    mergedFiles[filename] = file
+  })
+
+  return didMerge
+    ? Object.assign({}, gistDetails, { files: mergedFiles })
+    : gistDetails
 }
 
 function mapStateToProps (state) {

@@ -212,8 +212,8 @@ class SearchPage extends Component {
     return this.renderHighlightedSegments(this.getHighlightSegments(text))
   }
 
-  renderSnippetDescription (rawDescription) {
-    const { title, description } = descriptionParser(rawDescription)
+  renderSnippetDescription (gist) {
+    const { title, description } = descriptionParser(gist)
 
     const htmlForDescriptionSection = []
     if (title.length > 0) {
@@ -325,7 +325,6 @@ class SearchPage extends Component {
 
     const resultsJSXGroup = []
     searchResults.forEach((gist, index) => {
-      const highlightedDescription = gist.description
       let filenames = []
 
       // FIXME: In some rare cases, gist.filename is undefined in runtime for some unknown reason. So
@@ -346,7 +345,7 @@ class SearchPage extends Component {
           ref={ node => this.setResultNode(index, node) }
           onClick={ this.handleSnippetClicked.bind(this, gist.id) }>
           <div className='search-result-header'>
-            <div className='snippet-description'>{ this.renderSnippetDescription(highlightedDescription) }</div>
+            <div className='snippet-description'>{ this.renderSnippetDescription(gist) }</div>
             { this.renderSearchMatchLabel(gist) }
           </div>
           { this.renderSearchMatchExcerpts(gist) }

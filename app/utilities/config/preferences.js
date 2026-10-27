@@ -1,4 +1,5 @@
 const { getSupportedLocales } = require('../i18n')
+const { normalizeProviderConfig } = require('../snippetProvider')
 
 const DEFAULT_IMAGE_MAX_SIZE_KB = 512
 const MIN_IMAGE_MAX_SIZE_KB = 64
@@ -44,10 +45,14 @@ const shortcutKeys = [
   'keySubmitGist', 'keyImmersiveMode', 'keyAboutPage', 'keyDashboard', 'keySyncGists'
 ].map(key => `shortcuts:${key}`)
 
+const secretConfigKeys = new Set([
+  'enterprise:token'
+])
+
 const stringKeys = new Set([
   'proxy:address',
+  'gitlab:host',
   'enterprise:host',
-  'enterprise:token',
   'enterprise:avatarUrl',
   ...shortcutKeys
 ])
@@ -78,8 +83,9 @@ const preferenceMetadata = {
   ], APPLY_MODES.NEXT_USE),
   ...metadataForKeys([
     'i18n:locale', 'avatar:type', 'avatar:boringAvatarVariant', 'userPanel:hideProfilePhoto',
-    'proxy:enable', 'proxy:address', 'snippet:expanded', 'snippet:newSnippetPrivate',
-    'editor:tabSize', 'enterprise:enable', 'enterprise:host', 'enterprise:token',
+    'provider:type', 'gitlab:host', 'proxy:enable', 'proxy:address',
+    'snippet:expanded', 'snippet:newSnippetPrivate',
+    'editor:tabSize', 'enterprise:enable', 'enterprise:host',
     'enterprise:avatarUrl'
   ], APPLY_MODES.RESTART)
 }
@@ -90,9 +96,26 @@ function preferenceRequiresRestart (key) {
   return Boolean(preferenceMetadata[key] && preferenceMetadata[key].applyMode === APPLY_MODES.RESTART)
 }
 
+function isSecretConfigKey (key) {
+  if (typeof key !== 'string') return false
+  return [...secretConfigKeys].some(secretKey =>
+    key === secretKey || key.startsWith(`${secretKey}:`) || secretKey.startsWith(`${key}:`)
+  )
+}
+
 function isValidPreferenceValue (key, value) {
   if (!writableConfigKeys.has(key)) return false
   if (booleanKeys.has(key)) return typeof value === 'boolean'
+  if (key === 'provider:type') return ['github', 'gitlab'].includes(value)
+  if (key === 'gitlab:host') {
+    if (typeof value !== 'string' || value.trim().length === 0 || value.length > 500) return false
+    try {
+      normalizeProviderConfig({ type: 'gitlab', baseUrl: value })
+      return true
+    } catch {
+      return false
+    }
+  }
   if (stringKeys.has(key)) {
     if (typeof value !== 'string' || value.length > 500) return false
     return !key.startsWith('shortcuts:') || value.trim().length > 0
@@ -124,6 +147,7 @@ function normalizeImageMaxSizeKB (value) {
 
 module.exports = {
   APPLY_MODES,
+  isSecretConfigKey,
   DEFAULT_IMAGE_MAX_SIZE_KB,
   MAX_IMAGE_MAX_SIZE_KB,
   MIN_IMAGE_MAX_SIZE_KB,

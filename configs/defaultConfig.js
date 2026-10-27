@@ -22,6 +22,12 @@ module.exports = {
     "security": {
         "cachedAccessTokenStorage": "auto"
     },
+    "provider": {
+        "type": "github"
+    },
+    "gitlab": {
+        "host": "gitlab.com"
+    },
     "proxy": {
         "enable": false,
         "address": "socks://localhost:1080"
@@ -45,7 +51,6 @@ module.exports = {
     "enterprise": {
         "enable": false,
         "host": "",
-        "token": "",
         "avatarUrl": ""
     },
     "notifications": {

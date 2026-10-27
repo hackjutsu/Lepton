@@ -34,6 +34,18 @@ describe('parser utilities', () => {
     })
   })
 
+  it('uses structured provider metadata without treating brackets in the description as title syntax', () => {
+    expect(descriptionParser({
+      description: '[Arrays] Use arr[index] safely #js',
+      providerTitle: 'Arrays',
+      providerDescription: 'Use arr[index] safely #js'
+    })).toEqual({
+      title: 'Arrays',
+      description: 'Use arr[index] safely #js',
+      customTags: '#tags:js'
+    })
+  })
+
   it('adds and removes language prefixes', () => {
     expect(addLangPrefix(' JavaScript ')).toBe('lang@JavaScript')
     expect(addLangPrefix('   ')).toBe('   ')

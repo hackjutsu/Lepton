@@ -28,7 +28,8 @@ function createUnavailableBridge () {
     },
     config: {
       get: unavailableBridgeMethod,
-      set: unavailableBridgeMethod
+      set: unavailableBridgeMethod,
+      setForRestart: unavailableBridgeMethod
     },
     credentials: {
       getAccessToken: unavailableBridgeMethod,
@@ -43,9 +44,6 @@ function createUnavailableBridge () {
     globals: {
       getPaths: unavailableBridgeMethod,
       getUpdateInfo: unavailableBridgeMethod
-    },
-    github: {
-      request: unavailableBridgeMethod
     },
     ipc: createIpcBridge(),
     logger: {
@@ -64,6 +62,9 @@ function createUnavailableBridge () {
     shell: {
       openExternal: unavailableBridgeMethod,
       openPath: unavailableBridgeMethod
+    },
+    snippets: {
+      request: unavailableBridgeMethod
     },
     store: {
       get: unavailableBridgeMethod,

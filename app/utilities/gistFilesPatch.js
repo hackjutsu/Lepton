@@ -1,5 +1,5 @@
 export function buildGistFilesPatch (gistFiles, existingFiles) {
-  const processedFiles = {}
+  const processedFiles = Object.create(null)
   const retainedFilenames = new Set()
 
   ;(gistFiles || []).forEach(file => {

@@ -4,6 +4,8 @@ const path = require('path')
 const { spawn } = require('child_process')
 const electronPath = require('electron')
 
+if (process.argv.includes('--login-layout')) process.env.LEPTON_SMOKE_LOGIN_LAYOUT = '1'
+
 const repoRoot = path.resolve(__dirname, '../..')
 const bundlePath = path.join(repoRoot, 'bundle', 'app.bundle.js')
 const smokeMainPath = path.join(__dirname, 'electron-render-smoke-main.js')
@@ -22,6 +24,9 @@ function createTempHome (locale = 'en', configOverrides = {}) {
   fs.mkdirSync(userData, { recursive: true })
   fs.writeFileSync(path.join(configHome, '.leptonrc'), JSON.stringify(Object.assign({
     autoUpdate: false,
+    enterprise: {
+      token: 'smoke-legacy-enterprise-token'
+    },
     i18n: {
       locale
     },
@@ -197,7 +202,9 @@ function runSmokeProcess (tempHome, options) {
       LEPTON_SMOKE_FILTER_ACTIONS: JSON.stringify(options.filterActions || []),
       LEPTON_SMOKE_FORBIDDEN_SELECTOR: options.forbiddenSelector || '',
       LEPTON_SMOKE_FORBIDDEN_TEXT: options.forbiddenText || '',
+      LEPTON_SMOKE_EXPECTED_PROVIDER: options.expectedProvider || '',
       LEPTON_SMOKE_SWITCH_LOGIN_MODE: options.switchLoginMode ? '1' : '',
+      LEPTON_SMOKE_SWITCH_PROVIDER: options.switchProvider ? '1' : '',
       LEPTON_SMOKE_EXPECTED_TEXT: options.expectedText,
       XDG_CONFIG_HOME: tempHome.configHome
     })
@@ -217,7 +224,7 @@ function runSmokeProcess (tempHome, options) {
     const timeout = setTimeout(() => {
       child.kill('SIGKILL')
       reject(new Error(`Electron render smoke test timed out.\n${output}`))
-    }, 45000)
+    }, process.env.LEPTON_SMOKE_LOGIN_LAYOUT === '1' ? 120000 : 45000)
 
     child.stdout.on('data', data => {
       const text = data.toString()
@@ -246,11 +253,28 @@ function runSmokeProcess (tempHome, options) {
 
 async function main () {
   assertBuiltBundleExists()
+  if (process.env.LEPTON_SMOKE_LOGIN_LAYOUT === '1') {
+    for (const type of ['github', 'gitlab']) {
+      await runSmokeProcess(createTempHome('en', { provider: { type } }), {
+        expectedProvider: type,
+        expectedText: type === 'gitlab' ? 'Login|GitLab Token Login' : 'Login|GitHub Login'
+      })
+    }
+    return
+  }
   await runSmokeProcess(createTempHome('en'), {
-    expectedText: 'Login|GitHub Login'
+    expectedText: 'Login|GitHub Login',
+    switchProvider: true
   })
   await runSmokeProcess(createTempHome('ja'), {
     expectedText: 'ログイン|GitHubでログイン'
+  })
+  await runSmokeProcess(createTempHome('en', {
+    provider: { type: 'gitlab' },
+    gitlab: { host: 'gitlab.example.com' }
+  }), {
+    expectedProvider: 'gitlab',
+    expectedText: 'Login|GitLab Token Login'
   })
 
   for (const fixture of RENDER_FIXTURES) {

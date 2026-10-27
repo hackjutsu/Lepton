@@ -76,7 +76,7 @@ function buildSearchRecord (gist, detailsOverride) {
       content: file.content
     }))
 
-  return {
+  const record = {
     id: source.id || brief.id,
     description: source.description || brief.description || '',
     updated_at: source.updated_at || brief.updated_at || '',
@@ -84,6 +84,10 @@ function buildSearchRecord (gist, detailsOverride) {
     filename: filenames.join(', '),
     files: searchableFiles
   }
+
+  if (source.providerTitle !== undefined) record.providerTitle = source.providerTitle
+  if (source.providerDescription !== undefined) record.providerDescription = source.providerDescription
+  return record
 }
 
 function buildExcerptBounds (value, indices, maxLength) {

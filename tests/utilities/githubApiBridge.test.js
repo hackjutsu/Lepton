@@ -1,43 +1,52 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { getGitHubApi } from '../../app/utilities/githubApi'
+import { setSnippetProvider } from '../../app/utilities/snippetApi'
+import snippetOperations from '../../app/utilities/snippetApi/operations'
 
-const githubRequest = vi.hoisted(() => vi.fn())
+const { GET_USER_PROFILE } = snippetOperations
+
+const snippetRequest = vi.hoisted(() => vi.fn())
 
 vi.mock('../../app/utilities/electronBridge', () => ({
   default: {
-    github: {
-      request: githubRequest
+    config: {
+      get: (key) => key === 'provider:type' ? 'github' : undefined
+    },
+    snippets: {
+      request: snippetRequest
     }
   }
 }))
 
-import {
-  GET_USER_PROFILE,
-  getGitHubApi
-} from '../../app/utilities/githubApi'
-
-describe('GitHub API renderer bridge', () => {
+describe('legacy GitHub API renderer wrapper', () => {
   beforeEach(() => {
-    githubRequest.mockReset()
+    snippetRequest.mockReset()
+    setSnippetProvider({ type: 'github', baseUrl: 'https://github.com' })
   })
 
-  it('unwraps successful GitHub API bridge responses', async () => {
-    githubRequest.mockResolvedValue({
-      __leptonGitHubApiBridgeResponse: true,
+  it('routes requests through the provider-neutral snippet bridge', async () => {
+    snippetRequest.mockResolvedValue({
+      __leptonSnippetApiBridgeResponse: true,
       ok: true,
       data: {
         login: 'octo'
       }
     })
+    setSnippetProvider({ type: 'gitlab', baseUrl: 'gitlab.example.test/' })
 
     await expect(getGitHubApi(GET_USER_PROFILE)('token-1')).resolves.toEqual({
       login: 'octo'
     })
-    expect(githubRequest).toHaveBeenCalledWith(GET_USER_PROFILE, ['token-1'])
+    expect(snippetRequest).toHaveBeenCalledWith(
+      { type: 'github', baseUrl: 'https://github.com' },
+      GET_USER_PROFILE,
+      ['token-1']
+    )
   })
 
-  it('rejects failed GitHub API bridge responses with serialized details', async () => {
-    githubRequest.mockResolvedValue({
-      __leptonGitHubApiBridgeResponse: true,
+  it('restores serialized provider errors', async () => {
+    snippetRequest.mockResolvedValue({
+      __leptonSnippetApiBridgeResponse: true,
       ok: false,
       error: {
         message: 'GitHub API request failed with status 401 Unauthorized',
@@ -59,8 +68,8 @@ describe('GitHub API renderer bridge', () => {
     })
   })
 
-  it('passes through legacy raw bridge responses', async () => {
-    githubRequest.mockResolvedValue({
+  it('passes through raw snippet bridge responses', async () => {
+    snippetRequest.mockResolvedValue({
       login: 'octo'
     })
 

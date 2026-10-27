@@ -1,4 +1,4 @@
-import { UPDATE_GISTS, UPDATE_SINGLE_GIST } from '../actions'
+import { LOGOUT_USER_SESSION, UPDATE_GISTS, UPDATE_SINGLE_GIST } from '../actions'
 
 export default function (state = {}, action) {
   switch (action.type) {
@@ -6,6 +6,8 @@ export default function (state = {}, action) {
       return action.payload
     case UPDATE_SINGLE_GIST:
       return Object.assign({}, state, action.payload)
+    case LOGOUT_USER_SESSION:
+      return {}
     default:
   }
   return state

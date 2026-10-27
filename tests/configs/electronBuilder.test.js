@@ -20,8 +20,16 @@ describe('electron-builder distribution config', () => {
   it('packages GitHub API bridge runtime dependencies', () => {
     expect(builderConfig.files).toEqual(expect.arrayContaining([
       'app/utilities/config/**',
-      'app/utilities/githubApi/core.js',
-      'app/utilities/githubApi/fetchAdapter.js'
+      'app/utilities/githubApi/**'
+    ]))
+  })
+
+  it('packages provider-neutral and GitLab API bridge dependencies', () => {
+    expect(builderConfig.files).toEqual(expect.arrayContaining([
+      'app/utilities/gitlabApi/**',
+      'app/utilities/providerAccessPolicy.js',
+      'app/utilities/snippetApi/**',
+      'app/utilities/snippetProvider.js'
     ]))
   })
 

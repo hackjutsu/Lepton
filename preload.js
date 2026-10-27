@@ -37,11 +37,12 @@ const leptonApi = {
   },
   config: {
     get: (key) => ipcRenderer.sendSync('lepton:config:get', key),
-    set: (key, value) => ipcRenderer.invoke('lepton:config:set', key, value)
+    set: (key, value) => ipcRenderer.invoke('lepton:config:set', key, value),
+    setForRestart: (key, value) => ipcRenderer.invoke('lepton:config:set-for-restart', key, value)
   },
   credentials: {
-    getAccessToken: () => ipcRenderer.sendSync('lepton:credentials:get-access-token'),
-    setAccessToken: (token) => ipcRenderer.sendSync('lepton:credentials:set-access-token', token)
+    getAccessToken: (scope) => ipcRenderer.sendSync('lepton:credentials:get-access-token', scope),
+    setAccessToken: (token, scope) => ipcRenderer.sendSync('lepton:credentials:set-access-token', token, scope)
   },
   dialog: {
     showMessage: (options) => ipcRenderer.invoke('lepton:dialog:show-message', options)
@@ -52,9 +53,6 @@ const leptonApi = {
   globals: {
     getUpdateInfo: () => ipcRenderer.sendSync('lepton:update-info:get'),
     getPaths: () => ipcRenderer.sendSync('lepton:paths:get')
-  },
-  github: {
-    request: (selection, args) => ipcRenderer.invoke('lepton:github-api:request', selection, args)
   },
   ipc: {
     emit: (channel, ...args) => ipcRenderer.emit(channel, ...args),
@@ -80,6 +78,9 @@ const leptonApi = {
   shell: {
     openExternal: (url) => ipcRenderer.send('lepton:shell:open-external', url),
     openPath: (filePath) => ipcRenderer.invoke('lepton:shell:open-path', filePath)
+  },
+  snippets: {
+    request: (provider, selection, args) => ipcRenderer.invoke('lepton:snippet-api:request', provider, selection, args)
   },
   store: {
     get: (configName, defaults) => ipcRenderer.sendSync('lepton:renderer-store:get', configName, defaults),
