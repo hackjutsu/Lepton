@@ -1,6 +1,11 @@
 const DEFAULT_EXCERPT_LENGTH = 140
 const EXCERPT_CONTEXT_LENGTH = 32
 
+const {
+  isImageAttachmentFile,
+  isNativeBinaryFile
+} = require('../imageAttachments')
+
 const MATCH_KEY_LABELS = {
   id: 'ID',
   description: 'Description',
@@ -45,10 +50,14 @@ function normalizeFileEntries (files) {
 
 function getUniqueLanguages (fileEntries) {
   const languages = new Set()
-  fileEntries.forEach(file => {
+  fileEntries.filter(file => !shouldExcludeFilePayload(file)).forEach(file => {
     languages.add(file.language || 'Other')
   })
   return [...languages]
+}
+
+function shouldExcludeFilePayload (file) {
+  return isNativeBinaryFile(file) || isImageAttachmentFile(file)
 }
 
 function buildSearchRecord (gist, detailsOverride) {
@@ -60,7 +69,7 @@ function buildSearchRecord (gist, detailsOverride) {
   const filenames = fileEntries.map(file => file.filename).filter(Boolean)
   const languages = getUniqueLanguages(fileEntries)
   const searchableFiles = fileEntries
-    .filter(file => typeof file.content === 'string' && file.content.length > 0)
+    .filter(file => typeof file.content === 'string' && file.content.length > 0 && !shouldExcludeFilePayload(file))
     .map(file => ({
       filename: file.filename,
       language: file.language || 'Other',

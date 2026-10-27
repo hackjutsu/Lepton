@@ -44,6 +44,11 @@ const RENDER_FIXTURES = [
     text: 'React 19 render fixture'
   },
   {
+    name: 'image-attachments',
+    selector: '.image-file-view .image-file-preview img',
+    text: 'lepton-logo.webp|Render|Base64'
+  },
+  {
     name: 'edit',
     selector: '.modal .gist-editor-form .CodeMirror',
     text: 'Edit'
@@ -61,7 +66,7 @@ const RENDER_FIXTURES = [
   {
     name: 'about',
     selector: '.about-modal .modal-title',
-    text: 'Settings|Preferences|Cancel|Apply|Save',
+    text: 'Settings|Preferences|Maximum image size (KB)|Cancel|Apply|Save',
     forbiddenSelector: '.preferences-section h3'
   },
   {
@@ -273,7 +278,14 @@ async function main () {
   })
 
   for (const fixture of RENDER_FIXTURES) {
-    await runSmokeProcess(createTempHome('en'), {
+    const configOverrides = fixture.name === 'image-attachments'
+      ? {
+        editor: {
+          imageMaxSizeKB: 64
+        }
+      }
+      : {}
+    await runSmokeProcess(createTempHome('en', configOverrides), {
       expectedSelector: fixture.selector,
       activeFilters: fixture.activeFilters,
       filterActions: fixture.filterActions,

@@ -7,6 +7,7 @@ import React, { Component } from 'react'
 import electronBridge from '../../utilities/electronBridge'
 import { adaptedLanguage, highlightContent } from './highlighting'
 import { getHighlightTheme } from '../../utilities/themeManager'
+import { t } from '../../utilities/i18n'
 
 import 'katex/dist/katex.min.css'
 import '../../utilities/vendor/prism/prism.scss'
@@ -60,6 +61,139 @@ resolveHighlightLanguage(hljsDefineSolidity)(HighlightJS) // register solidity t
 resolveHighlightLanguage(hljsDefineGraphQL)(HighlightJS) // register graphql to hightlight.js
 
 export default class CodeArea extends Component {
+  constructor (props) {
+    super(props)
+    this.codeAreaNode = null
+    this.handleMarkdownImageError = this.handleMarkdownImageError.bind(this)
+  }
+
+  componentDidMount () {
+    if (this.codeAreaNode) {
+      this.codeAreaNode.addEventListener('error', this.handleMarkdownImageError, true)
+    }
+    this.initializeMarkdownImageFallbacks()
+  }
+
+  componentDidUpdate () {
+    this.initializeMarkdownImageFallbacks()
+  }
+
+  componentWillUnmount () {
+    if (this.codeAreaNode) {
+      this.codeAreaNode.removeEventListener('error', this.handleMarkdownImageError, true)
+    }
+  }
+
+  initializeMarkdownImageFallbacks () {
+    if (!this.codeAreaNode) return
+
+    const images = Array.from(this.codeAreaNode.querySelectorAll('img.lepton-markdown-image'))
+    images.forEach(image => {
+      if (
+        image.classList.contains('lepton-markdown-missing-image') ||
+        (image.hasAttribute('src') && image.complete && image.naturalWidth === 0)
+      ) {
+        this.showMarkdownImageFallback(image)
+      }
+    })
+  }
+
+  handleMarkdownImageError (event) {
+    const image = event.target
+    if (
+      !image ||
+      image.tagName !== 'IMG' ||
+      !image.classList.contains('lepton-markdown-image')
+    ) {
+      return
+    }
+
+    this.showMarkdownImageFallback(image)
+  }
+
+  showMarkdownImageFallback (image) {
+    const existingFallback = image.nextElementSibling
+    if (
+      existingFallback &&
+      existingFallback.classList.contains('lepton-markdown-image-placeholder')
+    ) {
+      image.remove()
+      return
+    }
+
+    const document = image.ownerDocument
+    const fallback = document.createElement('span')
+    const message = document.createElement('span')
+    const alt = image.getAttribute('alt') || ''
+    const reference = image.getAttribute('data-lepton-image-reference') || ''
+    const filename = image.getAttribute('data-lepton-image-filename') || ''
+
+    fallback.className = 'lepton-markdown-image-placeholder'
+    message.className = 'lepton-markdown-image-placeholder-message'
+    message.setAttribute('role', 'status')
+    message.textContent = t('editor.imageUnavailable')
+    fallback.appendChild(message)
+
+    if (alt) {
+      const altText = document.createElement('span')
+      altText.className = 'lepton-markdown-image-placeholder-alt'
+      altText.textContent = alt
+      fallback.appendChild(altText)
+    }
+
+    if (reference && reference !== alt) {
+      const referenceText = document.createElement('span')
+      referenceText.className = 'lepton-markdown-image-placeholder-reference'
+      referenceText.textContent = reference
+      fallback.appendChild(referenceText)
+    }
+
+    const hasOpenAction = Boolean(filename && this.props.onSiblingImageOpen)
+    if (hasOpenAction) {
+      const openButton = document.createElement('button')
+      openButton.type = 'button'
+      openButton.className = 'lepton-markdown-image-open'
+      openButton.setAttribute('data-lepton-image-filename', filename)
+      openButton.textContent = t('editor.imageOpenFile')
+      fallback.appendChild(openButton)
+    }
+
+    const enclosingLink = hasOpenAction && image.closest && image.closest('a')
+    const linkContainsOnlyImage = enclosingLink && Array.from(enclosingLink.childNodes).every(node => {
+      return node === image || (node.nodeType === 3 && !node.textContent.trim())
+    })
+
+    if (!enclosingLink) {
+      image.replaceWith(fallback)
+    } else if (linkContainsOnlyImage) {
+      enclosingLink.replaceWith(fallback)
+    } else {
+      const insertionPoint = enclosingLink || image
+      insertionPoint.insertAdjacentElement('afterend', fallback)
+      image.remove()
+    }
+  }
+
+  handleMarkdownImageOpenClicked (event) {
+    const { onSiblingImageOpen } = this.props
+    const target = event.target
+    const button = target && target.closest
+      ? target.closest('.lepton-markdown-image-open')
+      : null
+    if (!button || !event.currentTarget.contains(button) || !onSiblingImageOpen) return
+
+    const filename = button.getAttribute('data-lepton-image-filename')
+    if (!filename) return
+
+    event.preventDefault()
+    onSiblingImageOpen(filename)
+  }
+
+  handleCodeAreaClicked (event) {
+    this.handleMarkdownTaskListItemClicked(event)
+    this.handleMarkdownImageOpenClicked(event)
+  }
+
   handleMarkdownTaskListItemClicked (event) {
     const { onMarkdownTaskListItemToggle } = this.props
     const target = event.target
@@ -101,8 +235,8 @@ export default class CodeArea extends Component {
     }
   }
 
-  createMarkdownCodeBlock (content) {
-    return `<div class='markdown-section'>${Markdown.render(content)}</div>`
+  createMarkdownCodeBlock (content, siblingFiles) {
+    return `<div class='markdown-section'>${Markdown.render(content, { siblingFiles })}</div>`
   }
 
   createAsciiDocCodeBlock (content, language, kTabLength) {
@@ -143,7 +277,7 @@ export default class CodeArea extends Component {
     return `<pre><code><table class='code-table' style='tab-size: ${kTabLength};'>${contentTable}</table></code></pre>`
   }
 
-  renderCodeArea (filename, content, lang, kTabLength) {
+  renderCodeArea (filename, content, lang, kTabLength, siblingFiles) {
     const language = adaptedLanguage(filename, lang)
     let htmlContent = ''
     switch (language) {
@@ -151,7 +285,7 @@ export default class CodeArea extends Component {
         htmlContent = this.createJupyterNotebookCodeBlock(content, language, kTabLength)
         break
       case 'Markdown':
-        htmlContent = this.createMarkdownCodeBlock(content)
+        htmlContent = this.createMarkdownCodeBlock(content, siblingFiles)
         break
       case 'AsciiDoc':
         htmlContent = this.createAsciiDocCodeBlock(content, language, kTabLength)
@@ -161,13 +295,14 @@ export default class CodeArea extends Component {
     }
     return (
       <div className='code-area'
-        onClick={ this.handleMarkdownTaskListItemClicked.bind(this) }
+        ref={ node => { this.codeAreaNode = node } }
+        onClick={ this.handleCodeAreaClicked.bind(this) }
         dangerouslySetInnerHTML={ { __html: htmlContent } }/>
     )
   }
 
   render () {
-    const { filename, content, language, kTabLength } = this.props
-    return this.renderCodeArea(filename, content, language, kTabLength)
+    const { filename, content, language, kTabLength, siblingFiles } = this.props
+    return this.renderCodeArea(filename, content, language, kTabLength, siblingFiles)
   }
 }

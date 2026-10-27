@@ -48,6 +48,8 @@ import newIcon from './new.svg'
 import privateinvestocatImage from '../../utilities/octodex/privateinvestocat.webp?inline'
 import syncIcon from './sync.svg'
 
+const { isImageAttachmentFile } = require('../../utilities/imageAttachments')
+
 const conf = electronBridge.config
 const ipcRenderer = electronBridge.ipc
 const logger = electronBridge.logger
@@ -189,7 +191,9 @@ class UserPanel extends Component {
     }
     gistTags[Prefixed('All')].unshift(gistId)
     Object.keys(files).forEach(filename => {
-      const language = files[filename].language || 'Other'
+      const file = files[filename]
+      if (isImageAttachmentFile(Object.assign({ filename }, file))) return
+      const language = file.language || 'Other'
       if (langs.has(language)) return
       langs.add(language)
       const prefixedLang = Prefixed(language)

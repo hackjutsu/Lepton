@@ -54,7 +54,8 @@ The file is not generated automatically. Create it if you want to override the d
   },
   "editor": {
     "tabSize": 4,
-    "validateFilename": true
+    "validateFilename": true,
+    "imageMaxSizeKB": 512
   },
   "enterprise": {
     "enable": false,
@@ -110,6 +111,7 @@ The file is not generated automatically. Create it if you want to override the d
 | | `colored` | `false` | Render custom tags with stable color badges. |
 | `editor` | `tabSize` | `4` | Tab size in spaces. |
 | | `validateFilename` | `true` | Validate snippet filenames before saving. |
+| | `imageMaxSizeKB` | `512` | Maximum decoded size for each newly added PNG, JPEG, GIF, or WebP image, in KB. Supported values are whole numbers from `64` through `700`; images are stored as Base64 text with their original suffix, increasing the stored size by roughly one third. |
 | `enterprise` | `enable` | `false` | Enable GitHub Enterprise mode. |
 | | `host` | `""` | GitHub Enterprise host, for example `github.example.com`. |
 | | `avatarUrl` | `""` | Optional avatar image URL for GitHub Enterprise users. |
@@ -245,3 +247,7 @@ OAuth/token modes, GitLab host errors, all eight interface locales, the minimum
 window size, and 100%, 150%, and 300% zoom. It checks outer margins, control
 padding, horizontal overflow, and whether the submit button is reachable by
 scrolling, and captures screenshots at the minimum window size.
+
+### Importing files
+
+In the New/Edit dialog, drop code, UTF-8 text files, or supported images into the file area, or use **Choose files** to select multiple files. Text files up to 700 KB are imported as editable snippet files with their filenames and content preserved. Images use the configured image limit above. Duplicate filenames receive a numbered suffix. Unsupported binary files and non-UTF-8 text are rejected. Use **Create file** to focus an empty editor or add a new blank file. Dropping files into a code editor also imports them; images dropped or pasted into a Markdown editor additionally insert image references.

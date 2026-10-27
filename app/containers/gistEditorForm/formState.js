@@ -1,21 +1,75 @@
 let nextGistFileEditorId = 0
 
+const {
+  createUniqueFilename,
+  isBase64TextImage,
+  isNativeBinaryFile
+} = require('../../utilities/imageAttachments')
+
+const GIST_FILE_METADATA_KEYS = [
+  'encoding',
+  'raw_url',
+  'size',
+  'truncated',
+  'type'
+]
+
 export function createGistFileEditorId () {
   return `gist-file-editor-${nextGistFileEditorId++}`
 }
 
 export function normalizeGistFile (file = {}) {
-  return {
+  const normalized = {
     filename: file.filename || '',
     content: file.content || '',
     _editorId: file._editorId || createGistFileEditorId()
   }
+
+  GIST_FILE_METADATA_KEYS.forEach(key => {
+    if (Object.prototype.hasOwnProperty.call(file, key)) normalized[key] = file[key]
+  })
+
+  if (file._imageAttachment || isBase64TextImage(file)) normalized._imageAttachment = true
+  if (file._nativeBinary || isNativeBinaryFile(file)) {
+    normalized._nativeBinary = true
+    normalized._originalFilename = file._originalFilename || file.filename || ''
+  }
+  return normalized
 }
 
 export function normalizeSubmitGistFile (file = {}) {
-  return {
+  const normalized = {
     filename: file.filename || '',
     content: file.content || ''
+  }
+
+  if (file._nativeBinary || isNativeBinaryFile(file)) {
+    normalized._nativeBinary = true
+    normalized._originalFilename = file._originalFilename || file.filename || ''
+  }
+  return normalized
+}
+
+export function appendImageAttachments (gistFiles, attachments) {
+  const normalizedFiles = gistFiles.map(normalizeGistFile)
+  const existingFilenames = normalizedFiles.map(file => file.filename)
+  const addedFilenames = []
+  const addedFiles = attachments.map(attachment => {
+    const filename = createUniqueFilename(attachment.filename, existingFilenames)
+    existingFilenames.push(filename)
+    addedFilenames.push(filename)
+    return normalizeGistFile(Object.assign({}, attachment, { filename }))
+  })
+
+  const isSingleEmptyFile = normalizedFiles.length === 1 &&
+    !normalizedFiles[0].filename && !normalizedFiles[0].content
+  const nextFiles = isSingleEmptyFile
+    ? addedFiles
+    : normalizedFiles.concat(addedFiles)
+
+  return {
+    gistFiles: nextFiles.length ? nextFiles : normalizedFiles,
+    filenames: addedFilenames
   }
 }
 
@@ -71,6 +125,8 @@ export function createFormState (initialData) {
   return {
     values: getInitialValues(initialData),
     errors: {},
+    fileError: '',
+    fileProcessing: false,
     touched: {},
     submitAttempted: false,
     submitting: false,
