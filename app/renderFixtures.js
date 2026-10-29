@@ -300,17 +300,18 @@ function getBaseState () {
 function getFixtureOverrides (name) {
   switch (name) {
     case 'everyday':
+    case 'memory-flow':
+    case 'memory-search':
     case 'everyday-search': {
       const library = {}
-      for (let index = 0; index < 100; index++) {
+      const librarySize = name === 'memory-search' ? 1000 : 100
+      const fileLines = name === 'memory-search' ? 100 : 20
+      for (let index = 0; index < librarySize; index++) {
         const id = `everyday-${index}`
-        library[id] = createGist(id, `[Utility ${String(index).padStart(3, '0')}] #common Everyday helper`, false, {
-          'helper.js': {
-            filename: 'helper.js',
-            language: 'JavaScript',
-            content: Array.from({ length: 20 }, (_, line) => `const value${line} = ${index + line};`).join('\n')
-          }
-        }, '2026-06-29T16:00:00Z')
+        const files = name === 'memory-flow' && index === 1
+          ? { 'notes.md': { filename: 'notes.md', language: 'Markdown', content: '# Profile Markdown\n\n**Ready to read**' } }
+          : { 'helper.js': { filename: 'helper.js', language: 'JavaScript', content: Array.from({ length: fileLines }, (_, line) => `const value${line} = ${index + line};`).join('\n') } }
+        library[id] = createGist(id, `[Utility ${String(index).padStart(3, '0')}] #common Everyday helper`, false, files, '2026-06-29T16:00:00Z')
       }
       const ids = Object.keys(library)
       return {
@@ -318,8 +319,8 @@ function getFixtureOverrides (name) {
         gists: library,
         gistTags: { [Prefixed('All')]: ids, [Prefixed('JavaScript')]: ids, common: ids },
         pinnedTags: [],
-        searchWindowStatus: name === 'everyday-search' ? 'ON' : 'OFF',
-        initialSearchQuery: name === 'everyday-search' ? 'utility' : ''
+        searchWindowStatus: ['everyday-search', 'memory-search'].includes(name) ? 'ON' : 'OFF',
+        initialSearchQuery: name === 'memory-search' ? 'const' : name === 'everyday-search' ? 'utility' : ''
       }
     }
     case 'large-collapsed':

@@ -12,6 +12,7 @@ vi.mock('../../app/utilities/electronBridge', () => ({
 vi.mock('../../app/utilities/snippetApi', () => ({
   getSnippetProvider: () => ({ type: 'github' })
 }))
+vi.mock('../../app/containers/gistEditor', () => ({ default: () => null }))
 
 import ConnectedList from '../../app/containers/navigationPanelDetails'
 import ConnectedSearch from '../../app/containers/searchPage'

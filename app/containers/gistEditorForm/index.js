@@ -1,8 +1,9 @@
 import electronBridge from '../../utilities/electronBridge'
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
+import GistEditor from '../gistEditor'
 import ImageFileView from '../imageFileView'
 import Panel from '../compatPanel'
-import React, { Component, lazy, Suspense } from 'react'
+import React, { Component } from 'react'
 import {
   copyValues,
   createFormState,
@@ -35,9 +36,6 @@ const { createFileAttachment } = require('../../utilities/fileImports')
 
 export const NEW_GIST = 'NEW_GIST'
 export const UPDATE_GIST = 'UPDATE_GIST'
-
-// Browsing snippets should not load CodeMirror or its language modes.
-const GistEditor = lazy(() => import(/* webpackChunkName: "gist-editor" */ '../gistEditor'))
 
 const conf = electronBridge.config
 const ipcRenderer = electronBridge.ipc
@@ -427,15 +425,13 @@ const renderContentField = ({ file, type, touched, error, warning, onChange, onI
         rawUrl={ file.raw_url }
         size={ file.size }
         truncated={ file.truncated } />
-      : <Suspense fallback={ <pre aria-busy='true'>{ file.content }</pre> }>
-        <GistEditor
-          filename={ file.filename }
-          value={ file.content }
-          onChange={ onChange }
-          onImageFiles={ file._nativeBinary ? null : onImageFiles }
-          readOnly={ file._nativeBinary }
-          type={ type }/>
-      </Suspense> }
+      : <GistEditor
+        filename={ file.filename }
+        value={ file.content }
+        onChange={ onChange }
+        onImageFiles={ file._nativeBinary ? null : onImageFiles }
+        readOnly={ file._nativeBinary }
+        type={ type }/> }
     { touched && ((error && <span className='error-msg'>{error}</span>) ||
       (warning && <span className='error-msg'>{warning}</span>)) }
   </div>
