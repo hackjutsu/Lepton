@@ -299,6 +299,58 @@ function getBaseState () {
 
 function getFixtureOverrides (name) {
   switch (name) {
+    case 'everyday':
+    case 'everyday-search': {
+      const library = {}
+      for (let index = 0; index < 100; index++) {
+        const id = `everyday-${index}`
+        library[id] = createGist(id, `[Utility ${String(index).padStart(3, '0')}] #common Everyday helper`, false, {
+          'helper.js': {
+            filename: 'helper.js',
+            language: 'JavaScript',
+            content: Array.from({ length: 20 }, (_, line) => `const value${line} = ${index + line};`).join('\n')
+          }
+        }, '2026-06-29T16:00:00Z')
+      }
+      const ids = Object.keys(library)
+      return {
+        activeGist: ids[0],
+        gists: library,
+        gistTags: { [Prefixed('All')]: ids, [Prefixed('JavaScript')]: ids, common: ids },
+        pinnedTags: [],
+        searchWindowStatus: name === 'everyday-search' ? 'ON' : 'OFF',
+        initialSearchQuery: name === 'everyday-search' ? 'utility' : ''
+      }
+    }
+    case 'large-collapsed':
+    case 'large-editor':
+      return {
+        gistEditModalStatus: name === 'large-editor' ? 'ON' : 'OFF',
+        fileExpandStatus: { 'fixture-gist-1-large.js': false },
+        gists: {
+          ...gists,
+          'fixture-gist-1': createGist('fixture-gist-1', '[Large snippet fixture] #smoke', false, {
+            'large.js': {
+              filename: 'large.js',
+              language: 'JavaScript',
+              content: Array.from({ length: 10000 }, (_, i) => `const item${i} = "example ${i}";`).join('\n')
+            }
+          }, '2026-06-29T16:00:00Z')
+        }
+      }
+    case 'asciidoc':
+      return {
+        gists: {
+          ...gists,
+          'fixture-gist-1': createGist('fixture-gist-1', '[AsciiDoc fixture] #smoke', false, {
+            'example.adoc': {
+              filename: 'example.adoc',
+              language: 'AsciiDoc',
+              content: '= On-demand AsciiDoc\n\n*Formatted after loading*\n\nA lightweight startup.'
+            }
+          }, '2026-06-29T16:00:00Z')
+        }
+      }
     case 'about':
       return { aboutModalStatus: 'ON' }
     case 'dashboard':
@@ -449,7 +501,9 @@ export function getRenderFixture (name) {
       }
       : null,
     name,
-    searchIndexRecords,
+    searchIndexRecords: stateOverrides.gists
+      ? Object.values(stateOverrides.gists).map(gist => SearchIndex.buildSearchRecord(gist))
+      : searchIndexRecords,
     state: Object.assign({}, getBaseState(), stateOverrides)
   }
 }

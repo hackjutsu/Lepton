@@ -1390,6 +1390,99 @@ async function assertFixtureImageAttachments (window) {
   }
 }
 
+async function assertEverydayInteractions (window) {
+  const fixture = process.env.LEPTON_RENDER_FIXTURE
+  if (!['everyday', 'everyday-search'].includes(fixture)) return
+  await window.webContents.executeJavaScript(`(async () => {
+    const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    if (${JSON.stringify(fixture)} === 'everyday') {
+      for (const index of [1, 50, 99, 0]) {
+        document.querySelectorAll('.snippet-thumnail-list-item > div')[index].click();
+        await frame();
+        const selected = document.querySelector('.active-snippet-thumnail-private, .active-snippet-thumnail-public');
+        if (!selected.textContent.includes('Utility ' + String(index).padStart(3, '0'))) throw Error('Wrong sidebar selection');
+        if (!document.querySelector('.code-table').textContent.includes('const value0 = ' + index + ';')) throw Error('Wrong snippet content');
+      }
+    } else {
+      const input = document.querySelector('.search-box');
+      // Model input/paste without a keyup event.
+      Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, 'Utility 099');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await frame();
+      if (document.querySelectorAll('.result-group > li').length !== 1) throw Error('Search input did not update results');
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 13, bubbles: true }));
+      await frame();
+      if (document.querySelector('.search-box')) throw Error('Search selection did not close search');
+      if (!document.querySelector('.code-table').textContent.includes('const value0 = 99;')) throw Error('Search opened wrong snippet');
+    }
+  })()`)
+}
+
+async function assertLargeSnippetRendering (window) {
+  const fixture = process.env.LEPTON_RENDER_FIXTURE
+  if (!['large-collapsed', 'large-editor'].includes(fixture)) return
+
+  if (fixture === 'large-collapsed') {
+    await window.webContents.executeJavaScript(`(async () => {
+      const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const toggle = document.querySelector('.file-expand');
+      if (document.querySelector('.code-area')) throw Error('Collapsed file is mounted');
+      for (let cycle = 0; cycle < 2; cycle++) {
+        toggle.click();
+        await frame();
+        const rows = document.querySelectorAll('.code-table tr');
+        if (rows.length !== 10000 || !rows[9999].textContent.includes('item9999')) throw Error('Expanded file lost content');
+        toggle.click();
+        await frame();
+        if (document.querySelector('.code-area')) throw Error('Collapsed file retained its renderer');
+      }
+    })()`)
+    return
+  }
+
+  await window.webContents.executeJavaScript(`(async () => {
+    const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const cm = document.querySelector('.CodeMirror').CodeMirror;
+    const original = cm.getValue();
+    const assertViewport = () => {
+      const bounds = cm.getWrapperElement().getBoundingClientRect();
+      const visibleLines = document.querySelectorAll('.CodeMirror-code > div').length;
+      if (cm.lineCount() !== 10000 || cm.getOption('viewportMargin') !== 10 || visibleLines > 200 || bounds.height > 650) {
+        throw Error('Large editor is not bounded: ' + JSON.stringify({ visibleLines, height: bounds.height }));
+      }
+    };
+    assertViewport();
+    cm.setValue('const small = true');
+    await frame();
+    if (document.querySelector('.gist-editor-viewport') || cm.getOption('viewportMargin') !== Infinity) throw Error('Small editor did not restore natural height');
+    cm.setValue(original);
+    await frame();
+    assertViewport();
+    cm.setCursor({ line: 9999, ch: cm.getLine(9999).length });
+    cm.scrollIntoView(cm.getCursor(), 40);
+    cm.focus();
+    await frame();
+    if (cm.getViewport().to < 10000) throw Error('Last line is not reachable');
+  })()`)
+  window.focus()
+  window.webContents.focus()
+  await window.webContents.executeJavaScript("document.querySelector('.CodeMirror').CodeMirror.focus()", true)
+  await window.webContents.insertText(' // viewport smoke')
+  await window.webContents.executeJavaScript(`(async () => {
+    const cm = document.querySelector('.CodeMirror').CodeMirror;
+    const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const deadline = Date.now() + 2000;
+    while (!cm.getLine(9999).endsWith(' // viewport smoke') && Date.now() < deadline) await new Promise(resolve => setTimeout(resolve, 20));
+    if (cm.lineCount() !== 10000 || !cm.getLine(9999).endsWith(' // viewport smoke')) throw Error('Typing at the end of the large file failed: ' + JSON.stringify({ line: cm.getLine(9999), focused: cm.hasFocus(), cursor: cm.getCursor() }));
+    cm.undo();
+    await frame();
+    if (cm.getLine(9999) !== 'const item9999 = "example 9999";') throw Error('Undo lost file content');
+    cm.setCursor({ line: 0, ch: 0 });
+    cm.scrollIntoView(cm.getCursor());
+    await frame();
+  })()`)
+}
+
 async function main () {
   let window
 
@@ -1402,6 +1495,8 @@ async function main () {
       await waitForFixtureUi(window)
       await applyFixtureFilterClicks(window)
       assertFixtureRendererState(await getRendererState(window))
+      await assertEverydayInteractions(window)
+      await assertLargeSnippetRendering(window)
       await assertFixtureLoginModeSwitch(window)
       await assertFixturePageFind(window)
       if (process.env.LEPTON_RENDER_FIXTURE === 'new-draft') {

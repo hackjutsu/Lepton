@@ -34,7 +34,7 @@ module.exports = {
       loader: 'babel-loader',
       options: {
         presets: [
-          ['@babel/preset-env', { modules: false }],
+          ['@babel/preset-env', { modules: false, targets: { electron: '42' } }],
           '@babel/preset-react'
         ]
       }
@@ -43,6 +43,8 @@ module.exports = {
       use: [
         'style-loader',
         'css-loader',
+        // Run after Sass, before css-loader resolves and emits font assets.
+        path.resolve(__dirname, 'configs/loaders/woff2Only.js'),
         {
           loader: 'sass-loader',
           options: {

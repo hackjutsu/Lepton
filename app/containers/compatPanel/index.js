@@ -38,10 +38,10 @@ function Body (props) {
 }
 
 function Collapse (props) {
-  const { children, className, in: expanded, ...elementProps } = props
+  const { children, className, in: expanded, unmountOnExit = false, ...elementProps } = props
   return h('div', Object.assign({}, elementProps, {
     className: classNames('collapse', expanded && 'in', className)
-  }), children)
+  }), expanded || !unmountOnExit ? children : null)
 }
 
 Panel.Heading = Heading
