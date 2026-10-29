@@ -100,6 +100,22 @@ describe('search utility', () => {
     ])
   })
 
+  it('retains only excerpt highlights for content matches while searching the entire file', () => {
+    const content = Array.from({ length: 100 }, (_, i) => `const helper${i} = ${i};`).join('\n')
+    SearchIndex.resetFuseIndex([SearchIndex.buildSearchRecord({
+      id: 'many-lines', description: 'Utility',
+      files: { 'helper.js': { filename: 'helper.js', language: 'JavaScript', content } }
+    })])
+    const [result] = SearchIndex.fuseSearch('const helper99')
+    expect(result.id).toBe('many-lines')
+    const match = result.searchMeta.matches.find(match => match.key === 'files.content')
+    expect(match.segments).toBe(match.excerpt.segments)
+    expect(match.segments.length).toBeLessThan(10)
+    expect(match.excerpt.segments).toContainEqual({ text: 'const', match: true })
+    expect(SearchIndex.fuseSearch('helper99')[0].searchMeta.bestMatch.excerpt.segments)
+      .toContainEqual({ text: 'helper99', match: true })
+  })
+
   it('keeps image filenames searchable without indexing Base64 payloads', () => {
     const imageContent = Buffer.from([
       0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,

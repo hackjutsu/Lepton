@@ -39,6 +39,32 @@ function createTempHome (locale = 'en', configOverrides = {}) {
 
 const RENDER_FIXTURES = [
   {
+    name: 'everyday',
+    selector: '.code-table',
+    text: 'Utility 000|helper.js'
+  },
+  {
+    name: 'everyday-search',
+    selector: '.search-result-count',
+    text: '100 snippets found'
+  },
+  {
+    name: 'large-collapsed',
+    selector: '.file-header .file-expand',
+    text: 'Large snippet fixture|large.js',
+    forbiddenSelector: '.code-area'
+  },
+  {
+    name: 'large-editor',
+    selector: '.gist-editor-viewport .CodeMirror',
+    text: 'Large snippet fixture|large.js'
+  },
+  {
+    name: 'asciidoc',
+    selector: '.asciidoc-section strong',
+    text: 'On-demand AsciiDoc|Formatted after loading'
+  },
+  {
     name: 'active',
     selector: '.active-layout .snippet-box',
     text: 'React 19 render fixture'
