@@ -5,6 +5,19 @@ const require = createRequire(import.meta.url)
 const builderConfig = require('../../electron-builder')
 
 describe('electron-builder distribution config', () => {
+  it('excludes duplicate runtime builds while retaining notebook language sources', () => {
+    expect(builderConfig.files).toEqual(expect.arrayContaining([
+      '!node_modules/prismjs/components/*.min.js',
+      '!node_modules/**/node_modules/prismjs/components/*.min.js',
+      '!node_modules/dompurify/dist/purify.cov.cjs.js',
+      '!node_modules/bluebird/js/browser/**',
+      '!node_modules/winston/dist/**'
+    ]))
+    expect(builderConfig.files).not.toContain('!node_modules/prismjs/**')
+    expect(builderConfig.files).not.toContain('!node_modules/prismjs/components/**')
+    expect(builderConfig.files).not.toContain('!node_modules/dompurify/dist/**')
+  })
+
   it('names release artifacts with platform and architecture', () => {
     expect(builderConfig.artifactName).toBe('${productName}-${version}-${os}-${arch}.${ext}')
   })

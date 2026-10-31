@@ -42,6 +42,26 @@ function createTempHome (locale = 'en') {
 
 const PACKAGED_RENDER_FIXTURES = [
   {
+    name: 'large-editor',
+    selector: '.gist-editor-viewport .CodeMirror',
+    text: 'Large snippet fixture|large.js'
+  },
+  {
+    name: 'edit',
+    selector: '.modal .gist-editor-form .CodeMirror',
+    text: 'Edit'
+  },
+  {
+    name: 'new',
+    selector: '.modal .gist-editor-form .CodeMirror',
+    text: 'New'
+  },
+  {
+    name: 'asciidoc',
+    selector: '.asciidoc-section strong',
+    text: 'On-demand AsciiDoc|Formatted after loading'
+  },
+  {
     name: 'active',
     selector: '.profile-image-section',
     text: 'React 19 render fixture'

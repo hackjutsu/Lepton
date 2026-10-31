@@ -149,12 +149,14 @@ import './index.scss'
 
 import electronBridge from '../../utilities/electronBridge'
 import { getEditorTheme } from '../../utilities/themeManager'
+import { needsBoundedViewport } from './viewport'
 
 const { createMarkdownImageReference, getFilesFromTransfer } = require('../../utilities/imageAttachments')
 
 const conf = electronBridge.config
 
 const highlightTheme = getEditorTheme(conf.get('theme'))
+const configuredEditorOptions = conf.get('editor') || {}
 const defaultOptions = Object.assign({}, {
   theme: highlightTheme,
   lineNumbers: true,
@@ -164,7 +166,7 @@ const defaultOptions = Object.assign({}, {
   viewportMargin: Infinity,
   foldGutter: true,
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
-}, conf.get('editor'))
+}, configuredEditorOptions)
 
 class CodeMirrorEditor extends Component {
   constructor (props) {
@@ -194,6 +196,8 @@ class CodeMirrorEditor extends Component {
         this.codeMirror.setOption(key, options[key])
       }
     })
+
+    if (this.props.className !== prevProps.className) this.codeMirror.refresh()
   }
 
   componentWillUnmount () {
@@ -226,7 +230,7 @@ class CodeMirrorEditor extends Component {
   }
 
   render () {
-    return <div ref={ this.setEditorNode } />
+    return <div className={ this.props.className } ref={ this.setEditorNode } />
   }
 }
 
@@ -307,13 +311,18 @@ class GistEditor extends Component {
 
   render () {
     const { value, placeholder, readOnly } = this.props
+    const boundedViewport = needsBoundedViewport(value || '')
     const options = Object.assign({}, defaultOptions, {
       placeholder,
-      readOnly: Boolean(readOnly)
+      readOnly: Boolean(readOnly),
+      viewportMargin: boundedViewport && configuredEditorOptions.viewportMargin === undefined
+        ? 10
+        : defaultOptions.viewportMargin
     })
 
     return (
       <CodeMirrorEditor
+        className={ boundedViewport ? 'gist-editor-viewport' : undefined }
         ref={ this.setEditorRef.bind(this) }
         value={ value }
         options={ options }

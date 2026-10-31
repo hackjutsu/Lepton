@@ -67,4 +67,20 @@ describe('React 19 panel compatibility', () => {
     expect(container.querySelector('.collapse').className).toContain('file-collapse')
     expect(container.textContent).toContain('Expanded file')
   })
+
+  it('retains the same mounted content while collapsed and expanded', () => {
+    const render = expanded => act(() => {
+      root.render(h(Collapse, { in: expanded }, h('pre', null, 'Keep mounted')))
+    })
+    render(false)
+    const content = container.querySelector('pre')
+    expect(content.textContent).toBe('Keep mounted')
+    expect(container.querySelector('.collapse').classList.contains('in')).toBe(false)
+    render(true)
+    expect(container.querySelector('pre')).toBe(content)
+    expect(container.querySelector('.collapse').classList.contains('in')).toBe(true)
+    render(false)
+    expect(container.querySelector('pre')).toBe(content)
+    expect(container.querySelector('.collapse').classList.contains('in')).toBe(false)
+  })
 })

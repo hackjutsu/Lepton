@@ -70,7 +70,10 @@ class GistEditorForm extends Component {
     })
   }
 
-  componentDidUpdate () {
+  componentDidUpdate (prevProps) {
+    // Local typing does not change initialData. Only compare original content
+    // when new input arrives, rather than serializing it on every keystroke.
+    if (prevProps.initialData === this.props.initialData) return
     const nextInitialValuesKey = getInitialValuesKey(this.props.initialData)
 
     if (nextInitialValuesKey !== this.state.initialValuesKey) {

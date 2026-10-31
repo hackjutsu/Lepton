@@ -1,7 +1,6 @@
 import HighlightJS from 'highlight.js'
 import hljsDefineSolidity from 'highlightjs-solidity'
 import hljsDefineGraphQL from 'highlightjs-graphql'
-import AsciiDoc from '../../utilities/asciidoc'
 import Markdown from '../../utilities/markdown'
 import React, { Component } from 'react'
 import electronBridge from '../../utilities/electronBridge'
@@ -63,11 +62,15 @@ resolveHighlightLanguage(hljsDefineGraphQL)(HighlightJS) // register graphql to 
 export default class CodeArea extends Component {
   constructor (props) {
     super(props)
+    this.state = { asciiDoc: null }
+    this.isMountedForRendering = false
     this.codeAreaNode = null
     this.handleMarkdownImageError = this.handleMarkdownImageError.bind(this)
   }
 
   componentDidMount () {
+    this.isMountedForRendering = true
+    this.loadAsciiDocIfNeeded()
     if (this.codeAreaNode) {
       this.codeAreaNode.addEventListener('error', this.handleMarkdownImageError, true)
     }
@@ -75,13 +78,30 @@ export default class CodeArea extends Component {
   }
 
   componentDidUpdate () {
+    this.loadAsciiDocIfNeeded()
     this.initializeMarkdownImageFallbacks()
   }
 
   componentWillUnmount () {
+    this.isMountedForRendering = false
     if (this.codeAreaNode) {
       this.codeAreaNode.removeEventListener('error', this.handleMarkdownImageError, true)
     }
+  }
+
+  loadAsciiDocIfNeeded () {
+    const { filename, language } = this.props
+    if (adaptedLanguage(filename, language) !== 'AsciiDoc' || this.asciiDocLoad) return this.asciiDocLoad
+
+    // The converter is large; ordinary snippets should not initialize it.
+    // Render the current props after loading, so switching snippets cannot
+    // display an earlier snippet's asynchronously generated HTML.
+    this.asciiDocLoad = import(/* webpackChunkName: "asciidoc" */ '../../utilities/asciidoc')
+      .then(module => {
+        if (this.isMountedForRendering) this.setState({ asciiDoc: module.default })
+      })
+      .catch(err => logger.error(`Failed to load AsciiDoc renderer with err ${err}`))
+    return this.asciiDocLoad
   }
 
   initializeMarkdownImageFallbacks () {
@@ -230,6 +250,7 @@ export default class CodeArea extends Component {
       }
       return `<div class='jupyterNotebook-section'>${result.html}</div>`
     } catch (err) {
+      this.renderFailed = true
       logger.error(`Failed to render Jupyter Notebook content with err ${err}`)
       return this.createHighlightedCodeBlock(content, language, kTabLength)
     }
@@ -240,9 +261,11 @@ export default class CodeArea extends Component {
   }
 
   createAsciiDocCodeBlock (content, language, kTabLength) {
+    if (!this.state.asciiDoc) return this.createHighlightedCodeBlock(content, language, kTabLength)
     try {
-      return `<div class='markdown-section asciidoc-section'>${AsciiDoc.render(content)}</div>`
+      return `<div class='markdown-section asciidoc-section'>${this.state.asciiDoc.render(content)}</div>`
     } catch (err) {
+      this.renderFailed = true
       logger.error(`Failed to render AsciiDoc content with err ${err}`)
       return this.createHighlightedCodeBlock(content, language, kTabLength)
     }
@@ -277,8 +300,16 @@ export default class CodeArea extends Component {
     return `<pre><code><table class='code-table' style='tab-size: ${kTabLength};'>${contentTable}</table></code></pre>`
   }
 
-  renderCodeArea (filename, content, lang, kTabLength, siblingFiles) {
+  getRenderedContent (filename, content, lang, kTabLength, siblingFiles) {
+    // Keep only this component's most recent result. Callback changes and
+    // unrelated UI updates must not reparse Markdown, highlight code, or make
+    // synchronous notebook IPC calls for unchanged content.
+    const inputs = [filename, content, lang, kTabLength, siblingFiles, this.state.asciiDoc]
+    if (this.renderedContent && inputs.every((value, index) => value === this.renderedContent.inputs[index])) {
+      return this.renderedContent.html
+    }
     const language = adaptedLanguage(filename, lang)
+    this.renderFailed = false
     let htmlContent = ''
     switch (language) {
       case 'Jupyter Notebook':
@@ -293,6 +324,13 @@ export default class CodeArea extends Component {
       default:
         htmlContent = this.createHighlightedCodeBlock(content, language, kTabLength)
     }
+    // Preserve retry behavior for transient renderer/IPC failures.
+    this.renderedContent = this.renderFailed ? null : { inputs, html: htmlContent }
+    return htmlContent
+  }
+
+  renderCodeArea (filename, content, lang, kTabLength, siblingFiles) {
+    const htmlContent = this.getRenderedContent(filename, content, lang, kTabLength, siblingFiles)
     return (
       <div className='code-area'
         ref={ node => { this.codeAreaNode = node } }

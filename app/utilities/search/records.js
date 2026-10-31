@@ -206,6 +206,7 @@ function buildSearchMatch (record, match) {
   const key = match.key
   const matchedFile = getMatchedFile(record, match)
   const isContentMatch = key === 'files.content'
+  const excerpt = isContentMatch ? createHighlightedExcerpt(match.value, match.indices) : null
   const baseLabel = MATCH_KEY_LABELS[key] || key
   const fileLabel = matchedFile && matchedFile.filename
     ? `${baseLabel} in ${matchedFile.filename}`
@@ -216,10 +217,10 @@ function buildSearchMatch (record, match) {
     label: fileLabel,
     filename: matchedFile ? matchedFile.filename : null,
     language: matchedFile ? matchedFile.language : null,
-    segments: createHighlightedSegments(match.value, match.indices),
-    excerpt: isContentMatch
-      ? createHighlightedExcerpt(match.value, match.indices)
-      : null
+    // The UI shows only an excerpt for content hits. Do not retain highlighted
+    // copies of every line in every matching file while search is open.
+    segments: excerpt ? excerpt.segments : createHighlightedSegments(match.value, match.indices),
+    excerpt
   }
 }
 

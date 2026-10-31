@@ -127,19 +127,11 @@ class SearchPage extends Component {
   }
 
   updateInputValue (evt) {
+    const inputValue = evt.target.value
     this.setState({
       selectedIndex: 0,
-      inputValue: evt.target.value
-    })
-  }
-
-  queryInputValue (evt) {
-    const inputValue = evt.target.value
-
-    const searchIndex = this.props.searchIndex
-    const results = searchIndex.fuseSearch(inputValue)
-    this.setState({
-      searchResults: results
+      inputValue,
+      searchResults: this.props.searchIndex.fuseSearch(inputValue)
     })
   }
 
@@ -370,8 +362,7 @@ class SearchPage extends Component {
             autoFocus
             value={ this.state.inputValue }
             onChange={ this.updateInputValue.bind(this) }
-            onKeyDown={ this.handleKeyDown.bind(this) }
-            onKeyUp={ this.queryInputValue.bind(this) }/>
+            onKeyDown={ this.handleKeyDown.bind(this) }/>
           { this.renderResultCount() }
         </div>
         <ul className='result-group'>

@@ -4,7 +4,7 @@ import { descriptionParser } from '../../utilities/parser'
 import electronBridge from '../../utilities/electronBridge'
 import { getFilteredGistIds } from '../../utilities/gistFilters'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus } from '../../actions'
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import TagBadges from '../tagBadges'
 import { t } from '../../utilities/i18n'
 import {
@@ -19,10 +19,35 @@ import './index.scss'
 const logger = electronBridge.logger
 const conf = electronBridge.config
 
+class SnippetThumbnail extends PureComponent {
+  constructor (props) {
+    super(props)
+    this.handleClick = () => this.props.onSelect(this.props.entry.id)
+    this.setNode = node => this.props.onNode(this.props.entry.id, node)
+  }
+
+  render () {
+    const { entry, active } = this.props
+    const className = active
+      ? (entry.isPublic ? 'active-snippet-thumnail-public' : 'active-snippet-thumnail-private')
+      : 'snippet-thumnail'
+    return (
+      <li className='snippet-thumnail-list-item' ref={ this.setNode }>
+        <div className={ className } onClick={ this.handleClick }>
+          <div className='snippet-thumnail-description'>{ entry.title }</div>
+          { entry.tags && <TagBadges tags={ entry.tags } className='snippet-thumnail-tags' colored={ entry.colored } /> }
+        </div>
+      </li>
+    )
+  }
+}
+
 class NavigationPanelDetails extends Component {
   constructor (props) {
     super(props)
     this.snippetNodes = {}
+    this.handleClicked = this.handleClicked.bind(this)
+    this.setSnippetNode = this.setSnippetNode.bind(this)
   }
 
   componentDidUpdate () {
@@ -58,96 +83,57 @@ class NavigationPanelDetails extends Component {
     selectGist(gistId)
   }
 
-  decideSnippetListItemClass (gistId) {
-    if (gistId === this.props.activeGist) {
-      if (this.props.gists[gistId].brief.public) {
-        return 'active-snippet-thumnail-public'
-      } else {
-        return 'active-snippet-thumnail-private'
-      }
-    }
-    return 'snippet-thumnail'
-  }
-
-  renderSnippetTags (gistId, customTags) {
-    if (!shouldShowTagsInSnippetList(conf)) {
-      return null
+  getSnippetEntries () {
+    const { gists, gistTags, activeGistFilters } = this.props
+    // Settings reads use synchronous IPC. Read each once, not once per row.
+    const sortingKey = conf.get('snippet:sorting')
+    const sortingReverse = conf.get('snippet:sortingReverse')
+    const showTags = shouldShowTagsInSnippetList(conf)
+    const colored = showTags && shouldColorTags(conf)
+    const inputs = [gists, gistTags, activeGistFilters, sortingKey, sortingReverse, showTags, colored]
+    if (this.snippetEntries && inputs.every((value, index) => value === this.snippetEntries.inputs[index])) {
+      return this.snippetEntries.entries
     }
 
-    const { gistTags } = this.props
-    const tags = getRegularTagsForGist(gistId, customTags, gistTags)
-    return (
-      <TagBadges
-        tags={ tags }
-        className='snippet-thumnail-tags'
-        colored={ shouldColorTags(conf) } />
-    )
+    const entries = getFilteredGistIds(gistTags, activeGistFilters)
+      .map(id => gists[id])
+      // Sync can update gists before its tag index.
+      .filter(Boolean)
+      .sort(compareGists(sortingKey, sortingReverse))
+      .map(gist => {
+        const firstFilename = Object.keys(gist.brief.files)[0]
+        const descriptionSource = gist.brief.providerTitle !== undefined
+          ? gist.brief
+          : gist.brief.description || firstFilename
+        const { title, description, customTags } = descriptionParser(descriptionSource)
+        const id = gist.brief.id
+        return {
+          id,
+          title: title.length > 0 ? title : description,
+          isPublic: gist.brief.public,
+          tags: showTags ? getRegularTagsForGist(id, customTags, gistTags) : null,
+          colored
+        }
+      })
+    // Retain only the current list. Selection changes do not rebuild metadata.
+    this.snippetEntries = { inputs, entries }
+    return entries
   }
 
   renderSnippetThumbnails () {
-    const { gists, gistTags, activeGistFilters } = this.props
-    const snippetThumbnails = []
-    const filteredGistIds = getFilteredGistIds(gistTags, activeGistFilters)
-
-    if (filteredGistIds.length === 0) {
+    const entries = this.getSnippetEntries()
+    if (!entries.length) {
       return (
-        <li className='snippet-thumnail-list-item snippet-thumnail-empty'
-          aria-live='polite'
-          role='status'>
+        <li className='snippet-thumnail-list-item snippet-thumnail-empty' aria-live='polite' role='status'>
           <div className='snippet-thumnail'>{ t('search.noResults') }</div>
         </li>
       )
     }
-
-    const rawGists = []
-    filteredGistIds.forEach((gistId) => {
-      // During the synchronization, gists will be updated before the gistTags,
-      // which introduces an interval where a gist exists in gistTags but not in
-      // the gists. This guard makes sure we push the gist only when it is already
-      // available in gists.
-      if (gists[gistId]) {
-        // Pick up the content inside the first [] as the snippet thumbnail's title.
-        // For example, "[Apple is delicious] It's affordable and healthy." will
-        // pick up "Apple is delicious" as the title. If no brackets are found,
-        // it shows to the original description. It provides users the flexibility
-        // to decide what to be shown in the thumbnail.
-        const gist = gists[gistId]
-        rawGists.push(gist)
-      }
-    })
-
-    const sortingKey = conf.get('snippet:sorting')
-    const sortingReverse = conf.get('snippet:sortingReverse')
-    rawGists.sort(compareGists(sortingKey, sortingReverse))
-
-    rawGists.forEach((gist) => {
-      const firstFilename = Object.keys(gist.brief.files)[0]
-      // '' will be converted to false, so this statement can handle situations
-      // for null, '' and undefined
-      const rawDescription = gist.brief.description || firstFilename
-
-      const descriptionSource = gist.brief.providerTitle !== undefined
-        ? gist.brief
-        : rawDescription
-      const { title, description, customTags } = descriptionParser(descriptionSource)
-      const thumbnailTitle = title.length > 0 ? title : description
-      const gistId = gist.brief.id
-      snippetThumbnails.push(
-        <li
-          className='snippet-thumnail-list-item'
-          key={ gistId }
-          ref={ node => this.setSnippetNode(gistId, node) }>
-          <div className={ this.decideSnippetListItemClass(gistId) }
-            onClick={ this.handleClicked.bind(this, gistId) }>
-            <div className='snippet-thumnail-description'>{ thumbnailTitle }</div>
-            { this.renderSnippetTags(gistId, customTags) }
-          </div>
-        </li>
-      )
-    })
-
-    return snippetThumbnails
-  } // renderSnippetThumbnails()
+    return entries.map(entry => (
+      <SnippetThumbnail key={ entry.id } entry={ entry } active={ entry.id === this.props.activeGist }
+        onSelect={ this.handleClicked } onNode={ this.setSnippetNode } />
+    ))
+  }
 
   render () {
     return (

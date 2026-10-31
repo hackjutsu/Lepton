@@ -4,12 +4,11 @@ import { connect } from 'react-redux'
 import electronBridge from '../../utilities/electronBridge'
 import { updateUpdateAvailableBarStatus } from '../../actions/index'
 import AboutPage from '../aboutPage'
-import Dashboard from '../dashboard'
 import FindInPage, { isFindInPageAvailable } from '../findInPage'
 import LoginPage from '../loginPage'
 import NavigationPanel from '../navigationPanel'
 import NavigationPanelDetails from '../navigationPanelDetails'
-import React, { Component } from 'react'
+import React, { Component, lazy, Suspense } from 'react'
 import SearchPage from '../searchPage'
 import SnippetPanel from '../snippetPanel'
 import { Pane, SplitPane } from 'react-split-pane'
@@ -20,6 +19,7 @@ import './index.scss'
 import './scrollbar.scss'
 
 const conf = electronBridge.config
+const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */ '../dashboard'))
 const themeManager = new ThemeManager()
 themeManager.setTheme(conf.get('theme'))
 
@@ -129,9 +129,12 @@ export class AppContainer extends Component {
   }
 
   renderDashboard () {
-    const { updateDashboardStatus } = this.props
+    const { dashboardModalStatus, updateDashboardStatus } = this.props
+    if (dashboardModalStatus !== 'ON') return null
     return (
-      <Dashboard updateDashboardStatus = { updateDashboardStatus }/>
+      <Suspense fallback={ null }>
+        <Dashboard updateDashboardStatus = { updateDashboardStatus }/>
+      </Suspense>
     )
   }
 

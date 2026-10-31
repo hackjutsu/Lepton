@@ -8,6 +8,17 @@
   height: auto;
 }
 
+.gist-editor-viewport {
+  .CodeMirror {
+    height: min(60vh, 600px);
+    min-height: 400px;
+  }
+
+  .CodeMirror-scroll {
+    min-height: 0;
+  }
+}
+
 .CodeMirror-gutters {
   border-right: 1px solid var(--border-color);
   background-color: var(--bg-secondary);

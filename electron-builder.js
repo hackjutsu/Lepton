@@ -114,6 +114,24 @@ const topLevelRendererOnlyNodeModules = [
   'entities'
 ]
 
+// These packages also ship browser builds, coverage output, or duplicate font
+// and grammar assets. Main-process code uses their normal runtime entry points;
+// renderer dependencies have already been compiled by webpack. Keep original
+// Prism grammars for the notebook renderer's dynamic language loading.
+const redundantRuntimeAssets = [
+  'bluebird/js/browser/**',
+  'dompurify/src/**',
+  'dompurify/dist/purify.cov.cjs.js',
+  'dompurify/dist/purify.js',
+  'dompurify/dist/purify.min.js',
+  'prismjs/components/*.min.js',
+  'prismjs/plugins/**',
+  'prismjs/themes/**',
+  'winston/dist/**',
+  '@asamuzakjp/css-color/src/**',
+  '@asamuzakjp/css-color/dist/browser/**'
+]
+
 // Apply package exclusions to both direct dependencies and nested copies so
 // transitive renderer-only packages do not remain in the final archive.
 function excludeNodeModule (packageName) {
@@ -145,6 +163,10 @@ module.exports = {
     '!node_modules/@types/**',
     '!node_modules/**/node_modules/@types/**',
     ...rendererOnlyNodeModules.flatMap(excludeNodeModule),
+    ...redundantRuntimeAssets.flatMap(pattern => [
+      `!node_modules/${pattern}`,
+      `!node_modules/**/node_modules/${pattern}`
+    ]),
     ...topLevelRendererOnlyNodeModules.map(packageName => `!node_modules/${packageName}/**`)
   ],
   appId: 'com.cosmox.lepton',
