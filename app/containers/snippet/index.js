@@ -657,7 +657,7 @@ class Snippet extends Component {
                 </a>
               </div>
             </div>
-            <Collapse in={ isExpanded } unmountOnExit>
+            <Collapse in={ isExpanded }>
               <div className='collapsable-code-area'>
                 { getRenderableImageSource(normalizedGistFile) || isNativeBinaryImage(normalizedGistFile)
                   ? <ImageFileView

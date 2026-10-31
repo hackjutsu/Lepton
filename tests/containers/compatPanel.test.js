@@ -68,21 +68,19 @@ describe('React 19 panel compatibility', () => {
     expect(container.textContent).toContain('Expanded file')
   })
 
-  it('releases collapsed content and recreates it when expanded', () => {
+  it('retains the same mounted content while collapsed and expanded', () => {
     const render = expanded => act(() => {
-      root.render(h(Collapse, { in: expanded, unmountOnExit: true }, h('pre', null, 'Large file')))
+      root.render(h(Collapse, { in: expanded }, h('pre', null, 'Keep mounted')))
     })
     render(false)
-    expect(container.querySelector('pre')).toBeNull()
+    const content = container.querySelector('pre')
+    expect(content.textContent).toBe('Keep mounted')
+    expect(container.querySelector('.collapse').classList.contains('in')).toBe(false)
     render(true)
-    expect(container.querySelector('pre').textContent).toBe('Large file')
+    expect(container.querySelector('pre')).toBe(content)
+    expect(container.querySelector('.collapse').classList.contains('in')).toBe(true)
     render(false)
-    expect(container.querySelector('pre')).toBeNull()
-    expect(container.innerHTML).not.toContain('unmountOnExit')
-  })
-
-  it('preserves mounted content for collapses that do not opt in', () => {
-    act(() => root.render(h(Collapse, { in: false }, h('pre', null, 'Keep mounted'))))
-    expect(container.querySelector('pre').textContent).toBe('Keep mounted')
+    expect(container.querySelector('pre')).toBe(content)
+    expect(container.querySelector('.collapse').classList.contains('in')).toBe(false)
   })
 })

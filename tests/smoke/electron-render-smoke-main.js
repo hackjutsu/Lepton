@@ -1426,15 +1426,17 @@ async function assertLargeSnippetRendering (window) {
     await window.webContents.executeJavaScript(`(async () => {
       const frame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       const toggle = document.querySelector('.file-expand');
-      if (document.querySelector('.code-area')) throw Error('Collapsed file is mounted');
+      const content = document.querySelector('.code-area');
+      if (!content || content.getClientRects().length) throw Error('Collapsed file is missing or visible');
       for (let cycle = 0; cycle < 2; cycle++) {
         toggle.click();
         await frame();
-        const rows = document.querySelectorAll('.code-table tr');
-        if (rows.length !== 10000 || !rows[9999].textContent.includes('item9999')) throw Error('Expanded file lost content');
+        const rows = content.querySelectorAll('.code-table tr');
+        if (document.querySelector('.code-area') !== content || !content.getClientRects().length ||
+          rows.length !== 10000 || !rows[9999].textContent.includes('item9999')) throw Error('Expanded file lost its mounted content');
         toggle.click();
         await frame();
-        if (document.querySelector('.code-area')) throw Error('Collapsed file retained its renderer');
+        if (document.querySelector('.code-area') !== content || content.getClientRects().length) throw Error('Collapsed file did not retain hidden content');
       }
     })()`)
     return

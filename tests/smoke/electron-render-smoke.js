@@ -51,8 +51,7 @@ const RENDER_FIXTURES = [
   {
     name: 'large-collapsed',
     selector: '.file-header .file-expand',
-    text: 'Large snippet fixture|large.js',
-    forbiddenSelector: '.code-area'
+    text: 'Large snippet fixture|large.js'
   },
   {
     name: 'large-editor',
