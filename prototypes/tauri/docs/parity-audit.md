@@ -54,6 +54,9 @@ fixture test checks that both suites use identical snippet payloads.
   raw URL; a disposable private Gist over 1 MiB passed a live round trip. Gists
   whose entire file list is truncated and files over 10 MiB still require safe
   handling. Sync failures and large accounts need fuller end-to-end coverage.
+- Remote sign-in and sync currently fetch every snippet's details regardless of
+  `snippet.downloadAll`. Electron can load details lazily when it is disabled;
+  large accounts may therefore sign in and sync more slowly in the prototype.
 - The Rust log now records redacted renderer messages, but timestamp, rotation,
   main-process coverage, and diagnostic parity still need verification.
 - Settings are persisted. Native zoom and restart-only preference behavior are

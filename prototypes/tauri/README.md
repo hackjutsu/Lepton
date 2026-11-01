@@ -1,7 +1,7 @@
 # Lepton Rust prototype
 
 This prototype runs Lepton's existing React interface in Tauri, with Rust-backed
-SQLite storage and session-only GitHub and GitLab connections. It is not yet a
+SQLite storage and GitHub and GitLab connections. It is not yet a
 complete replacement for the Electron application.
 
 ## Build
@@ -98,5 +98,5 @@ deleted against GitHub with a personal access token. These checks do not prove
 complete UI, platform, or feature parity. The native app also connected with a
 GitHub token and loaded the account's profile image. The earlier clipboard-enabled macOS
 prototype measured 8.06 MiB installed excluding the OS webview; this is not a
-full-feature size comparison. RAM has not been measured across the process
-family.
+full-feature size comparison. See [the benchmark notes](docs/benchmark.md)
+for later bundle, process RSS, and latency measurements and their limitations.
