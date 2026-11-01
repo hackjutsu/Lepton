@@ -54,3 +54,36 @@ respectively. This is neither a GitHub download nor an end-to-end large-Gist
 load, and five repetitions in one process are not a broad benchmark. As with
 the startup measurement, Electron used DevTools and the Rust test build used
 WebDriver to run the same measurement code.
+
+## Large-file follow-up
+
+An isolated loopback server returned the same single 512 KiB JavaScript Gist to
+both apps, with `snippet.downloadAll` enabled. The samples measure from
+submitting the test token to the complete 513-row file table appearing in the
+DOM, including profile, index and file requests, local processing, and UI
+construction. Each run used a fresh data directory; the server used only test
+credentials and in-memory data.
+
+| Measurement | Electron | Rust prototype |
+| --- | ---: | ---: |
+| Mock 512 KiB Gist login to file view | 117, 87, 101 ms | 62, 69, 71 ms |
+
+The medians are 101 ms and 69 ms, respectively. This uses a local server with
+no internet latency and a complete, untruncated API response. It does not prove
+performance for GitHub's truncated-file response, larger accounts, or actual
+network conditions.
+
+The 1 MiB editor test was also split into the synchronous `CodeMirror.setValue`
+call and the following two animation-frame callbacks. In one eight-insertion
+run, Electron's `setValue` calls took 368–440 ms. Rust's calls varied between
+339–393 ms and 886–1,408 ms; its second post-insertion frame arrived roughly
+224–238 ms after the first. Electron's second frame arrived 14–62 ms after the
+first. Both windows reported being visible and focused; five idle frame waits
+were approximately 12–18 ms in each app. Detaching the editor's one change
+handler did not remove the slow Rust calls or the post-insertion frame delay.
+
+These observations narrow the issue to work in or following the editor/WebKit
+path, rather than the measured React change handler alone. They do not identify
+a specific function, prove a garbage-collection cause, or establish how much
+of the frame delay is layout, rendering, scheduling, or test instrumentation.
+This was phase timing, not a sampled CPU profile or a real GitHub load.
