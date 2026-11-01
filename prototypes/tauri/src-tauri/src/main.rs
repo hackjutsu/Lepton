@@ -11,6 +11,45 @@ use local_gists::LocalGists;
 use serde_json::Value;
 use std::sync::Mutex;
 use tauri::Manager;
+use tauri_plugin_opener::OpenerExt;
+
+fn validated_external_url(url: &str) -> Result<reqwest::Url, String> {
+    let url = reqwest::Url::parse(url).map_err(|_| "Invalid external URL")?;
+    if !matches!(url.scheme(), "https" | "http")
+        || url.host_str().is_none()
+        || !url.username().is_empty()
+        || url.password().is_some()
+    {
+        return Err("Invalid external URL".into());
+    }
+    Ok(url)
+}
+
+#[tauri::command]
+fn open_external(app: tauri::AppHandle, url: String) -> Result<(), String> {
+    let url = validated_external_url(&url)?;
+    app.opener()
+        .open_url(url.as_str(), None::<&str>)
+        .map_err(|_| "Unable to open external URL".to_owned())
+}
+
+#[cfg(test)]
+mod external_url_tests {
+    use super::validated_external_url;
+
+    #[test]
+    fn accepts_web_urls_only() {
+        assert!(validated_external_url("https://gist.github.com/example").is_ok());
+        assert!(validated_external_url("http://localhost:8080/example").is_ok());
+        for url in [
+            "file:///etc/passwd",
+            "javascript:alert(1)",
+            "https://user:secret@example.com/",
+        ] {
+            assert!(validated_external_url(url).is_err());
+        }
+    }
+}
 
 #[tauri::command]
 fn search_snippets(
@@ -191,7 +230,8 @@ fn main() {
             local_gist_request,
             gitlab_request,
             github_request,
-            start_github_oauth
+            start_github_oauth,
+            open_external
         ])
         .run(tauri::generate_context!())
         .expect("Unable to start Lepton Rust prototype");

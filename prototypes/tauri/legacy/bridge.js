@@ -46,6 +46,16 @@ window.addEventListener('keydown', event => {
   }
 })
 
+function openExternal (url) { return invoke('open_external', { url }) }
+document.addEventListener('click', event => {
+  const anchor = event.target instanceof Element ? event.target.closest('a[href]') : null
+  if (!anchor) return
+  const href = anchor.getAttribute('href') || ''
+  if (!/^https?:\/\//i.test(href)) return
+  event.preventDefault()
+  openExternal(href).catch(() => window.alert('Could not open the link.'))
+})
+
 window.lepton = {
   isLocalPrototype: true,
   account: { get: () => ({}) },
@@ -61,7 +71,7 @@ window.lepton = {
   logger: { debug: () => {}, info: () => {}, warn: console.warn, error: console.error },
   localStorage: { get: key => ({ status: true, data: load('lepton-local-' + key, null) }), set: (key, value) => save('lepton-local-' + key, value) },
   notebook: { render: content => { try { return { status: true, html: renderNotebookContent(content) } } catch (error) { return { status: false, error: String(error) } } } },
-  shell: { openExternal: () => {}, openPath: () => Promise.reject(new Error('Opening local paths is not implemented')) },
+  shell: { openExternal, openPath: () => Promise.reject(new Error('Opening local paths is not implemented')) },
   snippets: { request: (_provider, operation, args) => {
     if (session.mode !== 'local') return requestProvider(invoke, operation, args)
     if (operation === 'CREATE_SINGLE_GIST' || operation === 'EDIT_SINGLE_GIST') args = [...args, new Date().toISOString()]

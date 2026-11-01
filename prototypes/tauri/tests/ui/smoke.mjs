@@ -80,7 +80,7 @@ try {
   await check('about and settings', async () => { await emit('about-page'); await expectElement('.about-modal .modal-title', 'Settings'); await closeModal('.about-modal') })
   await check('dashboard', async () => { await emit('dashboard'); await expectElement('.dashboard-modal canvas'); await closeModal('.dashboard-modal') })
   await check('search with file content', async () => {
-    await emit('search-gist'); await expectElement('.search-modal .search-box')
+    await run('window.dispatchEvent(new KeyboardEvent("keydown", {key:" ", code:"Space", shiftKey:true, bubbles:true})); return true'); await expectElement('.search-modal .search-box')
     await run('const e=document.querySelector(".search-modal input"); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,"hello"); e.dispatchEvent(new Event("input",{bubbles:true})); return true')
     await run('document.querySelector(".search-modal input").dispatchEvent(new KeyboardEvent("keyup",{bubbles:true,key:"o"})); return true')
     await expectElement('.search-modal', 'React 19 render fixture')
@@ -133,6 +133,8 @@ try {
       }
       await waitFor('const e=document.querySelector(".profile-image-section"); return !!e && e.complete && e.naturalWidth > 0', 'GitHub profile image')
       assert.equal(await run('return document.querySelector(".profile-image-section").src.startsWith("https:")'), true, 'Expected a remote GitHub avatar')
+      const remoteLinks = await run('const links=[...document.querySelectorAll(".header-controls a")]; return links.filter(e=>/^https?:/.test(e.href) && getComputedStyle(e).display!=="none").length')
+      assert.ok(remoteLinks > 0, 'Expected a visible link to the selected Gist')
       await run('[...document.querySelectorAll("button")].find(e=>e.textContent.trim()==="Switch to local library").click(); return true')
       await waitFor('return !![...document.querySelectorAll("button")].find(e=>e.textContent.trim()==="Connect account")', 'local library')
     })

@@ -38,8 +38,9 @@ with an enterprise or self-managed server URL. Tokens are held in memory for
 the session and must be entered again after restarting. Account switching keeps
 the local library separate. Remote content is not cached in the local database.
 GitHub snippet files returned truncated by the API are rejected to avoid
-accidentally overwriting incomplete content. Sharing and history controls, and
-some native integrations and preferences, still need implementation.
+accidentally overwriting incomplete content. Remote links open in the system
+browser, and sharing copies a provider link. Some native integrations and
+preferences still need implementation.
 
 The prototype also contains an experimental GitHub OAuth flow. It requires an
 OAuth app with callback `http://127.0.0.1/callback` and the environment variables
