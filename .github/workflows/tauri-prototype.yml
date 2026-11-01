@@ -76,7 +76,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     env:
-      LEPTON_UI_SCREENSHOT: ${{ runner.temp }}/lepton-tauri-ui.png
       CARGO_TERM_COLOR: never
     steps:
       - uses: actions/checkout@v5
@@ -99,11 +98,14 @@ jobs:
         run: xvfb-run -a npm run test:ui
         working-directory: prototypes/tauri
         env:
+          LEPTON_UI_SCREENSHOT: ${{ runner.temp }}/lepton-tauri-ui.png
           WEBKIT_DISABLE_COMPOSITING_MODE: '1'
       - name: Tauri UI smoke tests (macOS and Windows)
         if: runner.os != 'Linux'
         run: npm run test:ui
         working-directory: prototypes/tauri
+        env:
+          LEPTON_UI_SCREENSHOT: ${{ runner.temp }}/lepton-tauri-ui.png
       - name: Upload screenshot
         if: always()
         uses: actions/upload-artifact@v4
