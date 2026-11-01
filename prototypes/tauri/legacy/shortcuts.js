@@ -19,3 +19,20 @@ export function matchesAccelerator (event, accelerator, platform) {
   if (key === 'delete') return actual === 'delete' || actual === 'backspace'
   return actual === key
 }
+
+// Electron's View menu uses Command/Control with =, +, -, and 0 for zoom.
+export function zoomShortcutAction (event, platform) {
+  const mac = /mac|iphone|ipad/i.test(platform || '')
+  if (event.altKey || Boolean(event.metaKey) !== mac || Boolean(event.ctrlKey) === mac) return null
+  const key = String(event.key || '')
+  if (key === '+' || key === '=' || event.code === 'NumpadAdd') return 'in'
+  if (!event.shiftKey && (key === '-' || event.code === 'NumpadSubtract')) return 'out'
+  if (!event.shiftKey && key === '0') return 'reset'
+  return null
+}
+
+export function nextZoomPercent (current, action) {
+  if (action === 'reset') return 100
+  if (action !== 'in' && action !== 'out') return current
+  return Math.min(300, Math.max(50, current * (action === 'in' ? 1.2 : 1 / 1.2)))
+}

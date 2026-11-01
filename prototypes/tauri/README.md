@@ -70,6 +70,10 @@ clipboard plugin. Failed saves leave the draft in the editor. The original
 editor's unsaved-change behavior and other platform integrations need broader
 verification before production use.
 
+Use Command-Plus/Minus on macOS or Control-Plus/Minus on Windows and Linux to
+change the current window zoom. Command/Control-0 resets it to 100%. These
+shortcuts do not change the saved default zoom preference.
+
 ## Tests and verification
 
 `npm test` runs Rust unit tests. From the repository root, `npm run test:unit`

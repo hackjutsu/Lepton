@@ -647,7 +647,6 @@ class Snippet extends Component {
             key={ key }
             data-gist-filename={ key }
             ref={ node => this.setFileNode(key, node) }>
-            <hr/>
             <div className={ gistFile.language === 'Markdown' ? 'file-header-md' : 'file-header' }>
               <a href='#'
                 className={isExpanded ? 'file-expand is-expanded' : 'file-expand'}

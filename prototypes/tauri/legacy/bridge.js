@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import { session, requestProvider, formatLogArguments } from './session'
-import { matchesAccelerator } from './shortcuts'
+import { matchesAccelerator, nextZoomPercent, zoomShortcutAction } from './shortcuts'
 import defaults from '../../../configs/defaultConfig'
 import { renderNotebookContent } from '../../../app/utilities/jupyterNotebook/core'
 import { isValidPreferenceValue, preferenceRequiresRestart } from '../../../app/utilities/config/preferences'
@@ -23,6 +23,14 @@ function mergeConfig (base, override) {
 const runtime = window.__leptonRuntimeInfo
 const config = mergeConfig(mergeConfig(defaults, load(configKey, {})), runtime.config)
 function find (path) { return path.split(':').reduce((node, key) => node == null ? undefined : node[key], config) }
+const initialZoom = Number(find('zoom:percent'))
+let currentZoom = Number.isFinite(initialZoom) && initialZoom >= 50 && initialZoom <= 300 ? initialZoom : 100
+let zoomQueue = Promise.resolve()
+function applyZoom (percent) {
+  currentZoom = percent
+  zoomQueue = zoomQueue.catch(() => {}).then(() => invoke('set_webview_zoom', { percent }))
+  return zoomQueue
+}
 async function set (path, value) {
   if (!isValidPreferenceValue(path, value)) return undefined
   await invoke('set_runtime_config', { key: path, value })
@@ -31,14 +39,14 @@ async function set (path, value) {
   for (const part of parts) { node[part] = node[part] || {}; node = node[part] }
   node[key] = value
   save(configKey, config)
-  if (path === 'zoom:percent') await invoke('set_webview_zoom', { percent: value })
+  if (path === 'zoom:percent') await applyZoom(value)
   return value
 }
 async function setForRestart (path, value) {
   if (!preferenceRequiresRestart(path) || !isValidPreferenceValue(path, value)) return undefined
   return invoke('set_runtime_config', { key: path, value })
 }
-invoke('set_webview_zoom', { percent: find('zoom:percent') }).catch(() => {})
+applyZoom(currentZoom).catch(() => {})
 const listeners = new Map()
 function emit (channel, ...args) { (listeners.get(channel) || []).forEach(fn => fn(...args)) }
 const shortcutChannels = {
@@ -52,6 +60,13 @@ const shortcutChannels = {
   keyAboutPage: 'about-page',
   keySyncGists: 'sync-gists'
 }
+window.addEventListener('keydown', event => {
+  const action = zoomShortcutAction(event, navigator.platform)
+  if (!action) return
+  event.preventDefault()
+  event.stopPropagation()
+  applyZoom(nextZoomPercent(currentZoom, action)).catch(() => log('warn', ['Unable to apply zoom']))
+}, true)
 window.addEventListener('keydown', event => {
   if (event.repeat) return
   for (const [setting, channel] of Object.entries(shortcutChannels)) {

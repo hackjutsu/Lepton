@@ -39,7 +39,14 @@ module.exports = {
         ]
       }
     }, {
+      test: /[\\/]highlightJS[\\/]styles[\\/].+\.css$/,
+      use: [
+        { loader: 'style-loader', options: { injectType: 'lazyStyleTag' } },
+        'css-loader'
+      ]
+    }, {
       test: /\.(scss|css)$/,
+      exclude: /[\\/]highlightJS[\\/]styles[\\/]/,
       use: [
         'style-loader',
         'css-loader',

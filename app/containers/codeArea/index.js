@@ -24,38 +24,28 @@ function resolveHighlightLanguage (languageModule) {
   throw new TypeError('Invalid highlight.js language module')
 }
 
-const highlightTheme = getHighlightTheme(conf.get('theme'))
-switch (highlightTheme) {
-  case 'github':
-    require('../../utilities/vendor/highlightJS/styles/github.css')
-    break
-  case 'github-dark':
-    require('../../utilities/vendor/highlightJS/styles/github-dark.css')
-    break
-  case 'atom-one-dark':
-    require('../../utilities/vendor/highlightJS/styles/atom-one-dark.css')
-    break
-  case 'atom-one-light':
-    require('../../utilities/vendor/highlightJS/styles/atom-one-light.css')
-    break
-  case 'solarized-light':
-    require('../../utilities/vendor/highlightJS/styles/solarized-light.css')
-    break
-  case 'solarized-dark':
-    require('../../utilities/vendor/highlightJS/styles/solarized-dark.css')
-    break
-  case 'dracula':
-    require('../../utilities/vendor/highlightJS/styles/dracula.css')
-    break
-  case 'material':
-    require('../../utilities/vendor/highlightJS/styles/material.css')
-    break
-  case 'ayu-dark':
-    require('../../utilities/vendor/highlightJS/styles/ayu-dark.css')
-    break
-  default:
-    require('../../utilities/vendor/highlightJS/styles/github-gist.css')
+const highlightStyles = {
+  github: require('../../utilities/vendor/highlightJS/styles/github.css'),
+  'github-dark': require('../../utilities/vendor/highlightJS/styles/github-dark.css'),
+  'atom-one-dark': require('../../utilities/vendor/highlightJS/styles/atom-one-dark.css'),
+  'atom-one-light': require('../../utilities/vendor/highlightJS/styles/atom-one-light.css'),
+  'solarized-light': require('../../utilities/vendor/highlightJS/styles/solarized-light.css'),
+  'solarized-dark': require('../../utilities/vendor/highlightJS/styles/solarized-dark.css'),
+  dracula: require('../../utilities/vendor/highlightJS/styles/dracula.css'),
+  material: require('../../utilities/vendor/highlightJS/styles/material.css'),
+  'ayu-dark': require('../../utilities/vendor/highlightJS/styles/ayu-dark.css'),
+  'github-gist': require('../../utilities/vendor/highlightJS/styles/github-gist.css')
 }
+let activeHighlightStyle = null
+function applyHighlightTheme (theme) {
+  const next = highlightStyles[getHighlightTheme(theme)] || highlightStyles['github-gist']
+  if (next === activeHighlightStyle) return
+  if (activeHighlightStyle) activeHighlightStyle.unuse()
+  next.use()
+  activeHighlightStyle = next
+}
+applyHighlightTheme(conf.get('theme'))
+document.addEventListener('lepton:theme-change', event => applyHighlightTheme(event.detail))
 
 resolveHighlightLanguage(hljsDefineSolidity)(HighlightJS) // register solidity to hightlight.js
 resolveHighlightLanguage(hljsDefineGraphQL)(HighlightJS) // register graphql to hightlight.js

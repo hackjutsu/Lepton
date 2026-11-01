@@ -291,6 +291,7 @@ class ThemeManager {
     for (const property in themeColors) {
       this.root.style.setProperty(`--${property}`, themeColors[property])
     }
+    document.dispatchEvent(new CustomEvent('lepton:theme-change', { detail: themeName }))
   }
 }
 

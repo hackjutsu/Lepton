@@ -81,6 +81,10 @@ try {
     for (const icon of icons) assert.ok(icon.width > 0 && icon.height > 0 && Math.abs(icon.width - icon.box) < 1, 'Sidebar icon must fit its container')
     assert.match(info.text, /exercises markdown rendering/)
     assert.deepEqual(await run('return [...document.querySelectorAll("[data-gist-filename]")].map(e=>e.dataset.gistFilename)'), ['hello.js', 'notes.md', 'lepton-logo.webp', 'styles.css'])
+    const layout = await run('const divider=document.querySelector(".content-split-pane .split-pane-divider.horizontal"); const files=[...document.querySelectorAll("[data-gist-filename]")]; return {dividerBottom:divider.getBoundingClientRect().bottom, viewportBottom:innerHeight, dividerColor:getComputedStyle(divider,"::after").backgroundColor, gaps:files.slice(1).map((file,i)=>file.getBoundingClientRect().top-files[i].getBoundingClientRect().bottom)}')
+    assert.ok(Math.abs(layout.dividerBottom - layout.viewportBottom) < 2, 'Snippet divider should reach the bottom of the window')
+    assert.notEqual(layout.dividerColor, 'rgba(0, 0, 0, 0)', 'Snippet divider should remain visible')
+    assert.ok(layout.gaps.every(gap => Math.abs(gap) < 1), `Unexpected space between files: ${layout.gaps}`)
     assert.equal(await run('const e=document.querySelector(".starred-tag-section"); return !!e && getComputedStyle(e).display!=="none"'), false, 'Local library should not show a GitHub starred link')
   })
   const screenshot = await request(`/session/${session}/screenshot`)
@@ -107,6 +111,8 @@ try {
     await run('window.__configSaved=false; window.lepton.config.set("theme","dark").then(()=>{window.__configSaved=true}); return true')
     await waitFor('return window.__configSaved===true', 'configuration write')
     assert.equal(JSON.parse(fs.readFileSync(paths.configFilePath, 'utf8')).theme, 'dark')
+    await run('window.__configSaved=false; window.lepton.config.set("theme","light").then(()=>{window.__configSaved=true}); return true')
+    await waitFor('return window.__configSaved===true', 'configuration reset')
     await run('window.__restartSaved=false; window.lepton.config.setForRestart("avatar:type","boring").then(()=>{window.__restartSaved=true}); return true')
     await waitFor('return window.__restartSaved===true', 'restart preference write')
     assert.equal(await run('return window.lepton.config.get("avatar:type")'), 'github')
@@ -114,6 +120,51 @@ try {
     await run('window.__restartSaved=false; window.lepton.config.setForRestart("avatar:type","github").then(()=>{window.__restartSaved=true}); return true')
     await waitFor('return window.__restartSaved===true', 'restart preference reset')
     await closeModal('.about-modal')
+    await run('window.__tabSizeSaved=false; window.lepton.config.set("editor:tabSize",4).then(()=>{window.__tabSizeSaved=true}); return true')
+    await waitFor('return window.__tabSizeSaved===true', 'valid tab size for preferences')
+  })
+  await check('theme changes update rendered syntax and the editor', async () => {
+    const themes = [
+      ['dark', 'rgb(152, 195, 121)', 'one-dark'],
+      ['one-dark', 'rgb(152, 195, 121)', 'one-dark'],
+      ['atom-one-dark', 'rgb(152, 195, 121)', 'one-dark'],
+      ['github-dark', 'rgb(165, 214, 255)', 'github-dark'],
+      ['catppuccin-mocha', 'rgb(152, 195, 121)', 'one-dark'],
+      ['solarized-dark', 'rgb(42, 161, 152)', 'solarized dark'],
+      ['dracula', 'rgb(241, 250, 140)', 'dracula'],
+      ['material-theme', 'rgb(195, 232, 141)', 'material'],
+      ['ayu', 'rgb(194, 217, 76)', 'ayu-dark'],
+      ['light', 'rgb(3, 47, 98)', 'github']
+    ]
+    for (const [theme, color, editorTheme] of themes) {
+      await emit('about-page'); await expectElement('.about-modal [data-preference-key="theme"]')
+      await run('const select=document.querySelector(".about-modal [data-preference-key=theme]"); select.value=arguments[0]; select.dispatchEvent(new Event("change",{bubbles:true})); return true', theme)
+      try {
+        await waitFor('const e=[...document.querySelectorAll(".preferences-footer button")].find(e=>e.textContent.trim()==="Apply"); return e && !e.disabled', `${theme} preference change`)
+      } catch (error) {
+        const details = await run('return {footer:document.querySelector(".preferences-footer").innerText, selected:document.querySelector(".about-modal [data-preference-key=theme]").value, buttons:[...document.querySelectorAll(".preferences-footer button")].map(b=>[b.innerText,b.disabled])}')
+        throw new Error(`${error.message}: ${JSON.stringify(details)}`)
+      }
+      await run('[...document.querySelectorAll(".preferences-footer button")].find(e=>e.textContent.trim()==="Apply").click(); return true')
+      try {
+        await waitFor(`return window.lepton.config.get("theme")===${JSON.stringify(theme)} && getComputedStyle(document.querySelector(".snippet-box .hljs-string")).color===${JSON.stringify(color)}`, `${theme} syntax color`)
+      } catch (error) {
+        const details = await run('const e=document.querySelector(".snippet-box .hljs-string"); return {theme:window.lepton.config.get("theme"), color:e && getComputedStyle(e).color, selected:document.querySelector(".about-modal [data-preference-key=theme]").value, css:[...document.querySelectorAll("style")].filter(s=>s.textContent.includes(".hljs-string")).map(s=>s.textContent.slice(0,100))}')
+        throw new Error(`${error.message}: ${JSON.stringify(details)}`)
+      }
+      await closeModal('.about-modal')
+      if (theme === 'dark' && process.env.LEPTON_UI_DARK_SCREENSHOT) {
+        const screenshot = await request(`/session/${session}/screenshot`)
+        fs.writeFileSync(process.env.LEPTON_UI_DARK_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+      }
+      await emit('edit-gist-renderer'); await expectElement('.edit-modal .CodeMirror')
+      assert.equal(await run('return document.querySelector(".edit-modal .CodeMirror").CodeMirror.getOption("theme")'), editorTheme, `${theme} editor theme`)
+      if (theme === 'dark' && process.env.LEPTON_UI_DARK_SCREENSHOT) {
+        const screenshot = await request(`/session/${session}/screenshot`)
+        fs.writeFileSync(process.env.LEPTON_UI_DARK_SCREENSHOT.replace(/\.png$/, '-editor.png'), Buffer.from(screenshot, 'base64'))
+      }
+      await emit('exit-editor'); await absent('.modal .gist-editor-form')
+    }
   })
   await check('zoom preference changes the native webview', async () => {
     const before = await run('return window.innerWidth')
@@ -123,6 +174,22 @@ try {
     await run('window.__zoomDone=false; window.lepton.config.set("zoom:percent",100).then(()=>{window.__zoomDone=true}); return true')
     await waitFor('return window.__zoomDone===true', 'zoom reset')
     await waitFor(`return window.innerWidth >= ${before} * 0.95`, 'webview zoom reset')
+  })
+  await check('platform zoom shortcuts work in the editor without changing the saved default', async () => {
+    const before = await run('return window.innerWidth')
+    await emit('edit-gist-renderer'); await expectElement('.edit-modal .CodeMirror')
+    const sendKey = async (key, code, shift = false) => run('const mac=/mac|iphone|ipad/i.test(navigator.platform); const target=document.querySelector(".edit-modal .CodeMirror textarea") || document.querySelector(".edit-modal .CodeMirror"); const event=new KeyboardEvent("keydown",{key:arguments[0],code:arguments[1],shiftKey:arguments[2],metaKey:mac,ctrlKey:!mac,bubbles:true,cancelable:true}); return !target.dispatchEvent(event)', key, code, shift)
+    assert.equal(await sendKey('=', 'Equal'), true, 'Zoom shortcut should prevent the default key action')
+    await waitFor(`return window.innerWidth < ${before} * 0.9`, 'shortcut zoom in')
+    assert.equal(await run('return window.lepton.config.get("zoom:percent")'), 100)
+    assert.equal(await sendKey('-', 'Minus'), true)
+    await waitFor(`return window.innerWidth >= ${before} * 0.95`, 'shortcut zoom out')
+    assert.equal(await sendKey('+', 'Equal', true), true)
+    await waitFor(`return window.innerWidth < ${before} * 0.9`, 'shift-plus shortcut')
+    assert.equal(await sendKey('0', 'Digit0'), true)
+    await waitFor(`return window.innerWidth >= ${before} * 0.95`, 'shortcut zoom reset')
+    assert.equal(JSON.parse(fs.readFileSync(path.join(directory, '.leptonrc'), 'utf8')).zoom.percent, 100)
+    await emit('exit-editor'); await absent('.modal .gist-editor-form')
   })
   await check('autostart preference and native notification bridge', async () => {
     await run('window.__autostartDone=false; window.lepton.config.set("startAtLogin",true).then(()=>{window.__autostartDone=true}); new Notification("Lepton test",{body:"Test notification",silent:true}); return true')
