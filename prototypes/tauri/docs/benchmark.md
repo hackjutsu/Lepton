@@ -28,3 +28,29 @@ Rust, but three runs and different instrumentation do not establish a reliable
 general speedup. Filesystem and OS caches were warm; the test does not measure
 first paint, editing, search, live GitHub sync, or a large account. These are
 short, single-machine samples, and the migration is not feature-complete.
+
+## Local interaction samples
+
+Measured on the same Mac with the same six-snippet fixture. Each app was
+launched separately. The table shows medians for six repetitions of each UI
+action and five insertions of a synthetic 1 MiB editor buffer:
+
+| Action | Electron | Rust prototype |
+| --- | ---: | ---: |
+| Open search | 4.7 ms | 7 ms |
+| Search file content for `hello` | 5.1 ms | 8 ms |
+| Select the Python snippet | 5.4 ms | 7.5 ms |
+| Open the existing snippet editor | 7.4 ms | 8 ms |
+| Put 1 MiB of synthetic text in the editor and wait two animation frames | 480 ms | 587 ms |
+
+The small-action timings are measured inside the renderer from a synthetic
+event until the expected DOM element appears; they do not include physical
+input, screen presentation or remote requests. Search covered only six small
+snippets. For the large-buffer test, the editor was already open and CodeMirror
+received 16,384 synthetic 64-byte lines using `setValue`; the value was checked
+after two animation frames. The first insertion took 502 ms in Electron and
+1,623 ms in Rust; the following four ranged from 450–500 ms and 578–589 ms,
+respectively. This is neither a GitHub download nor an end-to-end large-Gist
+load, and five repetitions in one process are not a broad benchmark. As with
+the startup measurement, Electron used DevTools and the Rust test build used
+WebDriver to run the same measurement code.
