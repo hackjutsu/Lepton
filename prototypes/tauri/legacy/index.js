@@ -3,7 +3,7 @@ import './local.css'
 import localAvatar from '../../../app/utilities/octodex/dojocat.webp?inline'
 import React from 'react'
 import HumanReadableTime from 'human-readable-time'
-import { session, requestProvider, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loginFailureStatus, enqueueCache } from './session'
+import { session, requestProvider, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loginFailureStatus, enqueueCache, unavailableGithubSnippet } from './session'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
@@ -51,7 +51,13 @@ async function loadSnippets (target, progress = () => {}) {
   async function worker () {
     while (next < list.length) {
       const index = next++
-      results[index] = await requestProvider(invoke, 'GET_SINGLE_GIST', ['', list[index].id], target)
+      try {
+        results[index] = await requestProvider(invoke, 'GET_SINGLE_GIST', ['', list[index].id], target)
+      } catch (error) {
+        const unavailable = target.mode === 'github' && unavailableGithubSnippet(list[index], error)
+        if (!unavailable) throw error
+        results[index] = unavailable
+      }
       progress(`Downloading snippets (${++downloaded}/${list.length})`)
     }
   }

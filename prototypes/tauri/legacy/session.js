@@ -36,6 +36,16 @@ export function isOfflineError (error) {
   return /^(GitHub|GitLab) network request failed$/.test(String(error))
 }
 
+export function unavailableGithubSnippet (brief, error) {
+  const message = String(error)
+  if (![
+    'GitHub returned an incomplete file list; this snippet cannot be edited safely',
+    'GitHub raw file exceeds the supported size',
+    'GitHub raw file is not UTF-8 text'
+  ].includes(message)) return null
+  return { ...brief, files: brief.files || {}, _leptonUnavailable: 'This snippet cannot be displayed or edited safely here. Open it on GitHub to view it.' }
+}
+
 export async function loadRemoteSnapshot (knownAccount, target, fetchLive, loadCache) {
   try { return { ...(await fetchLive()), offline: false } } catch (error) {
     if (!knownAccount || knownAccount.provider !== target.mode || knownAccount.base !== target.base || !isOfflineError(error)) throw error

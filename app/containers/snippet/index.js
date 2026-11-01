@@ -149,7 +149,7 @@ class Snippet extends Component {
 
   showGistEditorModal () {
     const { gists, activeGist, updateGistEditModeStatus } = this.props
-    if (gists && gists[activeGist] && gists[activeGist].details) {
+    if (gists && gists[activeGist] && gists[activeGist].details && !gists[activeGist].details._leptonUnavailable) {
       updateGistEditModeStatus('ON')
     }
   }
@@ -478,12 +478,12 @@ class Snippet extends Component {
             }
           </div>
           <div className='header-controls'>
-            <a className='snippet-control'
+            { !activeSnippet.details?._leptonUnavailable && <a className='snippet-control'
               title={ t('snippet.edit') }
               href='#'
               onClick={ this.showGistEditorModal.bind(this) }>
               <div dangerouslySetInnerHTML={{ __html: editIcon }} />
-            </a>
+            </a> }
             <a className='snippet-control'
               title={ t('snippet.openInWeb') }
               href={ activeSnippet.brief.html_url }>
@@ -625,7 +625,7 @@ class Snippet extends Component {
 
     const fileHtmlArray = []
     const fileArray = []
-    if (activeSnippet.details) {
+    if (activeSnippet.details && !activeSnippet.details._leptonUnavailable) {
       const fileList = activeSnippet.details.files
       for (const key in fileList) {
         const gistFile = fileList[key]
@@ -707,6 +707,9 @@ class Snippet extends Component {
           <Panel.Heading>{ this.renderPanelHeader(activeSnippet) }</Panel.Heading>
           <Panel.Body>
             <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet) }</div>
+            { activeSnippet.details?._leptonUnavailable
+              ? <div className='alert alert-warning' role='status'>{ activeSnippet.details._leptonUnavailable }</div>
+              : null }
             { activeSnippet.details
               ? null
               : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }

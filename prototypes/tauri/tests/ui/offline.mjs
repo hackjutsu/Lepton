@@ -8,6 +8,7 @@ import { spawn } from 'node:child_process'
 
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-offline-ui-'))
 let gist = { id: 'abc123', description: '[Offline fixture] #test', public: false, html_url: 'https://example.test/abc123', updated_at: '2026-01-01T00:00:00Z', files: { 'note.txt': { filename: 'note.txt', language: 'Text', content: 'before sync' }, 'tasks.md': { filename: 'tasks.md', language: 'Markdown', content: '# Tasks\n\n- [ ] first task\n' } } }
+const incomplete = { id: 'abc124', description: '[Large fixture] #test', public: false, html_url: 'https://example.test/abc124', updated_at: '2026-01-01T00:00:00Z', truncated: true, files: { 'first.txt': { filename: 'first.txt', language: 'Text' } } }
 const server = http.createServer((req, res) => {
   if (req.headers.authorization !== 'Bearer ui-test-token') { res.writeHead(401); res.end(); return }
   let body = ''
@@ -15,8 +16,9 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     let output
     if (req.method === 'GET' && req.url === '/api/v3/user') output = { login: 'fixture-user', html_url: 'https://example.test/user' }
-    else if (req.method === 'GET' && req.url.startsWith('/api/v3/gists?')) output = [gist]
+    else if (req.method === 'GET' && req.url.startsWith('/api/v3/gists?')) output = [gist, incomplete]
     else if (req.method === 'GET' && req.url === '/api/v3/gists/abc123') output = gist
+    else if (req.method === 'GET' && req.url === '/api/v3/gists/abc124') output = incomplete
     else if (req.method === 'PATCH' && req.url === '/api/v3/gists/abc123') {
       const patch = JSON.parse(body)
       const files = { ...gist.files }
@@ -77,6 +79,13 @@ try {
   assert.equal(await run('return !!document.querySelector(".login-status-line-error a")'), false, 'Invalid token should not show a log link')
   await run('const e=document.querySelector(".login-modal-face-front form input"); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,"ui-test-token"); e.dispatchEvent(new Event("input",{bubbles:true})); document.querySelector(".login-modal-face-front form").requestSubmit(); return true')
   await waitFor('return document.querySelector(".snippet-box")?.innerText.includes("Offline fixture")', 'mock GitHub account')
+  await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Large fixture")).querySelector("div").click(); return true')
+  await waitFor('return document.querySelector(".snippet-box [role=status]")?.innerText.includes("cannot be displayed or edited safely")', 'incomplete snippet warning')
+  assert.equal(await run('return !!document.querySelector(".header-controls [title=Edit]")'), false)
+  await run('window.lepton.ipc.emit("edit-gist-renderer"); return true')
+  assert.equal(await run('return !!document.querySelector(".gist-editor-form")'), false, 'An incomplete snippet must not be editable')
+  await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Offline fixture")).querySelector("div").click(); return true')
+  await waitFor('return document.querySelector(".snippet-box")?.innerText.includes("Offline fixture")', 'return to complete snippet')
   const metadata = path.join(directory, 'remote-account.json')
   for (let n = 0; n < 100 && !fs.existsSync(metadata); n++) await new Promise(resolve => setTimeout(resolve, 100))
   assert.ok(fs.existsSync(metadata))

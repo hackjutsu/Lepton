@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { enqueueCache, formatLogArguments, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loginFailureStatus, requestProvider, session } from '../../prototypes/tauri/legacy/session'
+import { enqueueCache, formatLogArguments, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loginFailureStatus, requestProvider, session, unavailableGithubSnippet } from '../../prototypes/tauri/legacy/session'
 import githubCore from '../../app/utilities/githubApi/core'
 
 describe('Tauri provider request bridge', () => {
@@ -46,6 +46,17 @@ describe('Tauri provider request bridge', () => {
     expect(isOfflineError('GitLab network request failed')).toBe(true)
     expect(isOfflineError('GitHub request failed (HTTP 401)')).toBe(false)
     expect(isOfflineError('GitHub returned an incomplete file list')).toBe(false)
+  })
+
+  it('isolates incomplete snippets without treating unrelated failures as unavailable files', () => {
+    const brief = { id: 'abc', files: { 'a.txt': { filename: 'a.txt' } } }
+    for (const error of ['GitHub returned an incomplete file list; this snippet cannot be edited safely', 'GitHub raw file exceeds the supported size', 'GitHub raw file is not UTF-8 text']) {
+      const result = unavailableGithubSnippet(brief, error)
+      expect(result.id).toBe('abc')
+      expect(result._leptonUnavailable).toContain('cannot be displayed or edited safely')
+    }
+    expect(unavailableGithubSnippet(brief, 'GitHub request failed (HTTP 401)')).toBeNull()
+    expect(unavailableGithubSnippet(brief, 'GitHub network request failed')).toBeNull()
   })
 
   it('loads only the matching account cache after a network failure', async () => {

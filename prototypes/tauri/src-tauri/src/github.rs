@@ -503,7 +503,7 @@ mod tests {
             let api = GitHub::new_with_proxy(
                 "http://provider.example.test",
                 "test-token".into(),
-                Some(&format!("http://{address}")),
+                Some(&format!("http={address};https=other-proxy.example:8443")),
             )
             .unwrap();
             assert_eq!(api.profile().await.unwrap()["login"], "test");

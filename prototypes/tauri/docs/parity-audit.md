@@ -28,6 +28,9 @@ screen does show the original remote controls.
 - GitHub and GitLab writes return a safely reconstructed result when the server
   confirms a save but its subsequent refresh fails. Mock-provider tests cover
   create and edit in that condition.
+- Unsupported incomplete, oversized, or non-text GitHub snippets remain listed
+  with a read-only warning rather than preventing the entire account from
+  loading. A mock GitHub UI test verifies the warning and blocks editing.
 
 The original Electron smoke suite passed its fixtures, including login progress,
 login errors, editor draft, image-attachment, and exit cases. The Rust UI suite
@@ -58,8 +61,9 @@ fixture test checks that both suites use identical snippet payloads.
   are exercised with isolated test substitutes; actual operating-system delivery
   and login startup still need platform verification. A mock HTTP proxy test
   verifies provider routing, and HTTP/SOCKS proxy URLs are accepted. PAC and
-  multi-rule proxies, updates, window/tray behavior, and other preference
-  behavior remain incomplete.
+  multi-rule proxies with one proxy per scheme and local-host bypass are covered
+  by Rust tests. PAC scripts, ordered proxy failover, updates, window/tray
+  behavior, and other preference behavior remain incomplete.
 - A request interrupted before the server responds can leave a save outcome
   uncertain for either provider.
 - Login expiry and additional failure states, image insertion and attachment limits, file
