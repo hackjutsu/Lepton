@@ -1,5 +1,19 @@
 import HighlightJS from 'highlight.js'
 
+// Highlight.js emits escaped text and spans. Keep each table cell's markup
+// balanced while carrying all active scopes (including nested ones) across lines.
+export function splitHighlightedLines (html) {
+  const openSpans = []
+  return html.split(/\r?\n/).map(line => {
+    const prefix = openSpans.join('')
+    for (const [tag] of line.matchAll(/<span\b[^>]*>|<\/span>/g)) {
+      if (tag === '</span>') openSpans.pop()
+      else openSpans.push(tag)
+    }
+    return prefix + line + '</span>'.repeat(openSpans.length)
+  })
+}
+
 function shouldUsePhpTemplate (content, language) {
   return typeof language === 'string' &&
     language.toLowerCase() === 'php' &&

@@ -5,7 +5,7 @@ import AsciiDoc from '../../utilities/asciidoc'
 import Markdown from '../../utilities/markdown'
 import React, { Component } from 'react'
 import electronBridge from '../../utilities/electronBridge'
-import { adaptedLanguage, highlightContent } from './highlighting'
+import { adaptedLanguage, highlightContent, splitHighlightedLines } from './highlighting'
 import { getHighlightTheme } from '../../utilities/themeManager'
 import { t } from '../../utilities/i18n'
 
@@ -252,22 +252,7 @@ export default class CodeArea extends Component {
     let lineNumber = 0
     const highlightedContent = highlightContent(content, language)
 
-    /*
-      Highlight.js wraps comment blocks inside <span class='hljs-comment'></span>.
-      However, when the multi-line comment block is broken down into different
-      table rows, only the first row, which is appended by the <span> tag, is
-      highlighted. The following code fixes it by appending <span> to each line
-      of the comment block.
-    */
-    const commentPattern = /<span class="hljs-comment">(.|\n)*?\*\/\s*<\/span>/g
-    const adaptedHighlightedContent = highlightedContent.replace(commentPattern, data => {
-      return data.replace(/\r?\n/g, () => {
-        // Chromium is smart enough to add the closing </span>
-        return "\n<span class='hljs-comment'>"
-      })
-    })
-
-    const contentTable = adaptedHighlightedContent.split(/\r?\n/).map(lineContent => {
+    const contentTable = splitHighlightedLines(highlightedContent).map(lineContent => {
       return `<tr>
                 <td class='line-number' data-pseudo-content=${++lineNumber}></td>
                 <td>${lineContent === '' ? '\n' : lineContent}</td>

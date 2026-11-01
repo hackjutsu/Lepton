@@ -1390,6 +1390,32 @@ async function assertFixtureImageAttachments (window) {
   }
 }
 
+async function assertPythonMultilineHighlighting (window) {
+  if (process.env.LEPTON_RENDER_FIXTURE !== 'python-multiline') return
+  const rows = await window.webContents.executeJavaScript(`
+    Array.from(document.querySelectorAll('.code-table tr')).map(row => {
+      const cell = row.cells[1]
+      const string = cell.querySelector('.hljs-string')
+      return {
+        text: cell.textContent,
+        stringText: string && string.textContent,
+        color: string && getComputedStyle(string).color,
+        height: row.getBoundingClientRect().height,
+        line: row.cells[0].getAttribute('data-pseudo-content')
+      }
+    })
+  `)
+  const stringRows = [1, 2, 3, 4, 5, 6]
+  if (rows.length !== 9 ||
+    rows.some((row, index) => row.line !== String(index + 1) || row.height <= 0) ||
+    stringRows.some(index => rows[index].stringText === null || rows[index].color !== rows[1].color) ||
+    rows[3].stringText !== '    Preserve multiline docstring highlighting.' ||
+    rows[6].stringText !== "second line'''" ||
+    rows[7].stringText !== null) {
+    throw new Error('Multiline Python highlighting or line layout was lost: ' + JSON.stringify(rows))
+  }
+}
+
 async function main () {
   let window
 
@@ -1402,6 +1428,7 @@ async function main () {
       await waitForFixtureUi(window)
       await applyFixtureFilterClicks(window)
       assertFixtureRendererState(await getRendererState(window))
+      await assertPythonMultilineHighlighting(window)
       await assertFixtureLoginModeSwitch(window)
       await assertFixturePageFind(window)
       if (process.env.LEPTON_RENDER_FIXTURE === 'new-draft') {

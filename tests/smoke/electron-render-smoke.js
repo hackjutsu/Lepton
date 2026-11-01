@@ -39,6 +39,11 @@ function createTempHome (locale = 'en', configOverrides = {}) {
 
 const RENDER_FIXTURES = [
   {
+    name: 'python-multiline',
+    selector: '.code-table .hljs-string',
+    text: 'Preserve multiline docstring highlighting.'
+  },
+  {
     name: 'active',
     selector: '.active-layout .snippet-box',
     text: 'React 19 render fixture'

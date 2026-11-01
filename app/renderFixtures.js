@@ -179,7 +179,17 @@ const gists = {
         filename: 'parser.py',
         language: 'Python',
         raw_url: 'https://gist.githubusercontent.com/lepton-fixture/mock/raw/parser.py',
-        content: 'def parse(value):\n    return value.strip()\n'
+        content: [
+          'def parse(value):',
+          '    """Normalize a value.',
+          '',
+          '    Preserve multiline docstring highlighting.',
+          '    """',
+          "    example = '''first line",
+          "second line'''",
+          '    return value.strip()',
+          ''
+        ].join('\n')
       }
     },
     '2026-06-28T14:30:00Z'
@@ -326,6 +336,14 @@ function getFixtureOverrides (name) {
         activeGist: 'fixture-gist-5',
         activeGistFilters: {
           language: Prefixed('PHP'),
+          tags: []
+        }
+      }
+    case 'python-multiline':
+      return {
+        activeGist: 'fixture-gist-2',
+        activeGistFilters: {
+          language: Prefixed('Python'),
           tags: []
         }
       }
