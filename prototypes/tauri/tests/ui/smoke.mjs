@@ -43,6 +43,10 @@ async function waitFor (script, description) {
   throw new Error(`Timed out waiting for ${description}`)
 }
 async function click (selector) { assert.equal(await run('const e=document.querySelector(arguments[0]); if (!e) return false; e.click(); return true', selector), true, `Missing ${selector}`) }
+async function assertLoginFits (description) {
+  const layout = await run('const face=document.querySelector(".login-modal-face-front"); const bounds=face.getBoundingClientRect(); const elements=[...face.querySelectorAll(".login-modal-title, .button-group-modal button, .button-group-modal input, .button-group-modal select, .login-page-text-link, .login-status-line")]; return {overflow:face.scrollHeight-face.clientHeight, scrollTop:face.scrollTop, clipped:elements.filter(e=>{const r=e.getBoundingClientRect(); return r.top<bounds.top || r.bottom>bounds.bottom}).map(e=>e.innerText || e.getAttribute("aria-label"))}')
+  assert.ok(layout.overflow <= 1 && layout.scrollTop === 0 && layout.clipped.length === 0, `${description}: ${JSON.stringify(layout)}`)
+}
 async function emit (channel) { await run('window.lepton.ipc.emit(arguments[0]); return true', channel) }
 async function expectElement (selector, text = '') {
   for (let n = 0; n < 100; n++) {
@@ -247,12 +251,24 @@ try {
     await expectElement('.logout-modal', 'Confirm logout')
     await click('.logout-modal .btn-danger')
     await expectElement('.login-modal', 'GitHub Login')
+    await waitFor('return !document.querySelector(".logout-modal") && !document.querySelector(".modal-backdrop")', 'logout transition to finish')
+    await assertLoginFits('GitHub login')
+    if (process.env.LEPTON_UI_LOGIN_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_UI_LOGIN_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
     await run('const e=document.querySelector(".login-modal .login-provider-controls select"); e.value="gitlab"; e.dispatchEvent(new Event("change",{bubbles:true})); return true')
     await expectElement('.login-modal', 'GitLab Token Login')
+    await assertLoginFits('GitLab token login')
+    if (process.env.LEPTON_UI_LOGIN_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_UI_LOGIN_SCREENSHOT.replace(/\.png$/, '-gitlab.png'), Buffer.from(screenshot, 'base64'))
+    }
     await run('const e=document.querySelector(".login-modal .login-provider-controls select"); e.value="github"; e.dispatchEvent(new Event("change",{bubbles:true})); return true')
     await expectElement('.login-modal', 'GitHub Login')
     await click('.login-modal-face-front .login-mode-switch')
     await waitFor('return !!document.querySelector(".login-modal-face-front form input") && !document.querySelector(".login-modal-flipping")', 'GitHub token login')
+    await assertLoginFits('GitHub token login')
   })
   if (process.env.LEPTON_TEST_GITHUB_TOKEN) {
     await check('live GitHub token connection and profile', async () => {

@@ -131,6 +131,7 @@ export class LoginPage extends Component {
       providerSaveError,
       gitlabHost,
       gitlabHostSaving: false,
+      loadingCardHeight: null,
       modalFlipping: false,
       pendingLoginMode: null,
       pendingLocale: null,
@@ -156,7 +157,21 @@ export class LoginPage extends Component {
     ipcRenderer.send('login-page-ready')
   }
 
-  componentDidUpdate (prevProps) {
+  getSnapshotBeforeUpdate (prevProps) {
+    if (prevProps.userSessionStatus !== 'IN_PROGRESS' &&
+      this.props.userSessionStatus === 'IN_PROGRESS' && this.loginCard) {
+      return this.loginCard.offsetHeight
+    }
+    return null
+  }
+
+  componentDidUpdate (prevProps, prevState, loadingCardHeight) {
+    if (loadingCardHeight !== null && loadingCardHeight !== undefined) {
+      this.setState({ loadingCardHeight })
+    } else if (prevProps.userSessionStatus === 'IN_PROGRESS' &&
+      this.props.userSessionStatus !== 'IN_PROGRESS' && this.state.loadingCardHeight !== null) {
+      this.setState({ loadingCardHeight: null })
+    }
     const previousProviderType = normalizeProviderType(prevProps.provider || this.state.providerType)
     const providerType = normalizeProviderType(this.props.provider || this.state.providerType)
     const previousProviderHost = getProviderHost(prevProps.provider)
@@ -774,16 +789,18 @@ export class LoginPage extends Component {
 
   render () {
     const { activeLocale, loginMode, modalFlipping, pendingLocale, pendingLoginMode } = this.state
-    const className = modalFlipping
-      ? `login-modal login-modal-${this.state.providerType} login-modal-flipping`
-      : `login-modal login-modal-${this.state.providerType}`
+    const className = `login-modal login-modal-${this.state.providerType}` +
+      (modalFlipping ? ' login-modal-flipping' : '') +
+      (this.props.userSessionStatus === 'IN_PROGRESS' ? ' login-modal-loading' : '')
     const backLoginMode = pendingLoginMode || loginMode
     const backLocale = pendingLocale || activeLocale
 
     return (
       <div className={ className }>
         <Modal.Dialog bsSize='small'>
-          <div className='login-modal-card'>
+          <div className='login-modal-card'
+            ref={ node => { this.loginCard = node } }
+            style={ this.state.loadingCardHeight ? { height: this.state.loadingCardHeight } : undefined }>
             { this.renderModalFace(loginMode, activeLocale, 'login-modal-face login-modal-face-front', !modalFlipping) }
             { modalFlipping
               ? this.renderModalFace(backLoginMode, backLocale, 'login-modal-face login-modal-face-back', false)

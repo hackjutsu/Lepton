@@ -9,7 +9,10 @@
   .modal {
     -webkit-user-select: none;
     -webkit-app-region: drag;
+    align-items: center;
     background: #808080;
+    display: flex !important;
+    justify-content: center;
     padding: 24px;
   }
 
@@ -25,12 +28,11 @@
   }
 
   .modal-content {
-    animation: login-modal-fade-in 180ms ease-out;
     background: transparent;
     border: 0;
     box-shadow: none;
-    height: 455px;
-    margin-top: clamp(0px, calc((100dvh - 503px) / 2), 76px);
+    height: auto;
+    margin-top: 0;
     max-height: calc(100dvh - 48px);
     opacity: 1;
     overflow: visible;
@@ -38,16 +40,10 @@
     transform: translateZ(0);
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
-    transition: opacity 180ms ease-in;
-  }
-
-  &.login-modal-gitlab .modal-content {
-    height: 500px;
-    margin-top: clamp(0px, calc((100dvh - 548px) / 2), 36px);
   }
 
   .login-modal-card {
-    height: 100%;
+    height: auto;
     position: relative;
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
@@ -72,11 +68,12 @@
     box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: auto;
     left: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    position: absolute;
+    max-height: calc(100dvh - 48px);
+    position: relative;
     top: 0;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
@@ -88,7 +85,12 @@
     transform: rotateY(0deg);
   }
 
+  &.login-modal-loading .login-modal-face-front {
+    height: 100%;
+  }
+
   .login-modal-face-back {
+    position: absolute;
     -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
   }
@@ -201,10 +203,12 @@
   }
 
   .profile-image-modal {
+    aspect-ratio: 1 / 1;
     width: 200px;
     height: auto;
-    max-width: calc(100% - 10px);
+    max-width: min(calc(100% - 10px), max(80px, calc(100dvh - 470px)));
     margin: 5px;
+    object-fit: contain;
   }
 
   .profile-image-modal-compact {
@@ -213,7 +217,7 @@
 
   .login-modal-body-content > a > svg {
     height: auto;
-    max-width: 100%;
+    max-width: min(100%, max(80px, calc(100dvh - 470px)));
   }
 
   .login-modal-body {
@@ -344,6 +348,23 @@
 
 }
 
+@media (max-height: 500px), (max-width: 400px) {
+  .login-modal .modal-dialog {
+    zoom: .65;
+  }
+
+  .login-modal .modal-content,
+  .login-modal .login-modal-face {
+    max-height: none;
+  }
+}
+
+@media (max-height: 300px), (max-width: 270px) {
+  .login-modal .modal-dialog {
+    zoom: .33;
+  }
+}
+
 @media (max-width: 400px) {
   .login-modal .login-provider-controls {
     grid-template-columns: minmax(0, 1fr);
@@ -361,16 +382,6 @@
 
   .login-modal .login-provider-error {
     grid-column: 1;
-  }
-}
-
-@keyframes login-modal-fade-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
   }
 }
 

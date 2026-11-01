@@ -29,7 +29,9 @@ const server = http.createServer((req, res) => {
       gist = { ...gist, description: patch.description, files }
       output = gist
     } else { res.writeHead(404); res.end(); return }
-    res.writeHead(200, { 'content-type': 'application/json', connection: 'close' }); res.end(JSON.stringify(output))
+    const send = () => { res.writeHead(200, { 'content-type': 'application/json', connection: 'close' }); res.end(JSON.stringify(output)) }
+    if (req.url === '/api/v3/user') setTimeout(send, 1000)
+    else send()
   })
 })
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
@@ -76,8 +78,18 @@ try {
   await waitFor('return !!document.querySelector(".login-modal-face-front form input")', 'enterprise token login')
   await run('const e=document.querySelector(".login-modal-face-front form input"); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,"bad-test-token"); e.dispatchEvent(new Event("input",{bubbles:true})); document.querySelector(".login-modal-face-front form").requestSubmit(); return true')
   await waitFor('return document.querySelector(".login-status-line-error")?.innerText.includes("Token invalid. Please try again.")', 'invalid token feedback')
+  const loginLayout = await run('const face=document.querySelector(".login-modal-face-front"); const status=face.querySelector(".login-status-line-error").getBoundingClientRect(); const bounds=face.getBoundingClientRect(); return {overflow:face.scrollHeight-face.clientHeight, scrollTop:face.scrollTop, statusVisible:status.top>=bounds.top && status.bottom<=bounds.bottom}')
+  assert.ok(loginLayout.overflow <= 1 && loginLayout.scrollTop === 0 && loginLayout.statusVisible, `Login error must be visible without scrolling: ${JSON.stringify(loginLayout)}`)
   assert.equal(await run('return !!document.querySelector(".login-status-line-error a")'), false, 'Invalid token should not show a log link')
+  const loginHeight = await run('return document.querySelector(".login-modal-card").getBoundingClientRect().height')
   await run('const e=document.querySelector(".login-modal-face-front form input"); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,"ui-test-token"); e.dispatchEvent(new Event("input",{bubbles:true})); document.querySelector(".login-modal-face-front form").requestSubmit(); return true')
+  await waitFor('return !!document.querySelector(".login-modal-loading .progress")', 'login loading state')
+  const loadingLayout = await run('const face=document.querySelector(".login-modal-face-front"); return {height:document.querySelector(".login-modal-card").getBoundingClientRect().height, overflow:face.scrollHeight-face.clientHeight}')
+  assert.ok(Math.abs(loadingLayout.height - loginHeight) <= 1 && loadingLayout.overflow <= 1, `Login card moved or clipped while loading: ${JSON.stringify({ loginHeight, loadingLayout })}`)
+  if (process.env.LEPTON_UI_LOADING_SCREENSHOT) {
+    const screenshot = await request(`/session/${session}/screenshot`)
+    fs.writeFileSync(process.env.LEPTON_UI_LOADING_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+  }
   await waitFor('return document.querySelector(".snippet-box")?.innerText.includes("Offline fixture")', 'mock GitHub account')
   await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Large fixture")).querySelector("div").click(); return true')
   await waitFor('return document.querySelector(".snippet-box [role=status]")?.innerText.includes("cannot be displayed or edited safely")', 'incomplete snippet warning')
