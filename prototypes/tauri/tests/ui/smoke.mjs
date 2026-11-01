@@ -57,9 +57,13 @@ async function testWindowAction (action) {
 }
 
 async function expectElement (selector, text = '') {
+  let driverTimeouts = 0
   for (let n = 0; n < 100; n++) {
-    const result = await run('const e=document.querySelector(arguments[0]); return !!e && (!arguments[1] || e.innerText.includes(arguments[1]))', selector, text)
-    if (result) return
+    try {
+      if (await run('const e=document.querySelector(arguments[0]); return !!e && (!arguments[1] || e.innerText.includes(arguments[1]))', selector, text)) return
+    } catch (error) {
+      if (!String(error).includes('Script execution timed out') || ++driverTimeouts > 2) throw error
+    }
     await new Promise(resolve => setTimeout(resolve, 100))
   }
   const diagnostic = await run('return {text:document.body.innerText.slice(0,600), errors:window.__smokeErrors || []}')
