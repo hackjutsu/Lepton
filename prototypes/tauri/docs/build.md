@@ -31,6 +31,11 @@ prerequisites apply, and the Windows and Linux builds and packaged apps still
 need successful verification. On Apple Silicon macOS, the frontend build, Rust
 unit tests, native UI tests, and app bundle command above have been run locally.
 
+The Tauri prototype workflow builds a release bundle on each supported host:
+an app bundle on macOS, a Debian package on Linux, and an NSIS installer on
+Windows. It uses the Rust lockfile and runs separately from the existing Rust
+unit and native UI checks. It does not sign, publish, or run the packaged apps.
+
 `npm run test:ui` builds a test-only WebDriver-enabled app and exercises its
 native WebView with isolated fixture data and a disposable local provider. It
 launches one window and removes its temporary database. Set

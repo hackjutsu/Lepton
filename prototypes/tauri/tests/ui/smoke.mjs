@@ -57,9 +57,13 @@ async function testWindowAction (action) {
 }
 
 async function expectElement (selector, text = '') {
+  let driverTimeouts = 0
   for (let n = 0; n < 100; n++) {
-    const result = await run('const e=document.querySelector(arguments[0]); return !!e && (!arguments[1] || e.innerText.includes(arguments[1]))', selector, text)
-    if (result) return
+    try {
+      if (await run('const e=document.querySelector(arguments[0]); return !!e && (!arguments[1] || e.innerText.includes(arguments[1]))', selector, text)) return
+    } catch (error) {
+      if (!String(error).includes('Script execution timed out') || ++driverTimeouts > 2) throw error
+    }
     await new Promise(resolve => setTimeout(resolve, 100))
   }
   const diagnostic = await run('return {text:document.body.innerText.slice(0,600), errors:window.__smokeErrors || []}')
@@ -80,7 +84,12 @@ try {
     try { await request('/status'); ready = true; break } catch { await new Promise(resolve => setTimeout(resolve, 200)) }
   }
   if (!ready) throw new Error(`WebDriver did not start: ${output}`)
-  session = (await request('/session', { capabilities: { alwaysMatch: {} } })).sessionId
+  for (const deadline = Date.now() + 30000; !session;) {
+    try { session = (await request('/session', { capabilities: { alwaysMatch: {} } })).sessionId; break } catch (error) {
+      if (app.exitCode !== null || !String(error).includes('No window could be found') || Date.now() >= deadline) throw error
+      await new Promise(resolve => setTimeout(resolve, 200))
+    }
+  }
   try { await expectElement('.active-layout .snippet-box', 'React 19 render fixture') } catch (error) {
     const diagnostic = await run('return document.body.innerText.slice(0,1000)')
     throw new Error(`${error.message}; startup text: ${diagnostic}`)
