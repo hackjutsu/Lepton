@@ -12,12 +12,17 @@ const incomplete = { id: 'abc124', description: '[Large fixture] #test', public:
 const detailRequests = []
 const brief = value => ({ ...value, files: Object.fromEntries(Object.entries(value.files).map(([name, file]) => [name, Object.fromEntries(Object.entries(file).filter(([key]) => key !== 'content'))])) })
 const server = http.createServer((req, res) => {
+  if (req.url === '/avatar.png') {
+    const image = fs.readFileSync(path.resolve('../../build/icon/icon.png'))
+    setTimeout(() => { res.writeHead(200, { 'content-type': 'image/png', 'content-length': image.length }); res.end(image) }, 300)
+    return
+  }
   if (req.headers.authorization !== 'Bearer ui-test-token') { res.writeHead(401); res.end(); return }
   let body = ''
   req.on('data', chunk => { body += chunk })
   req.on('end', () => {
     let output
-    if (req.method === 'GET' && req.url === '/api/v3/user') output = { login: 'fixture-user', html_url: 'https://example.test/user' }
+    if (req.method === 'GET' && req.url === '/api/v3/user') output = { login: 'fixture-user', html_url: 'https://example.test/user', avatar_url: `${base}/avatar.png` }
     else if (req.method === 'GET' && req.url.startsWith('/api/v3/gists?')) output = [brief(gist), brief(incomplete)]
     else if (req.method === 'GET' && req.url === '/api/v3/gists/abc123') { detailRequests.push('abc123'); output = gist }
     else if (req.method === 'GET' && req.url === '/api/v3/gists/abc124') { detailRequests.push('abc124'); output = incomplete }
@@ -38,7 +43,7 @@ const server = http.createServer((req, res) => {
 })
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
 const base = `http://127.0.0.1:${server.address().port}`
-fs.writeFileSync(path.join(directory, '.leptonrc'), JSON.stringify({ enterprise: { enable: true, host: base }, provider: { type: 'github' } }))
+fs.writeFileSync(path.join(directory, '.leptonrc'), JSON.stringify({ enterprise: { enable: true, host: base, avatarUrl: `${base}/avatar.png` }, provider: { type: 'github' } }))
 const listener = net.createServer()
 await new Promise(resolve => listener.listen(0, '127.0.0.1', resolve))
 const port = listener.address().port
@@ -93,6 +98,9 @@ try {
     fs.writeFileSync(process.env.LEPTON_UI_LOADING_SCREENSHOT, Buffer.from(screenshot, 'base64'))
   }
   await waitFor('return document.querySelector(".snippet-box")?.innerText.includes("Offline fixture")', 'mock GitHub account')
+  await waitFor('const image=document.querySelector(".profile-image-section"); return image?.complete && image.naturalWidth>0 && image.src.endsWith("/avatar.png")', 'remote profile image')
+  const sidebar = await run('return [...document.querySelectorAll(".user-panel-button")].map(button=>{const icon=button.querySelector("svg").getBoundingClientRect(); const label=button.querySelector("span").getBoundingClientRect(); const avatar=document.querySelector(".profile-image-section").getBoundingClientRect(); return {iconTop:icon.top, iconBottom:icon.bottom, labelTop:label.top, labelBottom:label.bottom, avatarBottom:avatar.bottom}})')
+  assert.ok(sidebar.every(item => item.iconTop >= item.avatarBottom - 1 && item.iconBottom > item.labelTop && item.iconTop < item.labelBottom), `Sidebar icons must stay beside their labels below the avatar: ${JSON.stringify(sidebar)}`)
   assert.deepEqual(detailRequests, ['abc123'], 'Default sync should fetch only the selected snippet')
   await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Large fixture")).querySelector("div").click(); return true')
   await waitFor('return document.querySelector(".snippet-box [role=status]")?.innerText.includes("cannot be displayed or edited safely")', 'incomplete snippet warning')

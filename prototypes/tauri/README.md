@@ -4,24 +4,8 @@ This prototype runs Lepton's existing React interface in Tauri, with Rust-backed
 SQLite storage and GitHub and GitLab connections. It is not yet a
 complete replacement for the Electron application.
 
-## Build
-
-Install Node.js 24, Rust stable, and the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/).
-The frontend build also uses dependencies from the repository root:
-
-```sh
-npm ci
-cd prototypes/tauri
-npm ci
-npm run build
-npm test
-npm start
-```
-
-`npm run package` builds platform bundles on the host operating system. The
-configuration supports macOS, Windows, and Linux; platform prerequisites and
-build tooling are required. The automated cross-platform workflow has not yet
-established that every target works in practice.
+Build, packaging, and test instructions are in [docs/build.md](docs/build.md).
+The Electron application remains the main version in this repository.
 
 ## Libraries and accounts
 
@@ -83,18 +67,8 @@ shortcuts do not change the saved default zoom preference.
 
 ## Tests and verification
 
-`npm test` runs Rust unit tests. From the repository root, `npm run test:unit`
-runs the shared frontend tests. `npm run test:ui` in this directory builds a
-test-only WebDriver-enabled app and exercises the native WebView with isolated
-fixture data. It launches one window, removes its temporary database, and can
-write a screenshot to `LEPTON_UI_SCREENSHOT`. Set `LEPTON_TEST_GITHUB_TOKEN` to
-also test a live token connection and profile image (the token is never passed
-to the app as an environment variable). WebDriver is excluded from normal
-builds. The GitHub Actions workflow runs the UI checks on macOS, Windows, and
-Linux; results on the latter two platforms are pending.
-The UI suite also uses a disposable local provider to verify invalid-token
-feedback, a saved edit, a Markdown task toggle, and cached offline startup.
-See [the parity audit](docs/parity-audit.md) for remaining gaps.
+See [build and test instructions](docs/build.md) and [the parity audit](docs/parity-audit.md)
+for verification and remaining gaps.
 
 On Apple Silicon, the original Lepton layout and avatar rendered in the native
 window, and fixture checks covered editors, filters, search, dashboard,
