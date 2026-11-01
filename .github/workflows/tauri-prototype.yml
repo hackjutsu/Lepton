@@ -5,21 +5,69 @@ on:
   pull_request:
     paths:
       - 'app/**'
+      - 'build/icon/**'
       - 'configs/**'
       - 'prototypes/tauri/**'
+      - '.all-contributorsrc'
+      - '.nvmrc'
+      - 'license.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'webpack.config.js'
       - '.github/workflows/tauri-prototype.yml'
   push:
     branches: [master]
     paths:
       - 'app/**'
+      - 'build/icon/**'
       - 'configs/**'
       - 'prototypes/tauri/**'
+      - '.all-contributorsrc'
+      - '.nvmrc'
+      - 'license.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'webpack.config.js'
       - '.github/workflows/tauri-prototype.yml'
 
 permissions:
   contents: read
 
 jobs:
+  release-build:
+    name: Release bundle (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            bundle: deb
+          - os: macos-latest
+            bundle: app
+          - os: windows-latest
+            bundle: nsis
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    env:
+      CARGO_TERM_COLOR: never
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev pkg-config patchelf
+      - run: npm ci
+      - run: npm ci
+        working-directory: prototypes/tauri
+      - name: Build release bundle
+        run: npm run package -- --bundles ${{ matrix.bundle }} -- --locked
+        working-directory: prototypes/tauri
+
   ui:
     strategy:
       fail-fast: false
