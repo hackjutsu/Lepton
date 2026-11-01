@@ -2,11 +2,15 @@ const assert = require('node:assert/strict')
 const { spawnSync } = require('node:child_process')
 const { randomUUID } = require('node:crypto')
 const net = require('node:net')
+const fs = require('node:fs')
+const os = require('node:os')
+const path = require('node:path')
 const { verifyGitLabApi } = require('./gitlab-api-live')
 
 const container = `lepton-gitlab-test-${randomUUID()}`
 const image = process.env.LEPTON_GITLAB_TEST_IMAGE || 'gitlab/gitlab-ce:latest'
 let started = false
+let uiCredentialDirectory = null
 
 function docker (args, input) {
   const result = spawnSync('docker', args, { encoding: 'utf8', input, timeout: 300000, maxBuffer: 8 * 1024 * 1024 })
@@ -18,6 +22,10 @@ function docker (args, input) {
 }
 
 function cleanup () {
+  if (uiCredentialDirectory) {
+    fs.rmSync(uiCredentialDirectory, { recursive: true, force: true })
+    uiCredentialDirectory = null
+  }
   if (!started) return
   docker(['rm', '--force', '--volumes', container])
   started = false
@@ -85,6 +93,37 @@ puts token.token
     assert.ok(token, 'GitLab did not generate a test token')
     await verifyGitLabApi({ baseUrl, token })
     console.log('Live GitLab API verification passed')
+    if (process.argv.includes('--rust')) {
+      const rust = spawnSync('cargo', [
+        'test', '--offline', '--manifest-path', 'prototypes/tauri/src-tauri/Cargo.toml',
+        'live_personal_snippet_round_trip', '--', '--ignored'
+      ], {
+        env: { ...process.env, LEPTON_TEST_GITLAB_URL: baseUrl, LEPTON_TEST_GITLAB_TOKEN: token },
+        stdio: 'inherit',
+        timeout: 300000
+      })
+      assert.equal(rust.status, 0, 'Rust GitLab transport verification failed')
+      console.log('Rust GitLab transport verification passed')
+    }
+    if (process.argv.includes('--tauri-hold')) {
+      const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-gitlab-ui-'))
+      uiCredentialDirectory = directory
+      const tokenPath = path.join(directory, 'test-token')
+      const donePath = path.join(directory, 'done')
+      try {
+        fs.writeFileSync(tokenPath, token, { mode: 0o600 })
+        console.log(`Temporary UI test credential file: ${tokenPath}`)
+        console.log(`GitLab UI test URL: ${baseUrl}`)
+        const end = Date.now() + 5 * 60 * 1000
+        while (!fs.existsSync(donePath) && Date.now() < end) {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+        assert.ok(fs.existsSync(donePath), 'Tauri GitLab UI test did not finish in time')
+      } finally {
+        fs.rmSync(directory, { recursive: true, force: true })
+        uiCredentialDirectory = null
+      }
+    }
     if (process.argv.includes('--ui')) {
       await require('./gitlab-ui')({ baseUrl, token })
     }

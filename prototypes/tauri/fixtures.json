@@ -1,0 +1,44 @@
+[
+  {
+    "id": "rust-read",
+    "title": "Read a file, handle the unexpected",
+    "filename": "read_file.rs",
+    "tags": ["rust", "files"],
+    "content": "use std::fs;\nuse std::io;\n\nfn read_notes(path: &str) -> io::Result<String> {\n    let content = fs::read_to_string(path)?;\n    Ok(content.trim().to_owned())\n}\n\nfn main() -> io::Result<()> {\n    let notes = read_notes(\"notes.txt\")?;\n    println!(\"{notes}\");\n    Ok(())\n}\n"
+  },
+  {
+    "id": "js-debounce",
+    "title": "A small debounce helper",
+    "filename": "debounce.js",
+    "tags": ["javascript", "utilities"],
+    "content": "export function debounce(callback, delay = 250) {\n  let timer\n\n  return (...args) => {\n    clearTimeout(timer)\n    timer = setTimeout(() => callback(...args), delay)\n  }\n}\n"
+  },
+  {
+    "id": "python-chunks",
+    "title": "Split a collection into chunks",
+    "filename": "chunks.py",
+    "tags": ["python", "collections"],
+    "content": "def chunks(items, size):\n    \"\"\"Yield small batches from a collection.\"\"\"\n    if size <= 0:\n        raise ValueError(\"size must be positive\")\n\n    for start in range(0, len(items), size):\n        yield items[start:start + size]\n\n\nfor batch in chunks(list(range(12)), 4):\n    print(batch)\n"
+  },
+  {
+    "id": "sql-recent",
+    "title": "Find recently updated snippets",
+    "filename": "recent.sql",
+    "tags": ["sql", "queries"],
+    "content": "SELECT title, language, updated_at\nFROM snippets\nWHERE updated_at >= CURRENT_DATE - INTERVAL '7 days'\nORDER BY updated_at DESC\nLIMIT 20;\n"
+  },
+  {
+    "id": "shell-port",
+    "title": "See what is listening on a port",
+    "filename": "port.sh",
+    "tags": ["shell", "development"],
+    "content": "# Find the process listening on the development port.\nlsof -nP -iTCP:1420 -sTCP:LISTEN\n"
+  },
+  {
+    "id": "markdown-notes",
+    "title": "A place for the useful little things",
+    "filename": "welcome.md",
+    "tags": ["notes", "lepton"],
+    "content": "# Your local snippet library\n\nThis prototype keeps snippets on this computer.\n\n- Search titles, filenames, tags, and code.\n- Edit a snippet and save it to disk.\n- Close and reopen the app to keep working.\n\nGitHub sync and rich previews are future milestones.\n"
+  }
+]

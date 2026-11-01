@@ -149,16 +149,18 @@ class Snippet extends Component {
 
   showGistEditorModal () {
     const { gists, activeGist, updateGistEditModeStatus } = this.props
-    if (gists && gists[activeGist] && gists[activeGist].details) {
+    if (gists && gists[activeGist] && gists[activeGist].details && !gists[activeGist].details._leptonUnavailable) {
       updateGistEditModeStatus('ON')
     }
   }
 
   closeGistEditorModal () {
+    if (this.localEditSaving) return
     this.props.updateGistEditModeStatus('OFF')
   }
 
   handleGistEditorFormSubmit (data) {
+    if (this.localEditSaving) return Promise.resolve()
     const { gists, activeGist, accessToken } = this.props
     const sessionGeneration = getSessionGeneration()
     const description = data.description.trim()
@@ -171,7 +173,9 @@ class Snippet extends Component {
     // language tag and the active gist are likely be the same as before.
     // Therefore, we decide the close the dialog without waiting for the server’s
     // response, which provides better user experience.
-    this.closeGistEditorModal()
+    const waitForLocalSave = electronBridge.isLocalPrototype === true
+    if (waitForLocalSave) this.localEditSaving = true
+    else this.closeGistEditorModal()
 
     return getSnippetApi(EDIT_SINGLE_GIST)(
       accessToken,
@@ -181,12 +185,21 @@ class Snippet extends Component {
       .then((response) => {
         if (!isSessionGenerationCurrent(sessionGeneration)) return
         this.updateGistsStoreWithUpdatedGist(response)
+        if (waitForLocalSave) {
+          this.localEditSaving = false
+          this.closeGistEditorModal()
+        }
       })
       .catch((err) => {
         if (!isSessionGenerationCurrent(sessionGeneration)) return
-        notifyFailure(t('notification.gistUpdateFailed'))
+        if (waitForLocalSave) {
+          electronBridge.dialog.showMessage({ message: `${t('notification.gistUpdateFailed')}\n${err.message || err}` })
+        } else {
+          notifyFailure(t('notification.gistUpdateFailed'))
+        }
         logger.error(JSON.stringify(err))
       })
+      .finally(() => { this.localEditSaving = false })
   }
 
   handleMarkdownTaskListItemToggle (activeSnippet, gistFile, taskIndex, checked) {
@@ -384,7 +397,12 @@ class Snippet extends Component {
   }
 
   handleCopyGistFileClicked (gist) {
-    clipboard.writeText(gist.content)
+    const result = clipboard.writeText(gist.content)
+    if (electronBridge.isLocalPrototype === true) {
+      return Promise.resolve(result)
+        .then(() => notifySuccess(t('notification.copied'), t('notification.contentCopied')))
+        .catch(err => electronBridge.dialog.showMessage({ message: `Could not copy: ${err.message || err}` }))
+    }
     notifySuccess(t('notification.copied'), t('notification.contentCopied'))
   }
 
@@ -460,12 +478,12 @@ class Snippet extends Component {
             }
           </div>
           <div className='header-controls'>
-            <a className='snippet-control'
+            { !activeSnippet.details?._leptonUnavailable && <a className='snippet-control'
               title={ t('snippet.edit') }
               href='#'
               onClick={ this.showGistEditorModal.bind(this) }>
               <div dangerouslySetInnerHTML={{ __html: editIcon }} />
-            </a>
+            </a> }
             <a className='snippet-control'
               title={ t('snippet.openInWeb') }
               href={ activeSnippet.brief.html_url }>
@@ -607,7 +625,7 @@ class Snippet extends Component {
 
     const fileHtmlArray = []
     const fileArray = []
-    if (activeSnippet.details) {
+    if (activeSnippet.details && !activeSnippet.details._leptonUnavailable) {
       const fileList = activeSnippet.details.files
       for (const key in fileList) {
         const gistFile = fileList[key]
@@ -629,7 +647,6 @@ class Snippet extends Component {
             key={ key }
             data-gist-filename={ key }
             ref={ node => this.setFileNode(key, node) }>
-            <hr/>
             <div className={ gistFile.language === 'Markdown' ? 'file-header-md' : 'file-header' }>
               <a href='#'
                 className={isExpanded ? 'file-expand is-expanded' : 'file-expand'}
@@ -689,6 +706,9 @@ class Snippet extends Component {
           <Panel.Heading>{ this.renderPanelHeader(activeSnippet) }</Panel.Heading>
           <Panel.Body>
             <div className='snippet-description'>{ this.renderSnippetDescription(activeSnippet) }</div>
+            { activeSnippet.details?._leptonUnavailable
+              ? <div className='alert alert-warning' role='status'>{ activeSnippet.details._leptonUnavailable }</div>
+              : null }
             { activeSnippet.details
               ? null
               : <ProgressBar className='snippet-progressbar' active now={ 100 }/> }

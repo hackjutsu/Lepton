@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import ConnectedSnippet from '../../app/containers/snippet'
 import { createDefaultGistFilters } from '../../app/utilities/gistFilters'
+import electronBridge from '../../app/utilities/electronBridge'
 
 const mocks = vi.hoisted(() => ({
   getSnippetApi: vi.fn(),
@@ -14,6 +15,7 @@ vi.mock('../../app/utilities/electronBridge', () => ({
     clipboard: {
       writeText: vi.fn()
     },
+    dialog: { showMessage: vi.fn() },
     config: {
       get: () => false
     },
@@ -54,7 +56,51 @@ const Snippet = ConnectedSnippet.WrappedComponent
 describe('Snippet markdown task toggles', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    electronBridge.isLocalPrototype = false
     mocks.getSnippetApi.mockReturnValue(mocks.requestEdit)
+  })
+
+  it('keeps local edits open on a failed save and closes only after a successful retry', async () => {
+    electronBridge.isLocalPrototype = true
+    const details = { id: '42', description: 'Before', files: { 'a.js': { content: 'old' } } }
+    const close = vi.fn()
+    const snippet = new Snippet({
+      accessToken: 'local', activeGist: '42',
+      gists: { 42: { brief: details, details } },
+      updateGistEditModeStatus: close
+    })
+    snippet.updateGistsStoreWithUpdatedGist = vi.fn()
+    const draft = { description: 'After', gistFiles: [{ filename: 'a.js', content: 'new' }] }
+    let rejectSave
+    mocks.requestEdit.mockReturnValueOnce(new Promise((resolve, reject) => { rejectSave = reject }))
+    const first = snippet.handleGistEditorFormSubmit(draft)
+    snippet.closeGistEditorModal()
+    await snippet.handleGistEditorFormSubmit(draft)
+    expect(mocks.requestEdit).toHaveBeenCalledTimes(1)
+    expect(close).not.toHaveBeenCalled()
+    rejectSave(new Error('Disk full'))
+    await first
+    expect(close).not.toHaveBeenCalled()
+    expect(electronBridge.dialog.showMessage).toHaveBeenCalledWith(expect.objectContaining({ message: expect.stringContaining('Disk full') }))
+    mocks.requestEdit.mockResolvedValueOnce(details)
+    await snippet.handleGistEditorFormSubmit(draft)
+    expect(close).toHaveBeenCalledWith('OFF')
+    expect(snippet.updateGistsStoreWithUpdatedGist).toHaveBeenCalledWith(details)
+  })
+
+  it('reports local clipboard success only after the write and exposes errors', async () => {
+    electronBridge.isLocalPrototype = true
+    const snippet = new Snippet({})
+    let finish
+    electronBridge.clipboard.writeText.mockReturnValueOnce(new Promise(resolve => { finish = resolve }))
+    const copy = snippet.handleCopyGistFileClicked({ content: 'text' })
+    expect(mocks.notifySuccess).not.toHaveBeenCalled()
+    finish()
+    await copy
+    expect(mocks.notifySuccess).toHaveBeenCalledOnce()
+    electronBridge.clipboard.writeText.mockRejectedValueOnce(new Error('Clipboard unavailable'))
+    await snippet.handleCopyGistFileClicked({ content: 'text' })
+    expect(electronBridge.dialog.showMessage).toHaveBeenCalledWith(expect.objectContaining({ message: expect.stringContaining('Clipboard unavailable') }))
   })
 
   it('keeps untouched GitLab file contents after a partial task update', async () => {

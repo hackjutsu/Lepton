@@ -102,10 +102,20 @@ div > div.modal-header > button {
 
 .split-pane-divider.horizontal {
   width: 2px;
+  height: 100%;
+  opacity: 1;
   margin: 0 -2px;
   border-left: 2px solid rgba(0, 0, 0, 0);
   border-right: 2px solid rgba(0, 0, 0, 0);
   cursor: col-resize;
+}
+
+.split-pane-divider.horizontal::after {
+  background: var(--border-color);
+  content: '';
+  display: block;
+  height: 100%;
+  width: 1px;
 }
 
 .split-pane-divider.horizontal:hover {

@@ -1,0 +1,13 @@
+/* Local-only libraries have no remote links. */
+body[data-provider='local'] .starred-tag-section {
+  display: none !important;
+}
+body[data-provider='local'] .header-controls .snippet-control:nth-child(2),
+body[data-provider='local'] .header-controls .snippet-control:nth-last-child(2),
+body[data-provider='local'] .file-header-controls .file-header-control:first-child,
+body[data-provider='local'] .copy-raw-link { display: none !important; }
+body[data-provider='local'] .header-title > * { display: none !important; }
+body[data-provider='local'] .gist-editor-privacy-checkbox { display: none !important; }
+
+/* Keep each icon and label together below the floated profile image in WebKit. */
+.user-panel .user-panel-button { display: inline-block; }

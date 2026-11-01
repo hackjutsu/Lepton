@@ -233,6 +233,8 @@ class CodeMirrorEditor extends Component {
 class GistEditor extends Component {
   constructor (props) {
     super(props)
+    this.state = { theme: getEditorTheme(conf.get('theme')) }
+    this.handleThemeChange = event => this.setState({ theme: getEditorTheme(event.detail) })
     this.handleImageDrop = this.handleImageDrop.bind(this)
     this.handleImagePaste = this.handleImagePaste.bind(this)
   }
@@ -240,6 +242,7 @@ class GistEditor extends Component {
   componentDidMount () {
     const { filename } = this.props
 
+    document.addEventListener('lepton:theme-change', this.handleThemeChange)
     this.CodeMirror = this.editor.getCodeMirrorInstance()
     this.setMode(filename)
     this.editor.getCodeMirror().on('drop', this.handleImageDrop)
@@ -255,6 +258,7 @@ class GistEditor extends Component {
   }
 
   componentWillUnmount () {
+    document.removeEventListener('lepton:theme-change', this.handleThemeChange)
     if (!this.editor) return
     const codeMirror = this.editor.getCodeMirror()
     if (!codeMirror) return
@@ -308,6 +312,7 @@ class GistEditor extends Component {
   render () {
     const { value, placeholder, readOnly } = this.props
     const options = Object.assign({}, defaultOptions, {
+      theme: this.state.theme,
       placeholder,
       readOnly: Boolean(readOnly)
     })
