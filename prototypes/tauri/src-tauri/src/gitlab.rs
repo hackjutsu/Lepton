@@ -163,8 +163,22 @@ impl GitLab {
                 .ok_or("Invalid file content")?;
             records.push(json!({"file_path":path,"content":content}));
         }
-        let created = self.json(Method::POST, self.url(&["snippets"])?, Some(json!({"title":title,"description":description,"visibility":if public {"public"} else {"private"},"files":records}))).await?;
-        self.get(&id_of(&created)?).await
+        let response = self.response(Method::POST, self.url(&["snippets"])?, Some(json!({"title":title,"description":description,"visibility":if public {"public"} else {"private"},"files":records}))).await?;
+        let created: Value = response
+            .json()
+            .await
+            .map_err(|_| "GitLab may have created the snippet. Sync before retrying.")?;
+        let id = id_of(&created)
+            .map_err(|_| "GitLab may have created the snippet. Sync before retrying.")?;
+        match self.get(&id).await {
+            Ok(snippet) => Ok(snippet),
+            Err(_) => saved_fallback(
+                normalize(created, &Map::new()),
+                &title,
+                &description,
+                &Value::Object(files.clone()),
+            ),
+        }
     }
     pub async fn update(
         &self,
@@ -172,9 +186,12 @@ impl GitLab {
         description: &str,
         patch: &Value,
     ) -> Result<Value, String> {
-        let existing = self.metadata(id).await?;
+        let existing = self.get(id).await?;
         let files = patch.as_object().ok_or("Invalid files")?;
-        let current = descriptors(&existing);
+        let current = existing
+            .get("files")
+            .and_then(Value::as_object)
+            .ok_or("Invalid GitLab response")?;
         let first = files
             .iter()
             .find(|(_, v)| !v.is_null())
@@ -187,7 +204,7 @@ impl GitLab {
         );
         let mut actions = Vec::new();
         for (path, file) in files {
-            let exists = current.iter().any(|(name, _)| name == path);
+            let exists = current.contains_key(path);
             if file.is_null() {
                 if exists {
                     actions.push(json!({"action":"delete","file_path":path}));
@@ -204,9 +221,13 @@ impl GitLab {
         if !actions.is_empty() {
             body["files"] = json!(actions);
         }
-        self.json(Method::PUT, self.url(&["snippets", id])?, Some(body))
+        let fallback = saved_fallback(existing, &title, &description, patch)?;
+        self.response(Method::PUT, self.url(&["snippets", id])?, Some(body))
             .await?;
-        self.get(id).await
+        match self.get(id).await {
+            Ok(snippet) => Ok(snippet),
+            Err(_) => Ok(fallback),
+        }
     }
     pub async fn delete(&self, id: &str) -> Result<(), String> {
         valid_id(id)?;
@@ -214,6 +235,42 @@ impl GitLab {
             .await?;
         Ok(())
     }
+}
+fn saved_fallback(
+    mut snippet: Value,
+    title: &str,
+    description: &str,
+    patch: &Value,
+) -> Result<Value, String> {
+    let root = snippet.as_object_mut().ok_or("Invalid GitLab response")?;
+    root.insert("title".into(), json!(title));
+    root.insert("providerTitle".into(), json!(title));
+    root.insert("providerDescription".into(), json!(description));
+    root.insert(
+        "description".into(),
+        json!(format!("[{title}] {description}").trim()),
+    );
+    root.insert("_leptonRefreshPending".into(), json!(true));
+    let files = root
+        .get_mut("files")
+        .and_then(Value::as_object_mut)
+        .ok_or("Invalid GitLab response")?;
+    for (path, entry) in patch.as_object().ok_or("Invalid files")? {
+        if entry.is_null() {
+            files.shift_remove(path);
+        } else {
+            let content = entry
+                .get("content")
+                .and_then(Value::as_str)
+                .ok_or("Invalid file content")?;
+            let file = files.entry(path.clone()).or_insert_with(|| json!({"filename":path,"raw_url":"","language":crate::local_gists::language(path)}));
+            file["content"] = json!(content);
+        }
+    }
+    if files.is_empty() {
+        return Err("A snippet must contain a file".into());
+    }
+    Ok(snippet)
 }
 fn valid_id(id: &str) -> Result<(), String> {
     if id.is_empty() || !id.bytes().all(|c| c.is_ascii_digit()) {
@@ -355,6 +412,77 @@ fn normalize(mut snippet: Value, contents: &Map<String, Value>) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn confirmed_saves_survive_refresh_failures() {
+        use std::{
+            io::{Read, Write},
+            net::TcpListener,
+            thread,
+            time::Duration,
+        };
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = thread::spawn(move || {
+            for (method, path, status, body) in [
+                (
+                    "POST",
+                    "/api/v4/snippets",
+                    "201 Created",
+                    r#"{"id":42,"title":"new","description":"tag","visibility":"private","files":[]}"#,
+                ),
+                ("GET", "/api/v4/snippets/42", "503 Service Unavailable", ""),
+                (
+                    "GET",
+                    "/api/v4/snippets/42",
+                    "200 OK",
+                    r#"{"id":42,"title":"new","description":"tag","visibility":"private","file_name":"old.txt"}"#,
+                ),
+                ("GET", "/api/v4/snippets/42/raw", "200 OK", "old content"),
+                ("PUT", "/api/v4/snippets/42", "200 OK", "{}"),
+                ("GET", "/api/v4/snippets/42", "503 Service Unavailable", ""),
+            ] {
+                let (mut connection, _) = listener.accept().unwrap();
+                connection
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut input = [0; 8192];
+                let size = connection.read(&mut input).unwrap();
+                assert!(String::from_utf8_lossy(&input[..size])
+                    .starts_with(&format!("{method} {path} ")));
+                write!(
+                    connection,
+                    "HTTP/1.1 {status}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                )
+                .unwrap();
+            }
+        });
+        tauri::async_runtime::block_on(async {
+            let api = GitLab::new(&format!("http://{address}"), "test-token".into()).unwrap();
+            let created = api
+                .create(
+                    "[new] tag",
+                    &json!({"new.txt":{"content":"created"}}),
+                    false,
+                )
+                .await
+                .unwrap();
+            assert_eq!(created["files"]["new.txt"]["content"], "created");
+            assert_eq!(created["_leptonRefreshPending"], true);
+            let updated = api
+                .update(
+                    "42",
+                    "[new] changed",
+                    &json!({"new.txt":{"content":"edited"}}),
+                )
+                .await
+                .unwrap();
+            assert_eq!(updated["files"]["old.txt"]["content"], "old content");
+            assert_eq!(updated["files"]["new.txt"]["content"], "edited");
+            assert_eq!(updated["_leptonRefreshPending"], true);
+        });
+        server.join().unwrap();
+    }
     #[test]
     fn rejects_unsafe_urls_and_id() {
         assert!(GitLab::new("https://u:p@example.com", "token".into()).is_err());

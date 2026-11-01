@@ -25,9 +25,9 @@ screen does show the original remote controls.
   file order, including after deleting a file.
 - Sized the sidebar SVG icons explicitly so WebKit displays them as in Electron;
   both native apps were rendered with fixtures after the change.
-- GitHub writes return a safely reconstructed result when the server confirms a
-  save but its subsequent refresh fails. A mock-provider test covers create and
-  edit in that condition.
+- GitHub and GitLab writes return a safely reconstructed result when the server
+  confirms a save but its subsequent refresh fails. Mock-provider tests cover
+  create and edit in that condition.
 
 The original Electron smoke suite passed its fixtures, including login progress,
 login errors, editor draft, image-attachment, and exit cases. The Rust UI suite
@@ -60,8 +60,7 @@ fixture test checks that both suites use identical snippet payloads.
   verifies provider routing, and HTTP/SOCKS proxy URLs are accepted. PAC and
   multi-rule proxies, updates, window/tray behavior, and other preference
   behavior remain incomplete.
-- GitLab still needs the same post-save refresh recovery as GitHub, and a
-  request interrupted before the server responds can leave a save outcome
+- A request interrupted before the server responds can leave a save outcome
   uncertain for either provider.
 - Login expiry and additional failure states, image insertion and attachment limits, file
   dialogs, notifications, OS menu/shortcut behavior,
