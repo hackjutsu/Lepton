@@ -2,7 +2,8 @@ import './bridge'
 import './local.css'
 import localAvatar from '../../../app/utilities/octodex/dojocat.webp?inline'
 import React from 'react'
-import { session, requestProvider } from './session'
+import HumanReadableTime from 'human-readable-time'
+import { session, requestProvider, githubStarredUrl } from './session'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
@@ -20,7 +21,7 @@ import { advanceSessionGeneration } from '../../../app/utilities/sessionGenerati
 import { getRenderFixture } from '../../../app/renderFixtures'
 import { addLangPrefix, descriptionParser, parseCustomTags } from '../../../app/utilities/parser'
 import { createDefaultGistFilters, getActiveGistIdForFilters } from '../../../app/utilities/gistFilters'
-import { updateAboutModalStatus, updateDashboardModalStatus, updateGists, updateGistTags, updateGistFilters, selectGist, updateSearchWindowStatus, updateImmersiveModeStatus, updateUserSession, updateAccessToken, updatePinnedTags, updateLoginStatus } from '../../../app/actions'
+import { updateAboutModalStatus, updateDashboardModalStatus, updateGists, updateGistTags, updateGistFilters, selectGist, updateSearchWindowStatus, updateImmersiveModeStatus, updateUserSession, updateAccessToken, updatePinnedTags, updateLoginStatus, updateSyncTime } from '../../../app/actions'
 
 configureI18n(window.lepton.config.get('i18n:locale'))
 const localPref = new Store({ configName: 'user-preferences', defaults: {} })
@@ -40,15 +41,18 @@ const cached = { profile: null, token: null, provider }
 const fixture = getRenderFixture('active')
 const store = createStore(RootReducer, { ...fixture.state, gists: {}, gistTags: {}, activeGist: null, pinnedTags: localPref.get('local')?.pinnedTags || [], userSession: { activeStatus: 'ACTIVE', profile }, accessToken: 'local' }, applyMiddleware(thunk))
 
-async function loadSnippets (target) {
+async function loadSnippets (target, progress = () => {}) {
   if (target.mode === 'local') return invoke('local_gist_request', { operation: 'GET_ALL_GISTS', args: [] })
+  progress('Syncing snippet index...')
   const list = await requestProvider(invoke, 'GET_ALL_GISTS', [], target)
   const results = new Array(list.length)
   let next = 0
+  let downloaded = 0
   async function worker () {
     while (next < list.length) {
       const index = next++
       results[index] = await requestProvider(invoke, 'GET_SINGLE_GIST', ['', list[index].id], target)
+      progress(`Downloading snippets (${++downloaded}/${list.length})`)
     }
   }
   await Promise.all(Array.from({ length: Math.min(5, list.length) }, worker))
@@ -78,19 +82,21 @@ async function reload () {
   const snippets = await loadSnippets(current)
   if (current.mode !== session.mode || current.base !== session.base || current.token !== session.token) return
   applySnippets(snippets, current.mode === 'local')
+  store.dispatch(updateSyncTime(HumanReadableTime(new Date())))
 }
 function canSwitch () {
   const state = store.getState()
   if (state.gistEditModalStatus === 'ON' || state.gistNewModalStatus === 'ON') throw new Error('Close the snippet editor before switching libraries.')
 }
-async function switchProvider (target) {
+async function switchProvider (target, progress = () => {}) {
   canSwitch()
   let account = profile
   if (target.mode !== 'local') {
+    progress('Loading profile...')
     const user = await requestProvider(invoke, 'GET_USER_PROFILE', [], target)
-    account = { ...user, login: user.username || user.login, html_url: user.web_url || user.html_url, avatar_url: profileAvatar(user.avatar_url), storageKey: `${target.mode}:${target.base}:${user.username || user.login}`, providerType: target.mode }
+    account = { ...user, login: user.username || user.login, html_url: user.web_url || user.html_url, avatar_url: profileAvatar(user.avatar_url), starred_url: target.mode === 'github' ? githubStarredUrl(target.base, user.login) : null, storageKey: `${target.mode}:${target.base}:${user.username || user.login}`, providerType: target.mode }
   }
-  const snippets = await loadSnippets(target)
+  const snippets = await loadSnippets(target, progress)
   // Only switch after both authentication and data loading succeed.
   canSwitch()
   advanceSessionGeneration()
@@ -101,6 +107,7 @@ async function switchProvider (target) {
   store.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: account }))
   store.dispatch(updatePinnedTags(localPref.get(account.storageKey)?.pinnedTags || []))
   applySnippets(snippets, target.mode === 'local')
+  store.dispatch(updateSyncTime(HumanReadableTime(new Date())))
 }
 
 // Reuse Lepton's existing login and logout screens for account switching.
@@ -111,8 +118,9 @@ async function launchAuthWindow (token) {
   store.dispatch(updateLoginStatus({}))
   store.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
   try {
+    if (!token) store.dispatch(updateLoginStatus({ message: 'Opening OAuth...' }))
     const credential = token || await invoke('start_github_oauth')
-    await switchProvider({ mode: provider.type, base: provider.baseUrl, token: credential })
+    await switchProvider({ mode: provider.type, base: provider.baseUrl, token: credential }, message => store.dispatch(updateLoginStatus({ message })))
   } catch (error) {
     store.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
     store.dispatch(updateLoginStatus({ level: 'error', message: String(error) }))

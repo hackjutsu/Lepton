@@ -1,6 +1,14 @@
 // Provider credentials are held in memory only. Never serialize this object.
 export const session = { mode: 'local', base: '', token: '' }
 
+// Match the original GitHub adapter's web link, not the API's repository-star URL.
+export function githubStarredUrl (base, login) {
+  if (!login) return null
+  const url = new URL(base)
+  const host = url.hostname === 'github.com' ? 'gist.github.com' : `gist.${url.host}`
+  return `${url.protocol}//${host}/${encodeURIComponent(login)}/starred`
+}
+
 export async function requestProvider (invoke, operation, args = [], state = session) {
   const actions = {
     GET_USER_PROFILE: ['profile', () => []],

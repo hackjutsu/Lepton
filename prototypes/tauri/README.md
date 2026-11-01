@@ -56,10 +56,14 @@ OAuth app with callback `http://127.0.0.1/callback` and the environment variable
 OAuth verification is deferred. Neither OAuth credentials nor the provided
 personal access token are needed for local library use.
 
-Preferences currently use WebView local storage; existing Lepton settings are
-not migrated. Copying uses the Tauri clipboard plugin. Failed saves leave the
-draft in the editor. The original editor's unsaved-change behavior and other
-platform integrations need broader verification before production use.
+Preferences read and write the same `.leptonrc` location as Electron (or the
+`XDG_CONFIG_HOME` override). Older prototype settings in WebView local storage
+are used as fallbacks for keys absent from that file. The prototype writes a
+separate log in its app-data directory; its current renderer log records event
+levels without details to avoid exposing credentials. Copying uses the Tauri
+clipboard plugin. Failed saves leave the draft in the editor. The original
+editor's unsaved-change behavior and other platform integrations need broader
+verification before production use.
 
 ## Tests and verification
 

@@ -10,15 +10,26 @@ function load (key, fallback) {
   try { return JSON.parse(window.localStorage.getItem(key)) ?? fallback } catch (_) { return fallback }
 }
 function save (key, value) { window.localStorage.setItem(key, JSON.stringify(value)); return { status: true, data: value } }
-const config = load(configKey, defaults)
+function mergeConfig (base, override) {
+  const result = { ...base }
+  for (const [key, value] of Object.entries(override || {})) {
+    if (!(key in base)) continue
+    result[key] = value && typeof value === 'object' && !Array.isArray(value) && base[key] && typeof base[key] === 'object'
+      ? mergeConfig(base[key], value) : value
+  }
+  return result
+}
+const runtime = window.__leptonRuntimeInfo
+const config = mergeConfig(mergeConfig(defaults, load(configKey, {})), runtime.config)
 function find (path) { return path.split(':').reduce((node, key) => node == null ? undefined : node[key], config) }
-function set (path, value) {
+async function set (path, value) {
+  await invoke('set_runtime_config', { key: path, value })
   const parts = path.split(':'); const key = parts.pop()
   let node = config
   for (const part of parts) { node[part] = node[part] || {}; node = node[part] }
   node[key] = value
   save(configKey, config)
-  return Promise.resolve(value)
+  return value
 }
 const listeners = new Map()
 function emit (channel, ...args) { (listeners.get(channel) || []).forEach(fn => fn(...args)) }
@@ -65,13 +76,13 @@ window.lepton = {
   config: { get: find, set, setForRestart: set },
   credentials: { getAccessToken: () => ({ status: true, data: null }), setAccessToken: () => ({ status: true }) },
   dialog: { showMessage: options => { window.alert(options.message); return Promise.resolve({ response: 0 }) } },
-  files: { ensureConfigFile: () => Promise.resolve({ status: true }) },
-  globals: { getPaths: () => ({ configFilePath: '', logFilePath: '' }), getUpdateInfo: () => ({}) },
+  files: { ensureConfigFile: defaults => invoke('ensure_runtime_config', { defaults }) },
+  globals: { getPaths: () => ({ configFilePath: runtime.configFilePath, logFilePath: runtime.logFilePath }), getUpdateInfo: () => ({}) },
   ipc: { emit, on: (channel, fn) => { if (!listeners.has(channel)) listeners.set(channel, new Set()); listeners.get(channel).add(fn); return () => listeners.get(channel).delete(fn) }, removeAllListeners: channel => listeners.delete(channel), send: emit },
-  logger: { debug: () => {}, info: () => {}, warn: console.warn, error: console.error },
+  logger: { debug: () => {}, info: () => {}, warn: () => { invoke('log_runtime_event', { level: 'warn' }).catch(() => {}) }, error: () => { invoke('log_runtime_event', { level: 'error' }).catch(() => {}) } },
   localStorage: { get: key => ({ status: true, data: load('lepton-local-' + key, null) }), set: (key, value) => save('lepton-local-' + key, value) },
   notebook: { render: content => { try { return { status: true, html: renderNotebookContent(content) } } catch (error) { return { status: false, error: String(error) } } } },
-  shell: { openExternal, openPath: () => Promise.reject(new Error('Opening local paths is not implemented')) },
+  shell: { openExternal, openPath: path => invoke('open_runtime_file', { path }) },
   snippets: { request: (_provider, operation, args) => {
     if (session.mode !== 'local') return requestProvider(invoke, operation, args)
     if (operation === 'CREATE_SINGLE_GIST' || operation === 'EDIT_SINGLE_GIST') args = [...args, new Date().toISOString()]

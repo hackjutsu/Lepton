@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { requestProvider, session } from '../../prototypes/tauri/legacy/session'
+import { githubStarredUrl, requestProvider, session } from '../../prototypes/tauri/legacy/session'
+import githubCore from '../../app/utilities/githubApi/core'
 
 describe('Tauri provider request bridge', () => {
   it('routes edit and delete arguments to the selected provider', async () => {
@@ -17,5 +18,13 @@ describe('Tauri provider request bridge', () => {
     await expect(requestProvider(invoke, 'EXCHANGE_ACCESS_TOKEN', [])).rejects.toThrow('Unsupported')
     expect(invoke).not.toHaveBeenCalled()
     expect(session).toEqual({ mode: 'local', base: '', token: '' })
+  })
+
+  it('uses the original GitHub starred-Gist link for cloud and enterprise accounts', () => {
+    for (const base of ['https://github.com', 'https://github.example.test:8443']) {
+      const profile = githubCore.normalizeGitHubProfile({ login: 'some user' }, { type: 'github', baseUrl: base })
+      expect(githubStarredUrl(base, 'some user')).toBe(profile.starred_url)
+    }
+    expect(githubStarredUrl('https://github.com', null)).toBeNull()
   })
 })

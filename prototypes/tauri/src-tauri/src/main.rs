@@ -5,6 +5,7 @@ mod github_oauth;
 mod gitlab;
 mod library;
 mod local_gists;
+mod runtime;
 
 use library::{Draft, Library, Snippet};
 use local_gists::LocalGists;
@@ -51,6 +52,47 @@ fn open_external(app: tauri::AppHandle, url: String) -> Result<(), String> {
     app.opener()
         .open_url(url.as_str(), None::<&str>)
         .map_err(|_| "Unable to open external URL".to_owned())
+}
+
+#[tauri::command]
+fn runtime_info(files: tauri::State<'_, runtime::RuntimeFiles>) -> Result<Value, String> {
+    files.info()
+}
+
+#[tauri::command]
+fn set_runtime_config(
+    files: tauri::State<'_, runtime::RuntimeFiles>,
+    key: String,
+    value: Value,
+) -> Result<Value, String> {
+    files.set(&key, value)
+}
+
+#[tauri::command]
+fn ensure_runtime_config(
+    files: tauri::State<'_, runtime::RuntimeFiles>,
+    defaults: Value,
+) -> Result<(), String> {
+    files.ensure(&defaults)
+}
+
+#[tauri::command]
+fn log_runtime_event(files: tauri::State<'_, runtime::RuntimeFiles>, level: String) {
+    files.log_event(&level);
+}
+
+#[tauri::command]
+fn open_runtime_file(
+    app: tauri::AppHandle,
+    files: tauri::State<'_, runtime::RuntimeFiles>,
+    path: String,
+) -> Result<(), String> {
+    if std::path::Path::new(&path) != files.config && std::path::Path::new(&path) != files.log {
+        return Err("Invalid file path".into());
+    }
+    app.opener()
+        .open_path(path, None::<&str>)
+        .map_err(|_| "Unable to open file".into())
 }
 
 #[cfg(test)]
@@ -235,6 +277,15 @@ fn main() {
                 .into());
             }
             let library = Library::open(directory.clone()).map_err(std::io::Error::other)?;
+            let config_dir =
+                match std::env::var_os("XDG_CONFIG_HOME").filter(|path| !path.is_empty()) {
+                    Some(path) => std::path::PathBuf::from(path),
+                    None => app.path().home_dir()?,
+                };
+            app.manage(
+                runtime::RuntimeFiles::new(config_dir.join(".leptonrc"), &directory)
+                    .map_err(std::io::Error::other)?,
+            );
             app.manage(Mutex::new(library));
             #[allow(unused_mut)]
             let mut local_gists = LocalGists::open(&directory).map_err(std::io::Error::other)?;
@@ -255,7 +306,12 @@ fn main() {
             github_request,
             start_github_oauth,
             open_external,
-            take_startup_github_token
+            take_startup_github_token,
+            runtime_info,
+            set_runtime_config,
+            ensure_runtime_config,
+            open_runtime_file,
+            log_runtime_event
         ])
         .run(tauri::generate_context!())
         .expect("Unable to start Lepton Rust prototype");

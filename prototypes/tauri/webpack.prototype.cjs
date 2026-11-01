@@ -1,7 +1,7 @@
 const path = require('path')
 const root = path.resolve(__dirname, '../..')
 const base = require(path.join(root, 'webpack.config.js'))
-base.entry = path.join(__dirname, 'legacy/index.js')
+base.entry = path.join(__dirname, 'legacy/entry.js')
 base.output = { path: path.join(__dirname, 'dist'), publicPath: './', filename: 'app.bundle.js', clean: true }
 base.resolve.alias.jsdom = false
 base.resolve.alias['react$'] = require.resolve('react', { paths: [root] })

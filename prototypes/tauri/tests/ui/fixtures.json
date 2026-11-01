@@ -1,67 +1,109 @@
 [
   {
-    "id": "ui-js",
-    "description": "[React 19 render fixture] #ui #smoke",
+    "id": "fixture-gist-1",
+    "description": "[React 19 render fixture] #ui #smoke Covers editor, raw modal, tags, and dashboard rendering.",
     "public": false,
-    "html_url": "",
+    "html_url": "https://gist.github.com/lepton-fixture/fixture-gist-1",
     "updated_at": "2026-06-29T16:00:00Z",
     "files": {
       "hello.js": {
         "filename": "hello.js",
         "language": "JavaScript",
-        "content": "function hello(name) {\n  return \"hello \" + name\n}\n"
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/hello.js",
+        "content": "function hello(name) {\n  return \"hello \" + name\n}\n\nconsole.log(hello(\"Lepton\"))"
       },
       "notes.md": {
         "filename": "notes.md",
         "language": "Markdown",
-        "content": "# Render fixture\n\n- exercises markdown rendering\n"
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/notes.md",
+        "content": "# Render fixture\n\n- exercises markdown rendering\n- keeps GitHub out of smoke tests\n\n[![Lepton fixture](lepton-logo.webp)](https://example.com/full-size)\n\n![Missing fixture](missing-image.png)"
       },
       "lepton-logo.webp": {
         "filename": "lepton-logo.webp",
         "language": null,
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/lepton-logo.webp",
         "content": "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"
+      },
+      "styles.css": {
+        "filename": "styles.css",
+        "language": "CSS",
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/styles.css",
+        "content": ".fixture {\n  display: grid;\n  gap: 8px;\n}"
       }
     }
   },
   {
-    "id": "ui-python",
-    "description": "[Python utility] #backend",
-    "public": false,
-    "html_url": "",
-    "updated_at": "2026-06-29T16:00:00Z",
+    "id": "fixture-gist-2",
+    "description": "[Python utility] #backend Small parser helper fixture.",
+    "public": true,
+    "html_url": "https://gist.github.com/lepton-fixture/fixture-gist-2",
+    "updated_at": "2026-06-28T14:30:00Z",
     "files": {
       "parser.py": {
         "filename": "parser.py",
         "language": "Python",
-        "content": "def parse(value):\n    \"\"\"Normalize a value.\n    Preserve multiline docstring highlighting.\n    \"\"\"\n    return value.strip()\n"
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/parser.py",
+        "content": "def parse(value):\n    \"\"\"Normalize a value.\n\n    Preserve multiline docstring highlighting.\n    \"\"\"\n    example = '''first line\nsecond line'''\n    return value.strip()\n"
       }
     }
   },
   {
-    "id": "ui-php",
-    "description": "[PHP template] #php",
-    "public": false,
-    "html_url": "",
-    "updated_at": "2026-06-29T16:00:00Z",
+    "id": "fixture-gist-3",
+    "description": "[Shell setup] #ops Installs local development prerequisites.",
+    "public": true,
+    "html_url": "https://gist.github.com/lepton-fixture/fixture-gist-3",
+    "updated_at": "2026-06-27T10:15:00Z",
+    "files": {
+      "setup.sh": {
+        "filename": "setup.sh",
+        "language": "Shell",
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/setup.sh",
+        "content": "npm ci\nnpm run build\n"
+      }
+    }
+  },
+  {
+    "id": "fixture-gist-4",
+    "description": "[Java sample] #backend Simple class fixture for dashboard variety.",
+    "public": true,
+    "html_url": "https://gist.github.com/lepton-fixture/fixture-gist-4",
+    "updated_at": "2026-06-26T09:00:00Z",
+    "files": {
+      "Example.java": {
+        "filename": "Example.java",
+        "language": "Java",
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/Example.java",
+        "content": "class Example {}\n"
+      }
+    }
+  },
+  {
+    "id": "fixture-gist-5",
+    "description": "[PHP template] #php #smoke Embedded HTML syntax fixture.",
+    "public": true,
+    "html_url": "https://gist.github.com/lepton-fixture/fixture-gist-5",
+    "updated_at": "2026-06-25T11:45:00Z",
     "files": {
       "index.php": {
         "filename": "index.php",
         "language": "PHP",
-        "content": "<html><body><?php echo \"Ready\"; ?></body></html>"
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/index.php",
+        "content": "<!doctype html>\n<html>\n<body>\n<?php if ($isVisible) { ?>\n  <section class=\"notice\">\n    <h1><?= $title ?></h1>\n    <p>Ready</p>\n  </section>\n<?php } ?>\n</body>\n</html>"
       }
     }
   },
   {
-    "id": "ui-notebook",
-    "description": "[Notebook fixture] #notebook",
-    "public": false,
-    "html_url": "",
-    "updated_at": "2026-06-29T16:00:00Z",
+    "id": "fixture-gist-6",
+    "description": "[Notebook fixture] #notebook #smoke Jupyter rendering fixture.",
+    "public": true,
+    "html_url": "https://gist.github.com/lepton-fixture/fixture-gist-6",
+    "updated_at": "2026-06-24T13:20:00Z",
     "files": {
       "analysis.ipynb": {
         "filename": "analysis.ipynb",
         "language": "Jupyter Notebook",
-        "content": "{\"cells\": [{\"cell_type\": \"markdown\", \"metadata\": {}, \"source\": [\"# Notebook Fixture\\n\"]}, {\"cell_type\": \"code\", \"execution_count\": 1, \"metadata\": {}, \"outputs\": [{\"name\": \"stdout\", \"output_type\": \"stream\", \"text\": [\"hello from notebook\\n\"]}], \"source\": [\"print(\\\"hello from notebook\\\")\\n\"]}], \"metadata\": {}, \"nbformat\": 4, \"nbformat_minor\": 5}"
+        "raw_url": "https://gist.githubusercontent.com/lepton-fixture/mock/raw/analysis.ipynb",
+        "content": "{\n  \"cells\": [\n    {\n      \"cell_type\": \"markdown\",\n      \"metadata\": {},\n      \"source\": [\n        \"# Notebook Fixture\\n\",\n        \"\\n\",\n        \"This fixture renders **markdown** and removes unsafe HTML.\\n\",\n        \"\\n\",\n        \"<script>alert(\\\"xss\\\")</script>\"\n      ]\n    },\n    {\n      \"cell_type\": \"code\",\n      \"execution_count\": 1,\n      \"metadata\": {},\n      \"outputs\": [\n        {\n          \"name\": \"stdout\",\n          \"output_type\": \"stream\",\n          \"text\": [\n            \"hello from notebook\\n\"\n          ]\n        },\n        {\n          \"data\": {\n            \"text/plain\": [\n              \"42\"\n            ]\n          },\n          \"execution_count\": 1,\n          \"metadata\": {},\n          \"output_type\": \"execute_result\"\n        }\n      ],\n      \"source\": [\n        \"print(\\\"hello from notebook\\\")\\n\",\n        \"42\"\n      ]\n    }\n  ],\n  \"metadata\": {\n    \"kernelspec\": {\n      \"display_name\": \"Python 3\",\n      \"language\": \"python\",\n      \"name\": \"python3\"\n    },\n    \"language_info\": {\n      \"name\": \"python\"\n    }\n  },\n  \"nbformat\": 4,\n  \"nbformat_minor\": 5\n}"
       }
     }
   }

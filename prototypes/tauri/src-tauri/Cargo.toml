@@ -12,7 +12,7 @@ ui-tests = ["dep:tauri-plugin-wdio-webdriver"]
 [dependencies]
 tauri = { version = "2", features = [] }
 serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde_json = { version = "1", features = ["preserve_order"] }
 uuid = { version = "1", features = ["v4"] }
 tempfile = "3"
 tauri-plugin-clipboard-manager = "2"

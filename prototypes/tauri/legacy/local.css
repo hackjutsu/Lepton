@@ -1,6 +1,5 @@
 /* Local-only libraries have no remote links. */
-.user-panel .customized-tag-small,
-.starred-tag-section {
+body[data-provider='local'] .starred-tag-section {
   display: none !important;
 }
 body[data-provider='local'] .header-controls .snippet-control:nth-child(2),

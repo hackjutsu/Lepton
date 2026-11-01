@@ -204,7 +204,7 @@ impl LocalGists {
                 return Err("Filename is required".into());
             }
             if data.is_null() {
-                files.remove(name);
+                files.shift_remove(name);
                 continue;
             }
             let content = data
@@ -240,6 +240,43 @@ impl LocalGists {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn preserves_file_order_when_saving_and_reloading() {
+        let dir = tempfile::tempdir().unwrap();
+        crate::library::Library::open(dir.path().into()).unwrap();
+        let mut store = LocalGists::open(dir.path()).unwrap();
+        let gist = store
+            .create(
+                "ordered",
+                &json!({"z.txt":{"content":"z"},"m.txt":{"content":"m"},"a.txt":{"content":"a"}}),
+                false,
+                "2026-01-01T00:00:00Z",
+            )
+            .unwrap();
+        let saved = store.get(gist["id"].as_str().unwrap()).unwrap();
+        let names: Vec<_> = saved["files"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect();
+        assert_eq!(names, ["z.txt", "m.txt", "a.txt"]);
+        let updated = store
+            .update(
+                gist["id"].as_str().unwrap(),
+                "ordered",
+                &json!({"z.txt":null}),
+                "2026-01-02T00:00:00Z",
+            )
+            .unwrap();
+        let names: Vec<_> = updated["files"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect();
+        assert_eq!(names, ["m.txt", "a.txt"]);
+    }
     #[test]
     fn migrates_and_handles_multi_file_crud_transactionally() {
         let dir = tempfile::tempdir().unwrap();

@@ -15,7 +15,7 @@ if (!fs.existsSync(binary)) {
   fs.rmSync(directory, { recursive: true, force: true })
   throw new Error('Missing Tauri UI test binary. Run npm run test:ui:build first.')
 }
-const testEnv = { ...process.env, LEPTON_UI_TESTS: '1', LEPTON_PROTOTYPE_DATA_DIR: directory, TAURI_WEBDRIVER_PORT: String(port) }
+const testEnv = { ...process.env, XDG_CONFIG_HOME: directory, LEPTON_UI_TESTS: '1', LEPTON_PROTOTYPE_DATA_DIR: directory, TAURI_WEBDRIVER_PORT: String(port) }
 for (const key of ['LEPTON_GITHUB_OAUTH_CLIENT_ID', 'LEPTON_GITHUB_OAUTH_CLIENT_SECRET', 'LEPTON_GITHUB_TOKEN_FILE', 'LEPTON_TEST_GITHUB_TOKEN', 'LEPTON_TEST_GITLAB_TOKEN']) delete testEnv[key]
 const app = spawn(binary, [], { env: testEnv, stdio: ['ignore', 'pipe', 'pipe'] })
 let output = ''
@@ -70,6 +70,8 @@ try {
     const info = await run('const box=document.querySelector(".active-layout").getBoundingClientRect(); const avatar=document.querySelector(".profile-image-section"); const image=document.querySelector(".image-file-view img"); return {width:box.width,height:box.height,avatar:avatar?.naturalWidth,image:image?.naturalWidth,text:document.body.innerText}')
     assert.ok(info.width > 0 && info.height > 0 && info.avatar > 0 && info.image > 0)
     assert.match(info.text, /exercises markdown rendering/)
+    assert.deepEqual(await run('return [...document.querySelectorAll("[data-gist-filename]")].map(e=>e.dataset.gistFilename)'), ['hello.js', 'notes.md', 'lepton-logo.webp', 'styles.css'])
+    assert.equal(await run('const e=document.querySelector(".starred-tag-section"); return !!e && getComputedStyle(e).display!=="none"'), false, 'Local library should not show a GitHub starred link')
   })
   const screenshot = await request(`/session/${session}/screenshot`)
   const artifact = process.env.LEPTON_UI_SCREENSHOT || path.join(directory, 'active.png')
@@ -77,7 +79,25 @@ try {
   console.log(`Screenshot: ${artifact}`)
   await check('new editor', async () => { await emit('new-gist-renderer'); await expectElement('.modal .gist-editor-form .CodeMirror'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
   await check('edit editor', async () => { await emit('edit-gist-renderer'); await expectElement('.modal .gist-editor-form .CodeMirror'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
-  await check('about and settings', async () => { await emit('about-page'); await expectElement('.about-modal .modal-title', 'Settings'); await closeModal('.about-modal') })
+  await check('about and settings paths', async () => {
+    await emit('about-page'); await expectElement('.about-modal .modal-title', 'Settings')
+    await run('[...document.querySelectorAll(".settings-tabs button")].find(e=>e.textContent.trim()==="About").click(); return true')
+    await expectElement('.about-section', 'Configurations')
+    const paths = await run('return window.lepton.globals.getPaths()')
+    assert.equal(paths.configFilePath, path.join(directory, '.leptonrc'))
+    assert.equal(paths.logFilePath, path.join(directory, 'logs', 'lepton.log'))
+    assert.equal(fs.existsSync(paths.logFilePath), true)
+    await expectElement('.about-section', paths.configFilePath)
+    await expectElement('.about-section', paths.logFilePath)
+    if (process.env.LEPTON_UI_ABOUT_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_UI_ABOUT_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await run('window.__configSaved=false; window.lepton.config.set("theme","dark").then(()=>{window.__configSaved=true}); return true')
+    await waitFor('return window.__configSaved===true', 'configuration write')
+    assert.equal(JSON.parse(fs.readFileSync(paths.configFilePath, 'utf8')).theme, 'dark')
+    await closeModal('.about-modal')
+  })
   await check('dashboard', async () => { await emit('dashboard'); await expectElement('.dashboard-modal canvas'); await closeModal('.dashboard-modal') })
   await check('search with file content', async () => {
     await run('window.dispatchEvent(new KeyboardEvent("keydown", {key:" ", code:"Space", shiftKey:true, bubbles:true})); return true'); await expectElement('.search-modal .search-box')
@@ -105,7 +125,7 @@ try {
     await expectElement('.snippet-box', 'Python utility'); await waitFor('return [...document.querySelectorAll(".code-table .hljs-string")].some(e=>e.innerText.includes("Preserve multiline docstring highlighting."))', 'Python multiline highlighting')
     await run('[...document.querySelectorAll("[role=button]")].find(e=>e.textContent.trim()==="#All").click(); return true')
   })
-  await check('PHP template highlighting', async () => { await selectSnippet('PHP template'); await expectElement('.code-area .language-php', 'Ready') })
+  await check('PHP template highlighting', async () => { await selectSnippet('PHP template'); await expectElement('.code-area .language-php'); await expectElement('.code-area', 'Ready') })
   await check('Jupyter notebook preview', async () => { await selectSnippet('Notebook fixture'); await expectElement('.jupyterNotebook-section .nb-notebook', 'Notebook Fixture') })
   await check('recoverable new-snippet draft', async () => {
     await run('window.lepton.localStorage.set("new-gist-draft-local", {createdAt:"2026-09-06T21:35:00.000Z",description:"Recovered API helper",private:true,gists:[{filename:"recovered.js",content:"const recovered = true"}]}); return true')
@@ -147,6 +167,8 @@ try {
       }
       await waitFor('const e=document.querySelector(".profile-image-section"); return !!e && e.complete && e.naturalWidth > 0', 'GitHub profile image')
       assert.equal(await run('return document.querySelector(".profile-image-section").src.startsWith("https:")'), true, 'Expected a remote GitHub avatar')
+      const starred = await run('const e=document.querySelector(".starred-tag-section a"); return e && {url:e.href, visible:getComputedStyle(e.parentElement.parentElement).display!=="none"}')
+      assert.ok(starred?.visible && /^https:\/\/gist\.github\.com\/[^/]+\/starred$/.test(starred.url), 'Expected the original GitHub starred Gists link')
       const remoteLinks = await run('const links=[...document.querySelectorAll(".header-controls a")]; return links.filter(e=>/^https?:/.test(e.href) && getComputedStyle(e).display!=="none").length')
       assert.ok(remoteLinks > 0, 'Expected a visible link to the selected Gist')
       await run('[...document.querySelectorAll(".user-panel-button")].find(e=>e.innerText.trim().toLowerCase()==="logout").click(); return true')
