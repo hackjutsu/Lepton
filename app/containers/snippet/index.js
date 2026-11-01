@@ -155,10 +155,12 @@ class Snippet extends Component {
   }
 
   closeGistEditorModal () {
+    if (this.localEditSaving) return
     this.props.updateGistEditModeStatus('OFF')
   }
 
   handleGistEditorFormSubmit (data) {
+    if (this.localEditSaving) return Promise.resolve()
     const { gists, activeGist, accessToken } = this.props
     const sessionGeneration = getSessionGeneration()
     const description = data.description.trim()
@@ -171,7 +173,9 @@ class Snippet extends Component {
     // language tag and the active gist are likely be the same as before.
     // Therefore, we decide the close the dialog without waiting for the server’s
     // response, which provides better user experience.
-    this.closeGistEditorModal()
+    const waitForLocalSave = electronBridge.isLocalPrototype === true
+    if (waitForLocalSave) this.localEditSaving = true
+    else this.closeGistEditorModal()
 
     return getSnippetApi(EDIT_SINGLE_GIST)(
       accessToken,
@@ -181,12 +185,21 @@ class Snippet extends Component {
       .then((response) => {
         if (!isSessionGenerationCurrent(sessionGeneration)) return
         this.updateGistsStoreWithUpdatedGist(response)
+        if (waitForLocalSave) {
+          this.localEditSaving = false
+          this.closeGistEditorModal()
+        }
       })
       .catch((err) => {
         if (!isSessionGenerationCurrent(sessionGeneration)) return
-        notifyFailure(t('notification.gistUpdateFailed'))
+        if (waitForLocalSave) {
+          electronBridge.dialog.showMessage({ message: `${t('notification.gistUpdateFailed')}\n${err.message || err}` })
+        } else {
+          notifyFailure(t('notification.gistUpdateFailed'))
+        }
         logger.error(JSON.stringify(err))
       })
+      .finally(() => { this.localEditSaving = false })
   }
 
   handleMarkdownTaskListItemToggle (activeSnippet, gistFile, taskIndex, checked) {
@@ -384,7 +397,12 @@ class Snippet extends Component {
   }
 
   handleCopyGistFileClicked (gist) {
-    clipboard.writeText(gist.content)
+    const result = clipboard.writeText(gist.content)
+    if (electronBridge.isLocalPrototype === true) {
+      return Promise.resolve(result)
+        .then(() => notifySuccess(t('notification.copied'), t('notification.contentCopied')))
+        .catch(err => electronBridge.dialog.showMessage({ message: `Could not copy: ${err.message || err}` }))
+    }
     notifySuccess(t('notification.copied'), t('notification.contentCopied'))
   }
 

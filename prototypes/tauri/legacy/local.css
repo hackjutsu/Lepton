@@ -1,0 +1,16 @@
+/* This build has no remote account or sharing service. */
+.user-panel > div:nth-child(2) > a.user-panel-button:nth-of-type(1),
+.user-panel > div:nth-child(2) > a.user-panel-button:nth-of-type(3),
+.user-panel > div:nth-child(2) > br,
+.user-panel .customized-tag-small,
+.starred-tag-section,
+.header-controls .snippet-control:nth-child(2),
+.header-controls .snippet-control:nth-child(3),
+.file-header-controls .file-header-control:first-child,
+.copy-raw-link {
+  display: none !important;
+}
+.header-title { font-size: 0 !important; }
+.header-title > * { display: none !important; }
+.header-title::after { content: 'LOCAL SNIPPET'; font-size: 13px; }
+.gist-editor-privacy-checkbox { display: none !important; }
