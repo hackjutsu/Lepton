@@ -8,12 +8,14 @@
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 1420 --strictPort",
-    "build": "../../node_modules/.bin/webpack --mode production --config webpack.prototype.cjs && node legacy/copy-html.cjs",
+    "build": "node ../../node_modules/webpack/bin/webpack.js --mode production --config webpack.prototype.cjs && node legacy/copy-html.cjs",
     "start": "tauri dev",
     "package": "tauri build",
     "test": "cargo test --manifest-path src-tauri/Cargo.toml",
     "format": "prettier --write src index.html *.json src-tauri/*.json src-tauri/capabilities/*.json",
-    "format:check": "prettier --check src index.html *.json src-tauri/*.json src-tauri/capabilities/*.json"
+    "format:check": "prettier --check src index.html *.json src-tauri/*.json src-tauri/capabilities/*.json",
+    "test:ui:build": "tauri build --debug --no-bundle --features ui-tests --config src-tauri/tauri.ui-test.conf.json",
+    "test:ui": "npm run test:ui:build && node tests/ui/smoke.mjs"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.0.0",

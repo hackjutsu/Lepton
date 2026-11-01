@@ -1,5 +1,7 @@
 import { invoke } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
+import { session, requestProvider } from './session'
+import { matchesAccelerator } from './shortcuts'
 import defaults from '../../../configs/defaultConfig'
 import { renderNotebookContent } from '../../../app/utilities/jupyterNotebook/core'
 
@@ -20,13 +22,30 @@ function set (path, value) {
 }
 const listeners = new Map()
 function emit (channel, ...args) { (listeners.get(channel) || []).forEach(fn => fn(...args)) }
+const shortcutChannels = {
+  keyShortcutForSearch: 'search-gist',
+  keyNewGist: 'new-gist-renderer',
+  keyEditGist: 'edit-gist-renderer',
+  keyDeleteGist: 'delete-gist',
+  keySubmitGist: 'submit-gist',
+  keyImmersiveMode: 'immersive-mode',
+  keyDashboard: 'dashboard',
+  keyAboutPage: 'about-page',
+  keySyncGists: 'sync-gists'
+}
 window.addEventListener('keydown', event => {
-  if (event.shiftKey && event.code === 'Space') { event.preventDefault(); emit('search-gist'); return }
-  if (!(event.metaKey || event.ctrlKey)) return
-  const shortcuts = { n: 'new-gist-renderer', e: 'edit-gist-renderer', s: 'submit-gist', i: 'immersive-mode', d: 'dashboard', r: 'sync-gists', ',': 'about-page', Backspace: 'delete-gist' }
-  const channel = shortcuts[event.key]
-  if (channel) { event.preventDefault(); emit(channel) }
+  if (event.repeat) return
+  for (const [setting, channel] of Object.entries(shortcutChannels)) {
+    if (!matchesAccelerator(event, find(`shortcuts:${setting}`), navigator.platform)) continue
+    const modalOpen = Boolean(document.querySelector('.modal[role="dialog"], .local-provider-overlay'))
+    if (modalOpen && channel !== 'submit-gist') return
+    if (channel === 'submit-gist' && !document.querySelector('.gist-editor-form')) return
+    event.preventDefault()
+    emit(channel)
+    return
+  }
 })
+
 window.lepton = {
   isLocalPrototype: true,
   account: { get: () => ({}) },
@@ -44,6 +63,7 @@ window.lepton = {
   notebook: { render: content => { try { return { status: true, html: renderNotebookContent(content) } } catch (error) { return { status: false, error: String(error) } } } },
   shell: { openExternal: () => {}, openPath: () => Promise.reject(new Error('Opening local paths is not implemented')) },
   snippets: { request: (_provider, operation, args) => {
+    if (session.mode !== 'local') return requestProvider(invoke, operation, args)
     if (operation === 'CREATE_SINGLE_GIST' || operation === 'EDIT_SINGLE_GIST') args = [...args, new Date().toISOString()]
     return invoke('local_gist_request', { operation, args }).then(result => {
       if (result && !Array.isArray(result) && typeof result === 'object') return { ...result, public: false }

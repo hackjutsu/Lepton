@@ -1,4 +1,7 @@
 {
   "productName": "Lepton Local QA",
-  "identifier": "io.lepton.rust-prototype.qa"
+  "identifier": "io.lepton.rust-prototype.qa",
+  "bundle": {
+    "targets": ["app"]
+  }
 }

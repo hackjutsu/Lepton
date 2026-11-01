@@ -1,5 +1,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod github;
+mod github_oauth;
+mod gitlab;
 mod library;
 mod local_gists;
 
@@ -57,24 +60,138 @@ fn local_gist_request(
     }
 }
 
+#[tauri::command]
+async fn gitlab_request(
+    base: String,
+    token: String,
+    operation: String,
+    args: Vec<Value>,
+) -> Result<Value, String> {
+    let client = gitlab::GitLab::new(&base, token)?;
+    let string = |i: usize| {
+        args.get(i)
+            .and_then(Value::as_str)
+            .ok_or_else(|| "Invalid argument".to_owned())
+    };
+    match operation.as_str() {
+        "profile" => client.profile().await,
+        "list" => Ok(Value::Array(
+            client
+                .list()
+                .await?
+                .into_iter()
+                .map(gitlab::normalize_brief)
+                .collect(),
+        )),
+        "get" => client.get(string(0)?).await,
+        "create" => {
+            client
+                .create(
+                    string(0)?,
+                    args.get(1).ok_or("Missing files")?,
+                    args.get(2).and_then(Value::as_bool).unwrap_or(false),
+                )
+                .await
+        }
+        "update" => {
+            client
+                .update(string(0)?, string(1)?, args.get(2).ok_or("Missing files")?)
+                .await
+        }
+        "delete" => {
+            client.delete(string(0)?).await?;
+            Ok(Value::Null)
+        }
+        _ => Err("Unknown GitLab operation".into()),
+    }
+}
+
+#[tauri::command]
+async fn github_request(
+    base: String,
+    token: String,
+    operation: String,
+    args: Vec<Value>,
+) -> Result<Value, String> {
+    let client = github::GitHub::new(&base, token)?;
+    let string = |i: usize| {
+        args.get(i)
+            .and_then(Value::as_str)
+            .ok_or_else(|| "Invalid argument".to_owned())
+    };
+    match operation.as_str() {
+        "profile" => client.profile().await,
+        "list" => Ok(Value::Array(client.list().await?)),
+        "get" => client.get(string(0)?).await,
+        "create" => {
+            client
+                .create(
+                    string(0)?,
+                    args.get(1).ok_or("Missing files")?,
+                    args.get(2).and_then(Value::as_bool).unwrap_or(false),
+                )
+                .await
+        }
+        "update" => {
+            client
+                .update(string(0)?, string(1)?, args.get(2).ok_or("Missing files")?)
+                .await
+        }
+        "delete" => {
+            client.delete(string(0)?).await?;
+            Ok(Value::Null)
+        }
+        _ => Err("Unknown GitHub operation".into()),
+    }
+}
+
+#[tauri::command]
+async fn start_github_oauth(app: tauri::AppHandle) -> Result<String, String> {
+    github_oauth::authorize(app).await
+}
+
 fn main() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    #[cfg(feature = "ui-tests")]
+    let builder = builder.plugin(tauri_plugin_wdio_webdriver::init());
+    builder
         .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_opener::init())
         .setup(|app| {
             let directory = match std::env::var_os("LEPTON_PROTOTYPE_DATA_DIR") {
                 Some(path) => std::path::PathBuf::from(path),
                 None => app.path().app_data_dir()?,
             };
+            #[cfg(feature = "ui-tests")]
+            if std::env::var("LEPTON_UI_TESTS").as_deref() == Ok("1")
+                && (std::env::var_os("LEPTON_PROTOTYPE_DATA_DIR").is_none()
+                    || directory.join("snippets.sqlite3").exists())
+            {
+                return Err(std::io::Error::other(
+                    "UI tests require a fresh isolated data directory",
+                )
+                .into());
+            }
             let library = Library::open(directory.clone()).map_err(std::io::Error::other)?;
             app.manage(Mutex::new(library));
-            let local_gists = LocalGists::open(&directory).map_err(std::io::Error::other)?;
+            #[allow(unused_mut)]
+            let mut local_gists = LocalGists::open(&directory).map_err(std::io::Error::other)?;
+            #[cfg(feature = "ui-tests")]
+            if std::env::var("LEPTON_UI_TESTS").as_deref() == Ok("1") {
+                local_gists
+                    .seed_ui_fixtures()
+                    .map_err(std::io::Error::other)?;
+            }
             app.manage(Mutex::new(local_gists));
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             search_snippets,
             save_snippet,
-            local_gist_request
+            local_gist_request,
+            gitlab_request,
+            github_request,
+            start_github_oauth
         ])
         .run(tauri::generate_context!())
         .expect("Unable to start Lepton Rust prototype");

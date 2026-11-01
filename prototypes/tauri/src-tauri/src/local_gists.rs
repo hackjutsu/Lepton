@@ -6,7 +6,7 @@ pub struct LocalGists {
     db: Connection,
 }
 
-fn language(name: &str) -> Option<&'static str> {
+pub(crate) fn language(name: &str) -> Option<&'static str> {
     match name
         .rsplit('.')
         .next()
@@ -21,6 +21,16 @@ fn language(name: &str) -> Option<&'static str> {
         "md" => Some("Markdown"),
         "sql" => Some("SQL"),
         "sh" => Some("Shell"),
+        "c" | "h" => Some("C"),
+        "cpp" | "cc" | "hpp" => Some("C++"),
+        "cs" => Some("C#"),
+        "go" => Some("Go"),
+        "java" => Some("Java"),
+        "php" => Some("PHP"),
+        "rb" => Some("Ruby"),
+        "scss" => Some("SCSS"),
+        "xml" => Some("XML"),
+        "yml" | "yaml" => Some("YAML"),
         "html" => Some("HTML"),
         "css" => Some("CSS"),
         "json" => Some("JSON"),
@@ -94,6 +104,28 @@ impl LocalGists {
         tx.commit().map_err(|e| e.to_string())?;
         Ok(Self { db })
     }
+    #[cfg(feature = "ui-tests")]
+    pub fn seed_ui_fixtures(&mut self) -> Result<(), String> {
+        let fixtures: Vec<Value> =
+            serde_json::from_str(include_str!("../../tests/ui/fixtures.json"))
+                .map_err(|e| e.to_string())?;
+        let tx = self.db.transaction().map_err(|e| e.to_string())?;
+        tx.execute("DELETE FROM local_gists", [])
+            .map_err(|e| e.to_string())?;
+        for gist in fixtures.iter().rev() {
+            let id = gist
+                .get("id")
+                .and_then(Value::as_str)
+                .ok_or("Invalid UI fixture")?;
+            tx.execute(
+                "INSERT INTO local_gists (id,payload) VALUES (?1,?2)",
+                params![id, gist.to_string()],
+            )
+            .map_err(|e| e.to_string())?;
+        }
+        tx.commit().map_err(|e| e.to_string())
+    }
+
     pub fn list(&self) -> Result<Vec<Value>, String> {
         let mut stmt = self
             .db

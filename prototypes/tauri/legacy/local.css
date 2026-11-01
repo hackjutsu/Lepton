@@ -5,12 +5,23 @@
 .user-panel .customized-tag-small,
 .starred-tag-section,
 .header-controls .snippet-control:nth-child(2),
-.header-controls .snippet-control:nth-child(3),
+.header-controls .snippet-control:nth-last-child(2),
 .file-header-controls .file-header-control:first-child,
 .copy-raw-link {
   display: none !important;
 }
-.header-title { font-size: 0 !important; }
-.header-title > * { display: none !important; }
-.header-title::after { content: 'LOCAL SNIPPET'; font-size: 13px; }
-.gist-editor-privacy-checkbox { display: none !important; }
+body[data-provider='local'] .header-title { font-size: 0 !important; }
+body[data-provider='local'] .header-title > * { display: none !important; }
+body[data-provider='local'] .header-title::after { content: 'LOCAL SNIPPET'; font-size: 13px; }
+body[data-provider='local'] .gist-editor-privacy-checkbox { display: none !important; }
+.local-provider-panel { position: fixed; left: 8px; bottom: 8px; z-index: 1050; }
+.local-provider-panel > button { border: 1px solid #ccd0d5; background: var(--bg-primary, white); color: var(--text-primary, #333); padding: 6px 10px; border-radius: 4px; font-size: 12px; }
+.local-provider-overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.4); z-index: 1100; }
+.local-provider-overlay form { width: min(440px, 90vw); padding: 24px; border-radius: 6px; background: var(--bg-primary, white); color: var(--text-primary, #333); box-shadow: 0 8px 24px #0004; }
+.local-provider-overlay h2 { font-size: 20px; margin: 0 0 12px; }
+.local-provider-overlay p { font-size: 13px; line-height: 1.5; }
+.local-provider-overlay label { display: block; margin: 14px 0; font-size: 12px; }
+.local-provider-overlay input, .local-provider-overlay select { display: block; width: 100%; padding: 8px; margin-top: 5px; color: #222; background: white; border: 1px solid #ccc; border-radius: 4px; }
+.local-provider-overlay form > div { display: flex; justify-content: flex-end; gap: 8px; }
+.local-provider-overlay button { padding: 7px 12px; border: 1px solid #ccc; border-radius: 4px; background: #f8f8f8; color: #222; }
+.local-provider-overlay .provider-error { color: #b42318; }

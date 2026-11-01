@@ -19,12 +19,12 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self'"
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; script-src 'self'"
     }
   },
   "bundle": {
     "active": true,
-    "targets": ["app"],
-    "icon": ["icons/icon.png"]
+    "targets": "all",
+    "icon": ["icons/icon.png", "icons/icon.icns", "icons/icon.ico"]
   }
 }
