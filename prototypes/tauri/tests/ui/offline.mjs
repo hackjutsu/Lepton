@@ -64,8 +64,11 @@ async function request (route, body) {
 let session
 async function run (script, ...args) { return request(`/session/${session}/execute/sync`, { script, args }) }
 async function waitFor (script, description) {
+  let driverTimeouts = 0
   for (let n = 0; n < 300; n++) {
-    if (await run(script)) return
+    try { if (await run(script)) return } catch (error) {
+      if (!String(error).includes('Script execution timed out') || ++driverTimeouts > 2) throw error
+    }
     await new Promise(resolve => setTimeout(resolve, 100))
   }
   throw new Error(`Timed out waiting for ${description}`)
@@ -77,7 +80,12 @@ try {
     try { await request('/status'); ready = true; break } catch { await new Promise(resolve => setTimeout(resolve, 200)) }
   }
   if (!ready) throw new Error('Test WebDriver did not start')
-  session = (await request('/session', { capabilities: { alwaysMatch: {} } })).sessionId
+  for (const deadline = Date.now() + 30000; !session;) {
+    try { session = (await request('/session', { capabilities: { alwaysMatch: {} } })).sessionId; break } catch (error) {
+      if (app.exitCode !== null || !String(error).includes('No window could be found') || Date.now() >= deadline) throw error
+      await new Promise(resolve => setTimeout(resolve, 200))
+    }
+  }
   await waitFor('return !!document.querySelector(".active-layout .snippet-box")', 'local library')
   await run('[...document.querySelectorAll(".user-panel-button")].find(e=>e.innerText.trim().toLowerCase()==="logout").click(); return true')
   await waitFor('return !!document.querySelector(".logout-modal .btn-danger")', 'logout confirmation')
