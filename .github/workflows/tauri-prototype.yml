@@ -91,6 +91,9 @@ jobs:
       - run: npm ci
       - run: npm ci
         working-directory: prototypes/tauri
+      - name: Build frontend for Rust tests
+        run: npm run build
+        working-directory: prototypes/tauri
       - name: Rust unit tests
         run: cargo test --locked --manifest-path prototypes/tauri/src-tauri/Cargo.toml
       - name: Tauri UI smoke tests (Linux)
