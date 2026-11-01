@@ -1,7 +1,8 @@
 //! GitLab personal-snippet transport for the migration. This module does not
 //! persist credentials and never follows redirects carrying authentication.
+use crate::http_client::{Auth, ProviderClient};
 use percent_encoding::percent_decode_str;
-use reqwest::{Client, Method, Url};
+use reqwest::{Method, Url};
 use serde_json::{json, Map, Value};
 
 fn body_error(error: reqwest::Error) -> String {
@@ -15,7 +16,7 @@ fn body_error(error: reqwest::Error) -> String {
 pub struct GitLab {
     base: Url,
     token: String,
-    http: Client,
+    http: ProviderClient,
 }
 
 impl GitLab {
@@ -59,17 +60,11 @@ impl GitLab {
         url: Url,
         body: Option<Value>,
     ) -> Result<reqwest::Response, String> {
-        let mut request = self
+        let response = self
             .http
-            .request(method, url)
-            .header("PRIVATE-TOKEN", &self.token);
-        if let Some(body) = body {
-            request = request.json(&body);
-        }
-        let response = request
-            .send()
+            .send(method, url, Auth::PrivateToken(&self.token), None, body)
             .await
-            .map_err(|_| "GitLab network request failed")?;
+            .map_err(|error| error.for_provider("GitLab"))?;
         if !response.status().is_success() {
             return Err(format!(
                 "GitLab request failed (HTTP {})",

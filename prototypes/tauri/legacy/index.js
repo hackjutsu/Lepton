@@ -3,7 +3,7 @@ import './local.css'
 import localAvatar from '../../../app/utilities/octodex/dojocat.webp?inline'
 import React from 'react'
 import HumanReadableTime from 'human-readable-time'
-import { session, requestProvider, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loginFailureStatus, enqueueCache, unavailableGithubSnippet } from './session'
+import { session, requestProvider, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loadRemoteSnippets, loginFailureStatus, enqueueCache } from './session'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
@@ -41,28 +41,14 @@ const cached = { profile: null, token: null, provider }
 const fixture = getRenderFixture('active')
 const store = createStore(RootReducer, { ...fixture.state, gists: {}, gistTags: {}, activeGist: null, pinnedTags: localPref.get('local')?.pinnedTags || [], userSession: { activeStatus: 'ACTIVE', profile }, accessToken: 'local' }, applyMiddleware(thunk))
 
-async function loadSnippets (target, progress = () => {}) {
+async function loadSnippets (target, progress = () => {}, cached = [], selectedId = null) {
   if (target.mode === 'local') return invoke('local_gist_request', { operation: 'GET_ALL_GISTS', args: [] })
   progress('Syncing snippet index...')
   const list = await requestProvider(invoke, 'GET_ALL_GISTS', [], target)
-  const results = new Array(list.length)
-  let next = 0
-  let downloaded = 0
-  async function worker () {
-    while (next < list.length) {
-      const index = next++
-      try {
-        results[index] = await requestProvider(invoke, 'GET_SINGLE_GIST', ['', list[index].id], target)
-      } catch (error) {
-        const unavailable = target.mode === 'github' && unavailableGithubSnippet(list[index], error)
-        if (!unavailable) throw error
-        results[index] = unavailable
-      }
-      progress(`Downloading snippets (${++downloaded}/${list.length})`)
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(5, list.length) }, worker))
-  return results
+  return loadRemoteSnippets(list, brief => requestProvider(invoke, 'GET_SINGLE_GIST', ['', brief.id], target), {
+    cached, selectedId, progress, provider: target.mode,
+    downloadAll: Boolean(window.lepton.config.get('snippet:downloadAll'))
+  })
 }
 
 function applySnippets (snippets, local) {
@@ -71,7 +57,7 @@ function applySnippets (snippets, local) {
     const gist = local ? { ...savedGist, public: false } : savedGist
     const langs = new Set()
     for (const file of Object.values(gist.files)) langs.add(file.language || 'Other')
-    gists[gist.id] = { brief: gist, details: gist, langs }
+    gists[gist.id] = { brief: gist, details: gist._leptonBrief ? null : gist, langs }
     tags[addLangPrefix('All')].push(gist.id)
     for (const lang of langs) (tags[addLangPrefix(lang)] ||= []).push(gist.id)
     for (const tag of parseCustomTags(descriptionParser(gist).customTags)) (tags[tag] ||= []).push(gist.id)
@@ -86,7 +72,9 @@ function applySnippets (snippets, local) {
 async function reload () {
   const current = { ...session }
   let snippets
-  try { snippets = await loadSnippets(current) } catch (error) {
+  const state = store.getState()
+  const cached = Object.values(state.gists).map(gist => gist.details).filter(Boolean)
+  try { snippets = await loadSnippets(current, undefined, cached, state.activeGist) } catch (error) {
     if (current.mode !== 'local') {
       if (current.account !== session.account || current.token !== session.token) return
       if (isOfflineError(error)) store.dispatch(updateSyncTime('Offline'))
@@ -123,7 +111,12 @@ async function switchProvider (target, progress = () => {}, knownAccount = null)
       progress('Loading profile...')
       const user = await requestProvider(invoke, 'GET_USER_PROFILE', [], target)
       const account = { ...user, login: user.username || user.login, html_url: user.web_url || user.html_url, avatar_url: profileAvatar(user.avatar_url), starred_url: target.mode === 'github' ? githubStarredUrl(target.base, user.login) : null, storageKey: `${target.mode}:${target.base}:${user.username || user.login}`, providerType: target.mode }
-      return { account, snippets: await loadSnippets(target, progress) }
+      let cached = []
+      try {
+        const saved = await invoke('load_remote_cache', { account: { provider: target.mode, base: target.base, login: account.login } })
+        cached = saved?.snippets || []
+      } catch (_) { window.lepton.logger.warn('Unable to load the remote snippet cache') }
+      return { account, snippets: await loadSnippets(target, progress, cached) }
     }, account => invoke('load_remote_cache', { account }))
     account = snapshot.account; snippets = snapshot.snippets; offline = snapshot.offline; syncedAt = snapshot.syncedAt
   } else snippets = await loadSnippets(target, progress)

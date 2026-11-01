@@ -1,5 +1,6 @@
 //! GitHub Gist API transport. Tokens are session-only and never logged.
-use reqwest::{Client, Method, Url};
+use crate::http_client::{Auth, ProviderClient};
+use reqwest::{Method, Url};
 use serde_json::{json, Value};
 #[cfg(test)]
 use std::time::Duration;
@@ -17,7 +18,7 @@ pub struct GitHub {
     origin: Url,
     cloud: bool,
     token: String,
-    http: Client,
+    http: ProviderClient,
 }
 impl GitHub {
     #[cfg(test)]
@@ -75,18 +76,17 @@ impl GitHub {
         url: Url,
         body: Option<Value>,
     ) -> Result<reqwest::Response, String> {
-        let mut request = self
+        let response = self
             .http
-            .request(method, url)
-            .bearer_auth(&self.token)
-            .header("Accept", "application/vnd.github+json");
-        if let Some(body) = body {
-            request = request.json(&body);
-        }
-        let response = request
-            .send()
+            .send(
+                method,
+                url,
+                Auth::Bearer(&self.token),
+                Some("application/vnd.github+json"),
+                body,
+            )
             .await
-            .map_err(|_| "GitHub network request failed")?;
+            .map_err(|error| error.for_provider("GitHub"))?;
         if !response.status().is_success() {
             return Err(format!(
                 "GitHub request failed (HTTP {})",
@@ -146,14 +146,16 @@ impl GitHub {
                     .and_then(Value::as_str)
                     .ok_or("GitHub returned a truncated file without a raw URL")?;
                 let (url, authenticated) = self.raw_target(raw, id)?;
-                let mut request = self.http.get(url);
-                if authenticated {
-                    request = request.bearer_auth(&self.token);
-                }
-                let mut response = request
-                    .send()
+                let auth = if authenticated {
+                    Auth::Bearer(&self.token)
+                } else {
+                    Auth::None
+                };
+                let mut response = self
+                    .http
+                    .send(Method::GET, url, auth, None, None)
                     .await
-                    .map_err(|_| "GitHub network request failed")?;
+                    .map_err(|error| error.for_provider("GitHub"))?;
                 if !response.status().is_success() {
                     return Err(format!(
                         "GitHub raw file request failed (HTTP {})",

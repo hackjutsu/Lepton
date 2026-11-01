@@ -93,6 +93,23 @@ fn read(path: &Path) -> Result<Value, String> {
     }
 }
 impl RuntimeFiles {
+    pub fn boolean_preference(&self, key: &str) -> bool {
+        self.info()
+            .ok()
+            .and_then(|info| get(&info["config"], key).and_then(Value::as_bool))
+            .unwrap_or(false)
+    }
+    pub fn token_storage_mode(&self) -> Result<String, String> {
+        let info = self.info()?;
+        let mode = info["config"]["security"]["cachedAccessTokenStorage"]
+            .as_str()
+            .unwrap_or("auto");
+        Ok(match mode {
+            "file" | "encrypted" | "auto" => mode,
+            _ => "auto",
+        }
+        .to_owned())
+    }
     pub fn new(config: PathBuf, directory: &Path) -> Result<Self, String> {
         let log_dir = directory.join("logs");
         fs::create_dir_all(&log_dir).map_err(|_| "Unable to create log directory")?;

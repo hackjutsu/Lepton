@@ -43,7 +43,7 @@ fixture test checks that both suites use identical snippet payloads.
 - A local library has no equivalent in Electron; switching to a provider uses
   the original logout and login screens. Logging out returns to the original
   login screen; restarting opens the local library if no account is saved.
-- Secure remembered credentials and an account-scoped SQLite snapshot have
+- Remembered credentials and an account-scoped SQLite snapshot have
   been implemented. A disposable native Keychain entry passed on macOS, and a
   single-window mock GitHub test covered invalid credentials, a remote edit,
   Markdown task toggling and offline startup with a cached account. Windows,
@@ -54,19 +54,23 @@ fixture test checks that both suites use identical snippet payloads.
   raw URL; a disposable private Gist over 1 MiB passed a live round trip. Gists
   whose entire file list is truncated and files over 10 MiB still require safe
   handling. Sync failures and large accounts need fuller end-to-end coverage.
-- Remote sign-in and sync currently fetch every snippet's details regardless of
-  `snippet.downloadAll`. Electron can load details lazily when it is disabled;
-  large accounts may therefore sign in and sync more slowly in the prototype.
+- Remote sign-in and sync respect `snippet.downloadAll`: when disabled, only
+  the selected and previously cached snippets have their contents available
+  for search until other snippets are opened. Offline access is likewise limited
+  to snippets whose contents were downloaded.
 - The Rust log now records redacted renderer messages, but timestamp, rotation,
   main-process coverage, and diagnostic parity still need verification.
 - Settings are persisted. Native zoom and restart-only preference behavior are
   covered by the macOS UI suite. Native notification and start-at-login bridges
   are exercised with isolated test substitutes; actual operating-system delivery
   and login startup still need platform verification. A mock HTTP proxy test
-  verifies provider routing, and HTTP/SOCKS proxy URLs are accepted. PAC and
-  multi-rule proxies with one proxy per scheme and local-host bypass are covered
-  by Rust tests. PAC scripts, ordered proxy failover, updates, window/tray
-  behavior, and other preference behavior remain incomplete.
+  verifies provider routing, and HTTP/SOCKS proxy URLs, PAC scripts, ordered
+  proxy failover, and per-scheme rules are covered by Rust tests. Proxy settings
+  for network requests made directly by the system WebView, actual tray behavior
+  on Windows and Linux, updates, and other preference behavior need further work.
+- Automatic Rust updates need a signed Tauri release feed and its public
+  verification key. Neither exists yet; configure and validate those release
+  assets before enabling `autoUpdate` for the Rust build.
 - A request interrupted before the server responds can leave a save outcome
   uncertain for either provider.
 - Login expiry and additional failure states, image insertion and attachment limits, file

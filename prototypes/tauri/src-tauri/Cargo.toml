@@ -10,7 +10,7 @@ tauri-build = { version = "2", features = [] }
 ui-tests = ["dep:tauri-plugin-wdio-webdriver"]
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 uuid = { version = "1", features = ["v4"] }
@@ -18,12 +18,13 @@ tempfile = "3"
 tauri-plugin-clipboard-manager = "2"
 base64 = "0.22"
 sha2 = "0.10"
-tokio = { version = "1", features = ["io-util", "net", "time"] }
+tokio = { version = "1", features = ["io-util", "net", "time", "sync"] }
 tauri-plugin-wdio-webdriver = { version = "1", optional = true }
 tauri-plugin-opener = "2"
 tauri-plugin-autostart = "2"
 tauri-plugin-notification = "2"
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "socks"] }
+proxyres = { version = "1.5.7", features = ["quickjs"] }
 percent-encoding = "2"
 keyring = { version = "3.6.3", features = ["apple-native", "windows-native", "sync-secret-service", "crypto-rust"] }
 rusqlite = { version = "0.38", features = ["bundled"] }

@@ -55,6 +55,38 @@ export async function loadRemoteSnapshot (knownAccount, target, fetchLive, loadC
   }
 }
 
+// Keep metadata for every snippet, fetching content only when requested.
+export async function loadRemoteSnippets (list, fetchDetails, options = {}) {
+  const cachedById = new Map((options.cached || []).filter(Boolean).map(gist => [gist.id, gist]))
+  const results = list.map(brief => {
+    const cached = cachedById.get(brief.id)
+    if (brief.updated_at && cached && !cached._leptonBrief && !cached._leptonUnavailable &&
+      cached.updated_at === brief.updated_at) return cached
+    return { ...brief, _leptonBrief: true }
+  })
+  const selected = list.findIndex(gist => gist.id === options.selectedId)
+  const first = selected < 0 ? 0 : selected
+  const pending = results.map((gist, index) => index).filter(index =>
+    results[index]._leptonBrief && (options.downloadAll || index === first))
+  let next = 0
+  let downloaded = 0
+  async function worker () {
+    while (next < pending.length) {
+      const index = pending[next++]
+      try {
+        results[index] = await fetchDetails(list[index])
+      } catch (error) {
+        const unavailable = options.provider === 'github' && unavailableGithubSnippet(list[index], error)
+        if (!unavailable) throw error
+        results[index] = unavailable
+      }
+      if (options.progress) options.progress(`Downloading snippets (${++downloaded}/${pending.length})`)
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(5, pending.length) }, worker))
+  return results
+}
+
 export async function requestProvider (invoke, operation, args = [], state = session) {
   const actions = {
     GET_USER_PROFILE: ['profile', () => []],
@@ -70,11 +102,19 @@ export async function requestProvider (invoke, operation, args = [], state = ses
   const config = globalThis.window?.lepton?.config
   const address = config?.get('proxy:address')
   const proxy = config?.get('proxy:enable') && typeof address === 'string' && address.trim() ? address : null
-  const result = await invoke(snapshot.mode === 'github' ? 'github_request' : 'gitlab_request', { base: snapshot.base, token: snapshot.token, operation: entry[0], args: entry[1](args), proxy })
+  let result
+  try {
+    result = await invoke(snapshot.mode === 'github' ? 'github_request' : 'gitlab_request', { base: snapshot.base, token: snapshot.token, operation: entry[0], args: entry[1](args), proxy })
+  } catch (error) {
+    const unavailable = state === session && snapshot.mode === 'github' && operation === 'GET_SINGLE_GIST' &&
+      unavailableGithubSnippet({ id: args[1], files: {} }, error)
+    if (!unavailable) throw error
+    return unavailable
+  }
   if (state === session && snapshot.account) {
     if (session.account === snapshot.account && session.token === snapshot.token && ['CREATE_SINGLE_GIST', 'EDIT_SINGLE_GIST', 'DELETE_SINGLE_GIST'].includes(operation)) session.revision++
     try {
-      if (operation === 'CREATE_SINGLE_GIST' || operation === 'EDIT_SINGLE_GIST') await enqueueCache(() => invoke('update_remote_cache', { account: snapshot.account, gist: result }))
+      if (operation === 'GET_SINGLE_GIST' || operation === 'CREATE_SINGLE_GIST' || operation === 'EDIT_SINGLE_GIST') await enqueueCache(() => invoke('update_remote_cache', { account: snapshot.account, gist: result }))
       if (operation === 'DELETE_SINGLE_GIST') await enqueueCache(() => invoke('delete_remote_cache', { account: snapshot.account, id: args[1] }))
     } catch (_) {
       // The remote mutation already succeeded; do not report it as a failed save.

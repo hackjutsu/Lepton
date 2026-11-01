@@ -2,6 +2,7 @@
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use std::io::Write;
 use std::path::PathBuf;
 use std::sync::Mutex;
 
@@ -26,6 +27,42 @@ trait SecretStore: Send + Sync {
     fn remove(&self, account: &str) -> Result<(), String>;
 }
 struct SystemStore;
+struct FileStore(PathBuf);
+impl FileStore {
+    fn path(&self, key: &str) -> Result<PathBuf, String> {
+        if key.len() != 64 || !key.bytes().all(|byte| byte.is_ascii_hexdigit()) {
+            return Err("Invalid credential key".into());
+        }
+        Ok(self.0.join(key))
+    }
+}
+impl SecretStore for FileStore {
+    fn put(&self, key: &str, token: &str) -> Result<(), String> {
+        let path = self.path(key)?;
+        std::fs::create_dir_all(&self.0).map_err(|_| "Unable to save credential")?;
+        let mut file =
+            tempfile::NamedTempFile::new_in(&self.0).map_err(|_| "Unable to save credential")?;
+        file.write_all(token.as_bytes())
+            .map_err(|_| "Unable to save credential")?;
+        file.persist(path)
+            .map_err(|_| "Unable to save credential")?;
+        Ok(())
+    }
+    fn get(&self, key: &str) -> Result<Option<String>, String> {
+        match std::fs::read_to_string(self.path(key)?) {
+            Ok(token) => Ok(Some(token)),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+            Err(_) => Err("Unable to read credential".into()),
+        }
+    }
+    fn remove(&self, key: &str) -> Result<(), String> {
+        match std::fs::remove_file(self.path(key)?) {
+            Ok(()) => Ok(()),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+            Err(_) => Err("Unable to remove credential".into()),
+        }
+    }
+}
 #[cfg(feature = "ui-tests")]
 #[derive(Default)]
 struct UiTestStore(Mutex<std::collections::HashMap<String, String>>);
@@ -102,6 +139,8 @@ pub(crate) fn scope(account: &Account) -> Result<String, String> {
 pub struct Credentials {
     metadata: PathBuf,
     store: Box<dyn SecretStore>,
+    file_store: FileStore,
+    test_mode: bool,
     lock: Mutex<()>,
 }
 impl Credentials {
@@ -120,14 +159,26 @@ impl Credentials {
         Self {
             metadata: directory.join("remote-account.json"),
             store,
+            file_store: FileStore(directory.join("credentials")),
+            test_mode,
             lock: Mutex::new(()),
         }
     }
+    #[cfg(test)]
     fn remember_with(
         &self,
         store: &dyn SecretStore,
         account: &Account,
         token: &str,
+    ) -> Result<bool, String> {
+        self.remember_in(store, account, token, None)
+    }
+    fn remember_in(
+        &self,
+        store: &dyn SecretStore,
+        account: &Account,
+        token: &str,
+        storage: Option<&str>,
     ) -> Result<bool, String> {
         let key = scope(account)?;
         if token.is_empty() || token.len() > 16_384 || token.chars().any(char::is_control) {
@@ -143,7 +194,12 @@ impl Credentials {
             .ok_or("Invalid account storage path")?;
         let mut file = tempfile::NamedTempFile::new_in(parent)
             .map_err(|_| "Unable to save account information")?;
-        serde_json::to_writer(&mut file, account)
+        let mut metadata =
+            serde_json::to_value(account).map_err(|_| "Unable to save account information")?;
+        if let Some(storage) = storage {
+            metadata["storage"] = storage.into();
+        }
+        serde_json::to_writer(&mut file, &metadata)
             .map_err(|_| "Unable to save account information")?;
         let previous = store.get(&key)?;
         store.put(&key, token)?;
@@ -194,14 +250,112 @@ impl Credentials {
         }
         store.remove(&key)
     }
+    #[cfg(all(test, feature = "ui-tests"))]
     pub fn remember(&self, account: &Account, token: &str) -> Result<bool, String> {
         self.remember_with(self.store.as_ref(), account, token)
     }
+    #[cfg(all(test, feature = "ui-tests"))]
     pub fn restore(&self) -> Result<Option<RestoredAccount>, String> {
         self.restore_with(self.store.as_ref())
     }
+    #[cfg(all(test, feature = "ui-tests"))]
     pub fn forget(&self, account: &Account) -> Result<(), String> {
         self.forget_with(self.store.as_ref(), account)
+    }
+
+    fn file_mode(&self, mode: &str) -> bool {
+        mode == "file" || (mode == "auto" && cfg!(debug_assertions) && !self.test_mode)
+    }
+
+    fn stores_for(&self, mode: &str) -> (&dyn SecretStore, &dyn SecretStore) {
+        if self.file_mode(mode) {
+            (&self.file_store, self.store.as_ref())
+        } else {
+            (self.store.as_ref(), &self.file_store)
+        }
+    }
+
+    pub fn remember_configured(
+        &self,
+        account: &Account,
+        token: &str,
+        mode: &str,
+    ) -> Result<(bool, bool), String> {
+        let (selected, previous) = self.stores_for(mode);
+        let file_mode = self.file_mode(mode);
+        let saved = self.remember_in(
+            selected,
+            account,
+            token,
+            Some(if file_mode { "file" } else { "encrypted" }),
+        );
+        let (result, fallback) = match saved {
+            Err(error) if !file_mode && error == "Secure credential storage is unavailable" => (
+                self.remember_in(&self.file_store, account, token, Some("file"))?,
+                true,
+            ),
+            other => (other?, false),
+        };
+        if !fallback {
+            match previous.remove(&scope(account)?) {
+                Ok(()) => {}
+                Err(error) if file_mode && error == "Secure credential storage is unavailable" => {}
+                Err(error) => return Err(error),
+            }
+        }
+        Ok((result, fallback))
+    }
+
+    pub fn restore_configured(
+        &self,
+        mode: &str,
+    ) -> Result<(Option<RestoredAccount>, bool), String> {
+        let (selected, previous) = self.stores_for(mode);
+        let metadata = match std::fs::read(&self.metadata) {
+            Ok(bytes) => serde_json::from_slice::<serde_json::Value>(&bytes)
+                .map_err(|_| "Invalid account information")?,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok((None, false)),
+            Err(_) => return Err("Unable to read account information".into()),
+        };
+        let saved_file =
+            metadata.get("storage").and_then(serde_json::Value::as_str) == Some("file");
+        let selected_is_saved = saved_file == self.file_mode(mode);
+        let saved_store = if selected_is_saved {
+            selected
+        } else {
+            previous
+        };
+        let Some(account) = self.restore_with(saved_store)? else {
+            return Ok((None, false));
+        };
+        if selected_is_saved {
+            return Ok((Some(account), saved_file && !self.file_mode(mode)));
+        }
+        match self.remember_configured(&account.account, &account.token, mode) {
+            Ok((_, fallback)) => Ok((Some(account), fallback)),
+            Err(error) => Err(error),
+        }
+    }
+
+    pub fn forget_configured(&self, account: &Account, mode: &str) -> Result<(), String> {
+        let saved_file = match std::fs::read(&self.metadata) {
+            Ok(bytes) => {
+                serde_json::from_slice::<serde_json::Value>(&bytes)
+                    .map_err(|_| "Invalid account information")?
+                    .get("storage")
+                    .and_then(serde_json::Value::as_str)
+                    == Some("file")
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => self.file_mode(mode),
+            Err(_) => return Err("Unable to read account information".into()),
+        };
+        let (stored, other): (&dyn SecretStore, &dyn SecretStore) = if saved_file {
+            (&self.file_store, self.store.as_ref())
+        } else {
+            (self.store.as_ref(), &self.file_store)
+        };
+        self.forget_with(stored, account)?;
+        other.remove(&scope(account)?)
     }
 }
 
@@ -211,6 +365,18 @@ mod tests {
     use std::collections::HashMap;
     #[derive(Default)]
     struct Mock(Mutex<HashMap<String, String>>);
+    struct Unavailable;
+    impl SecretStore for Unavailable {
+        fn put(&self, _: &str, _: &str) -> Result<(), String> {
+            Err("Secure credential storage is unavailable".into())
+        }
+        fn get(&self, _: &str) -> Result<Option<String>, String> {
+            Err("Secure credential storage is unavailable".into())
+        }
+        fn remove(&self, _: &str) -> Result<(), String> {
+            Err("Secure credential storage is unavailable".into())
+        }
+    }
     impl SecretStore for Mock {
         fn put(&self, key: &str, token: &str) -> Result<(), String> {
             self.0.lock().unwrap().insert(key.into(), token.into());
@@ -264,6 +430,122 @@ mod tests {
             .remember_with(&backend, &account, "test")
             .is_err());
         assert!(backend.0.lock().unwrap().is_empty());
+    }
+    #[test]
+    fn configured_storage_moves_credentials_between_file_and_secure_store() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut credentials = Credentials::new(dir.path().into(), true);
+        credentials.store = Box::new(Mock::default());
+        let account = Account {
+            provider: "github".into(),
+            base: "https://github.com".into(),
+            login: "octocat".into(),
+        };
+        let key = scope(&account).unwrap();
+        credentials
+            .remember_configured(&account, "test-only", "encrypted")
+            .unwrap();
+        assert!(credentials.file_store.get(&key).unwrap().is_none());
+        assert_eq!(
+            credentials
+                .restore_configured("file")
+                .unwrap()
+                .0
+                .unwrap()
+                .token,
+            "test-only"
+        );
+        assert_eq!(
+            credentials.file_store.get(&key).unwrap().as_deref(),
+            Some("test-only")
+        );
+        assert!(credentials.store.get(&key).unwrap().is_none());
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            assert_eq!(
+                std::fs::metadata(credentials.file_store.path(&key).unwrap())
+                    .unwrap()
+                    .permissions()
+                    .mode()
+                    & 0o077,
+                0
+            );
+        }
+        assert_eq!(
+            credentials
+                .restore_configured("encrypted")
+                .unwrap()
+                .0
+                .unwrap()
+                .token,
+            "test-only"
+        );
+        assert!(credentials.file_store.get(&key).unwrap().is_none());
+        credentials
+            .forget_configured(&account, "encrypted")
+            .unwrap();
+        assert!(credentials
+            .restore_configured("encrypted")
+            .unwrap()
+            .0
+            .is_none());
+    }
+    #[test]
+    fn encrypted_mode_falls_back_and_recovers_when_native_storage_returns() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut credentials = Credentials::new(dir.path().into(), true);
+        credentials.store = Box::new(Unavailable);
+        let account = Account {
+            provider: "github".into(),
+            base: "https://github.com".into(),
+            login: "octocat".into(),
+        };
+        let key = scope(&account).unwrap();
+        assert_eq!(
+            credentials
+                .remember_configured(&account, "test-only", "encrypted")
+                .unwrap(),
+            (true, true)
+        );
+        assert_eq!(
+            credentials
+                .restore_configured("encrypted")
+                .unwrap()
+                .0
+                .unwrap()
+                .token,
+            "test-only"
+        );
+        assert_eq!(
+            credentials.file_store.get(&key).unwrap().as_deref(),
+            Some("test-only")
+        );
+        credentials.store = Box::new(Mock::default());
+        let (restored, fallback) = credentials.restore_configured("encrypted").unwrap();
+        assert!(!fallback);
+        assert_eq!(restored.unwrap().token, "test-only");
+        assert!(credentials.file_store.get(&key).unwrap().is_none());
+    }
+    #[test]
+    fn logout_removes_the_fallback_file_even_if_secure_storage_is_unavailable() {
+        let dir = tempfile::tempdir().unwrap();
+        let mut credentials = Credentials::new(dir.path().into(), true);
+        credentials.store = Box::new(Unavailable);
+        let account = Account {
+            provider: "github".into(),
+            base: "https://github.com".into(),
+            login: "octocat".into(),
+        };
+        let key = scope(&account).unwrap();
+        credentials
+            .remember_configured(&account, "test-only", "encrypted")
+            .unwrap();
+        assert!(credentials
+            .forget_configured(&account, "encrypted")
+            .is_err());
+        assert!(credentials.file_store.get(&key).unwrap().is_none());
+        assert!(!credentials.metadata.exists());
     }
     #[cfg(feature = "ui-tests")]
     #[test]

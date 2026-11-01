@@ -6,7 +6,7 @@ import net from 'node:net'
 import { spawn } from 'node:child_process'
 
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-tauri-ui-'))
-fs.writeFileSync(path.join(directory, '.leptonrc'), JSON.stringify({ editor: { tabSize: 7 } }))
+fs.writeFileSync(path.join(directory, '.leptonrc'), JSON.stringify({ startAtLogin: true, editor: { tabSize: 7 } }))
 const listener = net.createServer()
 await new Promise(resolve => listener.listen(0, '127.0.0.1', resolve))
 const port = listener.address().port
@@ -48,13 +48,22 @@ async function assertLoginFits (description) {
   assert.ok(layout.overflow <= 1 && layout.scrollTop === 0 && layout.clipped.length === 0, `${description}: ${JSON.stringify(layout)}`)
 }
 async function emit (channel) { await run('window.lepton.ipc.emit(arguments[0]); return true', channel) }
+async function testWindowAction (action) {
+  await run('window.__testWindowResult=null; window.__TAURI_INTERNALS__.invoke("ui_test_window_action",{action:arguments[0]}).then(value=>{window.__testWindowResult={value}}).catch(error=>{window.__testWindowResult={error:String(error)}}); return true', action)
+  await waitFor('return window.__testWindowResult!==null', `test window ${action}`)
+  const result = await run('return window.__testWindowResult')
+  if (result.error) throw new Error(result.error)
+  return result.value
+}
+
 async function expectElement (selector, text = '') {
   for (let n = 0; n < 100; n++) {
     const result = await run('const e=document.querySelector(arguments[0]); return !!e && (!arguments[1] || e.innerText.includes(arguments[1]))', selector, text)
     if (result) return
     await new Promise(resolve => setTimeout(resolve, 100))
   }
-  throw new Error(`Timed out waiting for ${selector}: ${text}`)
+  const diagnostic = await run('return {text:document.body.innerText.slice(0,600), errors:window.__smokeErrors || []}')
+  throw new Error(`Timed out waiting for ${selector}: ${text}; ${JSON.stringify(diagnostic)}`)
 }
 async function absent (selector) { await waitFor(`return !document.querySelector(${JSON.stringify(selector)})`, `closing ${selector}`) }
 async function closeModal (selector) { await click(`${selector} .modal-header .close`); await absent(selector) }
@@ -95,6 +104,35 @@ try {
   const artifact = process.env.LEPTON_UI_SCREENSHOT || path.join(directory, 'active.png')
   fs.writeFileSync(artifact, Buffer.from(screenshot, 'base64'))
   console.log(`Screenshot: ${artifact}`)
+  await check('startup autostart and native tray preferences', async () => {
+    const status = await testWindowAction('status')
+    assert.equal(status.autostart, true, 'startAtLogin from .leptonrc must be applied on startup')
+    if (process.platform === 'linux') return // A desktop tray host is not guaranteed under Xvfb.
+    await run('window.__trayReady=false; window.lepton.config.set("window:closeToTray",true).then(()=>window.__TAURI_INTERNALS__.invoke("ui_test_window_action",{action:"close"})).then(()=>{window.__trayReady=true}); return true')
+    await waitFor('return window.__trayReady===true', 'close to tray')
+    let state
+    for (let n = 0; n < 100; n++) {
+      state = await testWindowAction('status')
+      if (!state.visible && state.tray) break
+      await new Promise(resolve => setTimeout(resolve, 100))
+    }
+    assert.equal(state.visible, false, 'Close-to-tray should hide the window')
+    assert.equal(state.tray, true, 'Close-to-tray should create the tray')
+    await testWindowAction('show')
+    await run('window.__minimizeReady=false; window.lepton.config.set("window:minimizeToTray",true).then(()=>window.__TAURI_INTERNALS__.invoke("ui_test_window_action",{action:"minimize"})).then(()=>{window.__minimizeReady=true}); return true')
+    await waitFor('return window.__minimizeReady===true', 'minimize request')
+    for (let n = 0; n < 100; n++) {
+      state = await testWindowAction('status')
+      if (!state.visible && state.tray) break
+      await new Promise(resolve => setTimeout(resolve, 100))
+    }
+    assert.equal(state.visible, false, 'Minimize-to-tray should hide the window')
+    assert.equal(state.tray, true, 'Minimize-to-tray should keep the tray available')
+    state = await testWindowAction('show')
+    assert.equal(state.visible, true, 'The window should restore from the tray')
+    await run('window.__trayReset=false; Promise.all([window.lepton.config.set("window:closeToTray",false),window.lepton.config.set("window:minimizeToTray",false)]).then(()=>{window.__trayReset=true}); return true')
+    await waitFor('return window.__trayReset===true', 'tray preferences reset')
+  })
   await check('new editor', async () => { await emit('new-gist-renderer'); await expectElement('.modal .gist-editor-form .CodeMirror'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
   await check('edit editor', async () => { await emit('edit-gist-renderer'); await expectElement('.modal .gist-editor-form .CodeMirror'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
   await check('about and settings paths', async () => {
@@ -234,9 +272,11 @@ try {
   await check('recoverable new-snippet draft', async () => {
     await run('window.lepton.localStorage.set("new-gist-draft-local", {createdAt:"2026-09-06T21:35:00.000Z",description:"Recovered API helper",private:true,gists:[{filename:"recovered.js",content:"const recovered = true"}]}); return true')
     assert.deepEqual(await run('return window.__smokeErrors'), [], 'Renderer errors before refresh')
-    await run('window.__reloadMarker=true; return true')
+    await run('window.localStorage.setItem("lepton-local-config", JSON.stringify({enterprise:{enable:true},editor:{tabSize:8}})); window.__reloadMarker=true; return true')
     await request(`/session/${session}/refresh`, {})
     await waitFor('return !window.__reloadMarker && !!window.lepton && !!document.querySelector(".active-layout .snippet-box")', 'reloaded UI')
+    assert.equal(await run('return window.lepton.config.get("enterprise:enable")'), false, 'Stale WebView settings must not override defaults when absent from .leptonrc')
+    assert.equal(await run('return window.lepton.config.get("editor:tabSize")'), 4, '.leptonrc must take precedence over stale WebView settings')
     await run('window.__smokeErrors=[]; window.addEventListener("error", e=>window.__smokeErrors.push(e.message)); window.addEventListener("unhandledrejection", e=>window.__smokeErrors.push(String(e.reason))); return true')
     await emit('new-gist-renderer')
     await expectElement('.new-gist-draft-callout', 'Local draft available')

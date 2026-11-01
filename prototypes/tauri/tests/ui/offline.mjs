@@ -9,6 +9,8 @@ import { spawn } from 'node:child_process'
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-offline-ui-'))
 let gist = { id: 'abc123', description: '[Offline fixture] #test', public: false, html_url: 'https://example.test/abc123', updated_at: '2026-01-01T00:00:00Z', files: { 'note.txt': { filename: 'note.txt', language: 'Text', content: 'before sync' }, 'tasks.md': { filename: 'tasks.md', language: 'Markdown', content: '# Tasks\n\n- [ ] first task\n' } } }
 const incomplete = { id: 'abc124', description: '[Large fixture] #test', public: false, html_url: 'https://example.test/abc124', updated_at: '2026-01-01T00:00:00Z', truncated: true, files: { 'first.txt': { filename: 'first.txt', language: 'Text' } } }
+const detailRequests = []
+const brief = value => ({ ...value, files: Object.fromEntries(Object.entries(value.files).map(([name, file]) => [name, Object.fromEntries(Object.entries(file).filter(([key]) => key !== 'content'))])) })
 const server = http.createServer((req, res) => {
   if (req.headers.authorization !== 'Bearer ui-test-token') { res.writeHead(401); res.end(); return }
   let body = ''
@@ -16,9 +18,9 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     let output
     if (req.method === 'GET' && req.url === '/api/v3/user') output = { login: 'fixture-user', html_url: 'https://example.test/user' }
-    else if (req.method === 'GET' && req.url.startsWith('/api/v3/gists?')) output = [gist, incomplete]
-    else if (req.method === 'GET' && req.url === '/api/v3/gists/abc123') output = gist
-    else if (req.method === 'GET' && req.url === '/api/v3/gists/abc124') output = incomplete
+    else if (req.method === 'GET' && req.url.startsWith('/api/v3/gists?')) output = [brief(gist), brief(incomplete)]
+    else if (req.method === 'GET' && req.url === '/api/v3/gists/abc123') { detailRequests.push('abc123'); output = gist }
+    else if (req.method === 'GET' && req.url === '/api/v3/gists/abc124') { detailRequests.push('abc124'); output = incomplete }
     else if (req.method === 'PATCH' && req.url === '/api/v3/gists/abc123') {
       const patch = JSON.parse(body)
       const files = { ...gist.files }
@@ -91,17 +93,31 @@ try {
     fs.writeFileSync(process.env.LEPTON_UI_LOADING_SCREENSHOT, Buffer.from(screenshot, 'base64'))
   }
   await waitFor('return document.querySelector(".snippet-box")?.innerText.includes("Offline fixture")', 'mock GitHub account')
+  assert.deepEqual(detailRequests, ['abc123'], 'Default sync should fetch only the selected snippet')
   await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Large fixture")).querySelector("div").click(); return true')
   await waitFor('return document.querySelector(".snippet-box [role=status]")?.innerText.includes("cannot be displayed or edited safely")', 'incomplete snippet warning')
+  assert.deepEqual(detailRequests, ['abc123', 'abc124'], 'Selecting an uncached snippet should fetch its details')
   assert.equal(await run('return !!document.querySelector(".header-controls [title=Edit]")'), false)
   await run('window.lepton.ipc.emit("edit-gist-renderer"); return true')
   assert.equal(await run('return !!document.querySelector(".gist-editor-form")'), false, 'An incomplete snippet must not be editable')
   await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Offline fixture")).querySelector("div").click(); return true')
   await waitFor('return document.querySelector(".snippet-box")?.innerText.includes("Offline fixture")', 'return to complete snippet')
+  await run('window.__downloadAllSaved=false; window.lepton.config.set("snippet:downloadAll",true).then(()=>{window.__downloadAllSaved=true}); return true')
+  await waitFor('return window.__downloadAllSaved===true', 'download-all preference')
+  await run('window.lepton.ipc.emit("sync-gists"); return true')
+  for (let n = 0; n < 100 && detailRequests.filter(id => id === 'abc124').length < 2; n++) await new Promise(resolve => setTimeout(resolve, 100))
+  assert.equal(detailRequests.filter(id => id === 'abc124').length, 2, 'Download-all sync should fetch details for every snippet')
+  await waitFor('return !!document.querySelector(".snippet-box .task-list-item-checkbox")', 'download-all sync completes')
   const metadata = path.join(directory, 'remote-account.json')
   for (let n = 0; n < 100 && !fs.existsSync(metadata); n++) await new Promise(resolve => setTimeout(resolve, 100))
   assert.ok(fs.existsSync(metadata))
   assert.equal(fs.readFileSync(metadata, 'utf8').includes('ui-test-token'), false)
+  await run('window.__storageReady=false; window.lepton.config.set("security:cachedAccessTokenStorage","file").then(()=>window.__TAURI_INTERNALS__.invoke("restore_remote_account")).then(value=>{window.__storageReady=value?.token==="ui-test-token"}); return true')
+  await waitFor('return window.__storageReady===true', 'file credential mode')
+  assert.equal(fs.readdirSync(path.join(directory, 'credentials')).length, 1, 'File mode should store the account credential in the isolated directory')
+  await run('window.__storageReady=false; window.lepton.config.set("security:cachedAccessTokenStorage","encrypted").then(()=>window.__TAURI_INTERNALS__.invoke("restore_remote_account")).then(value=>{window.__storageReady=value?.token==="ui-test-token"}); return true')
+  await waitFor('return window.__storageReady===true', 'encrypted credential mode')
+  assert.equal(fs.readdirSync(path.join(directory, 'credentials')).length, 0, 'Switching back to encrypted storage should remove the plaintext credential')
   // Exercise the same bridge used by the editor, including the cache update.
   await run('window.__saveResult="pending"; window.lepton.snippets.request(null,"EDIT_SINGLE_GIST",["provider-session","abc123","[Offline fixture] #test",{"note.txt":{"content":"updated online"}}]).then(()=>{window.__saveResult="ok"},()=>{window.__saveResult="failed"}); return true')
   await waitFor('return window.__saveResult!=="pending"', 'remote edit')

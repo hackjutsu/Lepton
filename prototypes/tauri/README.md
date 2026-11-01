@@ -37,18 +37,21 @@ Use the existing Logout control in the local library to open Lepton's login
 screen, then select GitHub or GitLab and enter a personal access token. For
 GitHub, the login screen's key icon switches to token login. Enterprise and
 self-managed server settings are available through the existing configuration.
-Provider credentials are saved in the operating system's secure credential
-store when available, with no plaintext fallback. Logging out removes the saved
-credential and returns to the login screen; restart to open the local library.
-The last complete remote library
-is cached in SQLite so it can be opened offline; the cached snippets are
+Provider credentials follow `security.cachedAccessTokenStorage`: `file` stores
+the token in a local file, `encrypted` uses the operating system credential
+store, and `auto` uses file storage for development builds and secure storage
+for packaged builds. Like Electron, the encrypted mode falls back to a local
+file when secure storage is unavailable and logs a warning. Logging out removes
+the saved credential and returns to the login screen; restart to open the local
+library. The last synced remote library is cached in SQLite so downloaded
+snippets can be opened offline; the cached snippets are
 plaintext just like the local library. These new behaviors still need native
 end-to-end verification on each supported platform.
 
 For a one-time GitHub sign-in at startup, set `LEPTON_GITHUB_TOKEN_FILE` to a
 local file containing the token. The file is read once; after successful sign-in
-the token is saved to the system credential store. The startup option always
-connects to github.com.
+the token is saved according to the configured credential storage mode. The
+startup option always connects to github.com.
 GitHub files truncated by the API are fetched from a trusted raw URL with size
 and completeness checks. Snippets whose entire file list is truncated and files
 larger than 10 MiB remain unavailable for safe editing. Remote links open in the system
@@ -61,9 +64,13 @@ OAuth app with callback `http://127.0.0.1/callback` and the environment variable
 OAuth verification is deferred. Neither OAuth credentials nor the provided
 personal access token are needed for local library use.
 
+The `autoUpdate` preference is not yet functional in the Rust prototype. It
+requires a signed Tauri release feed and public verification key; those have
+not been set up yet.
+
 Preferences read and write `.leptonrc` in the user's home directory. Isolated
-UI tests use their temporary data directory instead. Older prototype settings in WebView local storage
-are used as fallbacks for keys absent from that file. The prototype writes a
+UI tests use their temporary data directory instead. Settings absent from the
+file use Lepton's defaults. The prototype writes a
 separate log in its app-data directory and redacts known credential patterns
 and the active provider token from renderer messages. Copying uses the Tauri
 clipboard plugin. Failed saves leave the draft in the editor. The original

@@ -6,7 +6,6 @@ import defaults from '../../../configs/defaultConfig'
 import { renderNotebookContent } from '../../../app/utilities/jupyterNotebook/core'
 import { isValidPreferenceValue, preferenceRequiresRestart } from '../../../app/utilities/config/preferences'
 
-const configKey = 'lepton-local-config'
 function load (key, fallback) {
   try { return JSON.parse(window.localStorage.getItem(key)) ?? fallback } catch (_) { return fallback }
 }
@@ -21,7 +20,9 @@ function mergeConfig (base, override) {
   return result
 }
 const runtime = window.__leptonRuntimeInfo
-const config = mergeConfig(mergeConfig(defaults, load(configKey, {})), runtime.config)
+// The native runtime reads ~/.leptonrc. Old WebView-local copies can outlive
+// that file and must not silently re-enable settings removed from it.
+const config = mergeConfig(defaults, runtime.config)
 function find (path) { return path.split(':').reduce((node, key) => node == null ? undefined : node[key], config) }
 const initialZoom = Number(find('zoom:percent'))
 let currentZoom = Number.isFinite(initialZoom) && initialZoom >= 50 && initialZoom <= 300 ? initialZoom : 100
@@ -38,7 +39,6 @@ async function set (path, value) {
   let node = config
   for (const part of parts) { node[part] = node[part] || {}; node = node[part] }
   node[key] = value
-  save(configKey, config)
   if (path === 'zoom:percent') await applyZoom(value)
   return value
 }

@@ -9,6 +9,7 @@ mod library;
 mod local_gists;
 mod remote_cache;
 mod runtime;
+mod tray;
 
 use library::{Draft, Library, Snippet};
 use local_gists::LocalGists;
@@ -22,6 +23,38 @@ use tauri_plugin_opener::OpenerExt;
 
 struct StartupGithubTokenFile(Mutex<Option<std::ffi::OsString>>);
 struct TestAutostart(Mutex<bool>);
+
+#[cfg(feature = "ui-tests")]
+#[tauri::command]
+fn ui_test_window_action(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+    autostart: tauri::State<'_, TestAutostart>,
+    action: String,
+) -> Result<Value, String> {
+    if std::env::var("LEPTON_UI_TESTS").as_deref() != Ok("1") {
+        return Err("Test commands are disabled".into());
+    }
+    match action.as_str() {
+        "close" => window.close().map_err(|_| "Unable to close test window")?,
+        "minimize" => window
+            .minimize()
+            .map_err(|_| "Unable to minimize test window")?,
+        "show" => {
+            window
+                .unminimize()
+                .map_err(|_| "Unable to restore test window")?;
+            window.show().map_err(|_| "Unable to show test window")?;
+        }
+        "status" => {}
+        _ => return Err("Invalid test action".into()),
+    }
+    Ok(serde_json::json!({
+        "visible": window.is_visible().map_err(|_| "Unable to check test window")?,
+        "tray": app.tray_by_id("lepton-tray").is_some(),
+        "autostart": *autostart.0.lock().map_err(|_| "Autostart unavailable")?
+    }))
+}
 
 #[tauri::command]
 fn take_startup_github_token(
@@ -94,6 +127,37 @@ fn show_native_notification(
 #[tauri::command]
 fn runtime_info(files: tauri::State<'_, runtime::RuntimeFiles>) -> Result<Value, String> {
     files.info()
+}
+
+fn apply_startup_autostart(
+    app: &tauri::AppHandle,
+    files: &runtime::RuntimeFiles,
+    test_mode: bool,
+) -> Result<(), String> {
+    let enabled = files
+        .info()?
+        .get("config")
+        .and_then(|config| config.get("startAtLogin"))
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+    if test_mode {
+        let state = app.state::<TestAutostart>();
+        *state.0.lock().map_err(|_| "Autostart unavailable")? = enabled;
+        return Ok(());
+    }
+    let manager = app.autolaunch();
+    let current = manager
+        .is_enabled()
+        .map_err(|_| "Unable to check start at login")?;
+    if current != enabled {
+        if enabled {
+            manager.enable()
+        } else {
+            manager.disable()
+        }
+        .map_err(|_| "Unable to apply start at login")?;
+    }
+    Ok(())
 }
 
 #[tauri::command]
@@ -174,32 +238,55 @@ fn open_runtime_file(
 #[tauri::command]
 async fn remember_remote_account(
     store: tauri::State<'_, Arc<credentials::Credentials>>,
+    files: tauri::State<'_, runtime::RuntimeFiles>,
     account: credentials::Account,
     token: String,
 ) -> Result<bool, String> {
+    let mode = files.token_storage_mode()?;
     let store = Arc::clone(store.inner());
-    tauri::async_runtime::spawn_blocking(move || store.remember(&account, &token))
-        .await
-        .map_err(|_| "Credential storage is unavailable")?
+    let (saved, fallback) = tauri::async_runtime::spawn_blocking(move || {
+        store.remember_configured(&account, &token, &mode)
+    })
+    .await
+    .map_err(|_| "Credential storage is unavailable")??;
+    if fallback {
+        files.log_event(
+            "warn",
+            "Secure credential storage unavailable; using file storage",
+        );
+    }
+    Ok(saved)
 }
 
 #[tauri::command]
 async fn restore_remote_account(
     store: tauri::State<'_, Arc<credentials::Credentials>>,
+    files: tauri::State<'_, runtime::RuntimeFiles>,
 ) -> Result<Option<credentials::RestoredAccount>, String> {
+    let mode = files.token_storage_mode()?;
     let store = Arc::clone(store.inner());
-    tauri::async_runtime::spawn_blocking(move || store.restore())
-        .await
-        .map_err(|_| "Credential storage is unavailable")?
+    let (account, fallback) =
+        tauri::async_runtime::spawn_blocking(move || store.restore_configured(&mode))
+            .await
+            .map_err(|_| "Credential storage is unavailable")??;
+    if fallback {
+        files.log_event(
+            "warn",
+            "Secure credential storage unavailable; using file storage",
+        );
+    }
+    Ok(account)
 }
 
 #[tauri::command]
 async fn forget_remote_account(
     store: tauri::State<'_, Arc<credentials::Credentials>>,
+    files: tauri::State<'_, runtime::RuntimeFiles>,
     account: credentials::Account,
 ) -> Result<(), String> {
+    let mode = files.token_storage_mode()?;
     let store = Arc::clone(store.inner());
-    tauri::async_runtime::spawn_blocking(move || store.forget(&account))
+    tauri::async_runtime::spawn_blocking(move || store.forget_configured(&account, &mode))
         .await
         .map_err(|_| "Credential storage is unavailable")?
 }
@@ -436,6 +523,7 @@ fn main() {
     #[cfg(feature = "ui-tests")]
     let builder = builder.plugin(tauri_plugin_wdio_webdriver::init());
     builder
+        .on_window_event(tray::on_window_event)
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_autostart::init(
@@ -476,10 +564,14 @@ fn main() {
                 &app.path().home_dir()?,
                 test_credentials.then_some(directory.as_path()),
             );
-            app.manage(
-                runtime::RuntimeFiles::new(config_path, &directory)
-                    .map_err(std::io::Error::other)?,
-            );
+            let runtime_files = runtime::RuntimeFiles::new(config_path, &directory)
+                .map_err(std::io::Error::other)?;
+            if let Err(error) =
+                apply_startup_autostart(app.handle(), &runtime_files, test_credentials)
+            {
+                runtime_files.log_event("warn", &error);
+            }
+            app.manage(runtime_files);
             app.manage(Mutex::new(library));
             #[allow(unused_mut)]
             let mut local_gists = LocalGists::open(&directory).map_err(std::io::Error::other)?;
@@ -493,6 +585,8 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            #[cfg(feature = "ui-tests")]
+            ui_test_window_action,
             search_snippets,
             save_snippet,
             local_gist_request,

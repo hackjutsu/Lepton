@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import { enqueueCache, formatLogArguments, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loginFailureStatus, requestProvider, session, unavailableGithubSnippet } from '../../prototypes/tauri/legacy/session'
+import { enqueueCache, formatLogArguments, githubStarredUrl, isOfflineError, loadRemoteSnapshot, loadRemoteSnippets, loginFailureStatus, requestProvider, session, unavailableGithubSnippet } from '../../prototypes/tauri/legacy/session'
 import githubCore from '../../app/utilities/githubApi/core'
 
 describe('Tauri provider request bridge', () => {
@@ -68,6 +68,29 @@ describe('Tauri provider request bridge', () => {
     await expect(loadRemoteSnapshot(account, target, () => Promise.reject('GitHub request failed (HTTP 401)'), loadCache)).rejects.toBe('GitHub request failed (HTTP 401)')
     await expect(loadRemoteSnapshot(account, { ...target, base: 'https://other.test' }, offline, loadCache)).rejects.toBe('GitHub network request failed')
     expect(loadCache).toHaveBeenCalledTimes(1)
+  })
+
+  it('honors downloadAll and reuses only unchanged cached snippets', async () => {
+    const list = ['a', 'b', 'c'].map(id => ({ id, updated_at: 'new', files: { 'x.txt': { filename: 'x.txt' } } }))
+    const cached = [{ ...list[1], files: { 'x.txt': { content: 'cached' } } }, { ...list[2], updated_at: 'old' }]
+    const fetchDetails = vi.fn(async gist => ({ ...gist, files: { 'x.txt': { content: gist.id } } }))
+    const lazy = await loadRemoteSnippets(list, fetchDetails, { cached, selectedId: 'a', downloadAll: false, provider: 'github' })
+    expect(fetchDetails.mock.calls.map(call => call[0].id)).toEqual(['a'])
+    expect(lazy[0].files['x.txt'].content).toBe('a')
+    expect(lazy[1].files['x.txt'].content).toBe('cached')
+    expect(lazy[2]._leptonBrief).toBe(true)
+    fetchDetails.mockClear()
+    const all = await loadRemoteSnippets(list, fetchDetails, { cached, downloadAll: true, provider: 'github' })
+    expect(fetchDetails.mock.calls.map(call => call[0].id).sort()).toEqual(['a', 'c'])
+    expect(all.every(gist => !gist._leptonBrief)).toBe(true)
+  })
+
+  it('keeps incomplete GitHub snippets visible when downloading details', async () => {
+    const brief = { id: 'bad', files: {} }
+    const fetchDetails = vi.fn().mockRejectedValue('GitHub returned an incomplete file list; this snippet cannot be edited safely')
+    const result = await loadRemoteSnippets([brief], fetchDetails, { downloadAll: true, provider: 'github' })
+    expect(result[0]._leptonUnavailable).toContain('cannot be displayed')
+    await expect(loadRemoteSnippets([brief], () => Promise.reject('GitHub network request failed'), { downloadAll: true, provider: 'github' })).rejects.toBe('GitHub network request failed')
   })
 
   it('serializes cache updates and continues after a failed write', async () => {
