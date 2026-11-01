@@ -6,6 +6,7 @@ import net from 'node:net'
 import { spawn } from 'node:child_process'
 
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-tauri-ui-'))
+fs.writeFileSync(path.join(directory, '.leptonrc'), JSON.stringify({ editor: { tabSize: 7 } }))
 const listener = net.createServer()
 await new Promise(resolve => listener.listen(0, '127.0.0.1', resolve))
 const port = listener.address().port
@@ -94,6 +95,7 @@ try {
     await expectElement('.about-section', 'Configurations')
     const paths = await run('return window.lepton.globals.getPaths()')
     assert.equal(paths.configFilePath, path.join(directory, '.leptonrc'))
+    assert.equal(await run('return window.lepton.config.get("editor:tabSize")'), 7, 'Preferences must load from .leptonrc at startup')
     assert.equal(paths.logFilePath, path.join(directory, 'logs', 'lepton.log'))
     assert.equal(fs.existsSync(paths.logFilePath), true)
     await expectElement('.about-section', paths.configFilePath)

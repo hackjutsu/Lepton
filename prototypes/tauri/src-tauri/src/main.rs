@@ -472,13 +472,12 @@ fn main() {
                 directory.clone(),
                 test_credentials,
             )));
-            let config_dir =
-                match std::env::var_os("XDG_CONFIG_HOME").filter(|path| !path.is_empty()) {
-                    Some(path) => std::path::PathBuf::from(path),
-                    None => app.path().home_dir()?,
-                };
+            let config_path = runtime::config_path(
+                &app.path().home_dir()?,
+                test_credentials.then_some(directory.as_path()),
+            );
             app.manage(
-                runtime::RuntimeFiles::new(config_dir.join(".leptonrc"), &directory)
+                runtime::RuntimeFiles::new(config_path, &directory)
                     .map_err(std::io::Error::other)?,
             );
             app.manage(Mutex::new(library));

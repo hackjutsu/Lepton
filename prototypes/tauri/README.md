@@ -61,8 +61,8 @@ OAuth app with callback `http://127.0.0.1/callback` and the environment variable
 OAuth verification is deferred. Neither OAuth credentials nor the provided
 personal access token are needed for local library use.
 
-Preferences read and write the same `.leptonrc` location as Electron (or the
-`XDG_CONFIG_HOME` override). Older prototype settings in WebView local storage
+Preferences read and write `.leptonrc` in the user's home directory. Isolated
+UI tests use their temporary data directory instead. Older prototype settings in WebView local storage
 are used as fallbacks for keys absent from that file. The prototype writes a
 separate log in its app-data directory and redacts known credential patterns
 and the active provider token from renderer messages. Copying uses the Tauri

@@ -11,6 +11,10 @@ pub struct RuntimeFiles {
     lock: Mutex<()>,
 }
 
+pub fn config_path(home: &Path, test_directory: Option<&Path>) -> PathBuf {
+    test_directory.unwrap_or(home).join(".leptonrc")
+}
+
 const KEYS: &[&str] = &[
     "theme",
     "autoUpdate",
@@ -174,6 +178,16 @@ impl RuntimeFiles {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn configuration_uses_home_except_for_isolated_ui_tests() {
+        let home = Path::new("example-home");
+        let test_dir = Path::new("test-data");
+        assert_eq!(config_path(home, None), home.join(".leptonrc"));
+        assert_eq!(
+            config_path(home, Some(test_dir)),
+            test_dir.join(".leptonrc")
+        );
+    }
     #[test]
     fn preserves_private_fields_and_refuses_invalid_input() {
         let tmp = tempfile::tempdir().unwrap();
