@@ -18,7 +18,7 @@ function set (path, value) {
   for (const part of parts) { node[part] = node[part] || {}; node = node[part] }
   node[key] = value
   save(configKey, config)
-  return Promise.resolve({ status: true })
+  return Promise.resolve(value)
 }
 const listeners = new Map()
 function emit (channel, ...args) { (listeners.get(channel) || []).forEach(fn => fn(...args)) }
@@ -37,7 +37,7 @@ window.addEventListener('keydown', event => {
   if (event.repeat) return
   for (const [setting, channel] of Object.entries(shortcutChannels)) {
     if (!matchesAccelerator(event, find(`shortcuts:${setting}`), navigator.platform)) continue
-    const modalOpen = Boolean(document.querySelector('.modal[role="dialog"], .local-provider-overlay'))
+    const modalOpen = Boolean(document.querySelector('.modal[role="dialog"]'))
     if (modalOpen && channel !== 'submit-gist') return
     if (channel === 'submit-gist' && !document.querySelector('.gist-editor-form')) return
     event.preventDefault()

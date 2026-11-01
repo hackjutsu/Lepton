@@ -2,7 +2,6 @@ import './bridge'
 import './local.css'
 import localAvatar from '../../../app/utilities/octodex/dojocat.webp?inline'
 import React from 'react'
-import ProviderPanel from './ProviderPanel'
 import { session, requestProvider } from './session'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
@@ -16,11 +15,12 @@ import SearchIndex from '../../../app/utilities/search'
 import Store from '../../../app/utilities/store'
 import { configureI18n } from '../../../app/utilities/i18n'
 import { setSnippetProvider } from '../../../app/utilities/snippetApi'
+import { getConfiguredProvider } from '../../../app/utilities/snippetProvider'
 import { advanceSessionGeneration } from '../../../app/utilities/sessionGeneration'
 import { getRenderFixture } from '../../../app/renderFixtures'
 import { addLangPrefix, descriptionParser, parseCustomTags } from '../../../app/utilities/parser'
 import { createDefaultGistFilters, getActiveGistIdForFilters } from '../../../app/utilities/gistFilters'
-import { updateAboutModalStatus, updateDashboardModalStatus, updateGists, updateGistTags, updateGistFilters, selectGist, updateSearchWindowStatus, updateImmersiveModeStatus, updateUserSession, updateAccessToken, updatePinnedTags } from '../../../app/actions'
+import { updateAboutModalStatus, updateDashboardModalStatus, updateGists, updateGistTags, updateGistFilters, selectGist, updateSearchWindowStatus, updateImmersiveModeStatus, updateUserSession, updateAccessToken, updatePinnedTags, updateLoginStatus } from '../../../app/actions'
 
 configureI18n(window.lepton.config.get('i18n:locale'))
 const localPref = new Store({ configName: 'user-preferences', defaults: {} })
@@ -35,8 +35,8 @@ function profileAvatar (url) {
     return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : localAvatar
   } catch (_) { return localAvatar }
 }
-const provider = { type: 'github' }
-const cached = { profile: 'local', token: 'local', provider }
+let provider = getConfiguredProvider(window.lepton.config)
+const cached = { profile: null, token: null, provider }
 const fixture = getRenderFixture('active')
 const store = createStore(RootReducer, { ...fixture.state, gists: {}, gistTags: {}, activeGist: null, pinnedTags: localPref.get('local')?.pinnedTags || [], userSession: { activeStatus: 'ACTIVE', profile }, accessToken: 'local' }, applyMiddleware(thunk))
 
@@ -83,7 +83,6 @@ function canSwitch () {
   const state = store.getState()
   if (state.gistEditModalStatus === 'ON' || state.gistNewModalStatus === 'ON') throw new Error('Close the snippet editor before switching libraries.')
 }
-let renderProvider = () => {}
 async function switchProvider (target) {
   canSwitch()
   let account = profile
@@ -102,8 +101,32 @@ async function switchProvider (target) {
   store.dispatch(updateUserSession({ activeStatus: 'ACTIVE', profile: account }))
   store.dispatch(updatePinnedTags(localPref.get(account.storageKey)?.pinnedTags || []))
   applySnippets(snippets, target.mode === 'local')
-  renderProvider()
 }
+
+// Reuse Lepton's existing login and logout screens for account switching.
+let loginPending = false
+async function launchAuthWindow (token) {
+  if (loginPending) return
+  loginPending = true
+  store.dispatch(updateLoginStatus({}))
+  store.dispatch(updateUserSession({ activeStatus: 'IN_PROGRESS' }))
+  try {
+    const credential = token || await invoke('start_github_oauth')
+    await switchProvider({ mode: provider.type, base: provider.baseUrl, token: credential })
+  } catch (error) {
+    store.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+    store.dispatch(updateLoginStatus({ level: 'error', message: String(error) }))
+  } finally { loginPending = false }
+}
+window.lepton.ipc.on('session-destroyed', () => {
+  const wasRemote = session.mode !== 'local'
+  Object.assign(session, { mode: 'local', base: '', token: '' })
+  if (wasRemote) {
+    switchProvider({ mode: 'local', base: '', token: '' }).catch(error => {
+      store.dispatch(updateLoginStatus({ level: 'error', message: String(error) }))
+    })
+  }
+})
 
 for (const [channel, key, action] of [
   ['search-gist', 'searchWindowStatus', updateSearchWindowStatus],
@@ -112,13 +135,9 @@ for (const [channel, key, action] of [
   ['immersive-mode', 'immersiveMode', updateImmersiveModeStatus]
 ]) window.lepton.ipc.on(channel, () => store.dispatch(action(store.getState()[key] === 'ON' ? 'OFF' : 'ON')))
 
-const panelNode = document.createElement('div')
-document.body.appendChild(panelNode)
-const panelRoot = createRoot(panelNode)
-renderProvider = () => panelRoot.render(<ProviderPanel mode={session.mode} connect={(mode, base, token) => switchProvider({ mode, base, token })} disconnect={() => switchProvider({ mode: 'local', base: '', token: '' })} />)
 document.body.dataset.provider = 'local'
-renderProvider()
 const root = createRoot(document.getElementById('container'))
 reload().then(() => {
-  root.render(<Provider store={store}><AppContainer searchIndex={SearchIndex} localPref={localPref} updateLocalStorage={() => {}} getCachedUserInfo={() => cached} loggedInUserInfo={cached} launchAuthWindow={() => {}} provider={provider} onProviderChange={() => provider} onGitLabHostChange={() => provider} reSyncUserGists={reload} updateAboutModalStatus={updateAboutModalStatus} updateDashboardModalStatus={updateDashboardModalStatus} updateActiveGistAfterClicked={(gists, tags, filters, active) => store.dispatch(selectGist(getActiveGistIdForFilters(tags, filters, active)))} /></Provider>)
+  const refreshProvider = () => { provider = getConfiguredProvider(window.lepton.config); return provider }
+  root.render(<Provider store={store}><AppContainer searchIndex={SearchIndex} localPref={localPref} updateLocalStorage={() => {}} getCachedUserInfo={() => cached} loggedInUserInfo={cached} launchAuthWindow={launchAuthWindow} provider={provider} onProviderChange={refreshProvider} onGitLabHostChange={refreshProvider} reSyncUserGists={reload} updateAboutModalStatus={updateAboutModalStatus} updateDashboardModalStatus={updateDashboardModalStatus} updateActiveGistAfterClicked={(gists, tags, filters, active) => store.dispatch(selectGist(getActiveGistIdForFilters(tags, filters, active)))} /></Provider>)
 }).catch(error => { root.render(<main style={{ padding: 24 }}>Unable to open the local library: {String(error)}</main>) })

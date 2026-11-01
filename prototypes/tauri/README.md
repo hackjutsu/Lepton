@@ -33,10 +33,14 @@ Previous local prototype data is imported once without modifying the source.
 Snippets are stored as plaintext; files have a 2 MB limit. Concurrent edits to
 the same local snippet are last-write-wins.
 
-Connect an account using a GitHub or GitLab personal access token, optionally
-with an enterprise or self-managed server URL. Tokens are held in memory for
-the session and must be entered again after restarting. Account switching keeps
-the local library separate. Remote content is not cached in the local database.
+Use the existing Logout control in the local library to open Lepton's login
+screen, then select GitHub or GitLab and enter a personal access token. For
+GitHub, the login screen's key icon switches to token login. Enterprise and
+self-managed server settings are available through the existing configuration.
+Tokens are held in memory for the session and must be entered again after
+restarting. Logging out of a remote account returns to the local library;
+restarting also opens the local library. Remote content is not cached in the
+local database.
 GitHub snippet files returned truncated by the API are rejected to avoid
 accidentally overwriting incomplete content. Remote links open in the system
 browser, and sharing copies a provider link. Some native integrations and

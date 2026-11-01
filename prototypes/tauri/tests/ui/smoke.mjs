@@ -107,38 +107,6 @@ try {
   })
   await check('PHP template highlighting', async () => { await selectSnippet('PHP template'); await expectElement('.code-area .language-php', 'Ready') })
   await check('Jupyter notebook preview', async () => { await selectSnippet('Notebook fixture'); await expectElement('.jupyterNotebook-section .nb-notebook', 'Notebook Fixture') })
-  await check('provider dialog and OAuth configuration error', async () => {
-    await run('[...document.querySelectorAll("button")].find(e=>e.textContent.trim()==="Connect account").click(); return true')
-    await expectElement('.local-provider-overlay', 'Personal access token')
-    await run('const e=document.querySelector(".local-provider-overlay select"); e.value="github"; e.dispatchEvent(new Event("change",{bubbles:true})); return true')
-    await expectElement('.local-provider-overlay', 'Sign in with GitHub OAuth')
-    await run('[...document.querySelectorAll(".local-provider-overlay button")].find(e=>e.textContent.includes("GitHub OAuth")).click(); return true')
-    await expectElement('.provider-error', 'GitHub OAuth is not configured')
-    await run('[...document.querySelectorAll(".local-provider-overlay button")].find(e=>e.textContent.trim()==="Cancel").click(); return true')
-    await absent('.local-provider-overlay')
-    await expectElement('.active-layout')
-  })
-  if (process.env.LEPTON_TEST_GITHUB_TOKEN) {
-    await check('live GitHub token connection and profile', async () => {
-      await run('[...document.querySelectorAll("button")].find(e=>e.textContent.trim()==="Connect account").click(); return true')
-      await run('const e=document.querySelector(".local-provider-overlay select"); e.value="github"; e.dispatchEvent(new Event("change",{bubbles:true})); return true')
-      await run('const e=document.querySelector(".local-provider-overlay input[type=password]"); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,arguments[0]); e.dispatchEvent(new Event("input",{bubbles:true})); return true', process.env.LEPTON_TEST_GITHUB_TOKEN)
-      await run('document.querySelector(".local-provider-overlay form").requestSubmit(); return true')
-      for (let n = 0; n < 600; n++) {
-        const status = await run('return {connected:!![...document.querySelectorAll("button")].find(e=>e.textContent.trim()==="Switch to local library"), error:document.querySelector(".provider-error")?.innerText}')
-        if (status.error) throw new Error(`GitHub connection failed: ${status.error}`)
-        if (status.connected) break
-        if (n === 599) throw new Error('Timed out connecting to GitHub')
-        await new Promise(resolve => setTimeout(resolve, 200))
-      }
-      await waitFor('const e=document.querySelector(".profile-image-section"); return !!e && e.complete && e.naturalWidth > 0', 'GitHub profile image')
-      assert.equal(await run('return document.querySelector(".profile-image-section").src.startsWith("https:")'), true, 'Expected a remote GitHub avatar')
-      const remoteLinks = await run('const links=[...document.querySelectorAll(".header-controls a")]; return links.filter(e=>/^https?:/.test(e.href) && getComputedStyle(e).display!=="none").length')
-      assert.ok(remoteLinks > 0, 'Expected a visible link to the selected Gist')
-      await run('[...document.querySelectorAll("button")].find(e=>e.textContent.trim()==="Switch to local library").click(); return true')
-      await waitFor('return !![...document.querySelectorAll("button")].find(e=>e.textContent.trim()==="Connect account")', 'local library')
-    })
-  }
   await check('recoverable new-snippet draft', async () => {
     await run('window.lepton.localStorage.set("new-gist-draft-local", {createdAt:"2026-09-06T21:35:00.000Z",description:"Recovered API helper",private:true,gists:[{filename:"recovered.js",content:"const recovered = true"}]}); return true')
     assert.deepEqual(await run('return window.__smokeErrors'), [], 'Renderer errors before refresh')
@@ -153,6 +121,40 @@ try {
     await emit('exit-editor'); await absent('.modal .gist-editor-form')
     await run('window.lepton.localStorage.set("new-gist-draft-local", null); return true')
   })
+  await check('original logout and provider login screens', async () => {
+    assert.equal(await run('return !!document.querySelector(".local-provider-panel") || document.body.innerText.includes("LOCAL SNIPPET")'), false)
+    await run('[...document.querySelectorAll(".user-panel-button")].find(e=>e.innerText.trim().toLowerCase()==="logout").click(); return true')
+    await expectElement('.logout-modal', 'Confirm logout')
+    await click('.logout-modal .btn-danger')
+    await expectElement('.login-modal', 'GitHub Login')
+    await run('const e=document.querySelector(".login-modal .login-provider-controls select"); e.value="gitlab"; e.dispatchEvent(new Event("change",{bubbles:true})); return true')
+    await expectElement('.login-modal', 'GitLab Token Login')
+    await run('const e=document.querySelector(".login-modal .login-provider-controls select"); e.value="github"; e.dispatchEvent(new Event("change",{bubbles:true})); return true')
+    await expectElement('.login-modal', 'GitHub Login')
+    await click('.login-modal-face-front .login-mode-switch')
+    await waitFor('return !!document.querySelector(".login-modal-face-front form input") && !document.querySelector(".login-modal-flipping")', 'GitHub token login')
+  })
+  if (process.env.LEPTON_TEST_GITHUB_TOKEN) {
+    await check('live GitHub token connection and profile', async () => {
+      await run('const e=document.querySelector(".login-modal-face-front form input"); Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,arguments[0]); e.dispatchEvent(new Event("input",{bubbles:true})); return true', process.env.LEPTON_TEST_GITHUB_TOKEN)
+      await run('document.querySelector(".login-modal-face-front form").requestSubmit(); return true')
+      for (let n = 0; n < 600; n++) {
+        const status = await run('return {connected:!!document.querySelector(".active-layout"), error:document.querySelector(".login-status-line-error")?.innerText}')
+        if (status.error) throw new Error(`GitHub connection failed: ${status.error}`)
+        if (status.connected) break
+        if (n === 599) throw new Error('Timed out connecting to GitHub')
+        await new Promise(resolve => setTimeout(resolve, 200))
+      }
+      await waitFor('const e=document.querySelector(".profile-image-section"); return !!e && e.complete && e.naturalWidth > 0', 'GitHub profile image')
+      assert.equal(await run('return document.querySelector(".profile-image-section").src.startsWith("https:")'), true, 'Expected a remote GitHub avatar')
+      const remoteLinks = await run('const links=[...document.querySelectorAll(".header-controls a")]; return links.filter(e=>/^https?:/.test(e.href) && getComputedStyle(e).display!=="none").length')
+      assert.ok(remoteLinks > 0, 'Expected a visible link to the selected Gist')
+      await run('[...document.querySelectorAll(".user-panel-button")].find(e=>e.innerText.trim().toLowerCase()==="logout").click(); return true')
+      await expectElement('.logout-modal', 'Confirm logout')
+      await click('.logout-modal .btn-danger')
+      await expectElement('.active-layout .snippet-box', 'React 19 render fixture')
+    })
+  }
   const errors = await run('return window.__smokeErrors')
   assert.deepEqual(errors, [], 'Renderer errors')
 } finally {
