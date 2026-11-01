@@ -8,9 +8,9 @@ describe('Tauri provider request bridge', () => {
     const state = { mode: 'gitlab', base: 'http://127.0.0.1:8080', token: 'test-only' }
     const patch = { 'a.js': { content: 'hello' } }
     await requestProvider(invoke, 'EDIT_SINGLE_GIST', ['ignored', '42', 'title', patch], state)
-    expect(invoke).toHaveBeenCalledWith('gitlab_request', { base: state.base, token: state.token, operation: 'update', args: ['42', 'title', patch] })
+    expect(invoke).toHaveBeenCalledWith('gitlab_request', { base: state.base, token: state.token, operation: 'update', args: ['42', 'title', patch], proxy: null })
     await requestProvider(invoke, 'DELETE_SINGLE_GIST', ['ignored', '42'], { ...state, mode: 'github' })
-    expect(invoke).toHaveBeenLastCalledWith('github_request', { base: state.base, token: state.token, operation: 'delete', args: ['42'] })
+    expect(invoke).toHaveBeenLastCalledWith('github_request', { base: state.base, token: state.token, operation: 'delete', args: ['42'], proxy: null })
   })
 
   it('rejects unsupported operations without invoking a backend', async () => {

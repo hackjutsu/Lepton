@@ -1,6 +1,7 @@
 //! GitHub Gist API transport. Tokens are session-only and never logged.
 use reqwest::{Client, Method, Url};
 use serde_json::{json, Value};
+#[cfg(test)]
 use std::time::Duration;
 
 fn body_error(error: reqwest::Error) -> String {
@@ -19,7 +20,11 @@ pub struct GitHub {
     http: Client,
 }
 impl GitHub {
+    #[cfg(test)]
     pub fn new(host: &str, token: String) -> Result<Self, String> {
+        Self::new_with_proxy(host, token, None)
+    }
+    pub fn new_with_proxy(host: &str, token: String, proxy: Option<&str>) -> Result<Self, String> {
         let mut base = Url::parse(host).map_err(|_| "Invalid GitHub URL")?;
         if !matches!(base.scheme(), "http" | "https")
             || base.host_str().is_none()
@@ -44,12 +49,7 @@ impl GitHub {
             let path = base.path().trim_end_matches('/').to_owned();
             base.set_path(&format!("{path}/api/v3/"));
         }
-        let http = Client::builder()
-            .timeout(Duration::from_secs(20))
-            .redirect(reqwest::redirect::Policy::none())
-            .user_agent("lepton-snippet-app")
-            .build()
-            .map_err(|e| e.without_url().to_string())?;
+        let http = crate::http_client::provider_client(proxy)?;
         Ok(Self {
             base,
             origin,
@@ -237,21 +237,26 @@ impl GitHub {
         files: &Value,
         public: bool,
     ) -> Result<Value, String> {
-        if files.as_object().is_none_or(|files| files.is_empty()) {
-            return Err("A snippet must contain a file".into());
-        }
-        let created = self
-            .json(
+        validate_patch(files, true)?;
+        let response = self
+            .response(
                 Method::POST,
                 self.url(&["gists"])?,
                 Some(json!({"description":description,"files":files,"public":public})),
             )
             .await?;
+        let created: Value = response
+            .json()
+            .await
+            .map_err(|_| "GitHub may have created the snippet. Sync before retrying.")?;
         let id = created
             .get("id")
             .and_then(Value::as_str)
-            .ok_or("GitHub response has no gist ID")?;
-        self.get(id).await
+            .ok_or("GitHub may have created the snippet. Sync before retrying.")?;
+        match self.get(id).await {
+            Ok(gist) => Ok(gist),
+            Err(_) => saved_fallback(created, description, files),
+        }
     }
     pub async fn update(
         &self,
@@ -260,16 +265,20 @@ impl GitHub {
         files: &Value,
     ) -> Result<Value, String> {
         valid_id(id)?;
-        if !files.is_object() {
-            return Err("Invalid files".into());
-        }
-        self.json(
+        validate_patch(files, false)?;
+        // Fetch a complete pre-edit snapshot before mutating the remote Gist.
+        let previous = self.get(id).await?;
+        let fallback = saved_fallback(previous, description, files)?;
+        self.response(
             Method::PATCH,
             self.url(&["gists", id])?,
             Some(json!({"description":description,"files":files})),
         )
         .await?;
-        self.get(id).await
+        match self.get(id).await {
+            Ok(gist) => Ok(gist),
+            Err(_) => Ok(fallback),
+        }
     }
     pub async fn delete(&self, id: &str) -> Result<(), String> {
         valid_id(id)?;
@@ -277,6 +286,64 @@ impl GitHub {
             .await?;
         Ok(())
     }
+}
+
+fn validate_patch(files: &Value, create: bool) -> Result<(), String> {
+    let files = files.as_object().ok_or("Invalid files")?;
+    if create && files.is_empty() {
+        return Err("A snippet must contain a file".into());
+    }
+    for (name, entry) in files {
+        if name.trim().is_empty() {
+            return Err("Filename is required".into());
+        }
+        if entry.is_null() && !create {
+            continue;
+        }
+        let content = entry
+            .get("content")
+            .and_then(Value::as_str)
+            .ok_or("Invalid file content")?;
+        if content.len() > 10 * 1024 * 1024 {
+            return Err("GitHub file exceeds the supported size".into());
+        }
+    }
+    if create && files.len() > 300 {
+        return Err("GitHub snippets with more than 300 files cannot yet be edited safely".into());
+    }
+    Ok(())
+}
+
+fn saved_fallback(mut gist: Value, description: &str, patch: &Value) -> Result<Value, String> {
+    let root = gist.as_object_mut().ok_or("Invalid GitHub response")?;
+    root.insert("description".into(), json!(description));
+    let files = root
+        .entry("files")
+        .or_insert_with(|| json!({}))
+        .as_object_mut()
+        .ok_or("Invalid GitHub response")?;
+    for (name, entry) in patch.as_object().ok_or("Invalid files")? {
+        if entry.is_null() {
+            files.shift_remove(name);
+            continue;
+        }
+        let content = entry
+            .get("content")
+            .and_then(Value::as_str)
+            .ok_or("Invalid file content")?;
+        let file = files.entry(name).or_insert_with(
+            || json!({"filename":name,"language":crate::local_gists::language(name)}),
+        );
+        let object = file.as_object_mut().ok_or("Invalid GitHub response")?;
+        object.insert("filename".into(), json!(name));
+        object.insert("content".into(), json!(content));
+        object.insert("truncated".into(), json!(false));
+    }
+    if files.is_empty() || files.len() > 300 {
+        return Err("GitHub snippet must contain between 1 and 300 files".into());
+    }
+    root.insert("_leptonRefreshPending".into(), json!(true));
+    Ok(gist)
 }
 fn valid_id(id: &str) -> Result<(), String> {
     if id.is_empty() || !id.bytes().all(|c| c.is_ascii_alphanumeric()) {
@@ -407,6 +474,104 @@ mod tests {
     }
 
     #[test]
+    fn configured_http_proxy_is_used_for_provider_requests() {
+        use std::{
+            io::{Read, Write},
+            net::TcpListener,
+            thread,
+        };
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = thread::spawn(move || {
+            let (mut conn, _) = listener.accept().unwrap();
+            let mut input = [0; 4096];
+            let n = conn.read(&mut input).unwrap();
+            let request = String::from_utf8_lossy(&input[..n]);
+            assert!(request.starts_with("GET http://provider.example.test/api/v3/user "));
+            assert!(request
+                .to_lowercase()
+                .contains("authorization: bearer test-token"));
+            let body = r#"{"login":"test"}"#;
+            write!(
+                conn,
+                "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                body.len()
+            )
+            .unwrap();
+        });
+        tauri::async_runtime::block_on(async {
+            let api = GitHub::new_with_proxy(
+                "http://provider.example.test",
+                "test-token".into(),
+                Some(&format!("http://{address}")),
+            )
+            .unwrap();
+            assert_eq!(api.profile().await.unwrap()["login"], "test");
+        });
+        server.join().unwrap();
+    }
+
+    #[test]
+    fn a_successful_remote_save_is_not_reported_as_failed_when_refresh_fails() {
+        use std::{
+            io::{Read, Write},
+            net::TcpListener,
+            thread,
+        };
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = thread::spawn(move || {
+            for (method, expected, status, body) in [
+                (
+                    "POST",
+                    "/api/v3/gists",
+                    "201 Created",
+                    r#"{"id":"abc","files":{}}"#,
+                ),
+                ("GET", "/api/v3/gists/abc", "503 Service Unavailable", ""),
+                (
+                    "GET",
+                    "/api/v3/gists/abc",
+                    "200 OK",
+                    r#"{"id":"abc","files":{"old.txt":{"filename":"old.txt","content":"unchanged"}}}"#,
+                ),
+                ("PATCH", "/api/v3/gists/abc", "200 OK", "{}"),
+                ("GET", "/api/v3/gists/abc", "503 Service Unavailable", ""),
+            ] {
+                let (mut conn, _) = listener.accept().unwrap();
+                conn.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
+                let mut input = [0; 8192];
+                let n = conn.read(&mut input).unwrap();
+                let request = String::from_utf8_lossy(&input[..n]);
+                assert!(request.starts_with(&format!("{method} {expected} ")));
+                write!(
+                    conn,
+                    "HTTP/1.1 {status}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                )
+                .unwrap();
+            }
+        });
+        tauri::async_runtime::block_on(async {
+            let api = GitHub::new(&format!("http://{address}"), "test-token".into()).unwrap();
+            let created = api
+                .create("created", &json!({"new.txt":{"content":"new"}}), false)
+                .await
+                .unwrap();
+            assert_eq!(created["files"]["new.txt"]["content"], "new");
+            assert_eq!(created["_leptonRefreshPending"], true);
+            let updated = api
+                .update("abc", "edited", &json!({"new.txt":{"content":"changed"}}))
+                .await
+                .unwrap();
+            assert_eq!(updated["files"]["old.txt"]["content"], "unchanged");
+            assert_eq!(updated["files"]["new.txt"]["content"], "changed");
+            assert_eq!(updated["_leptonRefreshPending"], true);
+        });
+        server.join().unwrap();
+    }
+
+    #[test]
     fn gist_operations_use_the_expected_api_methods_and_paths() {
         use std::{
             io::{Read, Write},
@@ -424,6 +589,11 @@ mod tests {
                     r#"[{"id":"abc"}]"#,
                 ),
                 ("POST", "/api/v3/gists", r#"{"id":"abc"}"#),
+                (
+                    "GET",
+                    "/api/v3/gists/abc",
+                    r#"{"id":"abc","files":{"a.js":{"content":"one"}}}"#,
+                ),
                 (
                     "GET",
                     "/api/v3/gists/abc",

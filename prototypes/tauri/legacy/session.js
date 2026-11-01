@@ -57,7 +57,10 @@ export async function requestProvider (invoke, operation, args = [], state = ses
   const entry = actions[operation]
   if (!entry) throw new Error('Unsupported GitLab operation')
   const snapshot = { ...state }
-  const result = await invoke(snapshot.mode === 'github' ? 'github_request' : 'gitlab_request', { base: snapshot.base, token: snapshot.token, operation: entry[0], args: entry[1](args) })
+  const config = globalThis.window?.lepton?.config
+  const address = config?.get('proxy:address')
+  const proxy = config?.get('proxy:enable') && typeof address === 'string' && address.trim() ? address : null
+  const result = await invoke(snapshot.mode === 'github' ? 'github_request' : 'gitlab_request', { base: snapshot.base, token: snapshot.token, operation: entry[0], args: entry[1](args), proxy })
   if (state === session && snapshot.account) {
     if (session.account === snapshot.account && session.token === snapshot.token && ['CREATE_SINGLE_GIST', 'EDIT_SINGLE_GIST', 'DELETE_SINGLE_GIST'].includes(operation)) session.revision++
     try {
@@ -67,6 +70,9 @@ export async function requestProvider (invoke, operation, args = [], state = ses
       // The remote mutation already succeeded; do not report it as a failed save.
       globalThis.window?.lepton?.logger?.warn('Unable to update the remote snippet cache')
     }
+  }
+  if (result?._leptonRefreshPending && state === session && session.account === snapshot.account) {
+    globalThis.window?.lepton?.dialog?.showMessage({ message: 'Saved successfully, but the latest snippet could not be reloaded. Sync again when the connection is available.' })?.catch(() => {})
   }
   return result
 }

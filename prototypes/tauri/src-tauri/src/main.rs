@@ -4,6 +4,7 @@ mod credentials;
 mod github;
 mod github_oauth;
 mod gitlab;
+mod http_client;
 mod library;
 mod local_gists;
 mod remote_cache;
@@ -15,9 +16,12 @@ use serde_json::Value;
 use std::sync::Arc;
 use std::sync::Mutex;
 use tauri::Manager;
+use tauri_plugin_autostart::ManagerExt as AutostartExt;
+use tauri_plugin_notification::NotificationExt;
 use tauri_plugin_opener::OpenerExt;
 
 struct StartupGithubTokenFile(Mutex<Option<std::ffi::OsString>>);
+struct TestAutostart(Mutex<bool>);
 
 #[tauri::command]
 fn take_startup_github_token(
@@ -68,16 +72,71 @@ fn set_webview_zoom(window: tauri::WebviewWindow, percent: f64) -> Result<(), St
 }
 
 #[tauri::command]
+fn show_native_notification(
+    app: tauri::AppHandle,
+    title: String,
+    body: String,
+) -> Result<(), String> {
+    if title.len() > 512 || body.len() > 4096 {
+        return Err("Notification is too long".into());
+    }
+    if cfg!(feature = "ui-tests") && std::env::var("LEPTON_UI_TESTS").as_deref() == Ok("1") {
+        return Ok(());
+    }
+    app.notification()
+        .builder()
+        .title(title)
+        .body(body)
+        .show()
+        .map_err(|_| "Unable to show notification".into())
+}
+
+#[tauri::command]
 fn runtime_info(files: tauri::State<'_, runtime::RuntimeFiles>) -> Result<Value, String> {
     files.info()
 }
 
 #[tauri::command]
 fn set_runtime_config(
+    app: tauri::AppHandle,
     files: tauri::State<'_, runtime::RuntimeFiles>,
+    test_autostart: tauri::State<'_, TestAutostart>,
     key: String,
     value: Value,
 ) -> Result<Value, String> {
+    if key == "startAtLogin" {
+        let enabled = value.as_bool().ok_or("Invalid autostart preference")?;
+        if cfg!(feature = "ui-tests") && std::env::var("LEPTON_UI_TESTS").as_deref() == Ok("1") {
+            let mut current = test_autostart
+                .0
+                .lock()
+                .map_err(|_| "Autostart unavailable")?;
+            let saved = files.set(&key, value)?;
+            *current = enabled;
+            return Ok(saved);
+        }
+        let manager = app.autolaunch();
+        let previous = manager
+            .is_enabled()
+            .map_err(|_| "Unable to check start at login")?;
+        if enabled {
+            manager.enable()
+        } else {
+            manager.disable()
+        }
+        .map_err(|_| "Unable to change start at login")?;
+        match files.set(&key, value) {
+            Ok(saved) => return Ok(saved),
+            Err(error) => {
+                if previous {
+                    let _ = manager.enable();
+                } else {
+                    let _ = manager.disable();
+                }
+                return Err(error);
+            }
+        }
+    }
     files.set(&key, value)
 }
 
@@ -286,8 +345,9 @@ async fn gitlab_request(
     token: String,
     operation: String,
     args: Vec<Value>,
+    proxy: Option<String>,
 ) -> Result<Value, String> {
-    let client = gitlab::GitLab::new(&base, token)?;
+    let client = gitlab::GitLab::new_with_proxy(&base, token, proxy.as_deref())?;
     let string = |i: usize| {
         args.get(i)
             .and_then(Value::as_str)
@@ -332,8 +392,9 @@ async fn github_request(
     token: String,
     operation: String,
     args: Vec<Value>,
+    proxy: Option<String>,
 ) -> Result<Value, String> {
-    let client = github::GitHub::new(&base, token)?;
+    let client = github::GitHub::new_with_proxy(&base, token, proxy.as_deref())?;
     let string = |i: usize| {
         args.get(i)
             .and_then(Value::as_str)
@@ -377,6 +438,12 @@ fn main() {
     builder
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            None,
+        ))
+        .plugin(tauri_plugin_notification::init())
+        .manage(TestAutostart(Mutex::new(false)))
         .manage(StartupGithubTokenFile(Mutex::new(std::env::var_os(
             "LEPTON_GITHUB_TOKEN_FILE",
         ))))
@@ -435,6 +502,7 @@ fn main() {
             start_github_oauth,
             open_external,
             set_webview_zoom,
+            show_native_notification,
             take_startup_github_token,
             runtime_info,
             set_runtime_config,

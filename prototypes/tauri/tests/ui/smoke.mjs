@@ -75,6 +75,9 @@ try {
   await check('active layout, local avatar, image and Markdown', async () => {
     const info = await run('const box=document.querySelector(".active-layout").getBoundingClientRect(); const avatar=document.querySelector(".profile-image-section"); const image=document.querySelector(".image-file-view img"); return {width:box.width,height:box.height,avatar:avatar?.naturalWidth,image:image?.naturalWidth,text:document.body.innerText}')
     assert.ok(info.width > 0 && info.height > 0 && info.avatar > 0 && info.image > 0)
+    const icons = await run('return [...document.querySelectorAll(".user-panel-icon")].map(e=>{const svg=e.querySelector("svg"), box=e.getBoundingClientRect(), icon=svg?.getBoundingClientRect(); return {box:box.width, width:icon?.width, height:icon?.height}})')
+    assert.equal(icons.length, 3)
+    for (const icon of icons) assert.ok(icon.width > 0 && icon.height > 0 && Math.abs(icon.width - icon.box) < 1, 'Sidebar icon must fit its container')
     assert.match(info.text, /exercises markdown rendering/)
     assert.deepEqual(await run('return [...document.querySelectorAll("[data-gist-filename]")].map(e=>e.dataset.gistFilename)'), ['hello.js', 'notes.md', 'lepton-logo.webp', 'styles.css'])
     assert.equal(await run('const e=document.querySelector(".starred-tag-section"); return !!e && getComputedStyle(e).display!=="none"'), false, 'Local library should not show a GitHub starred link')
@@ -118,6 +121,13 @@ try {
     await run('window.__zoomDone=false; window.lepton.config.set("zoom:percent",100).then(()=>{window.__zoomDone=true}); return true')
     await waitFor('return window.__zoomDone===true', 'zoom reset')
     await waitFor(`return window.innerWidth >= ${before} * 0.95`, 'webview zoom reset')
+  })
+  await check('autostart preference and native notification bridge', async () => {
+    await run('window.__autostartDone=false; window.lepton.config.set("startAtLogin",true).then(()=>{window.__autostartDone=true}); new Notification("Lepton test",{body:"Test notification",silent:true}); return true')
+    await waitFor('return window.__autostartDone===true && window.lepton.config.get("startAtLogin")===true', 'autostart preference')
+    assert.equal(JSON.parse(fs.readFileSync(path.join(directory, '.leptonrc'), 'utf8')).startAtLogin, true)
+    await run('window.__autostartDone=false; window.lepton.config.set("startAtLogin",false).then(()=>{window.__autostartDone=true}); return true')
+    await waitFor('return window.__autostartDone===true && window.lepton.config.get("startAtLogin")===false', 'autostart reset')
   })
   await check('dashboard', async () => { await emit('dashboard'); await expectElement('.dashboard-modal canvas'); await closeModal('.dashboard-modal') })
   await check('search with file content', async () => {

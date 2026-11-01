@@ -23,6 +23,11 @@ screen does show the original remote controls.
   entries survive and malformed JSON is not overwritten.
 - Restored the sync timestamp and login progress messages and preserved snippet
   file order, including after deleting a file.
+- Sized the sidebar SVG icons explicitly so WebKit displays them as in Electron;
+  both native apps were rendered with fixtures after the change.
+- GitHub writes return a safely reconstructed result when the server confirms a
+  save but its subsequent refresh fails. A mock-provider test covers create and
+  edit in that condition.
 
 The original Electron smoke suite passed its fixtures, including login progress,
 login errors, editor draft, image-attachment, and exit cases. The Rust UI suite
@@ -49,9 +54,15 @@ fixture test checks that both suites use identical snippet payloads.
 - The Rust log now records redacted renderer messages, but timestamp, rotation,
   main-process coverage, and diagnostic parity still need verification.
 - Settings are persisted. Native zoom and restart-only preference behavior are
-  covered by the macOS UI suite. Updates, start-at-login, window/tray behavior,
-  proxy handling and other preference behavior need implementation or broader
-  platform verification.
+  covered by the macOS UI suite. Native notification and start-at-login bridges
+  are exercised with isolated test substitutes; actual operating-system delivery
+  and login startup still need platform verification. A mock HTTP proxy test
+  verifies provider routing, and HTTP/SOCKS proxy URLs are accepted. PAC and
+  multi-rule proxies, updates, window/tray behavior, and other preference
+  behavior remain incomplete.
+- GitLab still needs the same post-save refresh recovery as GitHub, and a
+  request interrupted before the server responds can leave a save outcome
+  uncertain for either provider.
 - Login expiry and additional failure states, image insertion and attachment limits, file
   dialogs, notifications, OS menu/shortcut behavior,
   account-switch races and unsaved edits need equivalent interaction tests.

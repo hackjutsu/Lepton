@@ -3,7 +3,6 @@
 use percent_encoding::percent_decode_str;
 use reqwest::{Client, Method, Url};
 use serde_json::{json, Map, Value};
-use std::time::Duration;
 
 fn body_error(error: reqwest::Error) -> String {
     if error.is_decode() {
@@ -20,7 +19,11 @@ pub struct GitLab {
 }
 
 impl GitLab {
+    #[cfg(test)]
     pub fn new(base: &str, token: String) -> Result<Self, String> {
+        Self::new_with_proxy(base, token, None)
+    }
+    pub fn new_with_proxy(base: &str, token: String, proxy: Option<&str>) -> Result<Self, String> {
         let mut base = Url::parse(base).map_err(|_| "Invalid GitLab URL")?;
         if !matches!(base.scheme(), "http" | "https")
             || base.host_str().is_none()
@@ -36,12 +39,7 @@ impl GitLab {
         }
         let path = base.path().trim_end_matches('/').to_owned();
         base.set_path(&format!("{path}/api/v4/"));
-        let http = Client::builder()
-            .timeout(Duration::from_secs(20))
-            .redirect(reqwest::redirect::Policy::none())
-            .user_agent("lepton-snippet-app")
-            .build()
-            .map_err(|e| e.without_url().to_string())?;
+        let http = crate::http_client::provider_client(proxy)?;
         Ok(Self { base, token, http })
     }
     fn url(&self, parts: &[&str]) -> Result<Url, String> {

@@ -88,6 +88,14 @@ function log (level, args) {
   invoke('log_runtime_event', { level, message: formatLogArguments(args, session.token) }).catch(() => {})
 }
 
+// The shared Electron renderer uses the web Notification constructor. Route
+// those calls through Tauri so the operating system owns notification delivery.
+window.Notification = class {
+  constructor (title, options = {}) {
+    invoke('show_native_notification', { title: String(title), body: String(options.body || '') }).catch(() => log('warn', ['Unable to show notification']))
+  }
+}
+
 window.lepton = {
   isLocalPrototype: true,
   account: { get: () => ({}) },
