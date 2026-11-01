@@ -13,6 +13,26 @@ use std::sync::Mutex;
 use tauri::Manager;
 use tauri_plugin_opener::OpenerExt;
 
+struct StartupGithubTokenFile(Mutex<Option<std::ffi::OsString>>);
+
+#[tauri::command]
+fn take_startup_github_token(
+    state: tauri::State<'_, StartupGithubTokenFile>,
+) -> Result<Option<String>, String> {
+    let path = state
+        .0
+        .lock()
+        .map_err(|_| "Unable to read startup credential")?
+        .take();
+    let Some(path) = path else { return Ok(None) };
+    let token = std::fs::read_to_string(path).map_err(|_| "Unable to read startup credential")?;
+    let token = token.trim();
+    if token.is_empty() {
+        return Err("Startup credential is empty".into());
+    }
+    Ok(Some(token.to_owned()))
+}
+
 fn validated_external_url(url: &str) -> Result<reqwest::Url, String> {
     let url = reqwest::Url::parse(url).map_err(|_| "Invalid external URL")?;
     if !matches!(url.scheme(), "https" | "http")
@@ -196,6 +216,9 @@ fn main() {
     builder
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_opener::init())
+        .manage(StartupGithubTokenFile(Mutex::new(std::env::var_os(
+            "LEPTON_GITHUB_TOKEN_FILE",
+        ))))
         .setup(|app| {
             let directory = match std::env::var_os("LEPTON_PROTOTYPE_DATA_DIR") {
                 Some(path) => std::path::PathBuf::from(path),
@@ -231,7 +254,8 @@ fn main() {
             gitlab_request,
             github_request,
             start_github_oauth,
-            open_external
+            open_external,
+            take_startup_github_token
         ])
         .run(tauri::generate_context!())
         .expect("Unable to start Lepton Rust prototype");

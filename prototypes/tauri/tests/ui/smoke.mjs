@@ -16,7 +16,7 @@ if (!fs.existsSync(binary)) {
   throw new Error('Missing Tauri UI test binary. Run npm run test:ui:build first.')
 }
 const testEnv = { ...process.env, LEPTON_UI_TESTS: '1', LEPTON_PROTOTYPE_DATA_DIR: directory, TAURI_WEBDRIVER_PORT: String(port) }
-for (const key of ['LEPTON_GITHUB_OAUTH_CLIENT_ID', 'LEPTON_GITHUB_OAUTH_CLIENT_SECRET', 'LEPTON_TEST_GITHUB_TOKEN', 'LEPTON_TEST_GITLAB_TOKEN']) delete testEnv[key]
+for (const key of ['LEPTON_GITHUB_OAUTH_CLIENT_ID', 'LEPTON_GITHUB_OAUTH_CLIENT_SECRET', 'LEPTON_GITHUB_TOKEN_FILE', 'LEPTON_TEST_GITHUB_TOKEN', 'LEPTON_TEST_GITLAB_TOKEN']) delete testEnv[key]
 const app = spawn(binary, [], { env: testEnv, stdio: ['ignore', 'pipe', 'pipe'] })
 let output = ''
 app.on('error', error => { output += error.message })

@@ -140,4 +140,12 @@ const root = createRoot(document.getElementById('container'))
 reload().then(() => {
   const refreshProvider = () => { provider = getConfiguredProvider(window.lepton.config); return provider }
   root.render(<Provider store={store}><AppContainer searchIndex={SearchIndex} localPref={localPref} updateLocalStorage={() => {}} getCachedUserInfo={() => cached} loggedInUserInfo={cached} launchAuthWindow={launchAuthWindow} provider={provider} onProviderChange={refreshProvider} onGitLabHostChange={refreshProvider} reSyncUserGists={reload} updateAboutModalStatus={updateAboutModalStatus} updateDashboardModalStatus={updateDashboardModalStatus} updateActiveGistAfterClicked={(gists, tags, filters, active) => store.dispatch(selectGist(getActiveGistIdForFilters(tags, filters, active)))} /></Provider>)
+  invoke('take_startup_github_token').then(token => {
+    if (!token) return
+    provider = { type: 'github', baseUrl: 'https://github.com' }
+    return launchAuthWindow(token)
+  }).catch(error => {
+    store.dispatch(updateUserSession({ activeStatus: 'INACTIVE' }))
+    store.dispatch(updateLoginStatus({ level: 'error', message: String(error) }))
+  })
 }).catch(error => { root.render(<main style={{ padding: 24 }}>Unable to open the local library: {String(error)}</main>) })

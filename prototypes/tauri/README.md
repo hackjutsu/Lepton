@@ -41,6 +41,10 @@ Tokens are held in memory for the session and must be entered again after
 restarting. Logging out of a remote account returns to the local library;
 restarting also opens the local library. Remote content is not cached in the
 local database.
+
+For a one-time GitHub sign-in at startup, set `LEPTON_GITHUB_TOKEN_FILE` to a
+local file containing the token. The file is read once; the token is held only
+for the current session. The startup option always connects to github.com.
 GitHub snippet files returned truncated by the API are rejected to avoid
 accidentally overwriting incomplete content. Remote links open in the system
 browser, and sharing copies a provider link. Some native integrations and
