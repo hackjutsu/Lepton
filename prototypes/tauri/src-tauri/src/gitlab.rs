@@ -5,6 +5,14 @@ use reqwest::{Client, Method, Url};
 use serde_json::{json, Map, Value};
 use std::time::Duration;
 
+fn body_error(error: reqwest::Error) -> String {
+    if error.is_decode() {
+        "GitLab returned an invalid response".into()
+    } else {
+        "GitLab network request failed".into()
+    }
+}
+
 pub struct GitLab {
     base: Url,
     token: String,
@@ -63,7 +71,7 @@ impl GitLab {
         let response = request
             .send()
             .await
-            .map_err(|e| e.without_url().to_string())?;
+            .map_err(|_| "GitLab network request failed")?;
         if !response.status().is_success() {
             return Err(format!(
                 "GitLab request failed (HTTP {})",
@@ -77,7 +85,7 @@ impl GitLab {
             .await?
             .json()
             .await
-            .map_err(|e| e.without_url().to_string())
+            .map_err(body_error)
     }
     pub async fn profile(&self) -> Result<Value, String> {
         self.json(Method::GET, self.url(&["user"])?, None).await
@@ -97,10 +105,7 @@ impl GitLab {
                 .and_then(|v| v.to_str().ok())
                 .and_then(|s| s.parse::<u32>().ok())
                 .filter(|next| *next > page);
-            let snippets: Vec<Value> = response
-                .json()
-                .await
-                .map_err(|e| e.without_url().to_string())?;
+            let snippets: Vec<Value> = response.json().await.map_err(body_error)?;
             let count = snippets.len();
             all.extend(
                 snippets
@@ -135,7 +140,7 @@ impl GitLab {
                 .await?
                 .text()
                 .await
-                .map_err(|e| e.without_url().to_string())?;
+                .map_err(body_error)?;
             contents.insert(path.clone(), json!(content));
         }
         Ok(normalize(snippet, &contents))

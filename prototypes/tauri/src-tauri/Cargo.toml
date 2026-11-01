@@ -23,6 +23,7 @@ tauri-plugin-wdio-webdriver = { version = "1", optional = true }
 tauri-plugin-opener = "2"
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
 percent-encoding = "2"
+keyring = { version = "3.6.3", features = ["apple-native", "windows-native", "sync-secret-service", "crypto-rust"] }
 rusqlite = { version = "0.38", features = ["bundled"] }
 
 [profile.release]

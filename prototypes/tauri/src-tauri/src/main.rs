@@ -1,15 +1,18 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod credentials;
 mod github;
 mod github_oauth;
 mod gitlab;
 mod library;
 mod local_gists;
+mod remote_cache;
 mod runtime;
 
 use library::{Draft, Library, Snippet};
 use local_gists::LocalGists;
 use serde_json::Value;
+use std::sync::Arc;
 use std::sync::Mutex;
 use tauri::Manager;
 use tauri_plugin_opener::OpenerExt;
@@ -55,6 +58,16 @@ fn open_external(app: tauri::AppHandle, url: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+fn set_webview_zoom(window: tauri::WebviewWindow, percent: f64) -> Result<(), String> {
+    if !percent.is_finite() || !(50.0..=300.0).contains(&percent) {
+        return Err("Invalid zoom percentage".into());
+    }
+    window
+        .set_zoom(percent / 100.0)
+        .map_err(|_| "Unable to apply zoom".into())
+}
+
+#[tauri::command]
 fn runtime_info(files: tauri::State<'_, runtime::RuntimeFiles>) -> Result<Value, String> {
     files.info()
 }
@@ -77,8 +90,12 @@ fn ensure_runtime_config(
 }
 
 #[tauri::command]
-fn log_runtime_event(files: tauri::State<'_, runtime::RuntimeFiles>, level: String) {
-    files.log_event(&level);
+fn log_runtime_event(
+    files: tauri::State<'_, runtime::RuntimeFiles>,
+    level: String,
+    message: String,
+) {
+    files.log_event(&level, &message);
 }
 
 #[tauri::command]
@@ -93,6 +110,108 @@ fn open_runtime_file(
     app.opener()
         .open_path(path, None::<&str>)
         .map_err(|_| "Unable to open file".into())
+}
+
+#[tauri::command]
+async fn remember_remote_account(
+    store: tauri::State<'_, Arc<credentials::Credentials>>,
+    account: credentials::Account,
+    token: String,
+) -> Result<bool, String> {
+    let store = Arc::clone(store.inner());
+    tauri::async_runtime::spawn_blocking(move || store.remember(&account, &token))
+        .await
+        .map_err(|_| "Credential storage is unavailable")?
+}
+
+#[tauri::command]
+async fn restore_remote_account(
+    store: tauri::State<'_, Arc<credentials::Credentials>>,
+) -> Result<Option<credentials::RestoredAccount>, String> {
+    let store = Arc::clone(store.inner());
+    tauri::async_runtime::spawn_blocking(move || store.restore())
+        .await
+        .map_err(|_| "Credential storage is unavailable")?
+}
+
+#[tauri::command]
+async fn forget_remote_account(
+    store: tauri::State<'_, Arc<credentials::Credentials>>,
+    account: credentials::Account,
+) -> Result<(), String> {
+    let store = Arc::clone(store.inner());
+    tauri::async_runtime::spawn_blocking(move || store.forget(&account))
+        .await
+        .map_err(|_| "Credential storage is unavailable")?
+}
+
+#[tauri::command]
+async fn save_remote_cache(
+    cache: tauri::State<'_, Arc<Mutex<remote_cache::RemoteCache>>>,
+    account: credentials::Account,
+    profile: Value,
+    snippets: Vec<Value>,
+    synced_at: String,
+) -> Result<(), String> {
+    let cache = Arc::clone(cache.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        cache
+            .lock()
+            .map_err(|_| "Remote cache unavailable")?
+            .replace(&account, &profile, &snippets, &synced_at)
+    })
+    .await
+    .map_err(|_| "Remote cache unavailable")?
+}
+
+#[tauri::command]
+async fn load_remote_cache(
+    cache: tauri::State<'_, Arc<Mutex<remote_cache::RemoteCache>>>,
+    account: credentials::Account,
+) -> Result<Option<Value>, String> {
+    let cache = Arc::clone(cache.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        cache
+            .lock()
+            .map_err(|_| "Remote cache unavailable")?
+            .load(&account)
+    })
+    .await
+    .map_err(|_| "Remote cache unavailable")?
+}
+
+#[tauri::command]
+async fn update_remote_cache(
+    cache: tauri::State<'_, Arc<Mutex<remote_cache::RemoteCache>>>,
+    account: credentials::Account,
+    gist: Value,
+) -> Result<(), String> {
+    let cache = Arc::clone(cache.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        cache
+            .lock()
+            .map_err(|_| "Remote cache unavailable")?
+            .upsert(&account, &gist)
+    })
+    .await
+    .map_err(|_| "Remote cache unavailable")?
+}
+
+#[tauri::command]
+async fn delete_remote_cache(
+    cache: tauri::State<'_, Arc<Mutex<remote_cache::RemoteCache>>>,
+    account: credentials::Account,
+    id: String,
+) -> Result<(), String> {
+    let cache = Arc::clone(cache.inner());
+    tauri::async_runtime::spawn_blocking(move || {
+        cache
+            .lock()
+            .map_err(|_| "Remote cache unavailable")?
+            .delete(&account, &id)
+    })
+    .await
+    .map_err(|_| "Remote cache unavailable")?
 }
 
 #[cfg(test)]
@@ -277,6 +396,15 @@ fn main() {
                 .into());
             }
             let library = Library::open(directory.clone()).map_err(std::io::Error::other)?;
+            app.manage(Arc::new(Mutex::new(
+                remote_cache::RemoteCache::open(&directory).map_err(std::io::Error::other)?,
+            )));
+            let test_credentials = cfg!(feature = "ui-tests")
+                && std::env::var("LEPTON_UI_TESTS").as_deref() == Ok("1");
+            app.manage(Arc::new(credentials::Credentials::new(
+                directory.clone(),
+                test_credentials,
+            )));
             let config_dir =
                 match std::env::var_os("XDG_CONFIG_HOME").filter(|path| !path.is_empty()) {
                     Some(path) => std::path::PathBuf::from(path),
@@ -306,12 +434,20 @@ fn main() {
             github_request,
             start_github_oauth,
             open_external,
+            set_webview_zoom,
             take_startup_github_token,
             runtime_info,
             set_runtime_config,
             ensure_runtime_config,
             open_runtime_file,
-            log_runtime_event
+            log_runtime_event,
+            remember_remote_account,
+            restore_remote_account,
+            forget_remote_account,
+            save_remote_cache,
+            load_remote_cache,
+            update_remote_cache,
+            delete_remote_cache
         ])
         .run(tauri::generate_context!())
         .expect("Unable to start Lepton Rust prototype");

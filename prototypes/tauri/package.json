@@ -15,7 +15,7 @@
     "format": "prettier --write src index.html *.json src-tauri/*.json src-tauri/capabilities/*.json",
     "format:check": "prettier --check src index.html *.json src-tauri/*.json src-tauri/capabilities/*.json",
     "test:ui:build": "tauri build --debug --no-bundle --features ui-tests --config src-tauri/tauri.ui-test.conf.json",
-    "test:ui": "npm run test:ui:build && node tests/ui/smoke.mjs"
+    "test:ui": "npm run test:ui:build && node tests/ui/smoke.mjs && node tests/ui/offline.mjs"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.0.0",

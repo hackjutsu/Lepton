@@ -32,8 +32,11 @@ async function request (route, body) {
 let session
 async function run (script, ...args) { return request(`/session/${session}/execute/sync`, { script, args }) }
 async function waitFor (script, description) {
+  let driverTimeouts = 0
   for (let n = 0; n < 100; n++) {
-    if (await run(script)) return
+    try { if (await run(script)) return } catch (error) {
+      if (!String(error).includes('Script execution timed out') || ++driverTimeouts > 2) throw error
+    }
     await new Promise(resolve => setTimeout(resolve, 100))
   }
   throw new Error(`Timed out waiting for ${description}`)
@@ -64,7 +67,10 @@ try {
   }
   if (!ready) throw new Error(`WebDriver did not start: ${output}`)
   session = (await request('/session', { capabilities: { alwaysMatch: {} } })).sessionId
-  await expectElement('.active-layout .snippet-box', 'React 19 render fixture')
+  try { await expectElement('.active-layout .snippet-box', 'React 19 render fixture') } catch (error) {
+    const diagnostic = await run('return document.body.innerText.slice(0,1000)')
+    throw new Error(`${error.message}; startup text: ${diagnostic}`)
+  }
   await run('window.__smokeErrors=[]; window.addEventListener("error", e=>window.__smokeErrors.push(e.message)); window.addEventListener("unhandledrejection", e=>window.__smokeErrors.push(String(e.reason))); return true')
   await check('active layout, local avatar, image and Markdown', async () => {
     const info = await run('const box=document.querySelector(".active-layout").getBoundingClientRect(); const avatar=document.querySelector(".profile-image-section"); const image=document.querySelector(".image-file-view img"); return {width:box.width,height:box.height,avatar:avatar?.naturalWidth,image:image?.naturalWidth,text:document.body.innerText}')
@@ -96,7 +102,22 @@ try {
     await run('window.__configSaved=false; window.lepton.config.set("theme","dark").then(()=>{window.__configSaved=true}); return true')
     await waitFor('return window.__configSaved===true', 'configuration write')
     assert.equal(JSON.parse(fs.readFileSync(paths.configFilePath, 'utf8')).theme, 'dark')
+    await run('window.__restartSaved=false; window.lepton.config.setForRestart("avatar:type","boring").then(()=>{window.__restartSaved=true}); return true')
+    await waitFor('return window.__restartSaved===true', 'restart preference write')
+    assert.equal(await run('return window.lepton.config.get("avatar:type")'), 'github')
+    assert.equal(JSON.parse(fs.readFileSync(paths.configFilePath, 'utf8')).avatar.type, 'boring')
+    await run('window.__restartSaved=false; window.lepton.config.setForRestart("avatar:type","github").then(()=>{window.__restartSaved=true}); return true')
+    await waitFor('return window.__restartSaved===true', 'restart preference reset')
     await closeModal('.about-modal')
+  })
+  await check('zoom preference changes the native webview', async () => {
+    const before = await run('return window.innerWidth')
+    await run('window.__zoomDone=false; window.lepton.config.set("zoom:percent",125).then(()=>{window.__zoomDone=true}); return true')
+    await waitFor('return window.__zoomDone===true', 'zoom setting')
+    await waitFor(`return window.innerWidth < ${before} * 0.9`, 'webview zoom')
+    await run('window.__zoomDone=false; window.lepton.config.set("zoom:percent",100).then(()=>{window.__zoomDone=true}); return true')
+    await waitFor('return window.__zoomDone===true', 'zoom reset')
+    await waitFor(`return window.innerWidth >= ${before} * 0.95`, 'webview zoom reset')
   })
   await check('dashboard', async () => { await emit('dashboard'); await expectElement('.dashboard-modal canvas'); await closeModal('.dashboard-modal') })
   await check('search with file content', async () => {
@@ -166,6 +187,10 @@ try {
         await new Promise(resolve => setTimeout(resolve, 200))
       }
       await waitFor('const e=document.querySelector(".profile-image-section"); return !!e && e.complete && e.naturalWidth > 0', 'GitHub profile image')
+      const accountFile = path.join(directory, 'remote-account.json')
+      for (let n = 0; n < 100 && !fs.existsSync(accountFile); n++) await new Promise(resolve => setTimeout(resolve, 100))
+      assert.equal(fs.existsSync(accountFile), true, 'Expected remembered account metadata')
+      assert.equal(fs.readFileSync(accountFile, 'utf8').includes(process.env.LEPTON_TEST_GITHUB_TOKEN), false, 'Token must not be saved in account metadata')
       assert.equal(await run('return document.querySelector(".profile-image-section").src.startsWith("https:")'), true, 'Expected a remote GitHub avatar')
       const starred = await run('const e=document.querySelector(".starred-tag-section a"); return e && {url:e.href, visible:getComputedStyle(e.parentElement.parentElement).display!=="none"}')
       assert.ok(starred?.visible && /^https:\/\/gist\.github\.com\/[^/]+\/starred$/.test(starred.url), 'Expected the original GitHub starred Gists link')
@@ -174,7 +199,14 @@ try {
       await run('[...document.querySelectorAll(".user-panel-button")].find(e=>e.innerText.trim().toLowerCase()==="logout").click(); return true')
       await expectElement('.logout-modal', 'Confirm logout')
       await click('.logout-modal .btn-danger')
+      await expectElement('.login-modal', 'GitHub Login')
+      for (let n = 0; n < 100 && fs.existsSync(accountFile); n++) await new Promise(resolve => setTimeout(resolve, 100))
+      assert.equal(fs.existsSync(accountFile), false, 'Logout should remove account metadata')
+      await run('window.__reloadMarker=true; return true')
+      await request(`/session/${session}/refresh`, {})
+      await waitFor('return !window.__reloadMarker && !!document.querySelector(".active-layout .snippet-box")', 'local library after restart')
       await expectElement('.active-layout .snippet-box', 'React 19 render fixture')
+      await run('window.__smokeErrors=[]; window.addEventListener("error", e=>window.__smokeErrors.push(e.message)); window.addEventListener("unhandledrejection", e=>window.__smokeErrors.push(String(e.reason))); return true')
     })
   }
   const errors = await run('return window.__smokeErrors')

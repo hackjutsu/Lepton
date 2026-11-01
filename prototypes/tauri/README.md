@@ -37,16 +37,21 @@ Use the existing Logout control in the local library to open Lepton's login
 screen, then select GitHub or GitLab and enter a personal access token. For
 GitHub, the login screen's key icon switches to token login. Enterprise and
 self-managed server settings are available through the existing configuration.
-Tokens are held in memory for the session and must be entered again after
-restarting. Logging out of a remote account returns to the local library;
-restarting also opens the local library. Remote content is not cached in the
-local database.
+Provider credentials are saved in the operating system's secure credential
+store when available, with no plaintext fallback. Logging out removes the saved
+credential and returns to the login screen; restart to open the local library.
+The last complete remote library
+is cached in SQLite so it can be opened offline; the cached snippets are
+plaintext just like the local library. These new behaviors still need native
+end-to-end verification on each supported platform.
 
 For a one-time GitHub sign-in at startup, set `LEPTON_GITHUB_TOKEN_FILE` to a
-local file containing the token. The file is read once; the token is held only
-for the current session. The startup option always connects to github.com.
-GitHub snippet files returned truncated by the API are rejected to avoid
-accidentally overwriting incomplete content. Remote links open in the system
+local file containing the token. The file is read once; after successful sign-in
+the token is saved to the system credential store. The startup option always
+connects to github.com.
+GitHub files truncated by the API are fetched from a trusted raw URL with size
+and completeness checks. Snippets whose entire file list is truncated and files
+larger than 10 MiB remain unavailable for safe editing. Remote links open in the system
 browser, and sharing copies a provider link. Some native integrations and
 preferences still need implementation.
 
@@ -59,8 +64,8 @@ personal access token are needed for local library use.
 Preferences read and write the same `.leptonrc` location as Electron (or the
 `XDG_CONFIG_HOME` override). Older prototype settings in WebView local storage
 are used as fallbacks for keys absent from that file. The prototype writes a
-separate log in its app-data directory; its current renderer log records event
-levels without details to avoid exposing credentials. Copying uses the Tauri
+separate log in its app-data directory and redacts known credential patterns
+and the active provider token from renderer messages. Copying uses the Tauri
 clipboard plugin. Failed saves leave the draft in the editor. The original
 editor's unsaved-change behavior and other platform integrations need broader
 verification before production use.
@@ -76,6 +81,9 @@ also test a live token connection and profile image (the token is never passed
 to the app as an environment variable). WebDriver is excluded from normal
 builds. The GitHub Actions workflow runs the UI checks on macOS, Windows, and
 Linux; results on the latter two platforms are pending.
+The UI suite also uses a disposable local provider to verify invalid-token
+feedback, a saved edit, a Markdown task toggle, and cached offline startup.
+See [the parity audit](docs/parity-audit.md) for remaining gaps.
 
 On Apple Silicon, the original Lepton layout and avatar rendered in the native
 window, and fixture checks covered editors, filters, search, dashboard,

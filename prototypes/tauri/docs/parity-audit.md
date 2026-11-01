@@ -33,22 +33,27 @@ fixture test checks that both suites use identical snippet payloads.
 ## Known gaps and follow-up
 
 - A local library has no equivalent in Electron; switching to a provider uses
-  the original logout and login screens. Logging out of a remote provider
-  returns to the local library rather than the Electron login screen.
-- Tokens are session-only. Secure remembered credentials, existing Electron
-  credential migration, and live OAuth verification remain incomplete.
-- Remote snippets are loaded into memory, not an offline SQLite cache. A
-  truncated GitHub response currently blocks safe editing and can prevent the
-  account from loading. Sync progress, failures, large accounts, and recovery
-  need fuller end-to-end coverage.
-- The Rust log records startup and generic warning/error events; detailed,
-  redacted diagnostic logging is not yet equivalent to Electron.
-- Settings are persisted, but several native settings including updates,
-  start-at-login, window/tray behavior, zoom, and proxy handling need
-  implementation or platform verification. Preferences requiring restart need
-  a complete behavior audit.
-- Login failure/expiry states, image insertion and attachment limits, file
-  dialogs, notifications, OS menu/shortcut behavior, Markdown task toggles,
+  the original logout and login screens. Logging out returns to the original
+  login screen; restarting opens the local library if no account is saved.
+- Secure remembered credentials and an account-scoped SQLite snapshot have
+  been implemented. A disposable native Keychain entry passed on macOS, and a
+  single-window mock GitHub test covered invalid credentials, a remote edit,
+  Markdown task toggling and offline startup with a cached account. Windows,
+  Linux, GitLab offline behavior, and other recovery cases still need end-to-end testing.
+  Existing Electron credential migration and live OAuth verification remain
+  incomplete.
+- GitHub files individually truncated by the API are fetched from their trusted
+  raw URL; a disposable private Gist over 1 MiB passed a live round trip. Gists
+  whose entire file list is truncated and files over 10 MiB still require safe
+  handling. Sync failures and large accounts need fuller end-to-end coverage.
+- The Rust log now records redacted renderer messages, but timestamp, rotation,
+  main-process coverage, and diagnostic parity still need verification.
+- Settings are persisted. Native zoom and restart-only preference behavior are
+  covered by the macOS UI suite. Updates, start-at-login, window/tray behavior,
+  proxy handling and other preference behavior need implementation or broader
+  platform verification.
+- Login expiry and additional failure states, image insertion and attachment limits, file
+  dialogs, notifications, OS menu/shortcut behavior,
   account-switch races and unsaved edits need equivalent interaction tests.
 - macOS is tested locally. Windows and Linux have CI configuration but still
   need successful runner results, packaged-app checks, and manual validation.

@@ -3,8 +3,18 @@ use reqwest::{Client, Method, Url};
 use serde_json::{json, Value};
 use std::time::Duration;
 
+fn body_error(error: reqwest::Error) -> String {
+    if error.is_decode() {
+        "GitHub returned an invalid response".into()
+    } else {
+        "GitHub network request failed".into()
+    }
+}
+
 pub struct GitHub {
     base: Url,
+    origin: Url,
+    cloud: bool,
     token: String,
     http: Client,
 }
@@ -23,11 +33,12 @@ impl GitHub {
         if token.trim().is_empty() {
             return Err("GitHub token is required".into());
         }
-        if base
+        let origin = base.clone();
+        let cloud = base
             .host_str()
             .is_some_and(|h| h.eq_ignore_ascii_case("github.com"))
-            && base.path() == "/"
-        {
+            && base.path() == "/";
+        if cloud {
             base = Url::parse("https://api.github.com/").map_err(|_| "Invalid GitHub URL")?;
         } else {
             let path = base.path().trim_end_matches('/').to_owned();
@@ -39,7 +50,13 @@ impl GitHub {
             .user_agent("lepton-snippet-app")
             .build()
             .map_err(|e| e.without_url().to_string())?;
-        Ok(Self { base, token, http })
+        Ok(Self {
+            base,
+            origin,
+            cloud,
+            token,
+            http,
+        })
     }
     fn url(&self, parts: &[&str]) -> Result<Url, String> {
         let mut url = self.base.clone();
@@ -69,7 +86,7 @@ impl GitHub {
         let response = request
             .send()
             .await
-            .map_err(|e| e.without_url().to_string())?;
+            .map_err(|_| "GitHub network request failed")?;
         if !response.status().is_success() {
             return Err(format!(
                 "GitHub request failed (HTTP {})",
@@ -83,7 +100,7 @@ impl GitHub {
             .await?
             .json()
             .await
-            .map_err(|e| e.without_url().to_string())
+            .map_err(body_error)
     }
     pub async fn profile(&self) -> Result<Value, String> {
         self.json(Method::GET, self.url(&["user"])?, None).await
@@ -97,10 +114,7 @@ impl GitHub {
                 .append_pair("per_page", "100")
                 .append_pair("page", &page.to_string());
             let response = self.response(Method::GET, url, None).await?;
-            let snippets: Vec<Value> = response
-                .json()
-                .await
-                .map_err(|e| e.without_url().to_string())?;
+            let snippets: Vec<Value> = response.json().await.map_err(body_error)?;
             let count = snippets.len();
             all.extend(snippets);
             if count < 100 {
@@ -112,24 +126,110 @@ impl GitHub {
     }
     pub async fn get(&self, id: &str) -> Result<Value, String> {
         valid_id(id)?;
-        let gist = self
+        let mut gist = self
             .json(Method::GET, self.url(&["gists", id])?, None)
             .await?;
-        // Never silently edit incomplete files. Raw URLs can point at a different
-        // origin and must not receive the access token.
-        if gist.get("truncated").and_then(Value::as_bool) == Some(true)
-            || gist
-                .get("files")
-                .and_then(Value::as_object)
-                .is_some_and(|files| {
-                    files
-                        .values()
-                        .any(|f| f.get("truncated").and_then(Value::as_bool) == Some(true))
-                })
-        {
-            return Err("GitHub returned truncated snippet content; this snippet cannot yet be edited safely".into());
+        // A truncated file list may omit files entirely and cannot safely be edited.
+        if gist.get("truncated").and_then(Value::as_bool) == Some(true) {
+            return Err(
+                "GitHub returned an incomplete file list; this snippet cannot be edited safely"
+                    .into(),
+            );
+        }
+        if let Some(files) = gist.get_mut("files").and_then(Value::as_object_mut) {
+            for file in files.values_mut() {
+                if file.get("truncated").and_then(Value::as_bool) != Some(true) {
+                    continue;
+                }
+                let raw = file
+                    .get("raw_url")
+                    .and_then(Value::as_str)
+                    .ok_or("GitHub returned a truncated file without a raw URL")?;
+                let (url, authenticated) = self.raw_target(raw, id)?;
+                let mut request = self.http.get(url);
+                if authenticated {
+                    request = request.bearer_auth(&self.token);
+                }
+                let mut response = request
+                    .send()
+                    .await
+                    .map_err(|_| "GitHub network request failed")?;
+                if !response.status().is_success() {
+                    return Err(format!(
+                        "GitHub raw file request failed (HTTP {})",
+                        response.status().as_u16()
+                    ));
+                }
+                const MAX_RAW_BYTES: usize = 10 * 1024 * 1024;
+                if response
+                    .content_length()
+                    .is_some_and(|n| n > MAX_RAW_BYTES as u64)
+                {
+                    return Err("GitHub raw file exceeds the supported size".into());
+                }
+                let mut bytes = Vec::new();
+                while let Some(chunk) = response
+                    .chunk()
+                    .await
+                    .map_err(|_| "GitHub network request failed")?
+                {
+                    if chunk.len() > MAX_RAW_BYTES.saturating_sub(bytes.len()) {
+                        return Err("GitHub raw file exceeds the supported size".into());
+                    }
+                    bytes.extend_from_slice(&chunk);
+                }
+                if file
+                    .get("size")
+                    .and_then(Value::as_u64)
+                    .is_some_and(|size| size != bytes.len() as u64)
+                {
+                    return Err("GitHub raw file length did not match the API response".into());
+                }
+                let content =
+                    String::from_utf8(bytes).map_err(|_| "GitHub raw file is not UTF-8 text")?;
+                file["content"] = Value::String(content);
+                file["truncated"] = Value::Bool(false);
+            }
         }
         Ok(gist)
+    }
+
+    fn raw_target(&self, raw: &str, id: &str) -> Result<(Url, bool), String> {
+        let url = Url::parse(raw).map_err(|_| "Invalid GitHub raw file URL")?;
+        if !matches!(url.scheme(), "http" | "https")
+            || !url.username().is_empty()
+            || url.password().is_some()
+            || url.query().is_some()
+            || url.fragment().is_some()
+            || !url
+                .path_segments()
+                .is_some_and(|parts| parts.into_iter().any(|part| part == id))
+        {
+            return Err("Invalid GitHub raw file URL".into());
+        }
+        let same_origin = url.scheme() == self.origin.scheme()
+            && url.host_str() == self.origin.host_str()
+            && url.port_or_known_default() == self.origin.port_or_known_default();
+        let public_raw = self.cloud
+            && url.scheme() == "https"
+            && url.host_str() == Some("gist.githubusercontent.com")
+            && url.port_or_known_default() == Some(443);
+        let enterprise_raw = !self.cloud
+            && url.scheme() == self.origin.scheme()
+            && url.port_or_known_default() == self.origin.port_or_known_default()
+            && url.host_str()
+                == self
+                    .origin
+                    .host_str()
+                    .map(|host| format!("gist.{host}"))
+                    .as_deref();
+        if same_origin && !self.cloud {
+            Ok((url, true))
+        } else if public_raw || enterprise_raw {
+            Ok((url, false))
+        } else {
+            Err("GitHub raw file URL is outside the configured provider".into())
+        }
     }
     pub async fn create(
         &self,
@@ -202,6 +302,83 @@ mod tests {
         );
         assert!(GitHub::new("https://user:pass@example.test", "test".into()).is_err());
         assert!(valid_id("../1").is_err());
+    }
+    #[test]
+    fn only_trusts_raw_urls_for_the_configured_provider_and_gist() {
+        let cloud = GitHub::new("https://github.com", "test".into()).unwrap();
+        assert!(
+            !cloud
+                .raw_target(
+                    "https://gist.githubusercontent.com/user/abc/raw/rev/a.txt",
+                    "abc"
+                )
+                .unwrap()
+                .1
+        );
+        for url in [
+            "https://evil.example/abc/raw/a",
+            "http://gist.githubusercontent.com/user/abc/raw/a",
+            "https://gist.githubusercontent.com/user/other/raw/a",
+            "https://user:password@gist.githubusercontent.com/user/abc/raw/a",
+        ] {
+            assert!(cloud.raw_target(url, "abc").is_err());
+        }
+        let enterprise = GitHub::new("https://git.example.test:8443", "test".into()).unwrap();
+        assert!(
+            enterprise
+                .raw_target("https://git.example.test:8443/user/abc/raw/a", "abc")
+                .unwrap()
+                .1
+        );
+        assert!(
+            !enterprise
+                .raw_target("https://gist.git.example.test:8443/user/abc/raw/a", "abc")
+                .unwrap()
+                .1
+        );
+        assert!(enterprise
+            .raw_target("https://evil.example/abc/raw/a", "abc")
+            .is_err());
+    }
+    #[test]
+    fn hydrates_a_truncated_file_without_accepting_incomplete_content() {
+        use std::{
+            io::{Read, Write},
+            net::TcpListener,
+            thread,
+        };
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = thread::spawn(move || {
+            for expected in ["/api/v3/gists/abc", "/user/abc/raw/rev/a.txt"] {
+                let (mut conn, _) = listener.accept().unwrap();
+                let mut input = [0; 4096];
+                let n = conn.read(&mut input).unwrap();
+                let request = String::from_utf8_lossy(&input[..n]);
+                assert!(request.starts_with(&format!("GET {expected} ")));
+                assert!(request
+                    .to_lowercase()
+                    .contains("authorization: bearer test-token"));
+                let body = if expected.starts_with("/api/") {
+                    json!({"id":"abc", "truncated":false, "files":{"a.txt":{"truncated":true, "size":5, "content":"H", "raw_url":format!("http://{address}/user/abc/raw/rev/a.txt")}}}).to_string()
+                } else {
+                    "Hello".to_owned()
+                };
+                write!(
+                    conn,
+                    "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                )
+                .unwrap();
+            }
+        });
+        tauri::async_runtime::block_on(async {
+            let api = GitHub::new(&format!("http://{address}"), "test-token".into()).unwrap();
+            let gist = api.get("abc").await.unwrap();
+            assert_eq!(gist["files"]["a.txt"]["content"], "Hello");
+            assert_eq!(gist["files"]["a.txt"]["truncated"], false);
+        });
+        server.join().unwrap();
     }
     #[test]
     fn does_not_forward_credentials_on_redirect() {
@@ -355,6 +532,39 @@ mod tests {
             .await;
             let deletion = api.delete(&id).await;
             outcome.expect("live GitHub Gist round trip");
+            deletion.expect("delete disposable gist");
+        });
+    }
+
+    #[test]
+    #[ignore = "requires a GitHub token authorized for disposable Gist testing"]
+    fn live_truncated_file_round_trip() {
+        let token = std::env::var("LEPTON_TEST_GITHUB_TOKEN").expect("test token required");
+        tauri::async_runtime::block_on(async {
+            let api = GitHub::new("https://github.com", token).unwrap();
+            let content = "line of text\n".repeat(90_000);
+            let created = api
+                .json(
+                    Method::POST,
+                    api.url(&["gists"]).unwrap(),
+                    Some(json!({
+                        "description":"Lepton Rust temporary large file test", "public":false,
+                        "files":{"large.txt":{"content":content}}
+                    })),
+                )
+                .await
+                .expect("create disposable private gist");
+            let id = created["id"].as_str().expect("gist id").to_owned();
+            let result = async {
+                let gist = api.get(&id).await?;
+                if gist["files"]["large.txt"]["content"].as_str() != Some(content.as_str()) {
+                    return Err("Retrieved content did not match".to_owned());
+                }
+                Ok::<(), String>(())
+            }
+            .await;
+            let deletion = api.delete(&id).await;
+            result.expect("retrieve full large file");
             deletion.expect("delete disposable gist");
         });
     }

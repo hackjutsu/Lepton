@@ -157,13 +157,15 @@ impl RuntimeFiles {
             .map_err(|_| "Unable to write .leptonrc")?;
         Ok(value)
     }
-    pub fn log_event(&self, level: &str) {
-        if matches!(level, "warn" | "error") {
+    pub fn log_event(&self, level: &str, message: &str) {
+        if matches!(level, "debug" | "info" | "warn" | "error") {
             if let Ok(mut file) = OpenOptions::new().append(true).open(&self.log) {
-                let _ = writeln!(
-                    file,
-                    "Renderer reported a {level}; details omitted to protect credentials"
-                );
+                let line: String = message
+                    .chars()
+                    .take(8192)
+                    .map(|c| if c == '\n' || c == '\r' { ' ' } else { c })
+                    .collect();
+                let _ = writeln!(file, "{level}: {line}");
             }
         }
     }
