@@ -22,7 +22,8 @@ function mergeConfig (base, override) {
 const runtime = window.__leptonRuntimeInfo
 // The native runtime reads ~/.leptonrc. Old WebView-local copies can outlive
 // that file and must not silently re-enable settings removed from it.
-const config = mergeConfig(defaults, runtime.config)
+const prototypeDefaults = { ...defaults, shortcuts: { ...defaults.shortcuts, keyShortcutForSearch: 'CommandOrControl+Shift+F' } }
+const config = mergeConfig(prototypeDefaults, runtime.config)
 function find (path) { return path.split(':').reduce((node, key) => node == null ? undefined : node[key], config) }
 const initialZoom = Number(find('zoom:percent'))
 let currentZoom = Number.isFinite(initialZoom) && initialZoom >= 50 && initialZoom <= 300 ? initialZoom : 100
@@ -50,7 +51,6 @@ applyZoom(currentZoom).catch(() => {})
 const listeners = new Map()
 function emit (channel, ...args) { (listeners.get(channel) || []).forEach(fn => fn(...args)) }
 const shortcutChannels = {
-  keyShortcutForSearch: 'search-gist',
   keyNewGist: 'new-gist-renderer',
   keyEditGist: 'edit-gist-renderer',
   keyDeleteGist: 'delete-gist',
@@ -66,6 +66,18 @@ window.addEventListener('keydown', event => {
   event.preventDefault()
   event.stopPropagation()
   applyZoom(nextZoomPercent(currentZoom, action)).catch(() => log('warn', ['Unable to apply zoom']))
+}, true)
+// Find in page listens during capture too, so handle the configured library
+// search first without changing the shared Electron find component.
+window.addEventListener('keydown', event => {
+  if (event.repeat || !matchesAccelerator(event, find('shortcuts:keyShortcutForSearch'), navigator.platform)) return
+  if (document.querySelector('.modal[role="dialog"], .inline-form-edit, .inline-new-editor')) return
+  const input = document.querySelector('.embedded-search-input')
+  if (!input || input.closest('[inert]')) return
+  event.preventDefault()
+  event.stopPropagation()
+  document.querySelector('.find-in-page-close')?.click()
+  emit('search-gist')
 }, true)
 window.addEventListener('keydown', event => {
   if (event.repeat) return
@@ -121,7 +133,7 @@ window.lepton = {
   config: { get: find, set, setForRestart },
   credentials: { getAccessToken: () => ({ status: true, data: null }), setAccessToken: () => ({ status: true }) },
   dialog: { showMessage: options => { window.alert(options.message); return Promise.resolve({ response: 0 }) } },
-  files: { ensureConfigFile: defaults => invoke('ensure_runtime_config', { defaults }) },
+  files: { ensureConfigFile: () => invoke('ensure_runtime_config', { defaults: prototypeDefaults }) },
   globals: { getPaths: () => ({ configFilePath: runtime.configFilePath, logFilePath: runtime.logFilePath }), getUpdateInfo: () => ({}) },
   ipc: { emit, on: (channel, fn) => { if (!listeners.has(channel)) listeners.set(channel, new Set()); listeners.get(channel).add(fn); return () => listeners.get(channel).delete(fn) }, removeAllListeners: channel => listeners.delete(channel), send: emit },
   logger: { debug: (...args) => log('debug', args), info: (...args) => log('info', args), warn: (...args) => log('warn', args), error: (...args) => log('error', args) },
