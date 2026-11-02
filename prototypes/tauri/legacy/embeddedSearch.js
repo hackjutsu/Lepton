@@ -5,11 +5,13 @@ import OriginalNavigationPanelDetails from '../../../app/containers/navigationPa
 import SearchIndex from '../../../app/utilities/search'
 import electronBridge from '../../../app/utilities/electronBridge'
 import { descriptionParser } from '../../../app/utilities/parser'
+import { formatRelativeTime } from '../../../app/utilities/relativeTime'
 import { createDefaultGistFilters } from '../../../app/utilities/gistFilters'
 import { t } from '../../../app/utilities/i18n'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus, updateGistFilters } from '../../../app/actions'
 
 const BaseNavigationPanelDetails = OriginalNavigationPanelDetails.WrappedComponent
+const searchSourceKeys = { id: 'id', description: 'description', filename: 'filename', 'files.filename': 'filename', language: 'language', 'files.language': 'language', 'files.content': 'content' }
 
 // Search uses the same exact-match index and downloaded-content rules as the
 // existing search window, but presents results in the snippet list.
@@ -108,6 +110,9 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
     return results.map((result, index) => {
       const parsed = descriptionParser(result)
       const title = parsed.title || parsed.description || result.filename || result.id
+      const bestMatch = result.searchMeta?.bestMatch
+      const matchSource = bestMatch ? t(`search.match.${searchSourceKeys[bestMatch.key] || 'description'}`) : null
+      const matchTitle = bestMatch?.filename ? t('search.match.inFile', { source: matchSource, filename: bestMatch.filename }) : matchSource
       const contentMatches = (result.searchMeta?.matches || []).filter(match => match.key === 'files.content' && match.excerpt?.segments?.length)
       return <li className='snippet-thumnail-list-item' role='option' aria-selected={ index === selected } id={ `embedded-result-${index}` } key={ result.id }
         ref={ node => { if (node) this.searchNodes[result.id] = node; else delete this.searchNodes[result.id] } }>
@@ -116,6 +121,10 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
           <div className='snippet-thumnail-description'>{ this.highlight(title) }</div>
           { parsed.title && parsed.description ? <div className='embedded-search-description'>{ this.highlight(parsed.description) }</div> : null }
           { result.filename ? <div className='embedded-search-filenames'>{ this.highlight(result.filename) }</div> : null }
+          <div className='embedded-search-meta'>
+            { matchSource ? <span title={ matchTitle }>{ matchSource }</span> : <span /> }
+            { result.updated_at ? <span>{ t('snippet.lastActive', { time: formatRelativeTime(result.updated_at) }) }</span> : null }
+          </div>
           { contentMatches.map((match, n) => <div className='embedded-search-excerpt' key={ `${match.filename || 'content'}-${n}` }>
             { contentMatches.length > 1 && match.filename ? <span>{ match.filename }: </span> : null }
             { match.excerpt.segments.map((segment, index) => segment.match ? <mark key={ index }>{ segment.text }</mark> : <React.Fragment key={ index }>{ segment.text }</React.Fragment>) }

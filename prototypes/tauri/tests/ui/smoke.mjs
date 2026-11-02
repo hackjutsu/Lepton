@@ -486,6 +486,7 @@ try {
     await setQuery('multiline')
     await expectElement('.panel-thumbnails-content', 'Python utility')
     await expectElement('.embedded-search-excerpt', 'multiline')
+    await expectElement('.embedded-search-meta', 'Content')
     assert.equal(await run('return document.querySelectorAll(".panel-thumbnails-content [role=option]").length'), 1, 'Content search should find the matching snippet')
     await run('document.querySelector(".embedded-search-input").dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true,cancelable:true})); return true')
     await expectElement('.snippet-box', 'Python utility')

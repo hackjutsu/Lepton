@@ -49,4 +49,5 @@ body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) {
 .embedded-search-panel .embedded-search-selected { box-shadow: inset 3px 0 #4078c0; }
 .embedded-search-panel mark { color: #24292f; background: #ffdf76; }
 .embedded-search-description, .embedded-search-excerpt, .embedded-search-filenames { margin: 0 5px 5px; color: var(--text-secondary); font-size: 12px; overflow-wrap: anywhere; }
+.embedded-search-meta { display: flex; justify-content: space-between; gap: 6px; margin: 0 5px 5px; color: var(--text-secondary); font-size: 11px; }
 .embedded-search-excerpt { padding: 5px; border-left: 2px solid #4078c0; background: var(--bg-secondary); font-family: Menlo, Monaco, Consolas, monospace; }
