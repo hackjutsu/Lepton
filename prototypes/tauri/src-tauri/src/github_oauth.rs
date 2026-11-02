@@ -21,7 +21,7 @@ fn oauth_credentials(
         (Some(id), Some(secret)) => (id, secret),
         (None, None) => match (bundled_id, bundled_secret) {
             (Some(id), Some(secret)) => (id, secret),
-            _ => return Err("GitHub OAuth is not configured"),
+            _ => return Err("GitHub OAuth is not configured: set LEPTON_GITHUB_OAUTH_CLIENT_ID and LEPTON_GITHUB_OAUTH_CLIENT_SECRET"),
         },
         _ => return Err("GitHub OAuth requires both runtime client credentials"),
     };
