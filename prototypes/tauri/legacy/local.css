@@ -49,3 +49,7 @@ body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) {
 .embedded-search-count { padding: 5px 11px; color: var(--text-secondary); font-size: 11px; }
 .embedded-search-panel .embedded-search-selected { box-shadow: inset 3px 0 #4078c0; }
 .detail-search-match, .cm-detail-search-match { color: #24292f !important; background: #ffdf76; }
+.search-detail-empty { position: sticky; top: 0; height: 100vh; margin-bottom: -100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--text-secondary); }
+.search-detail-empty svg { width: 36px; height: 36px; margin-bottom: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.search-detail-empty-title { color: var(--text-primary); font-size: 18px; font-weight: 600; }
+.search-detail-empty p { margin: 8px 0 0; font-size: 14px; }
