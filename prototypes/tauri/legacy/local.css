@@ -41,7 +41,7 @@ body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) {
 .embedded-search-panel { display: flex; flex-direction: column; }
 .embedded-search-panel .panel-thumbnails-scroll { flex: 1 1 auto; min-height: 0; height: auto; }
 .embedded-search-bar { flex: 0 0 auto; padding: 8px; border-bottom: 1px solid var(--border-color); background: var(--bg-secondary); }
-.embedded-search-control { display: flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 9px; border: 1px solid var(--text-secondary); border-radius: 6px; background: var(--bg-primary); }
+.embedded-search-control { display: flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 9px; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-primary); }
 .embedded-search-control svg { width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: var(--text-secondary); stroke-width: 1.7; }
 .embedded-search-input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-size: 14px; }
 .embedded-search-input::placeholder { color: var(--text-secondary); opacity: 1; }
