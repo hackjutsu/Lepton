@@ -71,12 +71,32 @@ async function expectElement (selector, text = '') {
 }
 async function absent (selector) { await waitFor(`return !document.querySelector(${JSON.stringify(selector)})`, `closing ${selector}`) }
 async function closeModal (selector) { await click(`${selector} .modal-header .close`); await absent(selector) }
+async function discardChanges () {
+  await expectElement('.discard-editor-modal', 'unsaved changes')
+  await click('.discard-editor-modal .btn-danger')
+  await absent('.discard-editor-modal')
+}
 async function selectSnippet (title) {
   const selected = await run('const e=[...document.querySelectorAll(".snippet-thumnail-list-item")].find(x=>x.innerText.includes(arguments[0])); if(!e) return false; e.querySelector("div").click(); return true', title)
   assert.equal(selected, true, `Missing snippet ${title}`)
   await expectElement('.snippet-box', title)
 }
+async function assertEditorsFillPane (selector, expectedFiles = 1) {
+  const layout = await run('const root=document.querySelector(arguments[0]); const outer=root.querySelector(".snippet-code").getBoundingClientRect(); const files=[...root.querySelectorAll(".gist-editor-gist-file > .panel")].map(e=>{const r=e.getBoundingClientRect(); return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}}); return {outer:{left:outer.left,right:outer.right},files}', selector)
+  assert.equal(layout.files.length, expectedFiles)
+  for (const file of layout.files) {
+    assert.ok(Math.abs(file.left - layout.outer.left) <= 2 && Math.abs(file.right - layout.outer.right) <= 2, `Editors must reach the detail pane edges: ${JSON.stringify(layout)}`)
+  }
+  for (let i = 1; i < layout.files.length; i++) assert.ok(Math.abs(layout.files[i].top - layout.files[i - 1].bottom) <= 2, `Editors must not have gaps between files: ${JSON.stringify(layout)}`)
+}
 async function check (name, fn) { await fn(); console.log(`PASS: ${name}`) }
+async function fallbackScreenshot (name, selector) {
+  if (!process.env.LEPTON_FALLBACK_SCREENSHOT_DIR) return
+  await run('const e=document.querySelector(arguments[0]); const box=e.getBoundingClientRect(); if (box.top<75 || box.bottom>innerHeight) e.scrollIntoView({block:"center"}); return true', selector)
+  await new Promise(resolve => setTimeout(resolve, 300))
+  const screenshot = await request(`/session/${session}/screenshot`)
+  fs.writeFileSync(path.join(process.env.LEPTON_FALLBACK_SCREENSHOT_DIR, `${name}.png`), Buffer.from(screenshot, 'base64'))
+}
 try {
   let ready = false
   for (let n = 0; n < 150; n++) {
@@ -103,6 +123,9 @@ try {
     for (const icon of icons) assert.ok(icon.width > 0 && icon.height > 0 && Math.abs(icon.width - icon.box) < 1, 'Sidebar icon must fit its container')
     assert.match(info.text, /exercises markdown rendering/)
     assert.deepEqual(await run('return [...document.querySelectorAll("[data-gist-filename]")].map(e=>e.dataset.gistFilename)'), ['hello.js', 'notes.md', 'lepton-logo.webp', 'styles.css'])
+    assert.equal(await run('return document.querySelector(".inline-code-editor .CodeMirror")?.CodeMirror.getOption("readOnly")'), true, 'Code should be read-only until editing starts')
+    assert.equal(await run('return !!document.querySelector("[data-gist-filename=\\"notes.md\\"] .markdown-section") && !document.querySelector("[data-gist-filename=\\"notes.md\\"] .inline-code-editor")'), true, 'Markdown should retain its rendered preview')
+    assert.equal(await run('return !!document.querySelector("[data-gist-filename=\\"lepton-logo.webp\\"] .image-file-view img") && !document.querySelector("[data-gist-filename=\\"lepton-logo.webp\\"] .inline-code-editor")'), true, 'Images should retain their rendered preview')
     const layout = await run('const divider=document.querySelector(".content-split-pane .split-pane-divider.horizontal"); const files=[...document.querySelectorAll("[data-gist-filename]")]; return {dividerBottom:divider.getBoundingClientRect().bottom, viewportBottom:innerHeight, dividerColor:getComputedStyle(divider,"::after").backgroundColor, gaps:files.slice(1).map((file,i)=>file.getBoundingClientRect().top-files[i].getBoundingClientRect().bottom)}')
     assert.ok(Math.abs(layout.dividerBottom - layout.viewportBottom) < 2, 'Snippet divider should reach the bottom of the window')
     assert.notEqual(layout.dividerColor, 'rgba(0, 0, 0, 0)', 'Snippet divider should remain visible')
@@ -113,6 +136,24 @@ try {
   const artifact = process.env.LEPTON_UI_SCREENSHOT || path.join(directory, 'active.png')
   fs.writeFileSync(artifact, Buffer.from(screenshot, 'base64'))
   console.log(`Screenshot: ${artifact}`)
+  if (process.env.LEPTON_FALLBACK_SCREENSHOT_DIR) {
+    const files = JSON.parse(fs.readFileSync('tests/ui/fixtures.json', 'utf8'))[0].files
+    await run('window.__screenFixtures=null; Promise.all([window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Markdown example] #docs",{"notes.md":{content:arguments[0]}},true]),window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Image example] #docs",{"lepton-logo.webp":{content:arguments[1]}},true])]).then(value=>{window.__screenFixtures=value}); return true', '# Project notes\n\nA rendered Markdown document.\n\n- Keep useful examples together\n- Share notes with your team\n\n```js\nconsole.log("Hello, Lepton!")\n```', files['lepton-logo.webp'].content)
+    await waitFor('return !!window.__screenFixtures', 'rendered examples fixtures')
+    await emit('sync-gists')
+    await waitFor('return document.body.innerText.includes("Markdown example") && document.body.innerText.includes("Image example")', 'rendered examples sync')
+    await selectSnippet('Markdown example')
+    await expectElement('.markdown-section', 'Project notes')
+    await fallbackScreenshot('markdown', '[data-gist-filename="notes.md"]')
+    await selectSnippet('Image example')
+    await waitFor('return document.querySelector(".image-file-view img")?.naturalWidth>0', 'image example')
+    await fallbackScreenshot('image', '[data-gist-filename="lepton-logo.webp"]')
+    await run('window.__screenDeleted=false; Promise.all(window.__screenFixtures.map(gist=>window.lepton.snippets.request(null,"DELETE_SINGLE_GIST",["local",gist.id]))).then(()=>{window.__screenDeleted=true}); return true')
+    await waitFor('return window.__screenDeleted', 'remove rendered examples')
+    await emit('sync-gists')
+    await waitFor('return !document.body.innerText.includes("Markdown example") && !document.body.innerText.includes("Image example")', 'rendered examples removed')
+    await selectSnippet('React 19 render fixture')
+  }
   await check('startup autostart and native tray preferences', async () => {
     const status = await testWindowAction('status')
     assert.equal(status.autostart, true, 'startAtLogin from .leptonrc must be applied on startup')
@@ -142,8 +183,166 @@ try {
     await run('window.__trayReset=false; Promise.all([window.lepton.config.set("window:closeToTray",false),window.lepton.config.set("window:minimizeToTray",false)]).then(()=>{window.__trayReset=true}); return true')
     await waitFor('return window.__trayReset===true', 'tray preferences reset')
   })
-  await check('new editor', async () => { await emit('new-gist-renderer'); await expectElement('.modal .gist-editor-form .CodeMirror'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
-  await check('edit editor', async () => { await emit('edit-gist-renderer'); await expectElement('.modal .gist-editor-form .CodeMirror'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
+  await check('new editor', async () => { await emit('new-gist-renderer'); await expectElement('.inline-new-editor .gist-editor-form .CodeMirror'); assert.equal(await run('return !!document.querySelector(".modal .gist-editor-form")'), false); await click('.inline-new-editor [title=Cancel]'); await absent('.inline-new-editor') })
+  await check('edit editor', async () => { await emit('edit-gist-renderer'); await expectElement('.inline-form-edit .gist-editor-form .CodeMirror'); assert.equal(await run('return !!document.querySelector(".modal .gist-editor-form")'), false); await click('.inline-form-edit [title=Cancel]'); await absent('.inline-form-edit') })
+  await check('create and edit rendered snippets without a modal', async () => {
+    await emit('new-gist-renderer')
+    await expectElement('.inline-new-editor .gist-editor-form .CodeMirror')
+    await assertEditorsFillPane('.inline-new-editor')
+    assert.equal(await run('return document.querySelector(".menu-panel").inert && document.querySelector(".panel-thumbnails-background").inert'), true, 'Navigation must not replace an unsaved form')
+    await run('const set=(el,value)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(el,value); el.dispatchEvent(new Event("input",{bubbles:true}))}; set(document.querySelector(".inline-new-editor .gist-editor-input-area"),"[In-place Markdown] #test"); set(document.querySelector(".inline-new-editor .gist-editor-filename-area"),"notes.md"); document.querySelector(".inline-new-editor .CodeMirror").CodeMirror.setValue("# Original\\n"); return true')
+    await click('.inline-new-editor [title=Cancel]')
+    await expectElement('.discard-editor-modal', 'unsaved changes')
+    await click('.discard-editor-modal .btn-default')
+    await absent('.discard-editor-modal')
+    assert.equal(await run('return document.querySelector(".inline-new-editor .CodeMirror").CodeMirror.getValue()'), '# Original\n', 'Keeping the new editor must retain its draft')
+    if (process.env.LEPTON_NEW_INLINE_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_NEW_INLINE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await click('.inline-new-editor [title=Submit]')
+    await absent('.inline-new-editor')
+    await expectElement('.snippet-box', 'In-place Markdown')
+    await expectElement('.markdown-section', 'Original')
+    assert.equal(await run('return document.querySelector(".menu-panel").inert'), false, 'Navigation should be restored after creation')
+    await click('.header-controls [title=Edit]')
+    await expectElement('.inline-form-edit .gist-editor-form .CodeMirror')
+    await assertEditorsFillPane('.inline-form-edit')
+    assert.equal(await run('return !!document.querySelector(".modal .gist-editor-form")'), false)
+    await run('const set=(e,value)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,value); e.dispatchEvent(new Event("input",{bubbles:true}))}; set(document.querySelector(".inline-form-edit .gist-editor-input-area"),"[In-place Markdown updated] #test"); set(document.querySelector(".inline-form-edit .gist-editor-filename-area"),"updated.md"); document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.setValue("# Updated\\n"); return true')
+    if (process.env.LEPTON_FULL_INLINE_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_FULL_INLINE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await click('.inline-form-edit [title=Submit]')
+    await absent('.inline-form-edit')
+    await expectElement('.snippet-box', 'In-place Markdown updated')
+    await expectElement('.markdown-section', 'Updated')
+    await expectElement('.file-expand', 'updated.md')
+    await click('.header-controls [title=Edit]')
+    await expectElement('.inline-form-edit .CodeMirror')
+    await run('document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.setValue("# Discarded\\n"); return true')
+    await click('.inline-form-edit [title=Cancel]')
+    await expectElement('.discard-editor-modal', 'unsaved changes')
+    await click('.discard-editor-modal .btn-default')
+    await absent('.discard-editor-modal')
+    assert.equal(await run('return document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.getValue()'), '# Discarded\n')
+    await click('.inline-form-edit [title=Cancel]')
+    await discardChanges()
+    await absent('.inline-form-edit')
+    await expectElement('.markdown-section', 'Updated')
+    await click('.header-controls [title=Delete]')
+    await expectElement('.modal-footer .btn-danger', 'delete')
+    await click('.modal-footer .btn-danger')
+    await waitFor('return !document.body.innerText.includes("In-place Markdown updated")', 'remove test snippet')
+    await selectSnippet('React 19 render fixture')
+  })
+  await check('in-place code edit, cancel, navigation, and save', async () => {
+    await selectSnippet('Python utility')
+    const editor = '[data-inline-filename="parser.py"] .CodeMirror'
+    const initial = await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor)
+    assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getOption("readOnly")', editor), true)
+    const originalIcons = await run('return [...document.querySelectorAll(".header-controls a.snippet-control")].map(e=>e.querySelector("svg").outerHTML)')
+    assert.equal(await run('return document.querySelectorAll(".inline-toolbar-action").length'), 0, 'Read-only toolbar must remain unchanged')
+    await click('.header-controls [title="Edit"]')
+    await waitFor('return !!document.querySelector(".snippet-box.inline-editing")', 'inline editor')
+    assert.equal(await run('return !!document.querySelector(".edit-modal .gist-editor-form")'), false, 'Code editing should not open a modal')
+    assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getOption("readOnly")', editor), false)
+    assert.deepEqual(await run('return [...document.querySelectorAll(".header-controls a.snippet-control")].map(e=>e.querySelector("svg").outerHTML)'), originalIcons, 'Editing must preserve the original toolbar icons')
+    assert.equal(await run('return [...document.querySelectorAll(".inline-toolbar-action")].filter(e=>getComputedStyle(e).display!=="none").length'), 2, 'Cancel and submit must be visible in the local library')
+    await run('document.querySelector(arguments[0]).CodeMirror.setValue(arguments[1]); return true', editor, initial + '\n# cancelled')
+    if (process.env.LEPTON_INLINE_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_INLINE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await emit('new-gist-renderer')
+    await expectElement('.inline-new-editor .gist-editor-form')
+    await emit('submit-gist')
+    await expectElement('.inline-new-editor .error-msg', 'required')
+    await click('.inline-new-editor [title=Cancel]')
+    await absent('.inline-new-editor')
+    assert.match(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), /# cancelled/, 'Creating a snippet must not submit or discard an existing inline draft')
+    await selectSnippet('Shell setup')
+    await selectSnippet('Python utility')
+    assert.match(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), /# cancelled/, 'Switching snippets must retain an unsaved draft')
+    await click('.inline-edit-actions [title="Cancel"]')
+    await expectElement('.discard-editor-modal', 'unsaved changes')
+    if (process.env.LEPTON_DISCARD_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_DISCARD_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await click('.discard-editor-modal .btn-default')
+    await absent('.discard-editor-modal')
+    assert.match(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), /# cancelled/)
+    await click('.inline-edit-actions [title="Cancel"]')
+    await discardChanges()
+    await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'cancel inline editing')
+    assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), initial, 'Cancel must restore the saved content')
+    await click('.header-controls [title="Edit"]')
+    await run('document.querySelector(arguments[0]).CodeMirror.setValue(arguments[1]); return true', editor, initial + '\n# saved inline')
+    await click('.inline-edit-actions [title="Submit"]')
+    await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'save inline editing')
+    await run('window.__inlineStored=null; window.lepton.snippets.request(null,"GET_SINGLE_GIST",["local","fixture-gist-2"]).then(value=>{window.__inlineStored=value}); return true')
+    await waitFor('return !!window.__inlineStored', 'saved local snippet')
+    assert.equal(await run('return window.__inlineStored.description'), '[Python utility] #backend Small parser helper fixture.')
+    assert.deepEqual(await run('return Object.keys(window.__inlineStored.files)'), ['parser.py'])
+    assert.match(await run('return window.__inlineStored.files["parser.py"].content'), /# saved inline/)
+    await emit('sync-gists')
+    await waitFor('return document.querySelector("[data-inline-filename=\\"parser.py\\"] .CodeMirror")?.CodeMirror.getValue().includes("# saved inline")', 'saved code after sync')
+    await click('.header-controls [title="Edit"]')
+    await run('document.querySelector(arguments[0]).CodeMirror.setValue(arguments[1]); return true', editor, initial)
+    await click('.inline-edit-actions [title="Submit"]')
+    await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'restore fixture')
+    await click('.header-controls [title="Edit"]')
+    await run('document.querySelector(arguments[0]).CodeMirror.setValue(arguments[1]); return true', editor, initial + '\n# kept in details')
+    await click('.inline-edit-actions [title="Edit details…"]')
+    await expectElement('.inline-form-edit .gist-editor-form')
+    assert.match(await run('return document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.getValue()'), /# kept in details/, 'Opening file details must retain inline edits')
+    await emit('exit-editor'); await discardChanges(); await absent('.inline-form-edit .gist-editor-form')
+    assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), initial)
+    await run('window.__inlineCreated=null; window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Inline multiple files] #test",{"first.js":{"content":"const first = 1;\\n"},"second.py":{"content":"second = 2\\n"}},true]).then(value=>{window.__inlineCreated=value}); return true')
+    await waitFor('return !!window.__inlineCreated', 'multi-file fixture creation')
+    await emit('sync-gists')
+    await waitFor('return document.body.innerText.includes("Inline multiple files")', 'multi-file fixture sync')
+    await selectSnippet('Inline multiple files')
+    await click('.header-controls [title="Edit"]')
+    assert.equal(await run('return [...document.querySelectorAll(".inline-code-editor .CodeMirror")].filter(e=>!e.CodeMirror.getOption("readOnly")).length'), 2, 'Both code files should be editable')
+    await run('document.querySelector("[data-inline-filename=\\"first.js\\"] .CodeMirror").CodeMirror.setValue("const first = 3;\\n"); document.querySelector(".inline-edit-actions [title=Submit]").click(); return true')
+    await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'save multi-file snippet')
+    await run('window.__multiStored=null; window.lepton.snippets.request(null,"GET_SINGLE_GIST",["local",window.__inlineCreated.id]).then(value=>{window.__multiStored=value}); return true')
+    await waitFor('return !!window.__multiStored', 'saved multi-file snippet')
+    assert.equal(await run('return window.__multiStored.files["first.js"].content'), 'const first = 3;\n')
+    assert.equal(await run('return window.__multiStored.files["second.py"].content'), 'second = 2\n', 'Saving one file must not overwrite another')
+    await run('window.__multiDeleted=false; window.lepton.snippets.request(null,"DELETE_SINGLE_GIST",["local",window.__inlineCreated.id]).then(()=>{window.__multiDeleted=true}); return true')
+    await waitFor('return window.__multiDeleted===true', 'delete multi-file fixture')
+    await emit('sync-gists')
+    await waitFor('return !document.body.innerText.includes("Inline multiple files")', 'multi-file fixture removed')
+    await selectSnippet('React 19 render fixture')
+  })
+  await check('mixed snippets retain image attachments while editing in place', async () => {
+    const image = JSON.parse(fs.readFileSync('tests/ui/fixtures.json', 'utf8'))[0].files['lepton-logo.webp'].content
+    await run('window.__mixed=null; window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Mixed editor fixture] #test",{"notes.md":{content:"# Before\\n"},"lepton-logo.webp":{content:arguments[0]}},true]).then(value=>{window.__mixed=value}); return true', image)
+    await waitFor('return !!window.__mixed', 'mixed fixture creation')
+    await emit('sync-gists')
+    await waitFor('return document.body.innerText.includes("Mixed editor fixture")', 'mixed fixture sync')
+    await selectSnippet('Mixed editor fixture')
+    await click('.header-controls [title=Edit]')
+    await expectElement('.inline-form-edit .gist-editor-form .CodeMirror')
+    await waitFor('return document.querySelector(".inline-form-edit .image-file-view img")?.naturalWidth>0', 'image preview in form')
+    await assertEditorsFillPane('.inline-form-edit', 2)
+    await run('document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.setValue("# After\\n"); return true')
+    await click('.inline-form-edit [title=Submit]')
+    await absent('.inline-form-edit')
+    await expectElement('.markdown-section', 'After')
+    await run('window.__mixedStored=null; window.lepton.snippets.request(null,"GET_SINGLE_GIST",["local",window.__mixed.id]).then(value=>{window.__mixedStored=value}); return true')
+    await waitFor('return !!window.__mixedStored', 'mixed fixture saved')
+    assert.equal(await run('return window.__mixedStored.files["lepton-logo.webp"].content'), image, 'Editing text must preserve the image data')
+    await run('window.__mixedDeleted=false; window.lepton.snippets.request(null,"DELETE_SINGLE_GIST",["local",window.__mixed.id]).then(()=>{window.__mixedDeleted=true}); return true')
+    await waitFor('return window.__mixedDeleted', 'mixed fixture deleted')
+    await emit('sync-gists')
+    await waitFor('return !document.body.innerText.includes("Mixed editor fixture")', 'mixed fixture removed')
+    await selectSnippet('React 19 render fixture')
+  })
   await check('about and settings paths', async () => {
     await emit('about-page'); await expectElement('.about-modal .modal-title', 'Settings')
     await run('[...document.querySelectorAll(".settings-tabs button")].find(e=>e.textContent.trim()==="About").click(); return true')
@@ -187,7 +386,7 @@ try {
       ['ayu', 'rgb(194, 217, 76)', 'ayu-dark'],
       ['light', 'rgb(3, 47, 98)', 'github']
     ]
-    for (const [theme, color, editorTheme] of themes) {
+    for (const [theme, , editorTheme] of themes) {
       await emit('about-page'); await expectElement('.about-modal [data-preference-key="theme"]')
       await run('const select=document.querySelector(".about-modal [data-preference-key=theme]"); select.value=arguments[0]; select.dispatchEvent(new Event("change",{bubbles:true})); return true', theme)
       try {
@@ -198,9 +397,9 @@ try {
       }
       await run('[...document.querySelectorAll(".preferences-footer button")].find(e=>e.textContent.trim()==="Apply").click(); return true')
       try {
-        await waitFor(`return window.lepton.config.get("theme")===${JSON.stringify(theme)} && getComputedStyle(document.querySelector(".snippet-box .hljs-string")).color===${JSON.stringify(color)}`, `${theme} syntax color`)
+        await waitFor(`const e=document.querySelector('[data-inline-filename="hello.js"] .CodeMirror'); return window.lepton.config.get("theme")===${JSON.stringify(theme)} && e?.CodeMirror.getOption("theme")===${JSON.stringify(editorTheme)} && !!e.querySelector('.cm-string')`, `${theme} syntax color`)
       } catch (error) {
-        const details = await run('const e=document.querySelector(".snippet-box .hljs-string"); return {theme:window.lepton.config.get("theme"), color:e && getComputedStyle(e).color, selected:document.querySelector(".about-modal [data-preference-key=theme]").value, css:[...document.querySelectorAll("style")].filter(s=>s.textContent.includes(".hljs-string")).map(s=>s.textContent.slice(0,100))}')
+        const details = await run('const e=document.querySelector(".inline-code-editor .CodeMirror"); return {theme:window.lepton.config.get("theme"), editorTheme:e?.CodeMirror.getOption("theme"), selected:document.querySelector(".about-modal [data-preference-key=theme]").value}')
         throw new Error(`${error.message}: ${JSON.stringify(details)}`)
       }
       await closeModal('.about-modal')
@@ -208,13 +407,15 @@ try {
         const screenshot = await request(`/session/${session}/screenshot`)
         fs.writeFileSync(process.env.LEPTON_UI_DARK_SCREENSHOT, Buffer.from(screenshot, 'base64'))
       }
-      await emit('edit-gist-renderer'); await expectElement('.edit-modal .CodeMirror')
-      assert.equal(await run('return document.querySelector(".edit-modal .CodeMirror").CodeMirror.getOption("theme")'), editorTheme, `${theme} editor theme`)
+      const previewColor = await run('return getComputedStyle(document.querySelector(".inline-code-editor .cm-string")).color')
+      await emit('edit-gist-renderer'); await expectElement('.inline-form-edit .CodeMirror')
+      assert.equal(await run('return document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.getOption("theme")'), editorTheme, `${theme} editor theme`)
+      assert.equal(previewColor, await run('return getComputedStyle(document.querySelector(".inline-form-edit .CodeMirror .cm-string")).color'), `${theme} preview and editor syntax colors`)
       if (theme === 'dark' && process.env.LEPTON_UI_DARK_SCREENSHOT) {
         const screenshot = await request(`/session/${session}/screenshot`)
         fs.writeFileSync(process.env.LEPTON_UI_DARK_SCREENSHOT.replace(/\.png$/, '-editor.png'), Buffer.from(screenshot, 'base64'))
       }
-      await emit('exit-editor'); await absent('.modal .gist-editor-form')
+      await emit('exit-editor'); await absent('.inline-form-edit .gist-editor-form')
     }
   })
   await check('zoom preference changes the native webview', async () => {
@@ -228,8 +429,8 @@ try {
   })
   await check('platform zoom shortcuts work in the editor without changing the saved default', async () => {
     const before = await run('return window.innerWidth')
-    await emit('edit-gist-renderer'); await expectElement('.edit-modal .CodeMirror')
-    const sendKey = async (key, code, shift = false) => run('const mac=/mac|iphone|ipad/i.test(navigator.platform); const target=document.querySelector(".edit-modal .CodeMirror textarea") || document.querySelector(".edit-modal .CodeMirror"); const event=new KeyboardEvent("keydown",{key:arguments[0],code:arguments[1],shiftKey:arguments[2],metaKey:mac,ctrlKey:!mac,bubbles:true,cancelable:true}); return !target.dispatchEvent(event)', key, code, shift)
+    await emit('edit-gist-renderer'); await expectElement('.inline-form-edit .CodeMirror')
+    const sendKey = async (key, code, shift = false) => run('const mac=/mac|iphone|ipad/i.test(navigator.platform); const target=document.querySelector(".inline-form-edit .CodeMirror textarea") || document.querySelector(".inline-form-edit .CodeMirror"); const event=new KeyboardEvent("keydown",{key:arguments[0],code:arguments[1],shiftKey:arguments[2],metaKey:mac,ctrlKey:!mac,bubbles:true,cancelable:true}); return !target.dispatchEvent(event)', key, code, shift)
     assert.equal(await sendKey('=', 'Equal'), true, 'Zoom shortcut should prevent the default key action')
     await waitFor(`return window.innerWidth < ${before} * 0.9`, 'shortcut zoom in')
     assert.equal(await run('return window.lepton.config.get("zoom:percent")'), 100)
@@ -240,7 +441,7 @@ try {
     assert.equal(await sendKey('0', 'Digit0'), true)
     await waitFor(`return window.innerWidth >= ${before} * 0.95`, 'shortcut zoom reset')
     assert.equal(JSON.parse(fs.readFileSync(path.join(directory, '.leptonrc'), 'utf8')).zoom.percent, 100)
-    await emit('exit-editor'); await absent('.modal .gist-editor-form')
+    await emit('exit-editor'); await absent('.inline-form-edit .gist-editor-form')
   })
   await check('autostart preference and native notification bridge', async () => {
     await run('window.__autostartDone=false; window.lepton.config.set("startAtLogin",true).then(()=>{window.__autostartDone=true}); new Notification("Lepton test",{body:"Test notification",silent:true}); return true')
@@ -257,7 +458,18 @@ try {
     await expectElement('.search-modal', 'React 19 render fixture')
     await emit('search-gist'); await absent('.search-modal')
   })
-  await check('delete confirmation', async () => { await emit('delete-gist'); await expectElement('.modal-footer .btn-danger', 'delete'); await click('.modal-footer .btn-default'); await absent('.modal-footer .btn-danger') })
+  await check('delete confirmation', async () => {
+    const selected = await run('return document.querySelector(".snippet-box .title-section")?.innerText')
+    await emit('delete-gist')
+    await expectElement('.modal-footer .btn-danger', 'delete')
+    if (process.env.LEPTON_DELETE_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_DELETE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await click('.modal-footer .btn-default')
+    await absent('.modal-footer .btn-danger')
+    assert.equal(await run('return document.querySelector(".snippet-box .title-section")?.innerText'), selected, 'Cancelling deletion must retain the selected snippet')
+  })
   await check('raw view', async () => { await run('[...document.querySelectorAll(".file-header-control")].find(e=>e.textContent.trim()==="RAW").click(); return true'); await expectElement('.raw-modal .code-area-raw'); await closeModal('.raw-modal') })
   await check('pinned tags', async () => { await click('.configure-tag'); await expectElement('.pinned-tags-modal .pin-tag-list'); await closeModal('.pinned-tags-modal') })
   await check('immersive view', async () => { await emit('immersive-mode'); await expectElement('.snippet-panel-immersive .snippet-box'); await emit('immersive-mode'); await expectElement('.active-layout') })
@@ -273,11 +485,11 @@ try {
   })
   await check('language filter and Python multiline highlighting', async () => {
     await run('[...document.querySelectorAll("[role=button]")].find(e=>e.textContent.trim()==="#Python").click(); return true')
-    await expectElement('.snippet-box', 'Python utility'); await waitFor('return [...document.querySelectorAll(".code-table .hljs-string")].some(e=>e.innerText.includes("Preserve multiline docstring highlighting."))', 'Python multiline highlighting')
+    await expectElement('.snippet-box', 'Python utility'); await waitFor('return [...document.querySelectorAll(".inline-code-editor .cm-string")].some(e=>e.innerText.includes("Preserve multiline docstring highlighting."))', 'Python multiline highlighting')
     await run('[...document.querySelectorAll("[role=button]")].find(e=>e.textContent.trim()==="#All").click(); return true')
   })
-  await check('PHP template highlighting', async () => { await selectSnippet('PHP template'); await expectElement('.code-area .language-php'); await expectElement('.code-area', 'Ready') })
-  await check('Jupyter notebook preview', async () => { await selectSnippet('Notebook fixture'); await expectElement('.jupyterNotebook-section .nb-notebook', 'Notebook Fixture') })
+  await check('PHP template highlighting', async () => { await selectSnippet('PHP template'); await expectElement('.inline-code-editor .CodeMirror', 'Ready') })
+  await check('Jupyter notebook preview', async () => { await selectSnippet('Notebook fixture'); await expectElement('.jupyterNotebook-section .nb-notebook', 'Notebook Fixture'); assert.equal(await run('return !!document.querySelector(".jupyterNotebook-section") && !document.querySelector(".inline-code-editor")'), true); await fallbackScreenshot('notebook', '.jupyterNotebook-section'); await click('.header-controls [title="Edit"]'); await expectElement('.inline-form-edit .gist-editor-form'); await emit('exit-editor'); await absent('.inline-form-edit .gist-editor-form') })
   await check('recoverable new-snippet draft', async () => {
     await run('window.lepton.localStorage.set("new-gist-draft-local", {createdAt:"2026-09-06T21:35:00.000Z",description:"Recovered API helper",private:true,gists:[{filename:"recovered.js",content:"const recovered = true"}]}); return true')
     assert.deepEqual(await run('return window.__smokeErrors'), [], 'Renderer errors before refresh')
@@ -291,7 +503,7 @@ try {
     await expectElement('.new-gist-draft-callout', 'Local draft available')
     await run('[...document.querySelectorAll(".new-gist-draft-callout button")].find(e=>e.textContent.includes("Load draft")).click(); return true')
     await waitFor('return [...document.querySelectorAll(".gist-editor-form input")].some(e=>e.value==="recovered.js")', 'loaded draft filename')
-    await emit('exit-editor'); await absent('.modal .gist-editor-form')
+    await emit('exit-editor'); await discardChanges(); await absent('.inline-new-editor .gist-editor-form')
     await run('window.lepton.localStorage.set("new-gist-draft-local", null); return true')
   })
   await check('original logout and provider login screens', async () => {

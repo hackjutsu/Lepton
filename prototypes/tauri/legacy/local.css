@@ -2,8 +2,8 @@
 body[data-provider='local'] .starred-tag-section {
   display: none !important;
 }
-body[data-provider='local'] .header-controls .snippet-control:nth-child(2),
-body[data-provider='local'] .header-controls .snippet-control:nth-last-child(2),
+body[data-provider='local'] .header-controls a.snippet-control:nth-of-type(2),
+body[data-provider='local'] .header-controls a.snippet-control:nth-last-of-type(2),
 body[data-provider='local'] .file-header-controls .file-header-control:first-child,
 body[data-provider='local'] .copy-raw-link { display: none !important; }
 body[data-provider='local'] .header-title > * { display: none !important; }
@@ -11,3 +11,29 @@ body[data-provider='local'] .gist-editor-privacy-checkbox { display: none !impor
 
 /* Keep each icon and label together below the floated profile image in WebKit. */
 .user-panel .user-panel-button { display: inline-block; }
+
+.snippet-box .inline-code-editor .CodeMirror-scroll { min-height: 0; }
+.snippet-box .inline-code-editor .CodeMirror { font-size: 13px; }
+.snippet-box .inline-toolbar-action { padding: 0; border: 0; background: transparent; cursor: pointer; }
+.snippet-box .inline-toolbar-action:disabled { opacity: .35; cursor: default; }
+.inline-form-edit .snippet-control[aria-disabled='true'] { opacity: .35; cursor: default; }
+
+body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) { display: none; }
+.inline-form-edit .gist-editor-form,
+.inline-new-editor .gist-editor-form { padding: 12px 0 20px; }
+.inline-form-edit .gist-editor-form > .gist-editor-name,
+.inline-new-editor .gist-editor-form > .gist-editor-name { margin: 5px 20px; }
+.inline-form-edit .gist-editor-form > .gist-editor-section:not(.gist-editor-name),
+.inline-new-editor .gist-editor-form > .gist-editor-section:not(.gist-editor-name) { margin: 0; }
+.inline-form-edit .gist-editor-form .gist-editor-gist-file,
+.inline-new-editor .gist-editor-form .gist-editor-gist-file { padding: 0 !important; }
+.inline-form-edit .gist-editor-form .gist-editor-gist-file > .panel,
+.inline-new-editor .gist-editor-form .gist-editor-gist-file > .panel { margin-bottom: 0; border-left: 0; border-right: 0; }
+.inline-form-edit .gist-editor-form .image-attachment-drop-zone,
+.inline-new-editor .gist-editor-form .image-attachment-drop-zone { margin: 8px 15px 0; }
+.inline-form-edit .gist-editor-form .gist-editor-privacy-checkbox,
+.inline-new-editor .gist-editor-form .gist-editor-privacy-checkbox { margin-right: 15px; }
+.snippet-box .gist-editor-form .panel-body { margin-top: 0; }
+.inline-form-edit .gist-editor-form .control-button-group .gist-editor-control-button,
+.inline-new-editor .gist-editor-form .control-button-group .gist-editor-control-button { display: none; }
+.inline-new-editor .new-gist-draft-callout { margin: 12px 20px 0; }

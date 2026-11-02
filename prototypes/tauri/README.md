@@ -52,6 +52,12 @@ The `autoUpdate` preference is not yet functional in the Rust prototype. It
 requires a signed Tauri release feed and public verification key; those have
 not been set up yet.
 
+Recognized code files use a read-only CodeMirror view. For code-only snippets,
+Edit enables in-place changes; Cancel discards them and Submit saves them. The
+full editor remains available through Edit details for metadata and file
+changes. Snippets containing rendered documents, images, notebooks, or other
+non-code files use the existing full editor.
+
 Preferences read and write `.leptonrc` in the user's home directory. Isolated
 UI tests use their temporary data directory instead. Settings absent from the
 file use Lepton's defaults. The prototype writes a

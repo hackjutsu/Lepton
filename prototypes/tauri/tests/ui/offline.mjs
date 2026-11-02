@@ -9,6 +9,9 @@ import { spawn } from 'node:child_process'
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lepton-offline-ui-'))
 let gist = { id: 'abc123', description: '[Offline fixture] #test', public: false, html_url: 'https://example.test/abc123', updated_at: '2026-01-01T00:00:00Z', files: { 'note.txt': { filename: 'note.txt', language: 'Text', content: 'before sync' }, 'tasks.md': { filename: 'tasks.md', language: 'Markdown', content: '# Tasks\n\n- [ ] first task\n' } } }
 const incomplete = { id: 'abc124', description: '[Large fixture] #test', public: false, html_url: 'https://example.test/abc124', updated_at: '2026-01-01T00:00:00Z', truncated: true, files: { 'first.txt': { filename: 'first.txt', language: 'Text' } } }
+let codeGist = { id: 'abc125', description: '[Inline code fixture] #test', public: false, html_url: 'https://example.test/abc125', updated_at: '2026-01-01T00:00:00Z', files: { 'remote.js': { filename: 'remote.js', language: 'JavaScript', content: 'const remote = true;\n' } } }
+let failCodeSave = true
+let failFormSave = false
 const detailRequests = []
 const brief = value => ({ ...value, files: Object.fromEntries(Object.entries(value.files).map(([name, file]) => [name, Object.fromEntries(Object.entries(file).filter(([key]) => key !== 'content'))])) })
 const server = http.createServer((req, res) => {
@@ -23,10 +26,19 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     let output
     if (req.method === 'GET' && req.url === '/api/v3/user') output = { login: 'fixture-user', html_url: 'https://example.test/user', avatar_url: `${base}/avatar.png` }
-    else if (req.method === 'GET' && req.url.startsWith('/api/v3/gists?')) output = [brief(gist), brief(incomplete)]
+    else if (req.method === 'GET' && req.url.startsWith('/api/v3/gists?')) output = [brief(gist), brief(incomplete), brief(codeGist)]
     else if (req.method === 'GET' && req.url === '/api/v3/gists/abc123') { detailRequests.push('abc123'); output = gist }
     else if (req.method === 'GET' && req.url === '/api/v3/gists/abc124') { detailRequests.push('abc124'); output = incomplete }
+    else if (req.method === 'GET' && req.url === '/api/v3/gists/abc125') { detailRequests.push('abc125'); output = codeGist }
+    else if (req.method === 'PATCH' && req.url === '/api/v3/gists/abc125') {
+      if (failCodeSave) { failCodeSave = false; res.writeHead(503); res.end(); return }
+      const patch = JSON.parse(body)
+      assert.equal(patch.description, codeGist.description, 'Inline editing must preserve the remote description')
+      codeGist = { ...codeGist, files: { ...codeGist.files, 'remote.js': { ...codeGist.files['remote.js'], content: patch.files['remote.js'].content } } }
+      output = codeGist
+    }
     else if (req.method === 'PATCH' && req.url === '/api/v3/gists/abc123') {
+      if (failFormSave) { failFormSave = false; res.writeHead(503); res.end(); return }
       const patch = JSON.parse(body)
       const files = { ...gist.files }
       for (const [name, file] of Object.entries(patch.files)) {
@@ -38,6 +50,7 @@ const server = http.createServer((req, res) => {
     } else { res.writeHead(404); res.end(); return }
     const send = () => { res.writeHead(200, { 'content-type': 'application/json', connection: 'close' }); res.end(JSON.stringify(output)) }
     if (req.url === '/api/v3/user') setTimeout(send, 1000)
+    else if (req.method === 'PATCH' && req.url === '/api/v3/gists/abc125') setTimeout(send, 1200)
     else send()
   })
 })
@@ -124,6 +137,35 @@ try {
   for (let n = 0; n < 100 && detailRequests.filter(id => id === 'abc124').length < 2; n++) await new Promise(resolve => setTimeout(resolve, 100))
   assert.equal(detailRequests.filter(id => id === 'abc124').length, 2, 'Download-all sync should fetch details for every snippet')
   await waitFor('return !!document.querySelector(".snippet-box .task-list-item-checkbox")', 'download-all sync completes')
+  await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Inline code fixture")).querySelector("div").click(); return true')
+  await waitFor('return !!document.querySelector("[data-inline-filename=\\"remote.js\\"] .CodeMirror")', 'remote code preview')
+  await run('window.__inlineError=null; window.alert=message=>{window.__inlineError=message}; document.querySelector(".header-controls [title=Edit]").click(); return true')
+  await waitFor('return !!document.querySelector(".snippet-box.inline-editing")', 'remote inline editor')
+  await run('document.querySelector("[data-inline-filename=\\"remote.js\\"] .CodeMirror").CodeMirror.setValue("const remote = false;\\n"); document.querySelector(".inline-edit-actions [title=Submit]").click(); return true')
+  await waitFor('return !!window.__inlineError && document.querySelector(".inline-edit-actions [title=Submit]")?.disabled === false', 'remote save error')
+  assert.equal(codeGist.files['remote.js'].content, 'const remote = true;\n', 'Failed save must not change server data')
+  assert.equal(await run('return !!document.querySelector(".snippet-box.inline-editing")'), true, 'Failed save must retain the inline draft')
+  await run('const mac=/mac|iphone|ipad/i.test(navigator.platform); document.querySelector("[data-inline-filename=\\"remote.js\\"] .CodeMirror textarea").dispatchEvent(new KeyboardEvent("keydown",{key:"s",code:"KeyS",metaKey:mac,ctrlKey:!mac,bubbles:true,cancelable:true})); return true')
+  await waitFor('return document.querySelector(".inline-edit-actions [title=Submit]")?.disabled', 'remote inline save in progress')
+  await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Offline fixture")).querySelector("div").click(); return true')
+  await waitFor('return document.querySelector(".snippet-box")?.innerText.includes("Offline fixture")', 'switch snippets while saving')
+  await new Promise(resolve => setTimeout(resolve, 1800))
+  assert.equal(codeGist.files['remote.js'].content, 'const remote = false;\n', 'Inline submit should persist through the provider')
+  await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Inline code fixture")).querySelector("div").click(); return true')
+  await waitFor('return !document.querySelector(".snippet-box.inline-editing") && document.querySelector("[data-inline-filename=\\"remote.js\\"] .CodeMirror")?.CodeMirror.getValue().includes("false")', 'saved remote snippet after switching')
+  await run('[...document.querySelectorAll(".snippet-thumnail-list-item")].find(e=>e.innerText.includes("Offline fixture")).querySelector("div").click(); return true')
+  await waitFor('return !!document.querySelector(".snippet-box .task-list-item-checkbox")', 'return to offline fixture')
+  failFormSave = true
+  await run('window.__inlineError=null; document.querySelector(".header-controls [title=Edit]").click(); return true')
+  await waitFor('return !!document.querySelector(".inline-form-edit .gist-editor-form .CodeMirror")', 'remote full editor in detail pane')
+  await run('document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.setValue("full editor retry"); return true')
+  await run('document.querySelector(".inline-form-edit [title=Submit]").click(); return true')
+  await waitFor('return !!window.__inlineError && !!document.querySelector(".inline-form-edit .gist-editor-form")', 'remote full editor save error')
+  assert.equal(gist.files['note.txt'].content, 'before sync', 'Failed form save must not change server data')
+  assert.equal(await run('return document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.getValue()'), 'full editor retry', 'Failed form save must retain the draft')
+  await run('document.querySelector(".inline-form-edit [title=Submit]").click(); return true')
+  await waitFor('return !document.querySelector(".inline-form-edit")', 'remote full editor save retry')
+  assert.equal(gist.files['note.txt'].content, 'full editor retry', 'Full form must save through the provider')
   const metadata = path.join(directory, 'remote-account.json')
   for (let n = 0; n < 100 && !fs.existsSync(metadata); n++) await new Promise(resolve => setTimeout(resolve, 100))
   assert.ok(fs.existsSync(metadata))
