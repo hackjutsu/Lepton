@@ -46,6 +46,6 @@ body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) {
 .embedded-search-input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-size: 14px; }
 .embedded-search-input::placeholder { color: var(--text-secondary); opacity: 1; }
 .embedded-search-control:focus-within { border-color: #4078c0; box-shadow: 0 0 0 2px rgba(64, 120, 192, .25); }
-.embedded-search-count { padding: 5px 11px; color: var(--text-secondary); background: var(--bg-primary); border-bottom: 1px solid var(--border-color); font-size: 11px; }
+.embedded-search-count { padding: 5px 3px 0; color: var(--text-secondary); font-size: 11px; }
 .embedded-search-panel .embedded-search-selected { box-shadow: inset 3px 0 #4078c0; }
 .detail-search-match, .cm-detail-search-match { color: #24292f !important; background: #ffdf76; }

@@ -119,12 +119,12 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
             onChange={ event => { const value = event.target.value; setSearchQuery(value); this.setState({ query: value, selectedIndex: 0 }) } }
             onKeyDown={ event => this.handleSearchKeyDown(event) } />
         </div>
+        { query
+          ? <div className='embedded-search-count' role='status' aria-live='polite'>
+            { results.length === 1 ? t('search.resultCountOne') : t('search.resultCountMany', { count: results.length }) }
+          </div>
+          : null }
       </div>
-      { query
-        ? <div className='embedded-search-count' role='status' aria-live='polite'>
-          { results.length === 1 ? t('search.resultCountOne') : t('search.resultCountMany', { count: results.length }) }
-        </div>
-        : null }
       <div className='panel-thumbnails-scroll'><div className='panel-thumbnails-content'>
         <ul id='embedded-search-results' role={ query ? 'listbox' : undefined }>
           { query ? this.renderSearchResults(results) : super.renderSnippetThumbnails() }
