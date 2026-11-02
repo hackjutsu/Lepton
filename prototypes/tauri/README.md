@@ -71,6 +71,10 @@ Use Command-Plus/Minus on macOS or Control-Plus/Minus on Windows and Linux to
 change the current window zoom. Command/Control-0 resets it to 100%. These
 shortcuts do not change the saved default zoom preference.
 
+Use Command-Shift-F on macOS or Control-Shift-F on Windows and Linux to search
+snippets. Command-F or Control-F finds text in the current view. The snippet
+search shortcut can be changed in Preferences or `~/.leptonrc`.
+
 ## Tests and verification
 
 See [build and test instructions](docs/build.md) and [the parity audit](docs/parity-audit.md)
