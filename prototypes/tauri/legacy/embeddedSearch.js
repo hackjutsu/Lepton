@@ -7,10 +7,11 @@ import electronBridge from '../../../app/utilities/electronBridge'
 import { descriptionParser } from '../../../app/utilities/parser'
 import { currentSearchQuery, setSearchQuery, announceSearchSelection, matchingSearchResults } from './searchHighlights'
 import { createDefaultGistFilters } from '../../../app/utilities/gistFilters'
-import { t } from '../../../app/utilities/i18n'
+import { getLocale, t } from '../../../app/utilities/i18n'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus, updateGistFilters, updateFileExpandStatus } from '../../../app/actions'
 
 const BaseNavigationPanelDetails = OriginalNavigationPanelDetails.WrappedComponent
+const clearLabels = { en: 'Clear search', es: 'Borrar búsqueda', fr: 'Effacer la recherche', ja: '検索をクリア', ko: '검색 지우기', tr: 'Aramayı temizle', 'zh-Hans': '清除搜索', 'zh-Hant': '清除搜尋' }
 
 // Search uses the same exact-match index and downloaded-content rules as the
 // existing search window, but presents results in the snippet list.
@@ -59,6 +60,11 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
     announceSearchSelection(id)
   }
 
+  clearSearch () {
+    setSearchQuery('')
+    this.setState({ query: '', selectedIndex: 0 }, () => this.input?.focus())
+  }
+
   handleSearchKeyDown (event) {
     const results = this.searchResults()
     const index = Math.min(this.state.selectedIndex, Math.max(0, results.length - 1))
@@ -72,9 +78,8 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
       this.selectSearchResult(results[index].id)
     } else if (event.key === 'Escape') {
       event.preventDefault()
-      setSearchQuery('')
-      this.setState({ query: '', selectedIndex: 0 })
-      this.input?.blur()
+      event.stopPropagation()
+      this.clearSearch()
     }
   }
 
@@ -109,6 +114,12 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
             placeholder={ t('menu.search') } value={ this.state.query }
             onChange={ event => { const value = event.target.value; setSearchQuery(value); this.setState({ query: value, selectedIndex: 0 }) } }
             onKeyDown={ event => this.handleSearchKeyDown(event) } />
+          { this.state.query
+            ? <button type='button' className='embedded-search-clear' aria-label={ clearLabels[getLocale()] || clearLabels.en }
+              title={ clearLabels[getLocale()] || clearLabels.en } onMouseDown={ event => event.preventDefault() } onClick={ () => this.clearSearch() }>
+              <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M6 6l12 12M18 6 6 18' /></svg>
+            </button>
+            : null }
         </div>
         { query
           ? <div className='embedded-search-count' role='status' aria-live='polite'>

@@ -45,6 +45,11 @@ body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) {
 .embedded-search-control svg { width: 16px; height: 16px; flex: 0 0 16px; fill: none; stroke: var(--text-secondary); stroke-width: 1.7; }
 .embedded-search-input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-size: 14px; }
 .embedded-search-input::placeholder { color: var(--text-secondary); opacity: 1; }
+.embedded-search-input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.embedded-search-clear { flex: 0 0 28px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--text-secondary); cursor: pointer; }
+.embedded-search-clear:hover { background: var(--bg-secondary); }
+.embedded-search-clear:focus-visible { outline: 2px solid #4078c0; outline-offset: -2px; }
+.embedded-search-control .embedded-search-clear svg { width: 14px; height: 14px; flex: 0 0 14px; stroke: currentColor; }
 .embedded-search-control:focus-within { box-shadow: inset 0 -2px #4078c0; }
 .embedded-search-count { padding: 5px 11px; color: var(--text-secondary); font-size: 11px; }
 .embedded-search-panel .embedded-search-selected { box-shadow: inset 3px 0 #4078c0; }
@@ -53,3 +58,4 @@ body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) {
 .search-detail-empty svg { width: 36px; height: 36px; margin-bottom: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; }
 .search-detail-empty-title { color: var(--text-primary); font-size: 18px; font-weight: 600; }
 .search-detail-empty p { margin: 8px 0 0; font-size: 14px; }
+.content-split-pane .split-pane-divider.horizontal { margin: 0 -5px; border-left: 5px solid transparent; border-right: 5px solid transparent; }
