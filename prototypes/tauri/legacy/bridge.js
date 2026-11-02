@@ -73,7 +73,7 @@ window.addEventListener('keydown', event => {
     if (!matchesAccelerator(event, find(`shortcuts:${setting}`), navigator.platform)) continue
     const modalOpen = Boolean(document.querySelector('.modal[role="dialog"]'))
     if (modalOpen && channel !== 'submit-gist') return
-    if (channel === 'submit-gist' && !document.querySelector('.gist-editor-form')) return
+    if (channel === 'submit-gist' && !document.querySelector('.gist-editor-form, .snippet-box.inline-editing')) return
     event.preventDefault()
     emit(channel)
     return

@@ -11,3 +11,8 @@ body[data-provider='local'] .gist-editor-privacy-checkbox { display: none !impor
 
 /* Keep each icon and label together below the floated profile image in WebKit. */
 .user-panel .user-panel-button { display: inline-block; }
+
+.snippet-box .inline-code-editor .CodeMirror-scroll { min-height: 0; }
+.snippet-box .inline-code-editor .CodeMirror { font-size: 13px; }
+.snippet-box .inline-edit-actions { display: flex; align-items: center; gap: 8px; }
+.snippet-box .inline-edit-actions .btn { padding: 4px 10px; }

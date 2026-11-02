@@ -4,6 +4,8 @@ const base = require(path.join(root, 'webpack.config.js'))
 base.entry = path.join(__dirname, 'legacy/entry.js')
 base.output = { path: path.join(__dirname, 'dist'), publicPath: './', filename: 'app.bundle.js', clean: true }
 base.resolve.alias.jsdom = false
+// Replace only the snippet panel's component in the Tauri build.
+base.resolve.alias['../snippet$'] = path.join(__dirname, 'legacy/inlineSnippet.js')
 base.resolve.alias['react$'] = require.resolve('react', { paths: [root] })
 base.resolve.alias['react-dom$'] = require.resolve('react-dom', { paths: [root] })
 base.module.rules.find(rule => String(rule.test) === String(/\.js$/)).include.push(path.join(__dirname, 'legacy'))
