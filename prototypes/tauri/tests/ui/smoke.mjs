@@ -476,8 +476,8 @@ try {
   await check('dashboard', async () => { await emit('dashboard'); await expectElement('.dashboard-modal canvas'); await closeModal('.dashboard-modal') })
   await check('embedded search, keyboard navigation and file content', async () => {
     await expectElement('.embedded-search-input')
-    const fieldStyle = await run('const field=document.querySelector(".embedded-search-control"), bar=document.querySelector(".embedded-search-bar"); const style=getComputedStyle(field); return {border:parseFloat(style.borderLeftWidth),radius:parseFloat(style.borderTopLeftRadius),height:field.getBoundingClientRect().height,fieldColor:style.backgroundColor,barColor:getComputedStyle(bar).backgroundColor}')
-    assert.ok(fieldStyle.border >= 1 && fieldStyle.radius >= 4 && fieldStyle.height >= 34 && fieldStyle.fieldColor !== fieldStyle.barColor, `Search field should be distinct from the list: ${JSON.stringify(fieldStyle)}`)
+    const fieldStyle = await run('const field=document.querySelector(".embedded-search-control"), bar=document.querySelector(".embedded-search-bar"); const rect=field.getBoundingClientRect(), parent=bar.getBoundingClientRect(); return {height:rect.height,left:rect.left-parent.left,right:parent.right-rect.right,top:rect.top-parent.top}')
+    assert.ok(fieldStyle.height >= 34 && fieldStyle.left <= 1 && fieldStyle.right <= 1 && fieldStyle.top <= 1, `Search field should fill the top of the list: ${JSON.stringify(fieldStyle)}`)
     if (process.env.LEPTON_SEARCH_IDLE_SCREENSHOT) {
       await selectSnippet('Python utility')
       await expectElement('[data-inline-filename="parser.py"] .CodeMirror', 'Normalize a value')
