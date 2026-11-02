@@ -9,6 +9,7 @@ import Panel from '../../../app/containers/compatPanel'
 import DiscardConfirmation, { hasUnsavedForm } from './discardConfirmation'
 import { getInitialValuesKey } from '../../../app/containers/gistEditorForm/formState'
 import { editorActions, activateFormButton, lockEditorNavigation } from './editorToolbar'
+import { currentSearchQuery, subscribeSearchQuery, subscribeSearchSelection, searchRanges, highlightRenderedText } from './searchHighlights'
 import electronBridge from '../../../app/utilities/electronBridge'
 import { getLocale, t } from '../../../app/utilities/i18n'
 import { EDIT_SINGLE_GIST, getSnippetApi } from '../../../app/utilities/snippetApi'
@@ -30,6 +31,27 @@ const messages = {
   'zh-Hant': { details: '編輯詳細資訊…', discard: '放棄目前的變更並開啟完整編輯器？', conflict: '編輯期間程式碼片段已變更。請複製修改內容，然後取消並重新開啟編輯器。' }
 }
 const inlineMessage = key => (messages[getLocale()] || messages.en)[key]
+
+function highlightText (text, query) {
+  if (typeof text !== 'string') return text
+  const output = []
+  let offset = 0
+  for (const [start, end] of searchRanges(text, query)) {
+    if (start > offset) output.push(text.slice(offset, start))
+    output.push(<mark className='detail-search-match' key={ start }>{ text.slice(start, end) }</mark>)
+    offset = end
+  }
+  if (offset < text.length) output.push(text.slice(offset))
+  return output.length ? output : text
+}
+
+function highlightTitle (node, query) {
+  if (Array.isArray(node)) return node.map(child => highlightTitle(child, query))
+  if (!React.isValidElement(node)) return node
+  if (node.props.className === 'title-section') return React.cloneElement(node, null, highlightText(node.props.children, query))
+  if (!node.props.children) return node
+  return React.cloneElement(node, null, highlightTitle(node.props.children, query))
+}
 
 function currentDrafts () {
   const generation = getSessionGeneration()
@@ -56,6 +78,41 @@ function filesFor (snippet) {
 // Set the language before CodeMirror's first render. The shared editor normally
 // sets it after mounting, which makes large previews render the document twice.
 class InlineGistEditor extends GistEditor {
+  componentDidMount () {
+    super.componentDidMount()
+    this.searchMarkers = []
+    this.onSearchContentChanged = () => {
+      if (this.searchFrame) cancelAnimationFrame(this.searchFrame)
+      this.searchFrame = requestAnimationFrame(() => { this.searchFrame = null; this.updateSearchHighlights() })
+    }
+    this.editor.getCodeMirror().on('changes', this.onSearchContentChanged)
+    this.updateSearchHighlights()
+  }
+
+  componentDidUpdate (previousProps, previousState) {
+    super.componentDidUpdate(previousProps, previousState)
+    if (previousProps.expanded !== this.props.expanded && this.props.expanded) this.editor.getCodeMirror().refresh()
+    if (previousProps.searchQuery !== this.props.searchQuery || previousProps.value !== this.props.value || previousProps.expanded !== this.props.expanded) this.updateSearchHighlights()
+  }
+
+  componentWillUnmount () {
+    if (this.searchFrame) cancelAnimationFrame(this.searchFrame)
+    const editor = this.editor?.getCodeMirror()
+    if (editor) editor.off('changes', this.onSearchContentChanged)
+    for (const marker of this.searchMarkers || []) marker.clear()
+    super.componentWillUnmount()
+  }
+
+  updateSearchHighlights () {
+    const editor = this.editor?.getCodeMirror()
+    if (!editor) return
+    editor.operation(() => {
+      for (const marker of this.searchMarkers) marker.clear()
+      this.searchMarkers = searchRanges(editor.getValue(), this.props.searchQuery || '').map(([start, end]) =>
+        editor.markText(editor.posFromIndex(start), editor.posFromIndex(end), { className: 'cm-detail-search-match' }))
+    })
+  }
+
   setMode (filename) {
     const mode = filename && CodeMirror.findModeByFileName(filename)
     if (!mode || this.editor.getCodeMirror().getOption('mode') !== mode.mime) super.setMode(filename)
@@ -71,16 +128,19 @@ class InlineGistEditor extends GistEditor {
 class InlineSnippet extends BaseSnippet {
   constructor (props) {
     super(props)
-    this.state = { revision: 0, confirmDiscard: false }
+    this.state = { revision: 0, confirmDiscard: false, searchQuery: currentSearchQuery() }
     this.mounted = false
   }
 
   componentDidMount () {
     super.componentDidMount()
     this.mounted = true
+    this.unsubscribeSearchQuery = subscribeSearchQuery(query => { if (this.mounted) this.setState({ searchQuery: query }) })
+    this.unsubscribeSearchSelection = subscribeSearchSelection(id => { this.revealSearchId = id; this.scheduleSearchHighlights() })
     this.unsubscribeInlineSubmit = electronBridge.ipc.on('submit-gist', () => {
       if (!document.querySelector('.inline-new-editor') && currentDrafts().has(this.props.activeGist)) this.submitInline()
     })
+    this.scheduleSearchHighlights()
   }
 
   componentDidUpdate (previousProps) {
@@ -89,16 +149,38 @@ class InlineSnippet extends BaseSnippet {
       lockEditorNavigation(open)
       if (open) this.formPanel?.querySelector('.gist-editor-input-area')?.focus()
     }
+    this.scheduleSearchHighlights()
   }
 
   componentWillUnmount () {
     if (this.props.gistEditModalStatus === 'ON') lockEditorNavigation(false)
     this.mounted = false
+    if (this.unsubscribeSearchQuery) this.unsubscribeSearchQuery()
+    if (this.unsubscribeSearchSelection) this.unsubscribeSearchSelection()
+    if (this.searchHighlightTimer) clearTimeout(this.searchHighlightTimer)
     if (this.unsubscribeInlineSubmit) this.unsubscribeInlineSubmit()
     super.componentWillUnmount()
   }
 
   repaint () { if (this.mounted) this.setState(state => ({ revision: state.revision + 1 })) }
+
+  scheduleSearchHighlights () {
+    if (this.searchHighlightTimer) clearTimeout(this.searchHighlightTimer)
+    this.searchHighlightTimer = setTimeout(() => {
+      this.searchHighlightTimer = null
+      const root = this.snippetRoot
+      if (!root) return
+      for (const node of root.querySelectorAll('.description-section, .code-area')) highlightRenderedText(node, this.state.searchQuery)
+      if (this.revealSearchId && this.revealSearchId === this.props.activeGist) {
+        this.revealSearchId = null
+        const marks = root.querySelectorAll('.collapsable-code-area .cm-detail-search-match, .collapsable-code-area .detail-search-match, .snippet-description .detail-search-match, .file-expand .detail-search-match')
+        const first = [...marks].find(mark => mark.getClientRects().length > 0)
+        first?.scrollIntoView({ block: 'center' })
+      }
+    }, 0)
+  }
+
+  renderSnippetDescription (gist) { return highlightTitle(super.renderSnippetDescription(gist), this.state.searchQuery) }
 
   showGistEditorModal () {
     const snippet = this.props.gists[this.props.activeGist]
@@ -261,11 +343,19 @@ class InlineSnippet extends BaseSnippet {
     if (!React.isValidElement(node)) return node
     if (node.type === CodeArea && isCodeFile(node.props)) {
       const filename = node.props.filename
+      const expandKey = this.props.activeGist + '-' + filename
+      const expanded = this.props.fileExpandStatus[expandKey] === undefined
+        ? Boolean(electronBridge.config.get('snippet:expanded'))
+        : this.props.fileExpandStatus[expandKey]
       return <div key={ node.key } className='inline-code-editor' data-inline-filename={ filename }>
-        <InlineGistEditor ref={ editor => editor?.editor?.getCodeMirror()?.getInputField()?.setAttribute('aria-label', filename) }
+        <InlineGistEditor ref={ editor => editor?.editor?.getCodeMirror()?.getInputField()?.setAttribute('aria-label', filename) } searchQuery={ this.state.searchQuery } expanded={ expanded }
           filename={ filename } value={ draft ? draft.contents[filename] : node.props.content }
           readOnly={ !draft || draft.saving } onChange={ value => this.changeInline(filename, value) } />
       </div>
+    }
+    if (node.type === 'a' && typeof node.props.className === 'string' && node.props.className.split(' ').includes('file-expand')) {
+      return React.cloneElement(node, null, React.Children.map(node.props.children, child => React.isValidElement(child)
+        ? React.cloneElement(child, null, highlightText(child.props.children, this.state.searchQuery)) : child))
     }
     if (!node.props.children) return node
     return React.cloneElement(node, null, this.renderInlineCode(node.props.children, draft))
@@ -277,7 +367,7 @@ class InlineSnippet extends BaseSnippet {
     if (!tree) return tree
     const draft = currentDrafts().get(this.props.activeGist)
     const rendered = this.renderInlineCode(tree, draft)
-    const content = draft ? React.cloneElement(rendered, { className: rendered.props.className + ' inline-editing' }) : rendered
+    const content = React.cloneElement(rendered, { ref: node => { this.snippetRoot = node }, className: rendered.props.className + (draft ? ' inline-editing' : '') })
     return <>{ content }<DiscardConfirmation show={ this.state.confirmDiscard } onKeepEditing={ () => this.setState({ confirmDiscard: false }) } onDiscard={ () => this.discardEditor() } /></>
   }
 }

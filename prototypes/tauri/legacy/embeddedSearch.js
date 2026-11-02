@@ -5,20 +5,19 @@ import OriginalNavigationPanelDetails from '../../../app/containers/navigationPa
 import SearchIndex from '../../../app/utilities/search'
 import electronBridge from '../../../app/utilities/electronBridge'
 import { descriptionParser } from '../../../app/utilities/parser'
-import { formatRelativeTime } from '../../../app/utilities/relativeTime'
+import { currentSearchQuery, setSearchQuery, announceSearchSelection } from './searchHighlights'
 import { createDefaultGistFilters } from '../../../app/utilities/gistFilters'
 import { t } from '../../../app/utilities/i18n'
-import { selectGist, fetchSingleGist, updatescrollRequestStatus, updateGistFilters } from '../../../app/actions'
+import { selectGist, fetchSingleGist, updatescrollRequestStatus, updateGistFilters, updateFileExpandStatus } from '../../../app/actions'
 
 const BaseNavigationPanelDetails = OriginalNavigationPanelDetails.WrappedComponent
-const searchSourceKeys = { id: 'id', description: 'description', filename: 'filename', 'files.filename': 'filename', language: 'language', 'files.language': 'language', 'files.content': 'content' }
 
 // Search uses the same exact-match index and downloaded-content rules as the
 // existing search window, but presents results in the snippet list.
 class EmbeddedSearch extends BaseNavigationPanelDetails {
   constructor (props) {
     super(props)
-    this.state = { query: '', selectedIndex: 0 }
+    this.state = { query: currentSearchQuery(), selectedIndex: 0 }
     this.searchNodes = {}
   }
 
@@ -35,6 +34,7 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
 
   componentWillUnmount () {
     if (this.unsubscribeSearch) this.unsubscribeSearch()
+    setSearchQuery('')
   }
 
   searchResults () {
@@ -52,10 +52,20 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
 
   selectSearchResult (id) {
     if (!this.props.gists[id]) return
-    const index = this.searchResults().findIndex(result => result.id === id)
+    const results = this.searchResults()
+    const index = results.findIndex(result => result.id === id)
     if (index !== -1) this.setState({ selectedIndex: index })
+    const expanded = { ...this.props.fileExpandStatus }
+    let changed = false
+    for (const match of results[index]?.searchMeta?.matches || []) {
+      if (match.key !== 'files.content' || !match.filename) continue
+      const key = `${id}-${match.filename}`
+      if (expanded[key] !== true) { expanded[key] = true; changed = true }
+    }
+    if (changed) this.props.updateFileExpandStatus(expanded)
     this.handleClicked(id)
     this.props.updateGistFilters(createDefaultGistFilters())
+    announceSearchSelection(id)
   }
 
   handleSearchKeyDown (event) {
@@ -71,37 +81,10 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
       this.selectSearchResult(results[index].id)
     } else if (event.key === 'Escape') {
       event.preventDefault()
+      setSearchQuery('')
       this.setState({ query: '', selectedIndex: 0 })
       this.input?.blur()
     }
-  }
-
-  highlight (text) {
-    if (!text) return null
-    const tokens = this.state.query.trim().toLowerCase().split(/\s+/).filter(Boolean)
-    const lower = text.toLowerCase()
-    const ranges = []
-    for (const token of tokens) {
-      for (let start = lower.indexOf(token); start !== -1; start = lower.indexOf(token, start + token.length)) {
-        ranges.push([start, start + token.length])
-      }
-    }
-    ranges.sort((a, b) => a[0] - b[0])
-    const merged = []
-    for (const range of ranges) {
-      const last = merged[merged.length - 1]
-      if (last && range[0] <= last[1]) last[1] = Math.max(last[1], range[1])
-      else merged.push(range.slice())
-    }
-    const output = []
-    let offset = 0
-    for (const [start, end] of merged) {
-      if (start > offset) output.push(text.slice(offset, start))
-      output.push(<mark key={ start }>{ text.slice(start, end) }</mark>)
-      offset = end
-    }
-    if (offset < text.length) output.push(text.slice(offset))
-    return output
   }
 
   renderSearchResults (results) {
@@ -110,25 +93,11 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
     return results.map((result, index) => {
       const parsed = descriptionParser(result)
       const title = parsed.title || parsed.description || result.filename || result.id
-      const bestMatch = result.searchMeta?.bestMatch
-      const matchSource = bestMatch ? t(`search.match.${searchSourceKeys[bestMatch.key] || 'description'}`) : null
-      const matchTitle = bestMatch?.filename ? t('search.match.inFile', { source: matchSource, filename: bestMatch.filename }) : matchSource
-      const contentMatches = (result.searchMeta?.matches || []).filter(match => match.key === 'files.content' && match.excerpt?.segments?.length)
       return <li className='snippet-thumnail-list-item' role='option' aria-selected={ index === selected } id={ `embedded-result-${index}` } key={ result.id }
         ref={ node => { if (node) this.searchNodes[result.id] = node; else delete this.searchNodes[result.id] } }>
         <div className={ `${this.decideSnippetListItemClass(result.id)}${index === selected ? ' embedded-search-selected' : ''}` }
           onClick={ () => this.selectSearchResult(result.id) }>
-          <div className='snippet-thumnail-description'>{ this.highlight(title) }</div>
-          { parsed.title && parsed.description ? <div className='embedded-search-description'>{ this.highlight(parsed.description) }</div> : null }
-          { result.filename ? <div className='embedded-search-filenames'>{ this.highlight(result.filename) }</div> : null }
-          <div className='embedded-search-meta'>
-            { matchSource ? <span title={ matchTitle }>{ matchSource }</span> : <span /> }
-            { result.updated_at ? <span>{ t('snippet.lastActive', { time: formatRelativeTime(result.updated_at) }) }</span> : null }
-          </div>
-          { contentMatches.map((match, n) => <div className='embedded-search-excerpt' key={ `${match.filename || 'content'}-${n}` }>
-            { contentMatches.length > 1 && match.filename ? <span>{ match.filename }: </span> : null }
-            { match.excerpt.segments.map((segment, index) => segment.match ? <mark key={ index }>{ segment.text }</mark> : <React.Fragment key={ index }>{ segment.text }</React.Fragment>) }
-          </div>) }
+          <div className='snippet-thumnail-description'>{ title }</div>
           { this.renderSnippetTags(result.id, parsed.customTags) }
         </div>
       </li>
@@ -147,7 +116,7 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
             aria-label={ t('search.placeholder') } aria-autocomplete='list' aria-expanded={ Boolean(query) }
             aria-controls='embedded-search-results' aria-activedescendant={ query && results.length ? `embedded-result-${selected}` : undefined }
             placeholder={ t('menu.search') } value={ this.state.query }
-            onChange={ event => this.setState({ query: event.target.value, selectedIndex: 0 }) }
+            onChange={ event => { const value = event.target.value; setSearchQuery(value); this.setState({ query: value, selectedIndex: 0 }) } }
             onKeyDown={ event => this.handleSearchKeyDown(event) } />
         </div>
       </div>
@@ -170,7 +139,8 @@ const mapState = state => ({
   gistTags: state.gistTags,
   activeGistFilters: state.activeGistFilters,
   activeGist: state.activeGist,
-  scrollRequestStatus: state.scrollRequestStatus
+  scrollRequestStatus: state.scrollRequestStatus,
+  fileExpandStatus: state.fileExpandStatus
 })
-const mapDispatch = dispatch => bindActionCreators({ selectGist, fetchSingleGist, updatescrollRequestStatus, updateGistFilters }, dispatch)
+const mapDispatch = dispatch => bindActionCreators({ selectGist, fetchSingleGist, updatescrollRequestStatus, updateGistFilters, updateFileExpandStatus }, dispatch)
 export default connect(mapState, mapDispatch)(EmbeddedSearch)
