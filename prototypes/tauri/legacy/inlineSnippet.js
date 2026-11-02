@@ -49,6 +49,21 @@ function filesFor (snippet) {
   return Object.entries(snippet.details.files).map(([filename, file]) => ({ ...file, filename }))
 }
 
+// Set the language before CodeMirror's first render. The shared editor normally
+// sets it after mounting, which makes large previews render the document twice.
+class InlineGistEditor extends GistEditor {
+  setMode (filename) {
+    const mode = filename && CodeMirror.findModeByFileName(filename)
+    if (!mode || this.editor.getCodeMirror().getOption('mode') !== mode.mime) super.setMode(filename)
+  }
+
+  render () {
+    const editor = super.render()
+    const mode = this.props.filename && CodeMirror.findModeByFileName(this.props.filename)
+    return mode ? React.cloneElement(editor, { options: { ...editor.props.options, mode: mode.mime } }) : editor
+  }
+}
+
 class InlineSnippet extends BaseSnippet {
   constructor (props) {
     super(props)
@@ -101,7 +116,6 @@ class InlineSnippet extends BaseSnippet {
     const draft = currentDrafts().get(this.props.activeGist)
     if (!draft || draft.saving) return
     draft.contents[filename] = value
-    this.repaint()
   }
 
   openFullEditor () {
@@ -168,12 +182,21 @@ class InlineSnippet extends BaseSnippet {
     const draft = currentDrafts().get(this.props.activeGist)
     if (!draft) return original
     const line = original.props.children
-    const [title] = React.Children.toArray(line.props.children)
-    const actions = <div className='header-controls inline-edit-actions'>
-      <button type='button' className='btn btn-default' disabled={ draft.saving } onClick={ () => this.openFullEditor() }>{ inlineMessage('details') }</button>
-      <button type='button' className='btn btn-default' disabled={ draft.saving } onClick={ () => this.closeGistEditorModal() }>{ t('editor.cancel') }</button>
-      <button type='button' className='btn btn-primary' disabled={ draft.saving } onClick={ () => this.submitInline() }>{ t('editor.submit') }</button>
-    </div>
+    const [title, controls] = React.Children.toArray(line.props.children)
+    const originalControls = React.Children.toArray(controls.props.children).map(control => {
+      if (React.isValidElement(control) && control.props.title === t('snippet.edit')) {
+        return React.cloneElement(control, { title: inlineMessage('details'), onClick: event => { event.preventDefault(); this.openFullEditor() } })
+      }
+      return control
+    })
+    const actions = React.cloneElement(controls, { className: 'header-controls inline-edit-actions' },
+      <button key='cancel' type='button' className='snippet-control inline-toolbar-action' title={ t('editor.cancel') } aria-label={ t('editor.cancel') } disabled={ draft.saving } onClick={ () => this.closeGistEditorModal() }>
+        <svg viewBox='0 0 50 50' aria-hidden='true'><path d='M15 13.6 25 23.6 35 13.6 36.4 15 26.4 25 36.4 35 35 36.4 25 26.4 15 36.4 13.6 35 23.6 25 13.6 15z' /></svg>
+      </button>,
+      <button key='submit' type='button' className='snippet-control inline-toolbar-action' title={ t('editor.submit') } aria-label={ t('editor.submit') } disabled={ draft.saving } onClick={ () => this.submitInline() }>
+        <svg viewBox='0 0 50 50' aria-hidden='true'><path d='m12 25 1.5-1.5 8.1 8.1L36.5 16.7l1.5 1.5-16.4 16.4z' /></svg>
+      </button>,
+      ...originalControls)
     return React.cloneElement(original, null, React.cloneElement(line, null, title, actions))
   }
 
@@ -183,7 +206,7 @@ class InlineSnippet extends BaseSnippet {
     if (node.type === CodeArea && isCodeFile(node.props)) {
       const filename = node.props.filename
       return <div key={ node.key } className='inline-code-editor' data-inline-filename={ filename }>
-        <GistEditor ref={ editor => editor?.editor?.getCodeMirror()?.getInputField()?.setAttribute('aria-label', filename) }
+        <InlineGistEditor ref={ editor => editor?.editor?.getCodeMirror()?.getInputField()?.setAttribute('aria-label', filename) }
           filename={ filename } value={ draft ? draft.contents[filename] : node.props.content }
           readOnly={ !draft || draft.saving } onChange={ value => this.changeInline(filename, value) } />
       </div>

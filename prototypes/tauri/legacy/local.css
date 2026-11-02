@@ -2,8 +2,8 @@
 body[data-provider='local'] .starred-tag-section {
   display: none !important;
 }
-body[data-provider='local'] .header-controls .snippet-control:nth-child(2),
-body[data-provider='local'] .header-controls .snippet-control:nth-last-child(2),
+body[data-provider='local'] .header-controls a.snippet-control:nth-of-type(2),
+body[data-provider='local'] .header-controls a.snippet-control:nth-last-of-type(2),
 body[data-provider='local'] .file-header-controls .file-header-control:first-child,
 body[data-provider='local'] .copy-raw-link { display: none !important; }
 body[data-provider='local'] .header-title > * { display: none !important; }
@@ -14,5 +14,5 @@ body[data-provider='local'] .gist-editor-privacy-checkbox { display: none !impor
 
 .snippet-box .inline-code-editor .CodeMirror-scroll { min-height: 0; }
 .snippet-box .inline-code-editor .CodeMirror { font-size: 13px; }
-.snippet-box .inline-edit-actions { display: flex; align-items: center; gap: 8px; }
-.snippet-box .inline-edit-actions .btn { padding: 4px 10px; }
+.snippet-box .inline-toolbar-action { padding: 0; border: 0; background: transparent; cursor: pointer; }
+.snippet-box .inline-toolbar-action:disabled { opacity: .35; cursor: default; }

@@ -77,6 +77,13 @@ async function selectSnippet (title) {
   await expectElement('.snippet-box', title)
 }
 async function check (name, fn) { await fn(); console.log(`PASS: ${name}`) }
+async function fallbackScreenshot (name, selector) {
+  if (!process.env.LEPTON_FALLBACK_SCREENSHOT_DIR) return
+  await run('const e=document.querySelector(arguments[0]); const box=e.getBoundingClientRect(); if (box.top<75 || box.bottom>innerHeight) e.scrollIntoView({block:"center"}); return true', selector)
+  await new Promise(resolve => setTimeout(resolve, 300))
+  const screenshot = await request(`/session/${session}/screenshot`)
+  fs.writeFileSync(path.join(process.env.LEPTON_FALLBACK_SCREENSHOT_DIR, `${name}.png`), Buffer.from(screenshot, 'base64'))
+}
 try {
   let ready = false
   for (let n = 0; n < 150; n++) {
@@ -104,6 +111,8 @@ try {
     assert.match(info.text, /exercises markdown rendering/)
     assert.deepEqual(await run('return [...document.querySelectorAll("[data-gist-filename]")].map(e=>e.dataset.gistFilename)'), ['hello.js', 'notes.md', 'lepton-logo.webp', 'styles.css'])
     assert.equal(await run('return document.querySelector(".inline-code-editor .CodeMirror")?.CodeMirror.getOption("readOnly")'), true, 'Code should be read-only until editing starts')
+    assert.equal(await run('return !!document.querySelector("[data-gist-filename=\\"notes.md\\"] .markdown-section") && !document.querySelector("[data-gist-filename=\\"notes.md\\"] .inline-code-editor")'), true, 'Markdown should retain its rendered preview')
+    assert.equal(await run('return !!document.querySelector("[data-gist-filename=\\"lepton-logo.webp\\"] .image-file-view img") && !document.querySelector("[data-gist-filename=\\"lepton-logo.webp\\"] .inline-code-editor")'), true, 'Images should retain their rendered preview')
     const layout = await run('const divider=document.querySelector(".content-split-pane .split-pane-divider.horizontal"); const files=[...document.querySelectorAll("[data-gist-filename]")]; return {dividerBottom:divider.getBoundingClientRect().bottom, viewportBottom:innerHeight, dividerColor:getComputedStyle(divider,"::after").backgroundColor, gaps:files.slice(1).map((file,i)=>file.getBoundingClientRect().top-files[i].getBoundingClientRect().bottom)}')
     assert.ok(Math.abs(layout.dividerBottom - layout.viewportBottom) < 2, 'Snippet divider should reach the bottom of the window')
     assert.notEqual(layout.dividerColor, 'rgba(0, 0, 0, 0)', 'Snippet divider should remain visible')
@@ -114,6 +123,24 @@ try {
   const artifact = process.env.LEPTON_UI_SCREENSHOT || path.join(directory, 'active.png')
   fs.writeFileSync(artifact, Buffer.from(screenshot, 'base64'))
   console.log(`Screenshot: ${artifact}`)
+  if (process.env.LEPTON_FALLBACK_SCREENSHOT_DIR) {
+    const files = JSON.parse(fs.readFileSync('tests/ui/fixtures.json', 'utf8'))[0].files
+    await run('window.__screenFixtures=null; Promise.all([window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Markdown example] #docs",{"notes.md":{content:arguments[0]}},true]),window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Image example] #docs",{"lepton-logo.webp":{content:arguments[1]}},true])]).then(value=>{window.__screenFixtures=value}); return true', '# Project notes\n\nA rendered Markdown document.\n\n- Keep useful examples together\n- Share notes with your team\n\n```js\nconsole.log("Hello, Lepton!")\n```', files['lepton-logo.webp'].content)
+    await waitFor('return !!window.__screenFixtures', 'rendered examples fixtures')
+    await emit('sync-gists')
+    await waitFor('return document.body.innerText.includes("Markdown example") && document.body.innerText.includes("Image example")', 'rendered examples sync')
+    await selectSnippet('Markdown example')
+    await expectElement('.markdown-section', 'Project notes')
+    await fallbackScreenshot('markdown', '[data-gist-filename="notes.md"]')
+    await selectSnippet('Image example')
+    await waitFor('return document.querySelector(".image-file-view img")?.naturalWidth>0', 'image example')
+    await fallbackScreenshot('image', '[data-gist-filename="lepton-logo.webp"]')
+    await run('window.__screenDeleted=false; Promise.all(window.__screenFixtures.map(gist=>window.lepton.snippets.request(null,"DELETE_SINGLE_GIST",["local",gist.id]))).then(()=>{window.__screenDeleted=true}); return true')
+    await waitFor('return window.__screenDeleted', 'remove rendered examples')
+    await emit('sync-gists')
+    await waitFor('return !document.body.innerText.includes("Markdown example") && !document.body.innerText.includes("Image example")', 'rendered examples removed')
+    await selectSnippet('React 19 render fixture')
+  }
   await check('startup autostart and native tray preferences', async () => {
     const status = await testWindowAction('status')
     assert.equal(status.autostart, true, 'startAtLogin from .leptonrc must be applied on startup')
@@ -150,10 +177,14 @@ try {
     const editor = '[data-inline-filename="parser.py"] .CodeMirror'
     const initial = await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor)
     assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getOption("readOnly")', editor), true)
+    const originalIcons = await run('return [...document.querySelectorAll(".header-controls a.snippet-control")].map(e=>e.querySelector("svg").outerHTML)')
+    assert.equal(await run('return document.querySelectorAll(".inline-toolbar-action").length'), 0, 'Read-only toolbar must remain unchanged')
     await click('.header-controls [title="Edit"]')
     await waitFor('return !!document.querySelector(".snippet-box.inline-editing")', 'inline editor')
     assert.equal(await run('return !!document.querySelector(".edit-modal .gist-editor-form")'), false, 'Code editing should not open a modal')
     assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getOption("readOnly")', editor), false)
+    assert.deepEqual(await run('return [...document.querySelectorAll(".header-controls a.snippet-control")].map(e=>e.querySelector("svg").outerHTML)'), originalIcons, 'Editing must preserve the original toolbar icons')
+    assert.equal(await run('return [...document.querySelectorAll(".inline-toolbar-action")].filter(e=>getComputedStyle(e).display!=="none").length'), 2, 'Cancel and submit must be visible in the local library')
     await run('document.querySelector(arguments[0]).CodeMirror.setValue(arguments[1]); return true', editor, initial + '\n# cancelled')
     if (process.env.LEPTON_INLINE_SCREENSHOT) {
       const screenshot = await request(`/session/${session}/screenshot`)
@@ -162,12 +193,12 @@ try {
     await selectSnippet('Shell setup')
     await selectSnippet('Python utility')
     assert.match(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), /# cancelled/, 'Switching snippets must retain an unsaved draft')
-    await run('[...document.querySelectorAll(".inline-edit-actions button")].find(e=>e.textContent.trim()==="Cancel").click(); return true')
+    await click('.inline-edit-actions [title="Cancel"]')
     await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'cancel inline editing')
     assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), initial, 'Cancel must restore the saved content')
     await click('.header-controls [title="Edit"]')
     await run('document.querySelector(arguments[0]).CodeMirror.setValue(arguments[1]); return true', editor, initial + '\n# saved inline')
-    await run('[...document.querySelectorAll(".inline-edit-actions button")].find(e=>e.textContent.trim()==="Submit").click(); return true')
+    await click('.inline-edit-actions [title="Submit"]')
     await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'save inline editing')
     await run('window.__inlineStored=null; window.lepton.snippets.request(null,"GET_SINGLE_GIST",["local","fixture-gist-2"]).then(value=>{window.__inlineStored=value}); return true')
     await waitFor('return !!window.__inlineStored', 'saved local snippet')
@@ -178,10 +209,10 @@ try {
     await waitFor('return document.querySelector("[data-inline-filename=\\"parser.py\\"] .CodeMirror")?.CodeMirror.getValue().includes("# saved inline")', 'saved code after sync')
     await click('.header-controls [title="Edit"]')
     await run('document.querySelector(arguments[0]).CodeMirror.setValue(arguments[1]); return true', editor, initial)
-    await run('[...document.querySelectorAll(".inline-edit-actions button")].find(e=>e.textContent.trim()==="Submit").click(); return true')
+    await click('.inline-edit-actions [title="Submit"]')
     await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'restore fixture')
     await click('.header-controls [title="Edit"]')
-    await run('[...document.querySelectorAll(".inline-edit-actions button")].find(e=>e.textContent.includes("Edit details")).click(); return true')
+    await click('.inline-edit-actions [title="Edit details…"]')
     await expectElement('.edit-modal .gist-editor-form')
     await emit('exit-editor'); await absent('.modal .gist-editor-form')
     await run('window.__inlineCreated=null; window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Inline multiple files] #test",{"first.js":{"content":"const first = 1;\\n"},"second.py":{"content":"second = 2\\n"}},true]).then(value=>{window.__inlineCreated=value}); return true')
@@ -191,7 +222,7 @@ try {
     await selectSnippet('Inline multiple files')
     await click('.header-controls [title="Edit"]')
     assert.equal(await run('return [...document.querySelectorAll(".inline-code-editor .CodeMirror")].filter(e=>!e.CodeMirror.getOption("readOnly")).length'), 2, 'Both code files should be editable')
-    await run('document.querySelector("[data-inline-filename=\\"first.js\\"] .CodeMirror").CodeMirror.setValue("const first = 3;\\n"); [...document.querySelectorAll(".inline-edit-actions button")].find(e=>e.textContent.trim()==="Submit").click(); return true')
+    await run('document.querySelector("[data-inline-filename=\\"first.js\\"] .CodeMirror").CodeMirror.setValue("const first = 3;\\n"); document.querySelector(".inline-edit-actions [title=Submit]").click(); return true')
     await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'save multi-file snippet')
     await run('window.__multiStored=null; window.lepton.snippets.request(null,"GET_SINGLE_GIST",["local",window.__inlineCreated.id]).then(value=>{window.__multiStored=value}); return true')
     await waitFor('return !!window.__multiStored', 'saved multi-file snippet')
@@ -337,7 +368,7 @@ try {
     await run('[...document.querySelectorAll("[role=button]")].find(e=>e.textContent.trim()==="#All").click(); return true')
   })
   await check('PHP template highlighting', async () => { await selectSnippet('PHP template'); await expectElement('.inline-code-editor .CodeMirror', 'Ready') })
-  await check('Jupyter notebook preview', async () => { await selectSnippet('Notebook fixture'); await expectElement('.jupyterNotebook-section .nb-notebook', 'Notebook Fixture'); await click('.header-controls [title="Edit"]'); await expectElement('.edit-modal .gist-editor-form'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
+  await check('Jupyter notebook preview', async () => { await selectSnippet('Notebook fixture'); await expectElement('.jupyterNotebook-section .nb-notebook', 'Notebook Fixture'); assert.equal(await run('return !!document.querySelector(".jupyterNotebook-section") && !document.querySelector(".inline-code-editor")'), true); await fallbackScreenshot('notebook', '.jupyterNotebook-section'); await click('.header-controls [title="Edit"]'); await expectElement('.edit-modal .gist-editor-form'); await emit('exit-editor'); await absent('.modal .gist-editor-form') })
   await check('recoverable new-snippet draft', async () => {
     await run('window.lepton.localStorage.set("new-gist-draft-local", {createdAt:"2026-09-06T21:35:00.000Z",description:"Recovered API helper",private:true,gists:[{filename:"recovered.js",content:"const recovered = true"}]}); return true')
     assert.deepEqual(await run('return window.__smokeErrors'), [], 'Renderer errors before refresh')
