@@ -20,7 +20,19 @@ body[data-provider='local'] .gist-editor-privacy-checkbox { display: none !impor
 
 body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) { display: none; }
 .inline-form-edit .gist-editor-form,
-.inline-new-editor .gist-editor-form { padding: 12px 15px 20px; }
+.inline-new-editor .gist-editor-form { padding: 12px 0 20px; }
+.inline-form-edit .gist-editor-form > .gist-editor-name,
+.inline-new-editor .gist-editor-form > .gist-editor-name { margin: 5px 20px; }
+.inline-form-edit .gist-editor-form > .gist-editor-section:not(.gist-editor-name),
+.inline-new-editor .gist-editor-form > .gist-editor-section:not(.gist-editor-name) { margin: 0; }
+.inline-form-edit .gist-editor-form .gist-editor-gist-file,
+.inline-new-editor .gist-editor-form .gist-editor-gist-file { padding: 0 !important; }
+.inline-form-edit .gist-editor-form .gist-editor-gist-file > .panel,
+.inline-new-editor .gist-editor-form .gist-editor-gist-file > .panel { margin-bottom: 0; border-left: 0; border-right: 0; }
+.inline-form-edit .gist-editor-form .image-attachment-drop-zone,
+.inline-new-editor .gist-editor-form .image-attachment-drop-zone { margin: 8px 15px 0; }
+.inline-form-edit .gist-editor-form .gist-editor-privacy-checkbox,
+.inline-new-editor .gist-editor-form .gist-editor-privacy-checkbox { margin-right: 15px; }
 .snippet-box .gist-editor-form .panel-body { margin-top: 0; }
 .inline-form-edit .gist-editor-form .control-button-group .gist-editor-control-button,
 .inline-new-editor .gist-editor-form .control-button-group .gist-editor-control-button { display: none; }

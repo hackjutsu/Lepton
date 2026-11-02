@@ -81,6 +81,14 @@ async function selectSnippet (title) {
   assert.equal(selected, true, `Missing snippet ${title}`)
   await expectElement('.snippet-box', title)
 }
+async function assertEditorsFillPane (selector, expectedFiles = 1) {
+  const layout = await run('const root=document.querySelector(arguments[0]); const outer=root.querySelector(".snippet-code").getBoundingClientRect(); const files=[...root.querySelectorAll(".gist-editor-gist-file > .panel")].map(e=>{const r=e.getBoundingClientRect(); return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}}); return {outer:{left:outer.left,right:outer.right},files}', selector)
+  assert.equal(layout.files.length, expectedFiles)
+  for (const file of layout.files) {
+    assert.ok(Math.abs(file.left - layout.outer.left) <= 2 && Math.abs(file.right - layout.outer.right) <= 2, `Editors must reach the detail pane edges: ${JSON.stringify(layout)}`)
+  }
+  for (let i = 1; i < layout.files.length; i++) assert.ok(Math.abs(layout.files[i].top - layout.files[i - 1].bottom) <= 2, `Editors must not have gaps between files: ${JSON.stringify(layout)}`)
+}
 async function check (name, fn) { await fn(); console.log(`PASS: ${name}`) }
 async function fallbackScreenshot (name, selector) {
   if (!process.env.LEPTON_FALLBACK_SCREENSHOT_DIR) return
@@ -180,6 +188,7 @@ try {
   await check('create and edit rendered snippets without a modal', async () => {
     await emit('new-gist-renderer')
     await expectElement('.inline-new-editor .gist-editor-form .CodeMirror')
+    await assertEditorsFillPane('.inline-new-editor')
     assert.equal(await run('return document.querySelector(".menu-panel").inert && document.querySelector(".panel-thumbnails-background").inert'), true, 'Navigation must not replace an unsaved form')
     await run('const set=(el,value)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(el,value); el.dispatchEvent(new Event("input",{bubbles:true}))}; set(document.querySelector(".inline-new-editor .gist-editor-input-area"),"[In-place Markdown] #test"); set(document.querySelector(".inline-new-editor .gist-editor-filename-area"),"notes.md"); document.querySelector(".inline-new-editor .CodeMirror").CodeMirror.setValue("# Original\\n"); return true')
     await click('.inline-new-editor [title=Cancel]')
@@ -198,6 +207,7 @@ try {
     assert.equal(await run('return document.querySelector(".menu-panel").inert'), false, 'Navigation should be restored after creation')
     await click('.header-controls [title=Edit]')
     await expectElement('.inline-form-edit .gist-editor-form .CodeMirror')
+    await assertEditorsFillPane('.inline-form-edit')
     assert.equal(await run('return !!document.querySelector(".modal .gist-editor-form")'), false)
     await run('const set=(e,value)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,value); e.dispatchEvent(new Event("input",{bubbles:true}))}; set(document.querySelector(".inline-form-edit .gist-editor-input-area"),"[In-place Markdown updated] #test"); set(document.querySelector(".inline-form-edit .gist-editor-filename-area"),"updated.md"); document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.setValue("# Updated\\n"); return true')
     if (process.env.LEPTON_FULL_INLINE_SCREENSHOT) {
@@ -319,6 +329,7 @@ try {
     await click('.header-controls [title=Edit]')
     await expectElement('.inline-form-edit .gist-editor-form .CodeMirror')
     await waitFor('return document.querySelector(".inline-form-edit .image-file-view img")?.naturalWidth>0', 'image preview in form')
+    await assertEditorsFillPane('.inline-form-edit', 2)
     await run('document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.setValue("# After\\n"); return true')
     await click('.inline-form-edit [title=Submit]')
     await absent('.inline-form-edit')
