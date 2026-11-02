@@ -141,13 +141,15 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
     const selected = Math.min(this.state.selectedIndex, Math.max(0, results.length - 1))
     return <div className='panel-thumbnails-background embedded-search-panel'>
       <div className='embedded-search-bar' role='search'>
-        <svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.5' cy='10.5' r='6.5' /><path d='m15.5 15.5 4.5 4.5' /></svg>
-        <input ref={ node => { this.input = node } } type='search' className='embedded-search-input' role='combobox'
-          aria-label={ t('search.placeholder') } aria-autocomplete='list' aria-expanded={ Boolean(query) }
-          aria-controls='embedded-search-results' aria-activedescendant={ query && results.length ? `embedded-result-${selected}` : undefined }
-          placeholder={ t('menu.search') } value={ this.state.query }
-          onChange={ event => this.setState({ query: event.target.value, selectedIndex: 0 }) }
-          onKeyDown={ event => this.handleSearchKeyDown(event) } />
+        <div className='embedded-search-control'>
+          <svg viewBox='0 0 24 24' aria-hidden='true'><circle cx='10.5' cy='10.5' r='6.5' /><path d='m15.5 15.5 4.5 4.5' /></svg>
+          <input ref={ node => { this.input = node } } type='search' className='embedded-search-input' role='combobox'
+            aria-label={ t('search.placeholder') } aria-autocomplete='list' aria-expanded={ Boolean(query) }
+            aria-controls='embedded-search-results' aria-activedescendant={ query && results.length ? `embedded-result-${selected}` : undefined }
+            placeholder={ t('menu.search') } value={ this.state.query }
+            onChange={ event => this.setState({ query: event.target.value, selectedIndex: 0 }) }
+            onKeyDown={ event => this.handleSearchKeyDown(event) } />
+        </div>
       </div>
       { query
         ? <div className='embedded-search-count' role='status' aria-live='polite'>
