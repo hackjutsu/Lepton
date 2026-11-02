@@ -16,3 +16,12 @@ body[data-provider='local'] .gist-editor-privacy-checkbox { display: none !impor
 .snippet-box .inline-code-editor .CodeMirror { font-size: 13px; }
 .snippet-box .inline-toolbar-action { padding: 0; border: 0; background: transparent; cursor: pointer; }
 .snippet-box .inline-toolbar-action:disabled { opacity: .35; cursor: default; }
+.inline-form-edit .snippet-control[aria-disabled='true'] { opacity: .35; cursor: default; }
+
+body.lepton-creating-snippet .snippet-panel-content > :not(.inline-new-editor) { display: none; }
+.inline-form-edit .gist-editor-form,
+.inline-new-editor .gist-editor-form { padding: 12px 15px 20px; }
+.snippet-box .gist-editor-form .panel-body { margin-top: 0; }
+.inline-form-edit .gist-editor-form .control-button-group .gist-editor-control-button,
+.inline-new-editor .gist-editor-form .control-button-group .gist-editor-control-button { display: none; }
+.inline-new-editor .new-gist-draft-callout { margin: 12px 20px 0; }

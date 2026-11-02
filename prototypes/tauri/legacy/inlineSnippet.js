@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux'
 import OriginalSnippet from '../../../app/containers/snippet/index'
 import CodeArea from '../../../app/containers/codeArea'
 import GistEditor from '../../../app/containers/gistEditor'
+import Panel from '../../../app/containers/compatPanel'
+import { editorActions, activateFormButton, lockEditorNavigation } from './editorToolbar'
 import electronBridge from '../../../app/utilities/electronBridge'
 import { getLocale, t } from '../../../app/utilities/i18n'
 import { EDIT_SINGLE_GIST, getSnippetApi } from '../../../app/utilities/snippetApi'
@@ -75,11 +77,20 @@ class InlineSnippet extends BaseSnippet {
     super.componentDidMount()
     this.mounted = true
     this.unsubscribeInlineSubmit = electronBridge.ipc.on('submit-gist', () => {
-      if (currentDrafts().has(this.props.activeGist)) this.submitInline()
+      if (!document.querySelector('.inline-new-editor') && currentDrafts().has(this.props.activeGist)) this.submitInline()
     })
   }
 
+  componentDidUpdate (previousProps) {
+    if (previousProps.gistEditModalStatus !== this.props.gistEditModalStatus) {
+      const open = this.props.gistEditModalStatus === 'ON'
+      lockEditorNavigation(open)
+      if (open) this.formPanel?.querySelector('.gist-editor-input-area')?.focus()
+    }
+  }
+
   componentWillUnmount () {
+    if (this.props.gistEditModalStatus === 'ON') lockEditorNavigation(false)
     this.mounted = false
     if (this.unsubscribeInlineSubmit) this.unsubscribeInlineSubmit()
     super.componentWillUnmount()
@@ -90,7 +101,10 @@ class InlineSnippet extends BaseSnippet {
   showGistEditorModal () {
     const snippet = this.props.gists[this.props.activeGist]
     const files = filesFor(snippet)
-    if (!files.length || typeof snippet.details.description !== 'string' || !files.every(isCodeFile)) return super.showGistEditorModal()
+    if (!files.length || typeof snippet.details.description !== 'string' || !files.every(isCodeFile)) {
+      this.fullEditorDraft = null
+      return super.showGistEditorModal()
+    }
     if (currentDrafts().has(this.props.activeGist)) return
     const contents = Object.fromEntries(files.map(file => [file.filename, file.content]))
     currentDrafts().set(this.props.activeGist, {
@@ -107,8 +121,10 @@ class InlineSnippet extends BaseSnippet {
   }
 
   closeGistEditorModal () {
+    if (document.querySelector('.inline-new-editor')) return
     if (currentDrafts().get(this.props.activeGist)?.saving) return
     if (currentDrafts().delete(this.props.activeGist)) { this.repaint(); return }
+    this.fullEditorDraft = null
     super.closeGistEditorModal()
   }
 
@@ -121,8 +137,7 @@ class InlineSnippet extends BaseSnippet {
   openFullEditor () {
     const draft = currentDrafts().get(this.props.activeGist)
     if (draft?.saving) return
-    const changed = draft && Object.keys(draft.contents).some(name => draft.contents[name] !== draft.original[name])
-    if (changed && !window.confirm(inlineMessage('discard'))) return
+    this.fullEditorDraft = draft ? { id: this.props.activeGist, contents: { ...draft.contents } } : null
     currentDrafts().delete(this.props.activeGist)
     this.repaint()
     super.showGistEditorModal()
@@ -180,24 +195,43 @@ class InlineSnippet extends BaseSnippet {
   renderPanelHeader (snippet) {
     const original = super.renderPanelHeader(snippet)
     const draft = currentDrafts().get(this.props.activeGist)
-    if (!draft) return original
+    const fullEditor = this.props.gistEditModalStatus === 'ON'
+    if (!draft && !fullEditor) return original
     const line = original.props.children
     const [title, controls] = React.Children.toArray(line.props.children)
     const originalControls = React.Children.toArray(controls.props.children).map(control => {
-      if (React.isValidElement(control) && control.props.title === t('snippet.edit')) {
+      if (draft && React.isValidElement(control) && control.props.title === t('snippet.edit')) {
         return React.cloneElement(control, { title: inlineMessage('details'), onClick: event => { event.preventDefault(); this.openFullEditor() } })
+      }
+      if (fullEditor && React.isValidElement(control)) {
+        return React.cloneElement(control, { 'aria-disabled': 'true', tabIndex: -1, onClick: event => event.preventDefault() })
       }
       return control
     })
     const actions = React.cloneElement(controls, { className: 'header-controls inline-edit-actions' },
-      <button key='cancel' type='button' className='snippet-control inline-toolbar-action' title={ t('editor.cancel') } aria-label={ t('editor.cancel') } disabled={ draft.saving } onClick={ () => this.closeGistEditorModal() }>
-        <svg viewBox='0 0 50 50' aria-hidden='true'><path d='M15 13.6 25 23.6 35 13.6 36.4 15 26.4 25 36.4 35 35 36.4 25 26.4 15 36.4 13.6 35 23.6 25 13.6 15z' /></svg>
-      </button>,
-      <button key='submit' type='button' className='snippet-control inline-toolbar-action' title={ t('editor.submit') } aria-label={ t('editor.submit') } disabled={ draft.saving } onClick={ () => this.submitInline() }>
-        <svg viewBox='0 0 50 50' aria-hidden='true'><path d='m12 25 1.5-1.5 8.1 8.1L36.5 16.7l1.5 1.5-16.4 16.4z' /></svg>
-      </button>,
+      ...editorActions(
+        () => fullEditor ? activateFormButton(this.formPanel, false) : this.closeGistEditorModal(),
+        () => fullEditor ? activateFormButton(this.formPanel, true) : this.submitInline(),
+        Boolean(draft?.saving)),
       ...originalControls)
     return React.cloneElement(original, null, React.cloneElement(line, null, title, actions))
+  }
+
+  // The original modal form stays mounted in the detail pane, with its
+  // existing file imports, validation and save handlers intact.
+  renderGistEditorModal () { return null }
+
+  renderFullEditor (snippet) {
+    if (!snippet?.details || snippet.details._leptonUnavailable) return super.render()
+    const contents = this.fullEditorDraft?.id === this.props.activeGist ? this.fullEditorDraft.contents : {}
+    const files = Object.entries(snippet.details.files || {}).map(([filename, file]) => ({ filename, ...file, ...(Object.prototype.hasOwnProperty.call(contents, filename) ? { content: contents[filename] } : {}) }))
+    const isInternal = snippet.brief.providerType === 'gitlab' && snippet.brief.visibility === 'internal'
+    return <div className='snippet-box inline-form-edit' ref={ node => { this.formPanel = node } }>
+      <Panel className='snippet-code' bsStyle={ isInternal ? 'warning' : snippet.brief.public ? 'default' : 'danger' }>
+        <Panel.Heading>{ this.renderPanelHeader(snippet) }</Panel.Heading>
+        <Panel.Body>{ this.renderGistEditorModalBody(snippet.brief.description, files, !snippet.brief.public) }</Panel.Body>
+      </Panel>
+    </div>
   }
 
   renderInlineCode (node, draft) {
@@ -216,6 +250,7 @@ class InlineSnippet extends BaseSnippet {
   }
 
   render () {
+    if (this.props.gistEditModalStatus === 'ON') return this.renderFullEditor(this.props.gists[this.props.activeGist])
     const tree = super.render()
     if (!tree) return tree
     const draft = currentDrafts().get(this.props.activeGist)
