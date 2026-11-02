@@ -5,7 +5,7 @@ import OriginalNavigationPanelDetails from '../../../app/containers/navigationPa
 import SearchIndex from '../../../app/utilities/search'
 import electronBridge from '../../../app/utilities/electronBridge'
 import { descriptionParser } from '../../../app/utilities/parser'
-import { currentSearchQuery, setSearchQuery, announceSearchSelection } from './searchHighlights'
+import { currentSearchQuery, setSearchQuery, announceSearchSelection, matchingSearchResults } from './searchHighlights'
 import { createDefaultGistFilters } from '../../../app/utilities/gistFilters'
 import { t } from '../../../app/utilities/i18n'
 import { selectGist, fetchSingleGist, updatescrollRequestStatus, updateGistFilters, updateFileExpandStatus } from '../../../app/actions'
@@ -38,16 +38,7 @@ class EmbeddedSearch extends BaseNavigationPanelDetails {
   }
 
   searchResults () {
-    const query = this.state.query.trim()
-    if (!query) return []
-    if (!this.cachedSearch || this.cachedSearch.query !== query || this.cachedSearch.gists !== this.props.gists) {
-      this.cachedSearch = {
-        query,
-        gists: this.props.gists,
-        results: SearchIndex.fuseSearch(query).filter(result => this.props.gists[result.id])
-      }
-    }
-    return this.cachedSearch.results
+    return matchingSearchResults(this.state.query, this.props.gists)
   }
 
   selectSearchResult (id) {

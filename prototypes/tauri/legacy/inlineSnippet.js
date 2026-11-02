@@ -9,7 +9,7 @@ import Panel from '../../../app/containers/compatPanel'
 import DiscardConfirmation, { hasUnsavedForm } from './discardConfirmation'
 import { getInitialValuesKey } from '../../../app/containers/gistEditorForm/formState'
 import { editorActions, activateFormButton, lockEditorNavigation } from './editorToolbar'
-import { currentSearchQuery, subscribeSearchQuery, subscribeSearchSelection, searchRanges, highlightRenderedText } from './searchHighlights'
+import { currentSearchQuery, subscribeSearchQuery, subscribeSearchSelection, searchRanges, highlightRenderedText, matchingSearchResults } from './searchHighlights'
 import electronBridge from '../../../app/utilities/electronBridge'
 import { getLocale, t } from '../../../app/utilities/i18n'
 import { EDIT_SINGLE_GIST, getSnippetApi } from '../../../app/utilities/snippetApi'
@@ -367,7 +367,14 @@ class InlineSnippet extends BaseSnippet {
     if (!tree) return tree
     const draft = currentDrafts().get(this.props.activeGist)
     const rendered = this.renderInlineCode(tree, draft)
-    const content = React.cloneElement(rendered, { ref: node => { this.snippetRoot = node }, className: rendered.props.className + (draft ? ' inline-editing' : '') })
+    const noResults = Boolean(this.state.searchQuery.trim()) && matchingSearchResults(this.state.searchQuery, this.props.gists).length === 0
+    const content = React.cloneElement(rendered, {
+      ref: node => { this.snippetRoot = node },
+      className: rendered.props.className + (draft ? ' inline-editing' : ''),
+      style: { ...rendered.props.style, visibility: noResults ? 'hidden' : undefined },
+      'aria-hidden': noResults || undefined,
+      inert: noResults || undefined
+    })
     return <>{ content }<DiscardConfirmation show={ this.state.confirmDiscard } onKeepEditing={ () => this.setState({ confirmDiscard: false }) } onDiscard={ () => this.discardEditor() } /></>
   }
 }

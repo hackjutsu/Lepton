@@ -1,4 +1,7 @@
+import SearchIndex from '../../../app/utilities/search'
+
 let query = ''
+let cachedResults
 const listeners = new Set()
 const selectionListeners = new Set()
 
@@ -19,6 +22,15 @@ export function announceSearchSelection (id) { selectionListeners.forEach(listen
 export function subscribeSearchSelection (listener) {
   selectionListeners.add(listener)
   return () => selectionListeners.delete(listener)
+}
+
+export function matchingSearchResults (input, gists) {
+  const trimmed = input.trim()
+  if (!trimmed) return []
+  if (!cachedResults || cachedResults.query !== trimmed || cachedResults.gists !== gists) {
+    cachedResults = { query: trimmed, gists, results: SearchIndex.fuseSearch(trimmed).filter(result => gists[result.id]) }
+  }
+  return cachedResults.results
 }
 
 // Match the exact, case-insensitive tokens used by the search index.
