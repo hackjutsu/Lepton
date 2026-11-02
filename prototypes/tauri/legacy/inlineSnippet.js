@@ -32,14 +32,14 @@ const messages = {
 }
 const inlineMessage = key => (messages[getLocale()] || messages.en)[key]
 const emptySearchMessages = {
-  en: { title: 'No snippets found', hint: 'They must be hiding. Try a different search.', short: 'Type at least two characters to search.' },
-  es: { title: 'No se encontraron fragmentos', hint: 'Deben de estar escondidos. Prueba otra búsqueda.', short: 'Escribe al menos dos caracteres para buscar.' },
-  fr: { title: 'Aucun extrait trouvé', hint: 'Ils doivent se cacher. Essayez une autre recherche.', short: 'Saisissez au moins deux caractères pour rechercher.' },
-  ja: { title: 'スニペットが見つかりません', hint: 'どこかに隠れているのかも。別の言葉で検索してください。', short: '検索するには2文字以上入力してください。' },
-  ko: { title: '스니펫을 찾을 수 없습니다', hint: '어딘가에 숨어 있나 봐요. 다른 검색어를 입력해 보세요.', short: '검색하려면 두 글자 이상 입력하세요.' },
-  tr: { title: 'Kod parçası bulunamadı', hint: 'Saklanıyor olmalılar. Başka bir arama deneyin.', short: 'Aramak için en az iki karakter yazın.' },
-  'zh-Hans': { title: '没有找到代码片段', hint: '它们可能藏起来了。试试其他搜索词吧。', short: '请输入至少两个字符进行搜索。' },
-  'zh-Hant': { title: '找不到程式碼片段', hint: '它們可能躲起來了。試試其他搜尋詞吧。', short: '請輸入至少兩個字元進行搜尋。' }
+  en: { title: 'No snippets found', hint: 'Try a different search.', short: 'Type at least two characters to search.' },
+  es: { title: 'No se encontraron fragmentos', hint: 'Prueba otra búsqueda.', short: 'Escribe al menos dos caracteres para buscar.' },
+  fr: { title: 'Aucun extrait trouvé', hint: 'Essayez une autre recherche.', short: 'Saisissez au moins deux caractères pour rechercher.' },
+  ja: { title: 'スニペットが見つかりません', hint: '別の言葉で検索してください。', short: '検索するには2文字以上入力してください。' },
+  ko: { title: '스니펫을 찾을 수 없습니다', hint: '다른 검색어를 입력해 보세요.', short: '검색하려면 두 글자 이상 입력하세요.' },
+  tr: { title: 'Kod parçası bulunamadı', hint: 'Başka bir arama deneyin.', short: 'Aramak için en az iki karakter yazın.' },
+  'zh-Hans': { title: '没有找到代码片段', hint: '请尝试其他搜索词。', short: '请输入至少两个字符进行搜索。' },
+  'zh-Hant': { title: '找不到程式碼片段', hint: '請嘗試其他搜尋詞。', short: '請輸入至少兩個字元進行搜尋。' }
 }
 
 function highlightText (text, query) {

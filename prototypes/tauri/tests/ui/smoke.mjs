@@ -567,7 +567,7 @@ try {
     await setQuery('unfindable-xyz')
     await expectElement('.snippet-thumnail-empty', 'No result found')
     await waitFor('const box=document.querySelector(".snippet-box"); return box && getComputedStyle(box).visibility==="hidden" && box.inert && box.getAttribute("aria-hidden")==="true"', 'hide detail pane when search has no results')
-    await expectElement('.search-detail-empty', 'They must be hiding. Try a different search.')
+    await expectElement('.search-detail-empty', 'Try a different search.')
     await searchScreenshot('no-results')
     await setQuery('x')
     await expectElement('.search-detail-empty', 'Type at least two characters to search.')
