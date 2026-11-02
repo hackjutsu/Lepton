@@ -1,0 +1,179 @@
+name: Rust prototype release
+
+on:
+  push:
+    tags:
+      - 'rust-v*'
+  workflow_dispatch:
+    inputs:
+      release_ref:
+        description: Branch, SHA, or rust-v tag to build (publishing requires a rust-v tag).
+        required: false
+        default: ''
+        type: string
+      publish:
+        description: Build only, or create a separate Rust draft/prerelease.
+        required: true
+        default: never
+        type: choice
+        options:
+          - never
+          - draft
+          - prerelease
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  context:
+    name: Resolve Rust release
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.context.outputs.sha }}
+      tag: ${{ steps.context.outputs.tag }}
+      publish: ${{ steps.context.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.release_ref || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - name: Validate release ref and version
+        id: context
+        env:
+          RELEASE_REF: ${{ inputs.release_ref || '' }}
+          PUBLISH_MODE: ${{ inputs.publish || 'never' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node prototypes/tauri/scripts/release-context.cjs
+          sha="$(git rev-parse HEAD)"
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            tag="${GITHUB_REF_NAME}"
+          elif [[ "${PUBLISH_MODE}" != "never" ]]; then
+            tag="${RELEASE_REF#refs/tags/}"
+          else
+            tag=""
+          fi
+          if [[ -n "${tag}" ]]; then
+            test "$(git rev-parse "refs/tags/${tag}^{commit}")" = "${sha}"
+          fi
+          echo "sha=${sha}" >> "${GITHUB_OUTPUT}"
+
+  build:
+    name: Package ${{ matrix.target }}
+    needs: context
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            target: macos-arm64
+            bundles: app
+          - os: macos-15-intel
+            target: macos-x64
+            bundles: app
+          - os: windows-latest
+            target: windows-x64
+            bundles: nsis
+          - os: ubuntu-22.04
+            target: linux-x64
+            bundles: deb,appimage
+    runs-on: ${{ matrix.os }}
+    environment: prerelease
+    timeout-minutes: 90
+    env:
+      CARGO_TERM_COLOR: never
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev pkg-config patchelf libfuse2
+      - run: npm ci
+      - run: npm ci
+        working-directory: prototypes/tauri
+      - name: Build installers
+        shell: bash
+        working-directory: prototypes/tauri
+        env:
+          LEPTON_GITHUB_CLIENT_ID: ${{ secrets.LEPTON_GITHUB_CLIENT_ID }}
+          LEPTON_GITHUB_CLIENT_SECRET: ${{ secrets.LEPTON_GITHUB_CLIENT_SECRET }}
+          BUNDLES: ${{ matrix.bundles }}
+          APPLE_SIGNING_IDENTITY: '-'
+        run: |
+          set -euo pipefail
+          if [[ -z "${LEPTON_GITHUB_CLIENT_ID:-}" || -z "${LEPTON_GITHUB_CLIENT_SECRET:-}" ]]; then
+            echo 'Missing LEPTON_GITHUB_CLIENT_ID or LEPTON_GITHUB_CLIENT_SECRET.' >&2
+            exit 1
+          fi
+          npm run package -- --bundles "${BUNDLES}" -- --locked
+      - name: Create macOS DMG
+        if: runner.os == 'macOS'
+        shell: bash
+        run: bash prototypes/tauri/scripts/create-macos-dmg.sh prototypes/tauri/src-tauri/target/release/bundle
+      - name: Stage installers
+        shell: bash
+        env:
+          TARGET_NAME: ${{ matrix.target }}
+        run: node prototypes/tauri/scripts/stage-release.cjs "${TARGET_NAME}" prototypes/tauri/src-tauri/target/release/bundle release-assets
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lepton-rust-${{ matrix.target }}
+          path: release-assets/*
+          if-no-files-found: error
+          overwrite: true
+
+  publish:
+    name: Publish Rust prototype release
+    if: needs.context.outputs.publish != 'never'
+    needs: [context, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ needs.context.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lepton-rust-*
+          merge-multiple: true
+          path: release-assets
+      - name: Create release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ needs.context.outputs.tag }}
+          RELEASE_SHA: ${{ needs.context.outputs.sha }}
+          PUBLISH_MODE: ${{ needs.context.outputs.publish }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          test "$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")" = "${RELEASE_SHA}"
+          assets=(release-assets/*)
+          if [[ "${#assets[@]}" -ne 5 ]]; then
+            echo 'Expected all five Rust installers before publishing.' >&2
+            exit 1
+          fi
+          gh release create "${RELEASE_TAG}" "${assets[@]}" --verify-tag --draft \
+            --title "Lepton Rust Prototype ${RELEASE_TAG}" \
+            --notes 'Experimental Rust prototype builds. macOS and Windows installers are not signed for distribution.'
+          if [[ "${PUBLISH_MODE}" == "prerelease" ]]; then
+            gh release edit "${RELEASE_TAG}" --draft=false --prerelease
+          fi

@@ -43,10 +43,11 @@ browser, and sharing copies a provider link. Some native integrations and
 preferences still need implementation.
 
 The prototype also contains an experimental GitHub OAuth flow. It requires an
-OAuth app with callback `http://127.0.0.1/callback` and the environment variables
-`LEPTON_GITHUB_OAUTH_CLIENT_ID` and `LEPTON_GITHUB_OAUTH_CLIENT_SECRET`. Live
-OAuth verification is deferred. Neither OAuth credentials nor the provided
-personal access token are needed for local library use.
+OAuth app with callback `http://127.0.0.1/callback`. Release builds embed the
+configured app credentials; local builds can set `LEPTON_GITHUB_OAUTH_CLIENT_ID`
+and `LEPTON_GITHUB_OAUTH_CLIENT_SECRET` at runtime. Live OAuth verification is
+deferred. Neither OAuth credentials nor a personal access token are needed for
+local library use. See [build instructions](docs/build.md) for release details.
 
 The `autoUpdate` preference is not yet functional in the Rust prototype. It
 requires a signed Tauri release feed and public verification key; those have
