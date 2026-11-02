@@ -6,6 +6,8 @@ import OriginalSnippet from '../../../app/containers/snippet/index'
 import CodeArea from '../../../app/containers/codeArea'
 import GistEditor from '../../../app/containers/gistEditor'
 import Panel from '../../../app/containers/compatPanel'
+import DiscardConfirmation, { hasUnsavedForm } from './discardConfirmation'
+import { getInitialValuesKey } from '../../../app/containers/gistEditorForm/formState'
 import { editorActions, activateFormButton, lockEditorNavigation } from './editorToolbar'
 import electronBridge from '../../../app/utilities/electronBridge'
 import { getLocale, t } from '../../../app/utilities/i18n'
@@ -69,7 +71,7 @@ class InlineGistEditor extends GistEditor {
 class InlineSnippet extends BaseSnippet {
   constructor (props) {
     super(props)
-    this.state = { revision: 0 }
+    this.state = { revision: 0, confirmDiscard: false }
     this.mounted = false
   }
 
@@ -103,6 +105,7 @@ class InlineSnippet extends BaseSnippet {
     const files = filesFor(snippet)
     if (!files.length || typeof snippet.details.description !== 'string' || !files.every(isCodeFile)) {
       this.fullEditorDraft = null
+      if (files.length && snippet?.details) this.fullEditorBaselineKey = getInitialValuesKey({ description: snippet.brief.description, gists: files, private: !snippet.brief.public })
       return super.showGistEditorModal()
     }
     if (currentDrafts().has(this.props.activeGist)) return
@@ -122,10 +125,26 @@ class InlineSnippet extends BaseSnippet {
 
   closeGistEditorModal () {
     if (document.querySelector('.inline-new-editor')) return
-    if (currentDrafts().get(this.props.activeGist)?.saving) return
+    const draft = currentDrafts().get(this.props.activeGist)
+    if (draft?.saving || this.localEditSaving) return
+    if (!this.closingAfterSave && ((draft && Object.keys(draft.original).some(name => draft.original[name] !== draft.contents[name])) || hasUnsavedForm(this.fullEditorForm, this.fullEditorBaselineKey))) {
+      this.setState({ confirmDiscard: true })
+      return
+    }
+    this.discardEditor()
+  }
+
+  discardEditor () {
+    this.setState({ confirmDiscard: false })
     if (currentDrafts().delete(this.props.activeGist)) { this.repaint(); return }
     this.fullEditorDraft = null
+    this.fullEditorBaselineKey = null
     super.closeGistEditorModal()
+  }
+
+  handleGistEditorFormSubmit (data) {
+    this.closingAfterSave = true
+    return Promise.resolve(super.handleGistEditorFormSubmit(data)).finally(() => { this.closingAfterSave = false })
   }
 
   changeInline (filename, value) {
@@ -138,6 +157,8 @@ class InlineSnippet extends BaseSnippet {
     const draft = currentDrafts().get(this.props.activeGist)
     if (draft?.saving) return
     this.fullEditorDraft = draft ? { id: this.props.activeGist, contents: { ...draft.contents } } : null
+    const snippet = this.props.gists[this.props.activeGist]
+    this.fullEditorBaselineKey = getInitialValuesKey({ description: snippet.brief.description, gists: filesFor(snippet), private: !snippet.brief.public })
     currentDrafts().delete(this.props.activeGist)
     this.repaint()
     super.showGistEditorModal()
@@ -229,8 +250,9 @@ class InlineSnippet extends BaseSnippet {
     return <div className='snippet-box inline-form-edit' ref={ node => { this.formPanel = node } }>
       <Panel className='snippet-code' bsStyle={ isInternal ? 'warning' : snippet.brief.public ? 'default' : 'danger' }>
         <Panel.Heading>{ this.renderPanelHeader(snippet) }</Panel.Heading>
-        <Panel.Body>{ this.renderGistEditorModalBody(snippet.brief.description, files, !snippet.brief.public) }</Panel.Body>
+        <Panel.Body>{ React.cloneElement(this.renderGistEditorModalBody(snippet.brief.description, files, !snippet.brief.public), { ref: form => { this.fullEditorForm = form } }) }</Panel.Body>
       </Panel>
+      <DiscardConfirmation show={ this.state.confirmDiscard } onKeepEditing={ () => this.setState({ confirmDiscard: false }) } onDiscard={ () => this.discardEditor() } />
     </div>
   }
 
@@ -255,7 +277,8 @@ class InlineSnippet extends BaseSnippet {
     if (!tree) return tree
     const draft = currentDrafts().get(this.props.activeGist)
     const rendered = this.renderInlineCode(tree, draft)
-    return draft ? React.cloneElement(rendered, { className: rendered.props.className + ' inline-editing' }) : rendered
+    const content = draft ? React.cloneElement(rendered, { className: rendered.props.className + ' inline-editing' }) : rendered
+    return <>{ content }<DiscardConfirmation show={ this.state.confirmDiscard } onKeepEditing={ () => this.setState({ confirmDiscard: false }) } onDiscard={ () => this.discardEditor() } /></>
   }
 }
 

@@ -71,6 +71,11 @@ async function expectElement (selector, text = '') {
 }
 async function absent (selector) { await waitFor(`return !document.querySelector(${JSON.stringify(selector)})`, `closing ${selector}`) }
 async function closeModal (selector) { await click(`${selector} .modal-header .close`); await absent(selector) }
+async function discardChanges () {
+  await expectElement('.discard-editor-modal', 'unsaved changes')
+  await click('.discard-editor-modal .btn-danger')
+  await absent('.discard-editor-modal')
+}
 async function selectSnippet (title) {
   const selected = await run('const e=[...document.querySelectorAll(".snippet-thumnail-list-item")].find(x=>x.innerText.includes(arguments[0])); if(!e) return false; e.querySelector("div").click(); return true', title)
   assert.equal(selected, true, `Missing snippet ${title}`)
@@ -177,6 +182,11 @@ try {
     await expectElement('.inline-new-editor .gist-editor-form .CodeMirror')
     assert.equal(await run('return document.querySelector(".menu-panel").inert && document.querySelector(".panel-thumbnails-background").inert'), true, 'Navigation must not replace an unsaved form')
     await run('const set=(el,value)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(el,value); el.dispatchEvent(new Event("input",{bubbles:true}))}; set(document.querySelector(".inline-new-editor .gist-editor-input-area"),"[In-place Markdown] #test"); set(document.querySelector(".inline-new-editor .gist-editor-filename-area"),"notes.md"); document.querySelector(".inline-new-editor .CodeMirror").CodeMirror.setValue("# Original\\n"); return true')
+    await click('.inline-new-editor [title=Cancel]')
+    await expectElement('.discard-editor-modal', 'unsaved changes')
+    await click('.discard-editor-modal .btn-default')
+    await absent('.discard-editor-modal')
+    assert.equal(await run('return document.querySelector(".inline-new-editor .CodeMirror").CodeMirror.getValue()'), '# Original\n', 'Keeping the new editor must retain its draft')
     if (process.env.LEPTON_NEW_INLINE_SCREENSHOT) {
       const screenshot = await request(`/session/${session}/screenshot`)
       fs.writeFileSync(process.env.LEPTON_NEW_INLINE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
@@ -203,6 +213,12 @@ try {
     await expectElement('.inline-form-edit .CodeMirror')
     await run('document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.setValue("# Discarded\\n"); return true')
     await click('.inline-form-edit [title=Cancel]')
+    await expectElement('.discard-editor-modal', 'unsaved changes')
+    await click('.discard-editor-modal .btn-default')
+    await absent('.discard-editor-modal')
+    assert.equal(await run('return document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.getValue()'), '# Discarded\n')
+    await click('.inline-form-edit [title=Cancel]')
+    await discardChanges()
     await absent('.inline-form-edit')
     await expectElement('.markdown-section', 'Updated')
     await click('.header-controls [title=Delete]')
@@ -240,6 +256,16 @@ try {
     await selectSnippet('Python utility')
     assert.match(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), /# cancelled/, 'Switching snippets must retain an unsaved draft')
     await click('.inline-edit-actions [title="Cancel"]')
+    await expectElement('.discard-editor-modal', 'unsaved changes')
+    if (process.env.LEPTON_DISCARD_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_DISCARD_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await click('.discard-editor-modal .btn-default')
+    await absent('.discard-editor-modal')
+    assert.match(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), /# cancelled/)
+    await click('.inline-edit-actions [title="Cancel"]')
+    await discardChanges()
     await waitFor('return !document.querySelector(".snippet-box.inline-editing")', 'cancel inline editing')
     assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), initial, 'Cancel must restore the saved content')
     await click('.header-controls [title="Edit"]')
@@ -262,7 +288,7 @@ try {
     await click('.inline-edit-actions [title="Edit details…"]')
     await expectElement('.inline-form-edit .gist-editor-form')
     assert.match(await run('return document.querySelector(".inline-form-edit .CodeMirror").CodeMirror.getValue()'), /# kept in details/, 'Opening file details must retain inline edits')
-    await emit('exit-editor'); await absent('.inline-form-edit .gist-editor-form')
+    await emit('exit-editor'); await discardChanges(); await absent('.inline-form-edit .gist-editor-form')
     assert.equal(await run('return document.querySelector(arguments[0]).CodeMirror.getValue()', editor), initial)
     await run('window.__inlineCreated=null; window.lepton.snippets.request(null,"CREATE_SINGLE_GIST",["local","[Inline multiple files] #test",{"first.js":{"content":"const first = 1;\\n"},"second.py":{"content":"second = 2\\n"}},true]).then(value=>{window.__inlineCreated=value}); return true')
     await waitFor('return !!window.__inlineCreated', 'multi-file fixture creation')
@@ -421,7 +447,18 @@ try {
     await expectElement('.search-modal', 'React 19 render fixture')
     await emit('search-gist'); await absent('.search-modal')
   })
-  await check('delete confirmation', async () => { await emit('delete-gist'); await expectElement('.modal-footer .btn-danger', 'delete'); await click('.modal-footer .btn-default'); await absent('.modal-footer .btn-danger') })
+  await check('delete confirmation', async () => {
+    const selected = await run('return document.querySelector(".snippet-box .title-section")?.innerText')
+    await emit('delete-gist')
+    await expectElement('.modal-footer .btn-danger', 'delete')
+    if (process.env.LEPTON_DELETE_SCREENSHOT) {
+      const screenshot = await request(`/session/${session}/screenshot`)
+      fs.writeFileSync(process.env.LEPTON_DELETE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+    }
+    await click('.modal-footer .btn-default')
+    await absent('.modal-footer .btn-danger')
+    assert.equal(await run('return document.querySelector(".snippet-box .title-section")?.innerText'), selected, 'Cancelling deletion must retain the selected snippet')
+  })
   await check('raw view', async () => { await run('[...document.querySelectorAll(".file-header-control")].find(e=>e.textContent.trim()==="RAW").click(); return true'); await expectElement('.raw-modal .code-area-raw'); await closeModal('.raw-modal') })
   await check('pinned tags', async () => { await click('.configure-tag'); await expectElement('.pinned-tags-modal .pin-tag-list'); await closeModal('.pinned-tags-modal') })
   await check('immersive view', async () => { await emit('immersive-mode'); await expectElement('.snippet-panel-immersive .snippet-box'); await emit('immersive-mode'); await expectElement('.active-layout') })
@@ -455,7 +492,7 @@ try {
     await expectElement('.new-gist-draft-callout', 'Local draft available')
     await run('[...document.querySelectorAll(".new-gist-draft-callout button")].find(e=>e.textContent.includes("Load draft")).click(); return true')
     await waitFor('return [...document.querySelectorAll(".gist-editor-form input")].some(e=>e.value==="recovered.js")', 'loaded draft filename')
-    await emit('exit-editor'); await absent('.inline-new-editor .gist-editor-form')
+    await emit('exit-editor'); await discardChanges(); await absent('.inline-new-editor .gist-editor-form')
     await run('window.lepton.localStorage.set("new-gist-draft-local", null); return true')
   })
   await check('original logout and provider login screens', async () => {

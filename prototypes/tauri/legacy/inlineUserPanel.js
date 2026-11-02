@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import OriginalUserPanel from '../../../app/containers/userPanel/index'
 import Panel from '../../../app/containers/compatPanel'
+import DiscardConfirmation, { hasUnsavedForm } from './discardConfirmation'
+import { getInitialValuesKey } from '../../../app/containers/gistEditorForm/formState'
 import { t } from '../../../app/utilities/i18n'
 import { editorActions, activateFormButton, lockEditorNavigation } from './editorToolbar'
 import { logoutUserSession, selectGist, updateGistFilters, updateGistNewModeStatus, updateGistTags, updateLogoutModalStatus, updateSingleGist } from '../../../app/actions'
@@ -14,8 +16,35 @@ class InlineUserPanel extends OriginalUserPanel.WrappedComponent {
       const open = this.props.gistNewModalStatus === 'ON'
       document.body.classList.toggle('lepton-creating-snippet', open)
       lockEditorNavigation(open)
-      if (open) this.formPanel?.querySelector('.gist-editor-input-area')?.focus()
+      if (open) {
+        this.newEditorBaselineKey = getInitialValuesKey(this.createEmptyNewGistData())
+        this.formPanel?.querySelector('.gist-editor-input-area')?.focus()
+      }
     }
+  }
+
+  handleCreateSingleGist (data) {
+    const result = super.handleCreateSingleGist(data)
+    this.pendingNewDraft = this.newGistInitialData
+    return Promise.resolve(result).finally(() => { this.pendingNewDraft = null })
+  }
+
+  closeGistEditorModal () {
+    if (this.props.gistNewModalStatus !== 'ON') return
+    if (this.pendingNewDraft) {
+      if (this.pendingNewDraft === this.newGistInitialData) return
+      return this.discardEditor()
+    }
+    if (hasUnsavedForm(this.newEditorForm, this.newEditorBaselineKey)) {
+      this.setState({ confirmDiscard: true })
+      return
+    }
+    this.discardEditor()
+  }
+
+  discardEditor () {
+    this.setState({ confirmDiscard: false })
+    super.closeGistEditorModal()
   }
 
   componentWillUnmount () {
@@ -37,8 +66,9 @@ class InlineUserPanel extends OriginalUserPanel.WrappedComponent {
               { editorActions(() => activateFormButton(this.formPanel, false), () => activateFormButton(this.formPanel, true)) }
             </div>
           </div></div></Panel.Heading>
-          <Panel.Body>{ this.renderNewGistDraftCallout() }{ this.renderGistEditorModalBody() }</Panel.Body>
+          <Panel.Body>{ this.renderNewGistDraftCallout() }{ React.cloneElement(this.renderGistEditorModalBody(), { ref: form => { this.newEditorForm = form } }) }</Panel.Body>
         </Panel>
+        <DiscardConfirmation show={ Boolean(this.state.confirmDiscard) } onKeepEditing={ () => this.setState({ confirmDiscard: false }) } onDiscard={ () => this.discardEditor() } />
       </div>, target)
   }
 }
