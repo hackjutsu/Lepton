@@ -1,6 +1,6 @@
 //! GitHub OAuth authorization-code flow with PKCE and a loopback callback.
-//! The client secret is read from the process environment and is never sent to
-//! the webview or included in an error message.
+//! Packaged builds can embed an OAuth app configuration; local environment
+//! variables override it. A desktop client secret is not confidential.
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 use sha2::{Digest, Sha256};
 use std::time::Duration;
@@ -10,6 +10,26 @@ use tokio::{
     net::TcpListener,
     time::timeout,
 };
+
+fn oauth_credentials(
+    runtime_id: Option<&str>,
+    runtime_secret: Option<&str>,
+    bundled_id: Option<&str>,
+    bundled_secret: Option<&str>,
+) -> Result<(String, String), &'static str> {
+    let (id, secret) = match (runtime_id, runtime_secret) {
+        (Some(id), Some(secret)) => (id, secret),
+        (None, None) => match (bundled_id, bundled_secret) {
+            (Some(id), Some(secret)) => (id, secret),
+            _ => return Err("GitHub OAuth is not configured"),
+        },
+        _ => return Err("GitHub OAuth requires both runtime client credentials"),
+    };
+    if id.trim().is_empty() || secret.trim().is_empty() {
+        return Err("GitHub OAuth client configuration is empty");
+    }
+    Ok((id.to_owned(), secret.to_owned()))
+}
 
 fn callback(request: &str, expected_state: &str) -> Option<Result<String, String>> {
     let line = request.lines().next()?;
@@ -46,11 +66,14 @@ fn callback(request: &str, expected_state: &str) -> Option<Result<String, String
 }
 
 pub async fn authorize(app: tauri::AppHandle) -> Result<String, String> {
-    let client_id = std::env::var("LEPTON_GITHUB_OAUTH_CLIENT_ID").map_err(|_| "GitHub OAuth is not configured: set LEPTON_GITHUB_OAUTH_CLIENT_ID and LEPTON_GITHUB_OAUTH_CLIENT_SECRET")?;
-    let secret = std::env::var("LEPTON_GITHUB_OAUTH_CLIENT_SECRET").map_err(|_| "GitHub OAuth is not configured: set LEPTON_GITHUB_OAUTH_CLIENT_ID and LEPTON_GITHUB_OAUTH_CLIENT_SECRET")?;
-    if client_id.trim().is_empty() || secret.trim().is_empty() {
-        return Err("GitHub OAuth client configuration is empty".into());
-    }
+    let runtime_id = std::env::var("LEPTON_GITHUB_OAUTH_CLIENT_ID").ok();
+    let runtime_secret = std::env::var("LEPTON_GITHUB_OAUTH_CLIENT_SECRET").ok();
+    let (client_id, secret) = oauth_credentials(
+        runtime_id.as_deref(),
+        runtime_secret.as_deref(),
+        option_env!("LEPTON_GITHUB_CLIENT_ID"),
+        option_env!("LEPTON_GITHUB_CLIENT_SECRET"),
+    )?;
     let listener = TcpListener::bind("127.0.0.1:0")
         .await
         .map_err(|_| "Unable to start the local OAuth callback")?;
@@ -140,6 +163,31 @@ pub async fn authorize(app: tauri::AppHandle) -> Result<String, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn selects_complete_runtime_or_bundled_credentials() {
+        assert_eq!(
+            oauth_credentials(None, None, Some("bundled-id"), Some("bundled-secret")),
+            Ok(("bundled-id".into(), "bundled-secret".into()))
+        );
+        assert_eq!(
+            oauth_credentials(
+                Some("local-id"),
+                Some("local-secret"),
+                Some("bundled-id"),
+                Some("bundled-secret")
+            ),
+            Ok(("local-id".into(), "local-secret".into()))
+        );
+        assert!(oauth_credentials(
+            Some("local-id"),
+            None,
+            Some("bundled-id"),
+            Some("bundled-secret")
+        )
+        .is_err());
+        assert!(oauth_credentials(None, None, None, None).is_err());
+        assert!(oauth_credentials(None, None, Some(" "), Some("secret")).is_err());
+    }
     #[test]
     fn checks_callback_path_state_and_duplicates() {
         assert_eq!(

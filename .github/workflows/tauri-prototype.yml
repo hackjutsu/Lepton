@@ -15,6 +15,7 @@ on:
       - 'package-lock.json'
       - 'webpack.config.js'
       - '.github/workflows/tauri-prototype.yml'
+      - '.github/workflows/rust-release.yml'
   push:
     branches: [master]
     paths:
@@ -29,6 +30,7 @@ on:
       - 'package-lock.json'
       - 'webpack.config.js'
       - '.github/workflows/tauri-prototype.yml'
+      - '.github/workflows/rust-release.yml'
 
 permissions:
   contents: read
@@ -40,12 +42,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            bundle: deb
-          - os: macos-latest
+          - os: ubuntu-22.04
+            bundle: deb,appimage
+            target: linux-x64
+          - os: macos-15
             bundle: app
+            target: macos-arm64
+          - os: macos-15-intel
+            bundle: app
+            target: macos-x64
           - os: windows-latest
             bundle: nsis
+            target: windows-x64
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     env:
@@ -60,13 +68,28 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev pkg-config patchelf
+          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev pkg-config patchelf libfuse2
       - run: npm ci
       - run: npm ci
         working-directory: prototypes/tauri
+      - name: Release workflow helper tests
+        run: node --test prototypes/tauri/tests/release.test.cjs
       - name: Build release bundle
         run: npm run package -- --bundles ${{ matrix.bundle }} -- --locked
         working-directory: prototypes/tauri
+        env:
+          LEPTON_GITHUB_CLIENT_ID: fixture-client-id
+          LEPTON_GITHUB_CLIENT_SECRET: fixture-client-secret
+          APPLE_SIGNING_IDENTITY: '-'
+      - name: Create macOS DMG
+        if: runner.os == 'macOS'
+        shell: bash
+        run: bash prototypes/tauri/scripts/create-macos-dmg.sh prototypes/tauri/src-tauri/target/release/bundle
+      - name: Validate release artifacts
+        shell: bash
+        env:
+          TARGET_NAME: ${{ matrix.target }}
+        run: node prototypes/tauri/scripts/stage-release.cjs "${TARGET_NAME}" prototypes/tauri/src-tauri/target/release/bundle release-assets
 
   ui:
     strategy:
