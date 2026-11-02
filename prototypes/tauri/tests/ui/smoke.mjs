@@ -90,6 +90,12 @@ async function assertEditorsFillPane (selector, expectedFiles = 1) {
   for (let i = 1; i < layout.files.length; i++) assert.ok(Math.abs(layout.files[i].top - layout.files[i - 1].bottom) <= 2, `Editors must not have gaps between files: ${JSON.stringify(layout)}`)
 }
 async function check (name, fn) { await fn(); console.log(`PASS: ${name}`) }
+async function searchScreenshot (name) {
+  if (!process.env.LEPTON_SEARCH_SCENARIOS_DIR) return
+  await new Promise(resolve => setTimeout(resolve, 200))
+  const screenshot = await request(`/session/${session}/screenshot`)
+  fs.writeFileSync(path.join(process.env.LEPTON_SEARCH_SCENARIOS_DIR, `${name}.png`), Buffer.from(screenshot, 'base64'))
+}
 async function fallbackScreenshot (name, selector) {
   if (!process.env.LEPTON_FALLBACK_SCREENSHOT_DIR) return
   await run('const e=document.querySelector(arguments[0]); const box=e.getBoundingClientRect(); if (box.top<75 || box.bottom>innerHeight) e.scrollIntoView({block:"center"}); return true', selector)
@@ -416,6 +422,7 @@ try {
         await click('.panel-thumbnails-content [role=option] > div')
         await expectElement('.snippet-box', 'Python utility')
         await expectElement('.cm-detail-search-match', 'multiline')
+        await searchScreenshot('dark-code-match')
         const contrast = await run('const e=document.querySelector(".cm-detail-search-match"); const rgb=s=>s.match(/\\d+/g).slice(0,3).map(Number).map(x=>{x/=255; return x<=0.04045?x/12.92:((x+0.055)/1.055)**2.4}); const lum=s=>{const c=rgb(s); return c[0]*0.2126+c[1]*0.7152+c[2]*0.0722}; const style=getComputedStyle(e); const a=lum(style.color),b=lum(style.backgroundColor); return (Math.max(a,b)+0.05)/(Math.min(a,b)+0.05)')
         assert.ok(contrast >= 4.5, `Search highlights need readable dark-theme contrast: ${contrast}`)
         if (process.env.LEPTON_SEARCH_DARK_SCREENSHOT) {
@@ -478,11 +485,14 @@ try {
     await expectElement('.embedded-search-input')
     const fieldStyle = await run('const field=document.querySelector(".embedded-search-control"), bar=document.querySelector(".embedded-search-bar"); const rect=field.getBoundingClientRect(), parent=bar.getBoundingClientRect(); return {height:rect.height,left:rect.left-parent.left,right:parent.right-rect.right,top:rect.top-parent.top}')
     assert.ok(fieldStyle.height >= 34 && fieldStyle.left <= 1 && fieldStyle.right <= 1 && fieldStyle.top <= 1, `Search field should fill the top of the list: ${JSON.stringify(fieldStyle)}`)
-    if (process.env.LEPTON_SEARCH_IDLE_SCREENSHOT) {
+    if (process.env.LEPTON_SEARCH_IDLE_SCREENSHOT || process.env.LEPTON_SEARCH_SCENARIOS_DIR) {
       await selectSnippet('Python utility')
       await expectElement('[data-inline-filename="parser.py"] .CodeMirror', 'Normalize a value')
-      const screenshot = await request(`/session/${session}/screenshot`)
-      fs.writeFileSync(process.env.LEPTON_SEARCH_IDLE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+      await searchScreenshot('empty')
+      if (process.env.LEPTON_SEARCH_IDLE_SCREENSHOT) {
+        const screenshot = await request(`/session/${session}/screenshot`)
+        fs.writeFileSync(process.env.LEPTON_SEARCH_IDLE_SCREENSHOT, Buffer.from(screenshot, 'base64'))
+      }
     }
     const placement = await run('const bar=document.querySelector(".embedded-search-bar").getBoundingClientRect(); const list=document.querySelector(".panel-thumbnails-scroll").getBoundingClientRect(); return {barTop:bar.top,barBottom:bar.bottom,listTop:list.top}')
     assert.ok(placement.barTop < placement.listTop && Math.abs(placement.barBottom - placement.listTop) < 2, `Search must stay above the snippet list: ${JSON.stringify(placement)}`)
@@ -501,11 +511,15 @@ try {
     await expectElement('.snippet-box', 'Python utility')
     await waitFor('return !!document.querySelector("[data-gist-filename=\\"parser.py\\"] .collapse.in")', 'reveal matching collapsed file')
     await expectElement('.cm-detail-search-match', 'multiline')
+    await searchScreenshot('code-match')
     assert.equal(await run('return document.querySelector("[data-inline-filename=\\"parser.py\\"] .CodeMirror").CodeMirror.getValue().includes("multiline")'), true, 'Highlighting must not change code content')
     if (process.env.LEPTON_SEARCH_SCREENSHOT) {
       const screenshot = await request(`/session/${session}/screenshot`)
       fs.writeFileSync(process.env.LEPTON_SEARCH_SCREENSHOT, Buffer.from(screenshot, 'base64'))
     }
+    await setQuery('MULTILINE')
+    await expectElement('.panel-thumbnails-content [role=option]', 'Python utility')
+    await expectElement('.cm-detail-search-match', 'multiline')
     await setQuery('fixture')
     await waitFor('return document.querySelectorAll(".panel-thumbnails-content [role=option]").length > 1', 'multiple search results')
     const initialActive = await run('return document.querySelector(".embedded-search-input").getAttribute("aria-activedescendant")')
@@ -513,8 +527,10 @@ try {
     assert.notEqual(await run('return document.querySelector(".embedded-search-input").getAttribute("aria-activedescendant")'), initialActive, 'Arrow down should move the selected result')
     await click('.panel-thumbnails-content [role=option]:nth-child(2) > div')
     assert.equal(await run('return document.querySelector(".panel-thumbnails-content [role=option]:nth-child(2)").getAttribute("aria-selected")'), 'true', 'Clicking a result should select it')
-    await setQuery('no-such-snippet-value')
+    await searchScreenshot('multiple-results')
+    await setQuery('unfindable-xyz')
     await expectElement('.snippet-thumnail-empty', 'No result found')
+    await searchScreenshot('no-results')
     await run('document.querySelector(".embedded-search-input").dispatchEvent(new KeyboardEvent("keydown",{key:"Escape",bubbles:true,cancelable:true})); return true')
     await waitFor('return document.querySelector(".embedded-search-input").value==="" && document.querySelectorAll(".snippet-thumnail-list-item").length===6', 'clear search')
     await waitFor('return !document.querySelector(".snippet-box .cm-detail-search-match, .snippet-box .detail-search-match")', 'clear detail highlights')
@@ -529,12 +545,14 @@ try {
     await expectElement('.panel-thumbnails-content [role=option]', 'Python utility')
     await click('.panel-thumbnails-content [role=option] > div')
     await expectElement('.file-expand .detail-search-match', 'parser.py')
+    await searchScreenshot('filename-match')
     await setQuery('python utility')
     await expectElement('.title-section .detail-search-match', 'Python')
     await setQuery('exercises markdown')
     await expectElement('.panel-thumbnails-content [role=option]', 'React 19 render fixture')
     await click('.panel-thumbnails-content [role=option] > div')
     await expectElement('.markdown-section mark.detail-search-match', 'exercises')
+    await searchScreenshot('markdown-match')
     await setQuery('hello')
     await waitFor('return [...document.querySelectorAll(".panel-thumbnails-content [role=option]")].some(e=>e.innerText.includes("React 19 render fixture"))', 'code match search')
     await run('[...document.querySelectorAll(".panel-thumbnails-content [role=option]")].find(e=>e.innerText.includes("React 19 render fixture")).querySelector("div").click(); return true')
