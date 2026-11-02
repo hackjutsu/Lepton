@@ -7,6 +7,7 @@ base.resolve.alias.jsdom = false
 // Keep the Electron components unchanged while placing Tauri editors in the detail pane.
 base.resolve.alias['../snippet$'] = path.join(__dirname, 'legacy/inlineSnippet.js')
 base.resolve.alias['../userPanel$'] = path.join(__dirname, 'legacy/inlineUserPanel.js')
+base.resolve.alias['../navigationPanelDetails$'] = path.join(__dirname, 'legacy/embeddedSearch.js')
 base.resolve.alias['react$'] = require.resolve('react', { paths: [root] })
 base.resolve.alias['react-dom$'] = require.resolve('react-dom', { paths: [root] })
 base.module.rules.find(rule => String(rule.test) === String(/\.js$/)).include.push(path.join(__dirname, 'legacy'))

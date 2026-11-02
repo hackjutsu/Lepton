@@ -21,7 +21,7 @@ import { advanceSessionGeneration } from '../../../app/utilities/sessionGenerati
 import { getRenderFixture } from '../../../app/renderFixtures'
 import { addLangPrefix, descriptionParser, parseCustomTags } from '../../../app/utilities/parser'
 import { createDefaultGistFilters, getActiveGistIdForFilters } from '../../../app/utilities/gistFilters'
-import { updateAboutModalStatus, updateDashboardModalStatus, updateGists, updateGistTags, updateGistFilters, selectGist, updateSearchWindowStatus, updateImmersiveModeStatus, updateUserSession, updateAccessToken, updatePinnedTags, updateLoginStatus, updateSyncTime } from '../../../app/actions'
+import { updateAboutModalStatus, updateDashboardModalStatus, updateGists, updateGistTags, updateGistFilters, selectGist, updateImmersiveModeStatus, updateUserSession, updateAccessToken, updatePinnedTags, updateLoginStatus, updateSyncTime } from '../../../app/actions'
 
 configureI18n(window.lepton.config.get('i18n:locale'))
 const localPref = new Store({ configName: 'user-preferences', defaults: {} })
@@ -181,7 +181,6 @@ window.lepton.ipc.on('session-destroyed', () => {
 })
 
 for (const [channel, key, action] of [
-  ['search-gist', 'searchWindowStatus', updateSearchWindowStatus],
   ['dashboard', 'dashboardModalStatus', updateDashboardModalStatus],
   ['about-page', 'aboutModalStatus', updateAboutModalStatus],
   ['immersive-mode', 'immersiveMode', updateImmersiveModeStatus]
