@@ -17,6 +17,9 @@
     "test:ui:build": "tauri build --debug --no-bundle --features ui-tests --config src-tauri/tauri.ui-test.conf.json",
     "test:ui": "npm run test:ui:build && node tests/ui/smoke.mjs && node tests/ui/offline.mjs"
   },
+  "_scriptNotes": {
+    "start": "npm start: manual testing with a dedicated provider token. Rust debug builds outside UI tests use existing unencrypted file token storage without Keychain access, regardless of the saved storage preference. Login persists across restarts; logout clears the saved token. Release builds retain configured credential storage."
+  },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.0.0",
     "@codemirror/lang-python": "^6.0.0",
