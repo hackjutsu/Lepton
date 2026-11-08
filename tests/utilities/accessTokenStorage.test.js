@@ -108,7 +108,7 @@ describe('access token storage', () => {
     const safeStorage = createSafeStorage()
     const accessTokenStorage = createAccessTokenStorage({
       conf: createConf({ 'security:cachedAccessTokenStorage': 'encrypted' }),
-      isDev: true,
+      isDev: false,
       localStorage,
       safeStorage
     })
@@ -425,34 +425,28 @@ describe('access token storage', () => {
   })
 })
 
-describe('keychain-free development', () => {
-  it('keeps tokens in memory across storage preferences and forgets them on restart', () => {
-    for (const mode of ['auto', 'file', 'encrypted']) {
-      const options = {
-        conf: createConf({ 'security:cachedAccessTokenStorage': mode }),
-        isDev: true,
-        devKeychainFree: true,
-        getSafeStorage: () => { throw new Error('Keychain must not be accessed') },
-        localStorage: {
-          get: () => { throw new Error('Disk must not be accessed') },
-          set: () => { throw new Error('Disk must not be accessed') }
+describe('local development uses existing file storage', () => {
+  it('persists tokens on disk across instances without accessing Keychain', () => {
+    const userDataPath = mkdtempSync(join(tmpdir(), 'lepton-dev-token-'))
+    try {
+      for (const mode of ['auto', 'file', 'encrypted']) {
+        const options = {
+          conf: createConf({ 'security:cachedAccessTokenStorage': mode }),
+          isDev: true,
+          getSafeStorage: () => { throw new Error('Keychain must not be accessed') }
         }
+        const makeStorage = () => createAccessTokenStorage({
+          ...options,
+          localStorage: createElectronLocalStorage({ getUserDataPath: () => userDataPath })
+        })
+        expect(makeStorage().set('dedicated-test-token').status).toBe(true)
+        expect(readFileSync(join(userDataPath, 'storage', 'token.json'), 'utf8')).toBe(JSON.stringify('dedicated-test-token'))
+        expect(makeStorage().get().data).toBe('dedicated-test-token')
+        expect(makeStorage().set(null).status).toBe(true)
+        expect(makeStorage().get().data).toBe(null)
       }
-      const storage = createAccessTokenStorage(options)
-      expect(storage.set('dummy-secret').status).toBe(true)
-      expect(storage.get().data).toBe('dummy-secret')
-      expect(createAccessTokenStorage(options).get().data).toBe(null)
-      expect(storage.set(null).status).toBe(true)
-      expect(storage.get().data).toBe(null)
+    } finally {
+      rmSync(userDataPath, { recursive: true, force: true })
     }
-  })
-  it('preserves encrypted production storage even with the development option', () => {
-    const safeStorage = createSafeStorage()
-    const storage = createAccessTokenStorage({
-      conf: createConf(), isDev: false, devKeychainFree: true,
-      localStorage: createMemoryStorage(), safeStorage
-    })
-    expect(storage.set('dummy-secret').status).toBe(true)
-    expect(safeStorage.encryptString).toHaveBeenCalledWith('dummy-secret')
   })
 })

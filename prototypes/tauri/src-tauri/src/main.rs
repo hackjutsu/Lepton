@@ -536,16 +536,9 @@ fn main() {
             "LEPTON_GITHUB_TOKEN_FILE",
         ))))
         .setup(|app| {
-            let dev_keychain_free = cfg!(debug_assertions)
-                && std::env::var("LEPTON_DEV_KEYCHAIN_FREE").as_deref() == Ok("1");
             let directory = match std::env::var_os("LEPTON_PROTOTYPE_DATA_DIR") {
                 Some(path) => std::path::PathBuf::from(path),
                 None => app.path().app_data_dir()?,
-            };
-            let directory = if dev_keychain_free {
-                directory.join("keychain-free-development")
-            } else {
-                directory
             };
             #[cfg(feature = "ui-tests")]
             if std::env::var("LEPTON_UI_TESTS").as_deref() == Ok("1")
@@ -563,26 +556,19 @@ fn main() {
             )));
             let test_credentials = cfg!(feature = "ui-tests")
                 && std::env::var("LEPTON_UI_TESTS").as_deref() == Ok("1");
-            let credential_store =
-                credentials::Credentials::new(directory.clone(), test_credentials);
-            #[cfg(debug_assertions)]
-            let credential_store = if dev_keychain_free {
-                credentials::Credentials::development(directory.clone())
-            } else {
-                credential_store
-            };
-            app.manage(Arc::new(credential_store));
+            app.manage(Arc::new(credentials::Credentials::new(
+                directory.clone(),
+                test_credentials,
+            )));
             let config_path = runtime::config_path(
                 &app.path().home_dir()?,
-                (test_credentials || dev_keychain_free).then_some(directory.as_path()),
+                test_credentials.then_some(directory.as_path()),
             );
             let runtime_files = runtime::RuntimeFiles::new(config_path, &directory)
                 .map_err(std::io::Error::other)?;
-            if let Err(error) = apply_startup_autostart(
-                app.handle(),
-                &runtime_files,
-                test_credentials || dev_keychain_free,
-            ) {
+            if let Err(error) =
+                apply_startup_autostart(app.handle(), &runtime_files, test_credentials)
+            {
                 runtime_files.log_event("warn", &error);
             }
             app.manage(runtime_files);

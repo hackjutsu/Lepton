@@ -1,9 +1,9 @@
-# Local testing without Keychain prompts
+# Local development token storage
 
-Run `npm run start:local` from this directory. Build the Electron renderer first with `npm run build` when needed.
+Use the regular `npm start` command (after installing dependencies and building the frontend). Unpackaged Electron and non-UI-test Rust debug builds use the existing file token storage, including when the saved preference is Auto or Encrypted. There is no extra storage mode, environment flag, or local launch command.
 
-This explicitly enables LEPTON_DEV_KEYCHAIN_FREE=1. The Electron app requires an unpackaged build; the Rust app requires a debug build. Packaged Electron and release Rust builds ignore the flag and retain their existing credential handling.
+Sign in with a dedicated testing token once. The existing token file persists across restarts and is removed on logout. Token files are unencrypted and retain each app’s existing file-storage implementation. Existing app data and configuration locations are retained.
 
-Tokens stay in process memory, including when the settings select encrypted or file storage. Sign in again after each restart. No existing credential is read, migrated, deleted, or granted broader Keychain access. Local snippets and preferences use separate development directories; tokens are not written there. Rust uses a keychain-free-development subdirectory of its app data directory; Electron uses Lepton-keychain-free-development alongside its usual app data directory.
+Development builds do not read, migrate, or delete Keychain credentials. If an account only has a Keychain token, sign in once to save its development token to the existing file store. The Keychain item is left untouched.
 
-Use `npm start` to return to the original behavior and data. Do not use Always Allow or change Keychain permissions for this workflow.
+Packaged Electron and Rust release builds retain their existing storage preferences and credential handling. Automated Rust UI tests retain their existing fake credential store and isolated fixtures.

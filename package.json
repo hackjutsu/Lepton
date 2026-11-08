@@ -27,8 +27,7 @@
     "pack": "npm run package:prepare && electron-builder --dir",
     "release": "npm run package:prepare && electron-builder",
     "check-outdated": "check-outdated --ignore-pre-releases --ignore-dev-dependencies --ignore-packages package1,package2 --columns name,type,current,latest,changes --types major,minor,patch,reverted",
-    "preversion": "npm run lint && npm run test && npm run check-outdated",
-    "start:local": "LEPTON_DEV_KEYCHAIN_FREE=1 electron ."
+    "preversion": "npm run lint && npm run test && npm run check-outdated"
   },
   "repository": {
     "type": "git",
