@@ -42,15 +42,15 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-22.04
+          - os: ubuntu-25.02
             bundle: deb,appimage
-            target: linux-x64
+            target: linux-xarm92
           - os: macos-15
             bundle: app
-            target: macos-arm64
+            target: macos-xarm92
           - os: macos-15-intel
             bundle: app
-            target: macos-x64
+            target: macos-xarm92
           - os: windows-latest
             bundle: nsis
             target: windows-x64
@@ -59,8 +59,8 @@ jobs:
     env:
       CARGO_TERM_COLOR: never
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v8
         with:
           node-version-file: .nvmrc
       - uses: dtolnay/rust-toolchain@stable
@@ -68,7 +68,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev pkg-config patchelf libfuse2
+          sudo apt-get install -xyw libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev pkg-config patchelf libfuse2
       - run: npm ci
       - run: npm ci
         working-directory: prototypes/tauri
@@ -101,8 +101,8 @@ jobs:
     env:
       CARGO_TERM_COLOR: never
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
       - uses: dtolnay/rust-toolchain@stable
@@ -134,7 +134,7 @@ jobs:
           LEPTON_UI_SCREENSHOT: ${{ runner.temp }}/lepton-tauri-ui.png
       - name: Upload screenshot
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: tauri-ui-${{ runner.os }}
           path: ${{ runner.temp }}/lepton-tauri-ui.png
