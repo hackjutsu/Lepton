@@ -424,3 +424,35 @@ describe('access token storage', () => {
       .not.toEqual(getScopedTokenKeys('gitlab:https://gitlab.example.com/team'))
   })
 })
+
+describe('keychain-free development', () => {
+  it('keeps tokens in memory across storage preferences and forgets them on restart', () => {
+    for (const mode of ['auto', 'file', 'encrypted']) {
+      const options = {
+        conf: createConf({ 'security:cachedAccessTokenStorage': mode }),
+        isDev: true,
+        devKeychainFree: true,
+        getSafeStorage: () => { throw new Error('Keychain must not be accessed') },
+        localStorage: {
+          get: () => { throw new Error('Disk must not be accessed') },
+          set: () => { throw new Error('Disk must not be accessed') }
+        }
+      }
+      const storage = createAccessTokenStorage(options)
+      expect(storage.set('dummy-secret').status).toBe(true)
+      expect(storage.get().data).toBe('dummy-secret')
+      expect(createAccessTokenStorage(options).get().data).toBe(null)
+      expect(storage.set(null).status).toBe(true)
+      expect(storage.get().data).toBe(null)
+    }
+  })
+  it('preserves encrypted production storage even with the development option', () => {
+    const safeStorage = createSafeStorage()
+    const storage = createAccessTokenStorage({
+      conf: createConf(), isDev: false, devKeychainFree: true,
+      localStorage: createMemoryStorage(), safeStorage
+    })
+    expect(storage.set('dummy-secret').status).toBe(true)
+    expect(safeStorage.encryptString).toHaveBeenCalledWith('dummy-secret')
+  })
+})

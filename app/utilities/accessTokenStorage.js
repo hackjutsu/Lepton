@@ -89,8 +89,12 @@ function createAccessTokenStorage ({
   localStorage,
   logger,
   platform = process.platform,
-  safeStorage
+  safeStorage,
+  devKeychainFree = false
 }) {
+  const memoryTokens = new Map()
+  const memoryOnly = isDev && devKeychainFree
+
   function getMode () {
     return getEffectiveStorageMode({ conf, isDev })
   }
@@ -201,6 +205,7 @@ function createAccessTokenStorage ({
         return createResult(false, null, error)
       }
 
+      if (memoryOnly) return createResult(true, memoryTokens.get(keys.legacy) || null)
       if (getMode() === 'file') return localStorage.get(keys.legacy)
       return getEncryptedToken(keys)
     },
@@ -213,6 +218,11 @@ function createAccessTokenStorage ({
         return createResult(false, null, error)
       }
 
+      if (memoryOnly) {
+        if (hasTokenValue(token)) memoryTokens.set(keys.legacy, token)
+        else memoryTokens.delete(keys.legacy)
+        return createResult(true, hasTokenValue(token) ? token : null)
+      }
       if (!hasTokenValue(token)) return clearEncryptedToken(keys)
       if (getMode() === 'file') return localStorage.set(keys.legacy, token)
 

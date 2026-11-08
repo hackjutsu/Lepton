@@ -50,12 +50,18 @@ const {
   preferenceRequiresRestart
 } = require('./app/utilities/config/preferences')
 
+const devKeychainFree = !app.isPackaged && process.env.LEPTON_DEV_KEYCHAIN_FREE === '1'
+if (devKeychainFree) {
+  app.setPath('userData', path.join(app.getPath('appData'), 'Lepton-keychain-free-development'))
+  fs.mkdirSync(app.getPath('userData'), { recursive: true, mode: 0o700 })
+}
 const logger = createMainLogger()
 const electronLocalStorage = createElectronLocalStorage({
   getUserDataPath: () => app.getPath('userData')
 })
 const accessTokenStorage = createAccessTokenStorage({
   conf: nconf,
+  devKeychainFree,
   getSafeStorage: () => electron.safeStorage,
   isDev,
   localStorage: electronLocalStorage,
@@ -91,6 +97,7 @@ let operationType = 0
 const MACOS_TRAY_ICON_SIZE = 18
 
 function getConfigPath() {
+  if (devKeychainFree) return path.join(app.getPath('userData'), '.leptonrc')
   if (process && process.env && process.env.XDG_CONFIG_HOME) {
     return path.join(process.env.XDG_CONFIG_HOME, '.leptonrc')
   } else {

@@ -63,10 +63,10 @@ impl SecretStore for FileStore {
         }
     }
 }
-#[cfg(feature = "ui-tests")]
+#[cfg(any(debug_assertions, feature = "ui-tests"))]
 #[derive(Default)]
 struct UiTestStore(Mutex<std::collections::HashMap<String, String>>);
-#[cfg(feature = "ui-tests")]
+#[cfg(any(debug_assertions, feature = "ui-tests"))]
 impl SecretStore for UiTestStore {
     fn put(&self, key: &str, token: &str) -> Result<(), String> {
         self.0
@@ -137,6 +137,8 @@ pub(crate) fn scope(account: &Account) -> Result<String, String> {
 }
 
 pub struct Credentials {
+    #[cfg(debug_assertions)]
+    dev_store: Option<UiTestStore>,
     metadata: PathBuf,
     store: Box<dyn SecretStore>,
     file_store: FileStore,
@@ -157,6 +159,8 @@ impl Credentials {
             Box::new(SystemStore)
         };
         Self {
+            #[cfg(debug_assertions)]
+            dev_store: None,
             metadata: directory.join("remote-account.json"),
             store,
             file_store: FileStore(directory.join("credentials")),
@@ -164,6 +168,13 @@ impl Credentials {
             lock: Mutex::new(()),
         }
     }
+    #[cfg(debug_assertions)]
+    pub fn development(directory: PathBuf) -> Self {
+        let mut credentials = Self::new(directory, false);
+        credentials.dev_store = Some(UiTestStore::default());
+        credentials
+    }
+
     #[cfg(test)]
     fn remember_with(
         &self,
@@ -281,6 +292,12 @@ impl Credentials {
         token: &str,
         mode: &str,
     ) -> Result<(bool, bool), String> {
+        #[cfg(debug_assertions)]
+        if let Some(store) = &self.dev_store {
+            return self
+                .remember_in(store, account, token, None)
+                .map(|saved| (saved, false));
+        }
         let (selected, previous) = self.stores_for(mode);
         let file_mode = self.file_mode(mode);
         let saved = self.remember_in(
@@ -310,6 +327,10 @@ impl Credentials {
         &self,
         mode: &str,
     ) -> Result<(Option<RestoredAccount>, bool), String> {
+        #[cfg(debug_assertions)]
+        if let Some(store) = &self.dev_store {
+            return self.restore_with(store).map(|account| (account, false));
+        }
         let (selected, previous) = self.stores_for(mode);
         let metadata = match std::fs::read(&self.metadata) {
             Ok(bytes) => serde_json::from_slice::<serde_json::Value>(&bytes)
@@ -338,6 +359,10 @@ impl Credentials {
     }
 
     pub fn forget_configured(&self, account: &Account, mode: &str) -> Result<(), String> {
+        #[cfg(debug_assertions)]
+        if let Some(store) = &self.dev_store {
+            return self.forget_with(store, account);
+        }
         let saved_file = match std::fs::read(&self.metadata) {
             Ok(bytes) => {
                 serde_json::from_slice::<serde_json::Value>(&bytes)
@@ -363,6 +388,40 @@ impl Credentials {
 mod tests {
     use super::*;
     use std::collections::HashMap;
+    #[cfg(debug_assertions)]
+    #[test]
+    fn development_never_touches_persistent_tokens() {
+        let dir = tempfile::tempdir().unwrap();
+        let account = Account {
+            provider: "github".into(),
+            base: "https://github.com".into(),
+            login: "octocat".into(),
+        };
+        let credentials = Credentials::development(dir.path().into());
+        for mode in ["auto", "file", "encrypted"] {
+            credentials
+                .remember_configured(&account, "dev-test-secret", mode)
+                .unwrap();
+            assert_eq!(
+                credentials
+                    .restore_configured(mode)
+                    .unwrap()
+                    .0
+                    .unwrap()
+                    .token,
+                "dev-test-secret"
+            );
+            assert!(!dir.path().join("credentials").exists());
+            assert!(!std::fs::read_to_string(&credentials.metadata)
+                .unwrap()
+                .contains("dev-test-secret"));
+            let restarted = Credentials::development(dir.path().into());
+            assert!(restarted.restore_configured(mode).unwrap().0.is_none());
+            credentials.forget_configured(&account, mode).unwrap();
+            assert!(credentials.restore_configured(mode).unwrap().0.is_none());
+        }
+    }
+
     #[derive(Default)]
     struct Mock(Mutex<HashMap<String, String>>);
     struct Unavailable;
