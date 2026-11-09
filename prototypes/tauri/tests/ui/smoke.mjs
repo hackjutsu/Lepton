@@ -53,6 +53,7 @@ async function assertLoginFits (description) {
       return {
         top: bounds.top, bottom: bounds.bottom, height: innerHeight,
         maxHeight: style.maxHeight, scrollbarWidth: style.scrollbarWidth, tabIndex: face.tabIndex,
+        viewportHeight: parseFloat(style.getPropertyValue('--login-viewport-height')),
         overflow: face.scrollHeight - face.clientHeight, clientHeight: face.clientHeight,
         controlsFit: controls.every(control => {
           control.blur(); control.focus()
@@ -65,6 +66,7 @@ async function assertLoginFits (description) {
     assert.equal(layout.scrollbarWidth, 'none', message)
     assert.equal(layout.tabIndex, 0, message)
     assert.notEqual(layout.maxHeight, 'none', message)
+    assert.ok(Math.abs(layout.viewportHeight - layout.height) <= 1, message)
     assert.ok(layout.top >= 22 && layout.bottom <= layout.height - 22, message)
     assert.ok(layout.overflow <= 1 || layout.clientHeight >= parseFloat(layout.maxHeight) - 3, message)
     assert.ok(layout.controlsFit, message)
@@ -115,15 +117,19 @@ async function assertLoginFits (description) {
         const button = face.querySelector('.button-group-modal button')
         const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
         return document.activeElement === button && face.scrollTop > 0 &&
-          r.top >= bounds.top - 1 && r.bottom <= bounds.bottom + 1
+          bounds.top >= -1 && bounds.bottom <= innerHeight + 1 &&
+          r.top >= bounds.top - 1 && r.bottom <= bounds.bottom + 1 && r.bottom <= innerHeight + 1
       `, 'focused login control to scroll into view')
     } catch (error) {
       const layout = await run(`
         const face = document.querySelector('.login-modal-face-front')
         const button = face.querySelector('.button-group-modal button')
         const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
+        const style = getComputedStyle(face)
         return { focused: document.activeElement === button, scrollTop: face.scrollTop,
           scrollHeight: face.scrollHeight, clientHeight: face.clientHeight,
+          maxHeight: style.maxHeight, viewportHeight: innerHeight,
+          configuredHeight: style.getPropertyValue('--login-viewport-height'),
           button: { top: r.top, bottom: r.bottom }, face: { top: bounds.top, bottom: bounds.bottom } }
       `)
       throw new Error(`Focused login control did not scroll into view: ${JSON.stringify(layout)}`, { cause: error })

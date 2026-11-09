@@ -122,6 +122,7 @@ export class LoginPage extends Component {
     }
     this.ignoredCachedProviderTypes = new Set()
     this.persistedGitLabHost = gitlabHost
+    this.updateViewportHeight = this.updateViewportHeight.bind(this)
     this.state = {
       inputTokenValue: '',
       activeLocale,
@@ -142,6 +143,9 @@ export class LoginPage extends Component {
   componentDidMount () {
     const { loggedInUserInfo } = this.props
     logger.debug('-----> Inside LoginPage componentDidMount with loggedInUserInfo' + JSON.stringify(loggedInUserInfo))
+
+    this.updateViewportHeight()
+    window.addEventListener('resize', this.updateViewportHeight)
 
     logger.debug('-----> Registering listener for auto-login signal')
     this.ipcSubscriptions = []
@@ -206,8 +210,17 @@ export class LoginPage extends Component {
 
   componentWillUnmount () {
     logger.debug('-----> Removing listener for auto-login signal')
+    window.removeEventListener('resize', this.updateViewportHeight)
     unsubscribeIpc(this.ipcSubscriptions)
     clearTimeout(this.loginModeFlipTimer)
+  }
+
+  updateViewportHeight () {
+    if (this.loginRoot) {
+      // Use the visible CSS viewport because native WebKit ports can resolve
+      // viewport units differently when the page is zoomed.
+      this.loginRoot.style.setProperty('--login-viewport-height', `${window.innerHeight}px`)
+    }
   }
 
   handleLoginClicked () {
@@ -798,6 +811,7 @@ export class LoginPage extends Component {
 
     return (
       <div className={ className }
+        ref={ node => { this.loginRoot = node } }
         onFocusCapture={ event => event.target.scrollIntoView({ block: 'nearest', inline: 'nearest' }) }>
         <Modal.Dialog bsSize='small'>
           <div className='login-modal-card'

@@ -99,6 +99,7 @@ module.exports = async function verifyLoginLayout (window, captureScreenshot) {
               locale: document.querySelector('[data-role=language-selector]').value,
               top: bounds.top, bottom: bounds.bottom, height: innerHeight,
               maxHeight: style.maxHeight, scrollbarWidth: style.scrollbarWidth,
+              viewportHeight: parseFloat(style.getPropertyValue('--login-viewport-height')),
               overflow: face.scrollHeight - face.clientHeight, clientHeight: face.clientHeight,
               labelsFit: [...face.querySelectorAll('.login-provider-field span')].every(label => label.scrollWidth <= label.clientWidth + 1 && label.scrollHeight <= label.clientHeight + 1),
               controlsFit: controls.every(control => {
@@ -112,6 +113,7 @@ module.exports = async function verifyLoginLayout (window, captureScreenshot) {
           assert.equal(result.locale, locale, context)
           assert.equal(result.scrollbarWidth, 'none', context)
           assert.notEqual(result.maxHeight, 'none', context)
+          assert.ok(Math.abs(result.viewportHeight - result.height) <= 1, context)
           assert.ok(result.top >= 22 && result.bottom <= result.height - 22, context)
           assert.ok(result.overflow <= 1 || result.clientHeight >= parseFloat(result.maxHeight) - 3, context)
           assert.ok(result.labelsFit && result.controlsFit, context)
