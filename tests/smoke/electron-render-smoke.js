@@ -197,10 +197,6 @@ function runSmokeProcess (tempHome, options) {
       electronArgs.unshift('--no-sandbox')
     }
 
-    if (process.env.LEPTON_SMOKE_DEVICE_SCALE_FACTOR) {
-      electronArgs.unshift(`--force-device-scale-factor=${process.env.LEPTON_SMOKE_DEVICE_SCALE_FACTOR}`)
-    }
-
     const env = Object.assign({}, process.env, {
       ELECTRON_DISABLE_SECURITY_WARNINGS: 'true',
       LEPTON_SMOKE_ARTIFACT_DIR: tempHome.root,

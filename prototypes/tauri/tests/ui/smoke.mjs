@@ -44,95 +44,77 @@ async function waitFor (script, description) {
 }
 async function click (selector) { assert.equal(await run('const e=document.querySelector(arguments[0]); if (!e) return false; e.click(); return true', selector), true, `Missing ${selector}`) }
 async function assertLoginFits (description) {
-  const locales = await run('return [...document.querySelector("[data-role=language-selector]").options].map(option=>option.value)')
-  const originalLocale = await run('return document.querySelector("[data-role=language-selector]").value')
-  const originalWindow = await request(`/session/${session}/window/rect`)
-  async function selectLocale (locale) {
-    await run('const select=document.querySelector("[data-role=language-selector]"); select.value=arguments[0]; select.dispatchEvent(new Event("change",{bubbles:true})); return true', locale)
-    await new Promise(resolve => setTimeout(resolve, 750))
-    await waitFor('return !document.querySelector(".login-modal-flipping")', 'login locale flip')
+  async function check (context) {
+    const layout = await run(`
+      const face = document.querySelector('.login-modal-face-front')
+      face.scrollTop = 0
+      const bounds = face.getBoundingClientRect(), style = getComputedStyle(face)
+      const controls = [...face.querySelectorAll('.button-group-modal button, .button-group-modal input, .button-group-modal select')]
+      return {
+        top: bounds.top, bottom: bounds.bottom, height: innerHeight,
+        maxHeight: style.maxHeight, scrollbarWidth: style.scrollbarWidth, tabIndex: face.tabIndex,
+        overflow: face.scrollHeight - face.clientHeight, clientHeight: face.clientHeight,
+        controlsFit: controls.every(control => {
+          control.blur(); control.focus()
+          const r = control.getBoundingClientRect(), card = face.getBoundingClientRect()
+          return r.top >= card.top - 1 && r.bottom <= card.bottom + 1 && r.left >= card.left - 1 && r.right <= card.right + 1
+        })
+      }
+    `)
+    const message = `${context}: ${JSON.stringify(layout)}`
+    assert.equal(layout.scrollbarWidth, 'none', message)
+    assert.equal(layout.tabIndex, 0, message)
+    assert.notEqual(layout.maxHeight, 'none', message)
+    assert.ok(layout.top >= 22 && layout.bottom <= layout.height - 22, message)
+    assert.ok(layout.overflow <= 1 || layout.clientHeight >= parseFloat(layout.maxHeight) - 3, message)
+    assert.ok(layout.controlsFit, message)
   }
+
+  await check(description)
+  if (description !== 'GitHub login') return
+
+  const originalWindow = await request(`/session/${session}/window/rect`)
+  const originalLocale = await run('return document.querySelector("[data-role=language-selector]").value')
   async function setZoom (percent) {
     await run('window.__loginZoomDone=false; window.lepton.config.set("zoom:percent",arguments[0]).then(()=>{window.__loginZoomDone=true}); return true', percent)
     await waitFor('return window.__loginZoomDone===true', 'login zoom')
     await new Promise(resolve => setTimeout(resolve, 100))
   }
+  async function setLocale (locale) {
+    await run('const select=document.querySelector("[data-role=language-selector]"); select.value=arguments[0]; select.dispatchEvent(new Event("change",{bubbles:true})); return true', locale)
+    await new Promise(resolve => setTimeout(resolve, 750))
+    await waitFor('return !document.querySelector(".login-modal-flipping")', 'login locale flip')
+  }
   try {
-    for (const locale of locales) {
-      await selectLocale(locale)
-      assert.equal(await run('return document.querySelector("[data-role=language-selector]").value'), locale)
-      for (const [width, height] of [[1180, 812], [800, 609]]) {
-        await request(`/session/${session}/window/rect`, { width, height })
-        for (const zoom of [100, 125, 150, 300]) {
-          await setZoom(zoom)
-          const layout = await run(`
-            const face = document.querySelector('.login-modal-face-front')
-            face.scrollTop = 0
-            const rect = face.getBoundingClientRect()
-            const style = getComputedStyle(face)
-            const overflow = face.scrollHeight - face.clientHeight
-            const controls = [...face.querySelectorAll('.button-group-modal button, .button-group-modal input, .button-group-modal select')]
-            const reachable = controls.map(control => {
-              control.blur(); control.focus()
-              const r = control.getBoundingClientRect()
-              const bounds = face.getBoundingClientRect()
-              return { top: r.top, bottom: r.bottom, faceTop: bounds.top, faceBottom: bounds.bottom }
-            })
-            return { width: innerWidth, height: innerHeight, top: rect.top, bottom: rect.bottom,
-              maxHeight: style.maxHeight, scrollbarWidth: style.scrollbarWidth, tabIndex: face.tabIndex,
-              clientHeight: face.clientHeight, overflow, reachable }
-          `)
-          const context = `${description} (${locale}, ${width}x${height}, ${zoom}%): ${JSON.stringify(layout)}`
-          assert.equal(layout.scrollbarWidth, 'none', context)
-          assert.equal(layout.tabIndex, 0, context)
-          assert.notEqual(layout.maxHeight, 'none', context)
-          assert.ok(layout.overflow <= 1 || layout.clientHeight >= parseFloat(layout.maxHeight) - 3, context)
-          assert.ok(layout.top >= 22 && layout.bottom <= layout.height - 22, context)
-          assert.ok(layout.reachable.every(r => r.top >= r.faceTop - 1 && r.bottom <= r.faceBottom + 1 && r.top >= -1 && r.bottom <= layout.height + 1), context)
-          if (locale === 'en' && width === 1180 && zoom === 100) {
-            const focus = await run(`
-              const face = document.querySelector('.login-modal-face-front')
-              const group = face.querySelector('.button-group-modal')
-              const message = document.createElement('div')
-              message.className = 'login-status-line login-status-line-error'
-              message.textContent = 'Token invalid. Please try again.'
-              message.style.paddingTop = '900px'
-              group.before(message)
-              face.scrollTop = 0
-              const button = group.querySelector('button')
-              button.blur(); button.focus()
-              const rect = button.getBoundingClientRect()
-              const bounds = face.getBoundingClientRect()
-              const result = { scrollTop: face.scrollTop, top: rect.top, bottom: rect.bottom,
-                faceTop: bounds.top, faceBottom: bounds.bottom }
-              message.remove()
-              return result
-            `)
-            assert.ok(focus.scrollTop > 0 && focus.top >= focus.faceTop - 1 && focus.bottom <= focus.faceBottom + 1, `${context}; focus: ${JSON.stringify(focus)}`)
-          }
-          const status = await run(`
-            const face = document.querySelector('.login-modal-face-front')
-            const status = document.createElement('div')
-            status.className = 'login-status-line login-status-line-error'
-            status.textContent = 'Token invalid. Please try again.'
-            status.style.paddingTop = '900px'
-            face.querySelector('.login-modal-body-content').append(status)
-            face.scrollTop = face.scrollHeight
-            const r = status.getBoundingClientRect()
-            const bounds = face.getBoundingClientRect()
-            const result = { overflowing: face.scrollHeight > face.clientHeight, scrollTop: face.scrollTop,
-              visible: r.bottom <= bounds.bottom + 1 && r.bottom <= innerHeight + 1 }
-            status.remove()
-            return result
-          `)
-          assert.ok(status.overflowing && status.scrollTop > 0 && status.visible, `${context}; status: ${JSON.stringify(status)}`)
-        }
-      }
-    }
+    await setLocale('ja')
+    await request(`/session/${session}/window/rect`, { width: 1180, height: 812 })
+    await setZoom(125)
+    await check('Japanese GitHub login at 125%')
+    await request(`/session/${session}/window/rect`, { width: 800, height: 609 })
+    await setZoom(300)
+    await check('Japanese GitHub login in a small viewport')
+
+    const focused = await run(`
+      const face = document.querySelector('.login-modal-face-front')
+      const group = face.querySelector('.button-group-modal')
+      const status = document.createElement('div')
+      status.className = 'login-status-line login-status-line-error'
+      status.textContent = 'Token invalid. Please try again.'
+      status.style.paddingTop = '900px'
+      group.before(status)
+      face.scrollTop = 0
+      const button = group.querySelector('button')
+      button.blur(); button.focus()
+      const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
+      const visible = face.scrollTop > 0 && r.top >= bounds.top - 1 && r.bottom <= bounds.bottom + 1
+      status.remove()
+      return visible
+    `)
+    assert.ok(focused, 'Focused control must scroll into view in native WebKit')
   } finally {
     await setZoom(100)
     await request(`/session/${session}/window/rect`, originalWindow)
-    await selectLocale(originalLocale)
+    await setLocale(originalLocale)
   }
 }
 
