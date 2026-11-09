@@ -94,10 +94,11 @@ async function assertLoginFits (description) {
     await setZoom(300)
     await check('Japanese GitHub login in a small viewport')
 
-    const focused = await run(`
+    await run(`
       const face = document.querySelector('.login-modal-face-front')
       const group = face.querySelector('.button-group-modal')
       const status = document.createElement('div')
+      status.id = 'layout-focus-test-status'
       status.className = 'login-status-line login-status-line-error'
       status.textContent = 'Token invalid. Please try again.'
       status.style.paddingTop = '900px'
@@ -105,12 +106,30 @@ async function assertLoginFits (description) {
       face.scrollTop = 0
       const button = group.querySelector('button')
       button.blur(); button.focus()
-      const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
-      const visible = face.scrollTop > 0 && r.top >= bounds.top - 1 && r.bottom <= bounds.bottom + 1
-      status.remove()
-      return visible
+      return true
     `)
-    assert.ok(focused, 'Focused control must scroll into view in native WebKit')
+    try {
+      // WebKitGTK may apply focus scrolling after the focus event returns.
+      await waitFor(`
+        const face = document.querySelector('.login-modal-face-front')
+        const button = face.querySelector('.button-group-modal button')
+        const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
+        return document.activeElement === button && face.scrollTop > 0 &&
+          r.top >= bounds.top - 1 && r.bottom <= bounds.bottom + 1
+      `, 'focused login control to scroll into view')
+    } catch (error) {
+      const layout = await run(`
+        const face = document.querySelector('.login-modal-face-front')
+        const button = face.querySelector('.button-group-modal button')
+        const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
+        return { focused: document.activeElement === button, scrollTop: face.scrollTop,
+          scrollHeight: face.scrollHeight, clientHeight: face.clientHeight,
+          button: { top: r.top, bottom: r.bottom }, face: { top: bounds.top, bottom: bounds.bottom } }
+      `)
+      throw new Error(`Focused login control did not scroll into view: ${JSON.stringify(layout)}`, { cause: error })
+    } finally {
+      await run("document.getElementById('layout-focus-test-status')?.remove(); return true")
+    }
   } finally {
     await setZoom(100)
     await request(`/session/${session}/window/rect`, originalWindow)
