@@ -44,9 +44,105 @@ async function waitFor (script, description) {
 }
 async function click (selector) { assert.equal(await run('const e=document.querySelector(arguments[0]); if (!e) return false; e.click(); return true', selector), true, `Missing ${selector}`) }
 async function assertLoginFits (description) {
-  const layout = await run('const face=document.querySelector(".login-modal-face-front"); const bounds=face.getBoundingClientRect(); const elements=[...face.querySelectorAll(".login-modal-title, .button-group-modal button, .button-group-modal input, .button-group-modal select, .login-page-text-link, .login-status-line")]; return {overflow:face.scrollHeight-face.clientHeight, scrollTop:face.scrollTop, clipped:elements.filter(e=>{const r=e.getBoundingClientRect(); return r.top<bounds.top || r.bottom>bounds.bottom}).map(e=>e.innerText || e.getAttribute("aria-label"))}')
-  assert.ok(layout.overflow <= 1 && layout.scrollTop === 0 && layout.clipped.length === 0, `${description}: ${JSON.stringify(layout)}`)
+  async function check (context) {
+    const layout = await run(`
+      const face = document.querySelector('.login-modal-face-front')
+      face.scrollTop = 0
+      const bounds = face.getBoundingClientRect(), style = getComputedStyle(face)
+      const controls = [...face.querySelectorAll('.button-group-modal button, .button-group-modal input, .button-group-modal select')]
+      return {
+        top: bounds.top, bottom: bounds.bottom, height: innerHeight,
+        maxHeight: style.maxHeight, scrollbarWidth: style.scrollbarWidth, tabIndex: face.tabIndex,
+        viewportHeight: parseFloat(style.getPropertyValue('--login-viewport-height')),
+        overflow: face.scrollHeight - face.clientHeight, clientHeight: face.clientHeight,
+        controlsFit: controls.every(control => {
+          control.blur(); control.focus()
+          const r = control.getBoundingClientRect(), card = face.getBoundingClientRect()
+          return r.top >= card.top - 1 && r.bottom <= card.bottom + 1 && r.left >= card.left - 1 && r.right <= card.right + 1
+        })
+      }
+    `)
+    const message = `${context}: ${JSON.stringify(layout)}`
+    assert.equal(layout.scrollbarWidth, 'none', message)
+    assert.equal(layout.tabIndex, 0, message)
+    assert.notEqual(layout.maxHeight, 'none', message)
+    assert.ok(Math.abs(layout.viewportHeight - layout.height) <= 1, message)
+    assert.ok(layout.top >= 22 && layout.bottom <= layout.height - 22, message)
+    assert.ok(layout.overflow <= 1 || layout.clientHeight >= parseFloat(layout.maxHeight) - 3, message)
+    assert.ok(layout.controlsFit, message)
+  }
+
+  await check(description)
+  if (description !== 'GitHub login') return
+
+  const originalWindow = await request(`/session/${session}/window/rect`)
+  const originalLocale = await run('return document.querySelector("[data-role=language-selector]").value')
+  async function setZoom (percent) {
+    await run('window.__loginZoomDone=false; window.lepton.config.set("zoom:percent",arguments[0]).then(()=>{window.__loginZoomDone=true}); return true', percent)
+    await waitFor('return window.__loginZoomDone===true', 'login zoom')
+    await new Promise(resolve => setTimeout(resolve, 100))
+  }
+  async function setLocale (locale) {
+    await run('const select=document.querySelector("[data-role=language-selector]"); select.value=arguments[0]; select.dispatchEvent(new Event("change",{bubbles:true})); return true', locale)
+    await new Promise(resolve => setTimeout(resolve, 750))
+    await waitFor('return !document.querySelector(".login-modal-flipping")', 'login locale flip')
+  }
+  try {
+    await setLocale('ja')
+    await request(`/session/${session}/window/rect`, { width: 1180, height: 812 })
+    await setZoom(125)
+    await check('Japanese GitHub login at 125%')
+    await request(`/session/${session}/window/rect`, { width: 800, height: 609 })
+    await setZoom(300)
+    await check('Japanese GitHub login in a small viewport')
+
+    await run(`
+      const face = document.querySelector('.login-modal-face-front')
+      const group = face.querySelector('.button-group-modal')
+      const status = document.createElement('div')
+      status.id = 'layout-focus-test-status'
+      status.className = 'login-status-line login-status-line-error'
+      status.textContent = 'Token invalid. Please try again.'
+      status.style.paddingTop = '900px'
+      group.before(status)
+      face.scrollTop = 0
+      const button = group.querySelector('button')
+      button.blur(); button.focus()
+      return true
+    `)
+    try {
+      // WebKitGTK may apply focus scrolling after the focus event returns.
+      await waitFor(`
+        const face = document.querySelector('.login-modal-face-front')
+        const button = face.querySelector('.button-group-modal button')
+        const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
+        return document.activeElement === button && face.scrollTop > 0 &&
+          bounds.top >= -1 && bounds.bottom <= innerHeight + 1 &&
+          r.top >= bounds.top - 1 && r.bottom <= bounds.bottom + 1 && r.bottom <= innerHeight + 1
+      `, 'focused login control to scroll into view')
+    } catch (error) {
+      const layout = await run(`
+        const face = document.querySelector('.login-modal-face-front')
+        const button = face.querySelector('.button-group-modal button')
+        const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
+        const style = getComputedStyle(face)
+        return { focused: document.activeElement === button, scrollTop: face.scrollTop,
+          scrollHeight: face.scrollHeight, clientHeight: face.clientHeight,
+          maxHeight: style.maxHeight, viewportHeight: innerHeight,
+          configuredHeight: style.getPropertyValue('--login-viewport-height'),
+          button: { top: r.top, bottom: r.bottom }, face: { top: bounds.top, bottom: bounds.bottom } }
+      `)
+      throw new Error(`Focused login control did not scroll into view: ${JSON.stringify(layout)}`, { cause: error })
+    } finally {
+      await run("document.getElementById('layout-focus-test-status')?.remove(); return true")
+    }
+  } finally {
+    await setZoom(100)
+    await request(`/session/${session}/window/rect`, originalWindow)
+    await setLocale(originalLocale)
+  }
 }
+
 async function emit (channel) { await run('window.lepton.ipc.emit(arguments[0]); return true', channel) }
 async function testWindowAction (action) {
   await run('window.__testWindowResult=null; window.__TAURI_INTERNALS__.invoke("ui_test_window_action",{action:arguments[0]}).then(value=>{window.__testWindowResult={value}}).catch(error=>{window.__testWindowResult={error:String(error)}}); return true', action)

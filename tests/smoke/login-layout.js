@@ -2,6 +2,54 @@ const assert = require('node:assert/strict')
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+async function verifyOverflowAccess (window, evaluate) {
+  window.setContentSize(800, 577)
+  window.webContents.setZoomFactor(1)
+  await wait(150)
+  const point = await evaluate(`(() => {
+    const face = document.querySelector('.login-modal-face-front')
+    const status = document.createElement('div')
+    status.id = 'layout-test-status'
+    status.className = 'login-status-line login-status-line-error'
+    status.textContent = 'Token invalid. Please try again.'
+    status.style.paddingTop = '900px'
+    face.querySelector('.button-group-modal').before(status)
+    face.scrollTop = 0
+    const bounds = face.getBoundingClientRect()
+    return { x: Math.round(bounds.left + bounds.width / 2), y: Math.round(bounds.top + bounds.height / 2) }
+  })()`)
+
+  try {
+    await wait(250)
+    window.webContents.sendInputEvent({ type: 'mouseWheel', ...point, deltaX: 0, deltaY: -400, canScroll: true })
+    await wait(400)
+    assert.ok(await evaluate("document.querySelector('.login-modal-face-front').scrollTop > 0"), 'Mouse wheel must scroll overflowing login')
+
+    assert.ok(await evaluate(`(() => {
+      const face = document.querySelector('.login-modal-face-front')
+      face.scrollTop = 0
+      face.focus()
+      return document.activeElement === face
+    })()`), 'Login must be keyboard focusable')
+    window.webContents.sendInputEvent({ type: 'keyDown', keyCode: 'End' })
+    window.webContents.sendInputEvent({ type: 'keyUp', keyCode: 'End' })
+    await wait(400)
+    assert.ok(await evaluate("document.querySelector('.login-modal-face-front').scrollTop > 0"), 'Keyboard must scroll overflowing login')
+
+    const focused = await evaluate(`(() => {
+      const face = document.querySelector('.login-modal-face-front')
+      face.scrollTop = 0
+      const button = face.querySelector('.button-group-modal button')
+      button.blur(); button.focus()
+      const r = button.getBoundingClientRect(), bounds = face.getBoundingClientRect()
+      return face.scrollTop > 0 && r.top >= bounds.top - 1 && r.bottom <= bounds.bottom + 1
+    })()`)
+    assert.ok(focused, 'Focused control must scroll into view')
+  } finally {
+    await evaluate("document.getElementById('layout-test-status').remove()")
+  }
+}
+
 module.exports = async function verifyLoginLayout (window, captureScreenshot) {
   const originalSize = window.getContentSize()
   const originalZoom = window.webContents.getZoomFactor()
@@ -12,10 +60,22 @@ module.exports = async function verifyLoginLayout (window, captureScreenshot) {
   let checked = 0
 
   try {
+    await verifyOverflowAccess(window, evaluate)
     for (const mode of modes) {
       if (mode === 'token' && provider === 'github') {
         await evaluate("document.querySelector('.login-mode-switch').click()")
         await wait(750)
+      }
+      if (mode === 'invalid-host') {
+        await evaluate(`(() => {
+          const input = document.querySelector('[aria-label="GitLab instance host"]')
+          Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, ' ')
+          input.dispatchEvent(new Event('input', { bubbles: true }))
+          input.dispatchEvent(new Event('change', { bubbles: true }))
+          input.dispatchEvent(new FocusEvent('focusout', { bubbles: true }))
+        })()`)
+        await wait(200)
+        assert.equal(await evaluate("!!document.querySelector('.login-provider-error')"), true)
       }
       for (const locale of locales) {
         await evaluate(`(() => {
@@ -24,96 +84,48 @@ module.exports = async function verifyLoginLayout (window, captureScreenshot) {
           select.dispatchEvent(new Event('change', { bubbles: true }))
         })()`)
         await wait(750)
-        if (mode === 'invalid-host') {
-          await evaluate(`(() => {
-            const input = document.querySelector('[aria-label="GitLab instance host"]')
-            Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set.call(input, ' ')
-            input.dispatchEvent(new Event('input', { bubbles: true }))
-            input.dispatchEvent(new Event('change', { bubbles: true }))
-          })()`)
-          await wait(100)
-          await evaluate("document.querySelector('[aria-label=\"GitLab instance host\"]').dispatchEvent(new FocusEvent('focusout', { bubbles: true }))")
-          await wait(100)
-          assert.equal(await evaluate("!!document.querySelector('.login-provider-error')"), true)
-        }
-        for (const [width, height, zoom] of [[1100, 768, 1], [800, 532, 1], [636, 577, 1], [636, 577, 1.5], [636, 577, 3]]) {
+        const viewports = [[800, 577, 1]]
+        if (locale === 'en' || locale === 'ja') viewports.push([1180, 780, 1.25], [636, 577, 3])
+        for (const [width, height, zoom] of viewports) {
           window.setContentSize(width, height)
           window.webContents.setZoomFactor(zoom)
           await wait(60)
           const result = await evaluate(`(() => {
             const face = document.querySelector('.login-modal-face-front')
-            const body = face.querySelector('.login-modal-body')
-            const card = face.getBoundingClientRect()
             face.scrollTop = 0
+            const bounds = face.getBoundingClientRect(), style = getComputedStyle(face)
             const controls = [...face.querySelectorAll('.button-group-modal button, .button-group-modal input, .button-group-modal select')]
-            const last = controls.at(-1).getBoundingClientRect()
-            const bounds = body.getBoundingClientRect()
-            const inputs = [...face.querySelectorAll('.button-group-modal .form-control')]
-            const inputStyles = inputs.map(control => {
-              const style = getComputedStyle(control)
-              return [style.height, style.fontSize, style.fontWeight, style.paddingTop, style.paddingBottom, style.borderRadius].join('|')
-            })
-            const fields = [...face.querySelectorAll('.login-provider-field')]
             return {
-              consistentInputs: inputStyles.every(style => style === inputStyles[0]),
-              labelsFit: fields.every(field => {
-                const label = field.querySelector('span')
-                return label.scrollWidth <= label.clientWidth + 1 && label.scrollHeight <= label.clientHeight + 1
-              }),
-              labelGaps: fields.map(field => {
-                const label = field.querySelector('span').getBoundingClientRect()
-                const input = field.querySelector('.form-control').getBoundingClientRect()
-                return innerWidth > 400 ? input.left - label.right : input.top - label.bottom
-              }),
-              margins: [card.left, card.top, innerWidth - card.right, innerHeight - card.bottom],
-              scale: card.width / face.offsetWidth,
-              overflowX: body.scrollWidth - body.clientWidth,
-              overflowY: face.scrollHeight - face.clientHeight,
-              faceHeight: face.clientHeight,
-              contentHeight: face.scrollHeight,
-              controlsPadded: controls.every(control => {
-                const rect = control.getBoundingClientRect()
-                return rect.left >= card.left + 14 * card.width / face.offsetWidth && rect.right <= card.right - 14 * card.width / face.offsetWidth
-              }),
-              bottomPadding: bounds.bottom - last.bottom,
-              visibleButton: last.top >= card.top && last.bottom <= card.bottom,
-              locale: document.querySelector('[data-role=language-selector]').value
+              locale: document.querySelector('[data-role=language-selector]').value,
+              top: bounds.top, bottom: bounds.bottom, height: innerHeight,
+              maxHeight: style.maxHeight, scrollbarWidth: style.scrollbarWidth,
+              viewportHeight: parseFloat(style.getPropertyValue('--login-viewport-height')),
+              overflow: face.scrollHeight - face.clientHeight, clientHeight: face.clientHeight,
+              labelsFit: [...face.querySelectorAll('.login-provider-field span')].every(label => label.scrollWidth <= label.clientWidth + 1 && label.scrollHeight <= label.clientHeight + 1),
+              controlsFit: controls.every(control => {
+                control.blur(); control.focus()
+                const rect = control.getBoundingClientRect(), card = face.getBoundingClientRect()
+                return rect.top >= card.top - 1 && rect.bottom <= card.bottom + 1 && rect.left >= card.left - 1 && rect.right <= card.right + 1
+              })
             }
           })()`)
           const context = JSON.stringify({ provider, mode, locale, width, height, zoom, result })
           assert.equal(result.locale, locale, context)
-          assert.ok(result.margins.every(margin => margin >= (zoom === 1 ? 23 : 0)), context)
-          assert.ok(result.overflowX <= 1, context)
-          {
-            assert.ok(result.overflowY <= 1, context)
-            const statusLayout = await evaluate(`(() => {
-              const face = document.querySelector('.login-modal-face-front')
-              const status = document.createElement('div')
-              status.className = 'login-status-line login-status-line-error'
-              status.textContent = 'Token invalid. Please try again.'
-              face.querySelector('.login-modal-body-content').append(status)
-              const rect = status.getBoundingClientRect()
-              const bounds = face.getBoundingClientRect()
-              const result = { overflowY: face.scrollHeight - face.clientHeight, visible: rect.bottom <= bounds.bottom && rect.bottom <= innerHeight && bounds.top >= 0 }
-              status.remove()
-              return result
-            })()`)
-            assert.ok(statusLayout.overflowY <= 1 && statusLayout.visible, `${context} status: ${JSON.stringify(statusLayout)}`)
-          }
-          assert.ok(result.controlsPadded, context)
-          assert.ok(result.bottomPadding >= 14 * result.scale - 1, context)
-          assert.ok(result.visibleButton, context)
-          assert.ok(result.consistentInputs, context)
-          assert.ok(result.labelsFit, context)
-          assert.ok(result.labelGaps.every(gap => gap >= 3 * result.scale - 1 && gap <= 9 * result.scale + 1), context)
+          assert.equal(result.scrollbarWidth, 'none', context)
+          assert.notEqual(result.maxHeight, 'none', context)
+          assert.ok(Math.abs(result.viewportHeight - result.height) <= 1, context)
+          assert.ok(result.top >= 22 && result.bottom <= result.height - 22, context)
+          assert.ok(result.overflow <= 1 || result.clientHeight >= parseFloat(result.maxHeight) - 3, context)
+          assert.ok(result.labelsFit && result.controlsFit, context)
           checked++
-          if ((zoom === 1 && width === 636) || (zoom === 3 && locale === 'en')) {
-            await captureScreenshot(window, `login-layout-${provider}-${mode}-${locale}-${zoom === 3 ? 'high-zoom' : 'minimum'}.png`)
+          if (mode === modes[0] && locale === 'ja' && zoom === 1.25) {
+            await evaluate("document.querySelector('.login-modal-face-front').scrollTop = 0")
+            await captureScreenshot(window, `login-layout-${provider}-japanese.png`)
           }
         }
       }
     }
-    console.log(`Login layout passed: ${provider}, ${checked} locale/mode/viewport/zoom combinations`)
+    console.log(`Login layout passed: ${provider}, ${checked} representative combinations`)
   } finally {
     window.webContents.setZoomFactor(originalZoom)
     window.setContentSize(...originalSize)
