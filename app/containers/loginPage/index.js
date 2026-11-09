@@ -773,7 +773,8 @@ export class LoginPage extends Component {
 
   renderModalFace (loginMode, locale, className, isInteractive = true) {
     return (
-      <div className={ className } aria-hidden={ isInteractive ? undefined : true }>
+      <div className={ className } aria-hidden={ isInteractive ? undefined : true }
+        tabIndex={ isInteractive ? 0 : -1 }>
         <Modal.Header>
           <Modal.Title className='login-modal-title' title={ this.translate(locale, 'login.title') }>
             { this.translate(locale, 'login.title') }
@@ -796,7 +797,8 @@ export class LoginPage extends Component {
     const backLocale = pendingLocale || activeLocale
 
     return (
-      <div className={ className }>
+      <div className={ className }
+        onFocusCapture={ event => event.target.scrollIntoView({ block: 'nearest', inline: 'nearest' }) }>
         <Modal.Dialog bsSize='small'>
           <div className='login-modal-card'
             ref={ node => { this.loginCard = node } }
