@@ -57,7 +57,7 @@ const electronLocalStorage = createElectronLocalStorage({
 const accessTokenStorage = createAccessTokenStorage({
   conf: nconf,
   getSafeStorage: () => electron.safeStorage,
-  isDev,
+  isDev: !app.isPackaged,
   localStorage: electronLocalStorage,
   logger
 })

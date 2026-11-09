@@ -50,6 +50,7 @@ function getConfiguredStorageMode (conf) {
 }
 
 function getEffectiveStorageMode ({ conf, isDev }) {
+  if (isDev) return 'file'
   const configuredMode = getConfiguredStorageMode(conf)
   if (configuredMode !== DEFAULT_STORAGE_MODE) return configuredMode
   return isDev ? 'file' : 'encrypted'

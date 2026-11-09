@@ -108,7 +108,7 @@ describe('access token storage', () => {
     const safeStorage = createSafeStorage()
     const accessTokenStorage = createAccessTokenStorage({
       conf: createConf({ 'security:cachedAccessTokenStorage': 'encrypted' }),
-      isDev: true,
+      isDev: false,
       localStorage,
       safeStorage
     })
@@ -422,5 +422,31 @@ describe('access token storage', () => {
   it('preserves case-sensitive provider paths in credential scopes', () => {
     expect(getScopedTokenKeys('gitlab:https://gitlab.example.com/Team'))
       .not.toEqual(getScopedTokenKeys('gitlab:https://gitlab.example.com/team'))
+  })
+})
+
+describe('local development uses existing file storage', () => {
+  it('persists tokens on disk across instances without accessing Keychain', () => {
+    const userDataPath = mkdtempSync(join(tmpdir(), 'lepton-dev-token-'))
+    try {
+      for (const mode of ['auto', 'file', 'encrypted']) {
+        const options = {
+          conf: createConf({ 'security:cachedAccessTokenStorage': mode }),
+          isDev: true,
+          getSafeStorage: () => { throw new Error('Keychain must not be accessed') }
+        }
+        const makeStorage = () => createAccessTokenStorage({
+          ...options,
+          localStorage: createElectronLocalStorage({ getUserDataPath: () => userDataPath })
+        })
+        expect(makeStorage().set('dedicated-test-token').status).toBe(true)
+        expect(readFileSync(join(userDataPath, 'storage', 'token.json'), 'utf8')).toBe(JSON.stringify('dedicated-test-token'))
+        expect(makeStorage().get().data).toBe('dedicated-test-token')
+        expect(makeStorage().set(null).status).toBe(true)
+        expect(makeStorage().get().data).toBe(null)
+      }
+    } finally {
+      rmSync(userDataPath, { recursive: true, force: true })
+    }
   })
 })

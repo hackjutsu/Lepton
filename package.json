@@ -29,6 +29,9 @@
     "check-outdated": "check-outdated --ignore-pre-releases --ignore-dev-dependencies --ignore-packages package1,package2 --columns name,type,current,latest,changes --types major,minor,patch,reverted",
     "preversion": "npm run lint && npm run test && npm run check-outdated"
   },
+  "_scriptNotes": {
+    "start": "npm start: manual testing with a dedicated provider token. Unpackaged Electron use existing unencrypted file token storage without Keychain access, regardless of the saved storage preference. Login persists across restarts; logout clears the saved token. Packaged builds retain configured credential storage."
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/hackjutsu/Lepton.git"

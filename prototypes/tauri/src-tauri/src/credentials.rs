@@ -263,8 +263,12 @@ impl Credentials {
         self.forget_with(self.store.as_ref(), account)
     }
 
+    fn development_file_storage(&self) -> bool {
+        cfg!(debug_assertions) && !self.test_mode
+    }
+
     fn file_mode(&self, mode: &str) -> bool {
-        mode == "file" || (mode == "auto" && cfg!(debug_assertions) && !self.test_mode)
+        mode == "file" || self.development_file_storage()
     }
 
     fn stores_for(&self, mode: &str) -> (&dyn SecretStore, &dyn SecretStore) {
@@ -281,6 +285,11 @@ impl Credentials {
         token: &str,
         mode: &str,
     ) -> Result<(bool, bool), String> {
+        if self.development_file_storage() {
+            return self
+                .remember_in(&self.file_store, account, token, Some("file"))
+                .map(|saved| (saved, false));
+        }
         let (selected, previous) = self.stores_for(mode);
         let file_mode = self.file_mode(mode);
         let saved = self.remember_in(
@@ -310,6 +319,11 @@ impl Credentials {
         &self,
         mode: &str,
     ) -> Result<(Option<RestoredAccount>, bool), String> {
+        if self.development_file_storage() {
+            return self
+                .restore_with(&self.file_store)
+                .map(|account| (account, false));
+        }
         let (selected, previous) = self.stores_for(mode);
         let metadata = match std::fs::read(&self.metadata) {
             Ok(bytes) => serde_json::from_slice::<serde_json::Value>(&bytes)
@@ -338,6 +352,9 @@ impl Credentials {
     }
 
     pub fn forget_configured(&self, account: &Account, mode: &str) -> Result<(), String> {
+        if self.development_file_storage() {
+            return self.forget_with(&self.file_store, account);
+        }
         let saved_file = match std::fs::read(&self.metadata) {
             Ok(bytes) => {
                 serde_json::from_slice::<serde_json::Value>(&bytes)
@@ -363,6 +380,45 @@ impl Credentials {
 mod tests {
     use super::*;
     use std::collections::HashMap;
+    struct NoKeychain;
+    impl SecretStore for NoKeychain {
+        fn put(&self, _: &str, _: &str) -> Result<(), String> {
+            panic!("Keychain write")
+        }
+        fn get(&self, _: &str) -> Result<Option<String>, String> {
+            panic!("Keychain read")
+        }
+        fn remove(&self, _: &str) -> Result<(), String> {
+            panic!("Keychain cleanup")
+        }
+    }
+    #[cfg(debug_assertions)]
+    #[test]
+    fn development_files_persist_without_keychain_access() {
+        let dir = tempfile::tempdir().unwrap();
+        let account = Account {
+            provider: "github".into(),
+            base: "https://github.com".into(),
+            login: "test-account".into(),
+        };
+        for mode in ["auto", "file", "encrypted"] {
+            let mut credentials = Credentials::new(dir.path().into(), false);
+            credentials.store = Box::new(NoKeychain);
+            assert!(credentials.restore_configured(mode).unwrap().0.is_none());
+            credentials
+                .remember_configured(&account, "dedicated-test-token", mode)
+                .unwrap();
+            let mut restarted = Credentials::new(dir.path().into(), false);
+            restarted.store = Box::new(NoKeychain);
+            assert_eq!(
+                restarted.restore_configured(mode).unwrap().0.unwrap().token,
+                "dedicated-test-token"
+            );
+            restarted.forget_configured(&account, mode).unwrap();
+            assert!(restarted.restore_configured(mode).unwrap().0.is_none());
+        }
+    }
+
     #[derive(Default)]
     struct Mock(Mutex<HashMap<String, String>>);
     struct Unavailable;
