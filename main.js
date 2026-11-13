@@ -172,6 +172,7 @@ function createWindow (autoLogin) {
     backgroundColor: '#808080',
     show: false,
     icon: path.join(__dirname, 'build/icon/icon.png'),
+    autoHideMenuBar: Boolean(nconf.get('window:autoHideMenuBar')),
     webPreferences
   })
 
@@ -532,6 +533,11 @@ function setUpBridgeIpcHandlers () {
       applyStartAtLoginSetting({ app, enabled: persistedValue, logger })
     }
     if (key === 'logger:level') logger.level = persistedValue
+    if (key === 'window:autoHideMenuBar' && mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.setAutoHideMenuBar(persistedValue)
+      // Reveal the menu again when auto-hide is turned off
+      if (!persistedValue) mainWindow.setMenuBarVisibility(true)
+    }
     if (key === 'zoom:percent' && mainWindow && !mainWindow.isDestroyed()) {
       applyDefaultZoomPercent({ webContents: mainWindow.webContents, percent: persistedValue, logger })
     }

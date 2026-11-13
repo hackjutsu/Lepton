@@ -31,9 +31,17 @@ describe('preferences config boundary', () => {
       'gitlab:host',
       'editor:imageMaxSizeKB',
       'proxy:address',
-      'shortcuts:keyAboutPage'
+      'shortcuts:keyAboutPage',
+      'window:autoHideMenuBar'
     ]))
     expect(writableConfigKeys.has('enterprise:token')).toBe(false)
+  })
+
+  it('applies the menu bar visibility preference immediately as a boolean', () => {
+    expect(defaultConfig.window.autoHideMenuBar).toBe(false)
+    expect(preferenceMetadata['window:autoHideMenuBar'].applyMode).toBe(APPLY_MODES.IMMEDIATE)
+    expect(isValidPreferenceValue('window:autoHideMenuBar', true)).toBe(true)
+    expect(isValidPreferenceValue('window:autoHideMenuBar', 'true')).toBe(false)
   })
 
   it('defines application behavior for every writable preference', () => {

@@ -7,7 +7,8 @@ module.exports = {
     },
     "window": {
         "closeToTray": false,
-        "minimizeToTray": false
+        "minimizeToTray": false,
+        "autoHideMenuBar": false
     },
     "avatar": {
         "type": "github",
