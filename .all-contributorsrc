@@ -300,6 +300,15 @@
       "contributions": [
         "platform"
       ]
+    },
+    {
+      "login": "farisbasha",
+      "name": "farisbasha",
+      "avatar_url": "https://avatars.githubusercontent.com/u/72191505?v=4",
+      "profile": "https://github.com/farisbasha",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
