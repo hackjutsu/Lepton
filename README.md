@@ -80,7 +80,7 @@ Missing a locale? See [How do I add a new interface locale?](wiki/faq.md#how-do-
 ![Based on](./docs/img/erb-logo.png)
 
 1. Framework: [Electron](http://electron.atom.io/)
-2. Bundler: [Webpack](http://webpack.github.io/docs/), [Babel](https://babeljs.io), [electron-builder](https://github.com/electron-userland/electron-builder)
+2. Bundler: [Webpack](https://webpack.js.org/), [Babel](https://babeljs.io), [electron-builder](https://github.com/electron-userland/electron-builder)
 3. Language: ES6, Sass/SCSS
 4. UI/state: React 19, Redux, React Redux, Redux Thunk
 5. Editor/rendering: CodeMirror, Highlight.js, Markdown/Jupyter rendering
