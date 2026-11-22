@@ -1,5 +1,5 @@
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-31-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-32-orange.svg?style=flat-square)](#contributors-)
 [![MIT Licensed](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://opensource.org/licenses/MIT)
 [![lepton](https://snapcraft.io/lepton/badge.svg)](https://snapcraft.io/lepton)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -329,6 +329,7 @@ $ npm run dist
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/yuhang-dong"><img src="https://avatars.githubusercontent.com/u/20642641?v=4?s=100" width="100px;" alt="董雨航"/><br /><sub><b>董雨航</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=yuhang-dong" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://sxyz.blog"><img src="https://avatars.githubusercontent.com/u/17523360?v=4?s=100" width="100px;" alt="sxyazi"/><br /><sub><b>sxyazi</b></sub></a><br /><a href="#platform-sxyazi" title="Packaging/porting to new platform">📦</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://megabyte.space"><img src="https://avatars.githubusercontent.com/u/59970525?v=4?s=100" width="100px;" alt="Brian Zalewski"/><br /><sub><b>Brian Zalewski</b></sub></a><br /><a href="#platform-ProfessorManhattan" title="Packaging/porting to new platform">📦</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/farisbasha"><img src="https://avatars.githubusercontent.com/u/72191505?v=4?s=100" width="100px;" alt="farisbasha"/><br /><sub><b>farisbasha</b></sub></a><br /><a href="https://github.com/hackjutsu/Lepton/commits?author=farisbasha" title="Documentation">📖</a></td>
     </tr>
   </tbody>
 </table>
