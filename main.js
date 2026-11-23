@@ -535,8 +535,8 @@ function setUpBridgeIpcHandlers () {
     if (key === 'logger:level') logger.level = persistedValue
     if (key === 'window:autoHideMenuBar' && mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.setAutoHideMenuBar(persistedValue)
-      // Reveal the menu again when auto-hide is turned off
-      if (!persistedValue) mainWindow.setMenuBarVisibility(true)
+      // Auto-hide alone does not hide an already visible menu.
+      mainWindow.setMenuBarVisibility(!persistedValue)
     }
     if (key === 'zoom:percent' && mainWindow && !mainWindow.isDestroyed()) {
       applyDefaultZoomPercent({ webContents: mainWindow.webContents, percent: persistedValue, logger })
