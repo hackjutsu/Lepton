@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api/core'
 import { writeText } from '@tauri-apps/plugin-clipboard-manager'
 import { session, requestProvider, formatLogArguments } from './session'
-import { matchesAccelerator, nextZoomPercent, zoomShortcutAction } from './shortcuts'
+import { matchesAccelerator, matchesSearchShortcut, nextZoomPercent, searchShortcutAllowed, zoomShortcutAction } from './shortcuts'
 import defaults from '../../../configs/defaultConfig'
 import { renderNotebookContent } from '../../../app/utilities/jupyterNotebook/core'
 import { isValidPreferenceValue, preferenceRequiresRestart } from '../../../app/utilities/config/preferences'
@@ -22,7 +22,7 @@ function mergeConfig (base, override) {
 const runtime = window.__leptonRuntimeInfo
 // The native runtime reads ~/.leptonrc. Old WebView-local copies can outlive
 // that file and must not silently re-enable settings removed from it.
-const prototypeDefaults = { ...defaults, shortcuts: { ...defaults.shortcuts, keyShortcutForSearch: 'CommandOrControl+Shift+F' } }
+const prototypeDefaults = defaults
 const config = mergeConfig(prototypeDefaults, runtime.config)
 function find (path) { return path.split(':').reduce((node, key) => node == null ? undefined : node[key], config) }
 const initialZoom = Number(find('zoom:percent'))
@@ -70,7 +70,8 @@ window.addEventListener('keydown', event => {
 // Find in page listens during capture too, so handle the configured library
 // search first without changing the shared Electron find component.
 window.addEventListener('keydown', event => {
-  if (event.repeat || !matchesAccelerator(event, find('shortcuts:keyShortcutForSearch'), navigator.platform)) return
+  if (event.repeat || !matchesSearchShortcut(event, find('shortcuts:keyShortcutForSearch'), navigator.platform)) return
+  if (!searchShortcutAllowed(event)) return
   if (document.querySelector('.modal[role="dialog"], .inline-form-edit, .inline-new-editor')) return
   const input = document.querySelector('.embedded-search-input')
   if (!input || input.closest('[inert]')) return

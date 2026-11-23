@@ -20,6 +20,18 @@ export function matchesAccelerator (event, accelerator, platform) {
   return actual === key
 }
 
+export function matchesSearchShortcut (event, configured, platform) {
+  return [configured, 'Shift+Space', 'CommandOrControl+Shift+F']
+    .some(accelerator => matchesAccelerator(event, accelerator, platform))
+}
+
+// Shift+Space is also ordinary text input, so don't intercept it in a field.
+export function searchShortcutAllowed (event) {
+  if (!matchesAccelerator(event, 'Shift+Space', '')) return true
+  const target = event.target
+  return !(target && (target.isContentEditable || target.closest?.('input, textarea, select, [contenteditable]')))
+}
+
 // Electron's View menu uses Command/Control with =, +, -, and 0 for zoom.
 export function zoomShortcutAction (event, platform) {
   const mac = /mac|iphone|ipad/i.test(platform || '')

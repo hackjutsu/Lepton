@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { matchesAccelerator, nextZoomPercent, zoomShortcutAction } from '../../prototypes/tauri/legacy/shortcuts'
+import { matchesAccelerator, matchesSearchShortcut, nextZoomPercent, searchShortcutAllowed, zoomShortcutAction } from '../../prototypes/tauri/legacy/shortcuts'
 
 function key (value, modifiers = {}) {
   return { key: value, metaKey: false, ctrlKey: false, altKey: false, shiftKey: false, ...modifiers }
@@ -22,6 +22,25 @@ describe('Tauri window shortcuts', () => {
     expect(matchesAccelerator(key('s'), null, 'Linux')).toBe(false)
     expect(matchesAccelerator(key('s'), '', 'Linux')).toBe(false)
     expect(matchesAccelerator(key('s'), 'Unknown+S', 'Linux')).toBe(false)
+  })
+
+  it('leaves Shift+Space available for typing while supporting other configured shortcuts', () => {
+    const field = { closest: () => ({}) }
+    const body = { closest: () => null }
+    const space = key(' ', { shiftKey: true })
+    expect(searchShortcutAllowed({ ...space, target: body })).toBe(true)
+    expect(searchShortcutAllowed({ ...space, target: field })).toBe(false)
+    expect(searchShortcutAllowed({ ...space, target: { isContentEditable: true } })).toBe(false)
+    expect(searchShortcutAllowed({ ...key('f', { metaKey: true, shiftKey: true }), target: field })).toBe(true)
+  })
+
+  it('supports both search shortcuts and an additional configured shortcut on each platform', () => {
+    for (const [platform, modifier] of [['MacIntel', { metaKey: true }], ['Win32', { ctrlKey: true }], ['Linux x86_64', { ctrlKey: true }]]) {
+      expect(matchesSearchShortcut(key(' ', { shiftKey: true }), 'Alt+S', platform)).toBe(true)
+      expect(matchesSearchShortcut(key('f', { ...modifier, shiftKey: true }), 'Alt+S', platform)).toBe(true)
+      expect(matchesSearchShortcut(key('s', { altKey: true }), 'Alt+S', platform)).toBe(true)
+      expect(matchesSearchShortcut(key('f', modifier), 'Alt+S', platform)).toBe(false)
+    }
   })
 
   it('recognizes native zoom keys on macOS, Windows and Linux', () => {
