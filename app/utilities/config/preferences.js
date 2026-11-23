@@ -26,6 +26,7 @@ const booleanKeys = new Set([
   'startAtLogin',
   'window:closeToTray',
   'window:minimizeToTray',
+  'window:autoHideMenuBar',
   'userPanel:hideProfilePhoto',
   'proxy:enable',
   'snippet:sortingReverse',
@@ -72,7 +73,7 @@ function metadataForKeys (keys, applyMode) {
 
 const preferenceMetadata = {
   ...metadataForKeys([
-    'theme', 'autoUpdate', 'startAtLogin', 'zoom:percent', 'logger:level', ...shortcutKeys
+    'theme', 'autoUpdate', 'startAtLogin', 'window:autoHideMenuBar', 'zoom:percent', 'logger:level', ...shortcutKeys
   ], APPLY_MODES.IMMEDIATE),
   ...metadataForKeys([
     'window:closeToTray', 'window:minimizeToTray', 'security:cachedAccessTokenStorage',

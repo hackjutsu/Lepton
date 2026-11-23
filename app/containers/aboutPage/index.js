@@ -73,7 +73,8 @@ const preferenceGroups = [
       { key: 'autoUpdate', label: 'Automatically check for updates', type: 'checkbox' },
       { key: 'startAtLogin', label: 'Start Lepton at login', type: 'checkbox' },
       { key: 'window:closeToTray', label: 'Close window to tray', type: 'checkbox' },
-      { key: 'window:minimizeToTray', label: 'Minimize window to tray', type: 'checkbox' }
+      { key: 'window:minimizeToTray', label: 'Minimize window to tray', type: 'checkbox' },
+      { key: 'window:autoHideMenuBar', label: 'Auto-hide menu bar (Windows/Linux, press Alt to show)', type: 'checkbox' }
     ]
   },
   {
