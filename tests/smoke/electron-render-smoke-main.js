@@ -1422,6 +1422,7 @@ async function main () {
 
   try {
     window = await waitForMainWindow()
+    if (process.env.LEPTON_SMOKE_LOGIN_LAYOUT === '1') window.webContents.setBackgroundThrottling(false)
     attachRendererDiagnostics(window)
     await waitForRendererLoad(window)
 
@@ -1429,6 +1430,15 @@ async function main () {
       await waitForFixtureUi(window)
       await applyFixtureFilterClicks(window)
       assertFixtureRendererState(await getRendererState(window))
+      if (process.env.LEPTON_RENDER_FIXTURE === 'login-expired-token') {
+        const errors = await window.webContents.executeJavaScript(`
+          Array.from(document.querySelectorAll('.login-modal-face-front .login-status-line-error'),
+            element => element.textContent.trim())
+        `)
+        if (errors.length !== 1 || errors[0] !== 'Token invalid. Please try again.') {
+          throw new Error('Expected one invalid-token message: ' + JSON.stringify(errors))
+        }
+      }
       await assertPythonMultilineHighlighting(window)
       await assertFixtureLoginModeSwitch(window)
       await assertFixturePageFind(window)

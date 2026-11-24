@@ -33,7 +33,7 @@
     box-shadow: none;
     height: auto;
     margin-top: 0;
-    max-height: calc(100dvh - 48px);
+    max-height: calc(var(--login-viewport-height, 100dvh) - 48px);
     opacity: 1;
     overflow: visible;
     -webkit-transform: translateZ(0);
@@ -72,12 +72,20 @@
     left: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    max-height: calc(100dvh - 48px);
+    max-height: calc(var(--login-viewport-height, 100dvh) - 48px);
+    // A small allowance keeps fractional text and border rounding from
+    // creating a scrollbar when the content otherwise fits.
+    padding-bottom: 2px;
+    scrollbar-width: none;
     position: relative;
     top: 0;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     width: 100%;
+  }
+
+  .login-modal-face::-webkit-scrollbar {
+    display: none;
   }
 
   .login-modal-face-front {
@@ -355,13 +363,20 @@
 
   .login-modal .modal-content,
   .login-modal .login-modal-face {
-    max-height: none;
+    // The dialog is zoomed to 65%, so express the viewport limit in its
+    // unscaled coordinate space.
+    max-height: calc((var(--login-viewport-height, 100dvh) - 48px) / .65);
   }
 }
 
 @media (max-height: 300px), (max-width: 270px) {
   .login-modal .modal-dialog {
     zoom: .33;
+  }
+
+  .login-modal .modal-content,
+  .login-modal .login-modal-face {
+    max-height: calc((var(--login-viewport-height, 100dvh) - 48px) / .33);
   }
 }
 
